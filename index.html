@@ -364,9 +364,20 @@
         <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-red-500 shadow-md text-center">
           <span class="block text-xs sm:text-sm font-black text-red-800 uppercase tracking-wider">Currywurst</span>
           <span id="hud-count-currywurst" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
-          <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
+          <span class="text-xs font-bold text-slate-500 uppercase">Sliced + Curry Sauce</span>
         </div>
 
+      </div>
+
+      <!-- Combined Bratwurst Braai Target Note -->
+      <div class="p-3 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-950 flex items-center justify-between font-bold text-xs sm:text-sm">
+        <span class="flex items-center gap-2">
+          <i class="ph-bold ph-info text-amber-700 text-lg"></i>
+          <span><b>Note for Braai:</b> Currywurst is made using a grilled Bratwurst!</span>
+        </span>
+        <span class="bg-amber-200 px-3 py-1 rounded-xl font-black text-amber-950 font-mono">
+          Total Bratwurst on Coals: <span id="hud-total-brat-combined">0</span>
+        </span>
       </div>
 
       <!-- Recent Orders on Grill (Reference Only) -->
@@ -950,14 +961,13 @@
       { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60, tag: 'Traditional Pork & Veal', color: 'border-amber-400 bg-amber-50/50' },
       { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60, tag: 'Smoked German Sausage', color: 'border-orange-400 bg-orange-50/50' },
       { id: 'kasegriller', name: 'Käsegriller (110g)', price: 60, tag: 'Cheddar Cheese Pork Sausage', color: 'border-yellow-400 bg-yellow-50/50' },
-      { id: 'currywurst', name: 'Currywurst', price: 70, tag: 'Sliced + Warm Curry Sauce', color: 'border-red-400 bg-red-50/50' }
+      { id: 'currywurst', name: 'Currywurst', price: 70, tag: 'Bratwurst + Warm Curry Tomato Sauce', color: 'border-red-400 bg-red-50/50' }
     ];
 
     let initialInventory = {
-      bratwurst: 275,
+      bratwurst: 275, // Bratwurst stock covers both Bratwurst & Currywurst
       bockwurst: 75,
-      kasegriller: 250,
-      currywurst: 0 // Currywurst drawn from Bratwurst/Bockwurst stock
+      kasegriller: 250
     };
 
     let startingCashFloat = 2000.00;
@@ -1692,11 +1702,13 @@
       const elBock = document.getElementById('hud-count-bockwurst');
       const elKase = document.getElementById('hud-count-kasegriller');
       const elCurr = document.getElementById('hud-count-currywurst');
+      const elCombinedBrat = document.getElementById('hud-total-brat-combined');
 
       if (elBrat) elBrat.innerText = counts.bratwurst;
       if (elBock) elBock.innerText = counts.bockwurst;
       if (elKase) elKase.innerText = counts.kasegriller;
       if (elCurr) elCurr.innerText = counts.currywurst;
+      if (elCombinedBrat) elCombinedBrat.innerText = `${counts.bratwurst + counts.currywurst} (${counts.bratwurst} Brat + ${counts.currywurst} Curry)`;
 
       // Stream of incoming tickets for reference
       const stream = document.getElementById('braai-incoming-stream');
@@ -1826,7 +1838,7 @@
               <!-- Currywurst Alert Banner if applicable -->
               ${hasCurry ? `
                 <div class="my-2.5 p-2 rounded-xl bg-red-100 border border-red-300 text-red-900 font-black text-xs uppercase flex items-center gap-1.5 animate-bounce">
-                  <span>⚠️ LADLE WARM CURRY SAUCE!</span>
+                  <span>⚠️ GRAB BRATWURST, SLICE & LADLE CURRY TOMATO SAUCE!</span>
                 </div>
               ` : ''}
 
@@ -1920,8 +1932,9 @@
       if (floatEl) floatEl.innerText = `R${startingCashFloat.toFixed(2)}`;
       if (totalSausEl) totalSausEl.innerText = `${sausagesSold} sausages sold`;
 
-      // Update remaining inventory
-      const remBrat = Math.max(0, initialInventory.bratwurst - sausageCounts.bratwurst);
+      // Update remaining inventory (Currywurst consumes physical Bratwurst stock)
+      const totalBratwurstsUsed = sausageCounts.bratwurst + sausageCounts.currywurst;
+      const remBrat = Math.max(0, initialInventory.bratwurst - totalBratwurstsUsed);
       const remBock = Math.max(0, initialInventory.bockwurst - sausageCounts.bockwurst);
       const remKase = Math.max(0, initialInventory.kasegriller - sausageCounts.kasegriller);
       const totalStart = initialInventory.bratwurst + initialInventory.bockwurst + initialInventory.kasegriller;
@@ -1929,8 +1942,8 @@
 
       const elInvBrat = document.getElementById('inv-bratwurst');
       const elRemBrat = document.getElementById('inv-rem-bratwurst');
-      if (elInvBrat) elInvBrat.innerText = `${sausageCounts.bratwurst} / ${initialInventory.bratwurst}`;
-      if (elRemBrat) elRemBrat.innerText = `${remBrat} Left`;
+      if (elInvBrat) elInvBrat.innerText = `${totalBratwurstsUsed} / ${initialInventory.bratwurst}`;
+      if (elRemBrat) elRemBrat.innerText = `${remBrat} Left (${sausageCounts.bratwurst} standard + ${sausageCounts.currywurst} curry)`;
 
       const elInvBock = document.getElementById('inv-bockwurst');
       const elRemBock = document.getElementById('inv-rem-bockwurst');
