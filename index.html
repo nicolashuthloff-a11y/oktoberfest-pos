@@ -1,88 +1,431 @@
-<!-- ... existing code ... -->
-        <!-- STEP 1: SELECT STATION FIRST -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Oktoberfest Gqeberha - Sausage Station KDS & POS</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fest: {
+              navy: '#0d2240',
+              bavaria: '#0066b2',
+              gold: '#ffb81c',
+              goldDark: '#d99800',
+              cream: '#fbf9f4',
+              fire: '#e63946'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Prevent accidental pull-to-refresh or bounce on touch screens */
+    html, body {
+      overscroll-behavior-y: contain;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col select-none">
+
+  <!-- ========================================== -->
+  <!-- TOP APP HEADER WITH EASY STATION SWITCHING -->
+  <!-- ========================================== -->
+  <header class="bg-fest-navy text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-lg sticky top-0 z-40 border-b-4 border-fest-gold">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      
+      <!-- Brand & Active Station Name -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-fest-gold text-fest-navy flex items-center justify-center font-black text-xl shadow">
+          🌭
+        </div>
         <div>
-          <div class="flex items-center gap-2 mb-2.5">
-            <span class="w-8 h-8 rounded-full bg-fest-navy text-amber-300 font-black text-base flex items-center justify-center">1</span>
-            <label class="text-base sm:text-lg font-black uppercase tracking-wide text-slate-900">
-              Select Station for this Device:
-            </label>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="station-picker-grid">
-            
-            <!-- Cashier Station Tile -->
-            <button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-fest-bavaria bg-blue-50/70 shadow-md hover:bg-blue-100 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-                  <i class="ph-bold ph-cash-register text-fest-bavaria text-2xl sm:text-3xl"></i>
-                  <span>Cashier / POS</span>
-                </span>
-                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-blue-600 text-white">Till & Pay</span>
-              </div>
-              <p class="text-xs text-slate-600 mt-1 font-semibold">Orders & Yoko / Cash payments</p>
-            </button>
-
-            <!-- Handout & Prep Station Tile -->
-            <button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-emerald-500 hover:bg-emerald-50/50 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-                  <i class="ph-bold ph-tray text-emerald-600 text-2xl sm:text-3xl"></i>
-                  <span>Handout & Prep</span>
-                </span>
-                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-emerald-600 text-white">Post-It Match</span>
-              </div>
-              <p class="text-xs text-slate-600 mt-1 font-semibold">Plate rolls, Curry sauce, deliver order</p>
-            </button>
-
-            <!-- Braai Station HUD Tile -->
-            <button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-red-500 hover:bg-red-50/50 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-                  <i class="ph-bold ph-flame text-red-600 text-2xl sm:text-3xl"></i>
-                  <span>Braai HUD 🔥</span>
-                </span>
-                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-red-600 text-white">Hands-Free</span>
-              </div>
-              <p class="text-xs text-slate-600 mt-1 font-semibold">Zero-touch live sausage demand counter</p>
-            </button>
-
-            <!-- Manager Master Tile -->
-            <button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-purple-500 hover:bg-purple-50/50 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-                  <i class="ph-bold ph-lock text-purple-600 text-2xl sm:text-3xl"></i>
-                  <span>Manager Master</span>
-                </span>
-                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-purple-600 text-white">Master PIN</span>
-              </div>
-              <p class="text-xs text-slate-600 mt-1 font-semibold">Cash-Up, Hourly sales velocity, stock & team</p>
-            </button>
-
+          <h1 class="text-sm sm:text-base font-black tracking-tight flex items-center gap-1.5 leading-none">
+            <span>OKTOBERFEST</span>
+            <span class="text-fest-gold font-normal hidden sm:inline">| Gqeberha</span>
+          </h1>
+          <div class="flex items-center gap-2 mt-1">
+            <span id="header-station-badge" class="px-2 py-0.5 rounded text-[10px] sm:text-xs font-black uppercase tracking-wider bg-fest-bavaria text-white">
+              CASHIER / POS
+            </span>
+            <span id="header-user-display" class="text-xs text-amber-200 font-bold truncate max-w-[120px] sm:max-w-[200px]">
+              Not Signed In
+            </span>
           </div>
         </div>
+      </div>
 
-        <!-- STEP 2: SELECT NAME BASED ON SELECTED STATION -->
-        <div>
-          <div class="flex items-center gap-2 mb-2.5">
-            <span class="w-8 h-8 rounded-full bg-fest-navy text-amber-300 font-black text-base flex items-center justify-center">2</span>
-            <label class="text-base sm:text-lg font-black uppercase tracking-wide text-slate-900">
-              Who is operating this device?
-            </label>
+      <!-- Quick Station Switch Tabs (High Visibility for Fast Swapping) -->
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button onclick="quickSwitchPosition('pos')" id="tab-nav-pos" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow hover:opacity-90 transition">
+          Till
+        </button>
+        <button onclick="quickSwitchPosition('handout')" id="tab-nav-handout" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+          Handout
+        </button>
+        <button onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+          Braai HUD 🔥
+        </button>
+        <button onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
+          <i class="ph-bold ph-lock-key"></i>
+        </button>
+
+        <!-- Sound toggle -->
+        <button onclick="toggleAudio()" id="btn-audio" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 ml-1">
+          <i class="ph-bold ph-speaker-high text-lg"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- LOGIN OVERLAY MODAL (STATION FIRST -> NAME -> 4-DIGIT PIN) -->
+  <!-- ======================================================== -->
+  <div id="screen-login" class="fixed inset-0 z-50 bg-fest-navy/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border-4 border-fest-gold max-h-[95vh] overflow-y-auto custom-scroll">
+      
+      <div class="text-center mb-5">
+        <div class="inline-block p-3 rounded-2xl bg-amber-100 text-fest-navy text-3xl font-black mb-1">
+          🍺 🌭
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Staff Station Sign-In</h2>
+        <p class="text-xs sm:text-sm text-slate-500 font-semibold mt-0.5">Select station, choose your name, and enter your 4-digit PIN</p>
+      </div>
+
+      <!-- STEP 1: SELECT STATION FIRST -->
+      <div class="mb-5">
+        <div class="flex items-center gap-2 mb-2.5">
+          <span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">1</span>
+          <label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+            Select Station for this Device:
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+          <button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-fest-bavaria bg-blue-50/80 shadow transition">
+            <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <i class="ph-bold ph-cash-register text-fest-bavaria text-2xl"></i> Till / POS
+            </span>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Take orders & Yoko/Cash</p>
+          </button>
+
+          <button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+            <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <i class="ph-bold ph-tray text-emerald-600 text-2xl"></i> Handout
+            </span>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Post-it match & plating</p>
+          </button>
+
+          <button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+            <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <i class="ph-bold ph-flame text-red-600 text-2xl"></i> Braai HUD 🔥
+            </span>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Zero-touch grill tally</p>
+          </button>
+
+          <button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+            <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <i class="ph-bold ph-lock text-purple-600 text-2xl"></i> Manager
+            </span>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Cash-up, audit & stock</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: SELECT NAME FROM ROSTER -->
+      <div class="mb-5">
+        <div class="flex items-center gap-2 mb-2.5">
+          <span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">2</span>
+          <label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+            Who is operating this device?
+          </label>
+        </div>
+        <div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <!-- Populated by JS -->
+        </div>
+        <input type="hidden" id="input-staff-name" value="">
+      </div>
+
+      <!-- STEP 3: MASKED PIN ENTRY -->
+      <div class="mb-5">
+        <div class="flex items-center gap-2 mb-2.5">
+          <span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">3</span>
+          <label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+            Enter 4-Digit Security PIN:
+          </label>
+        </div>
+        
+        <input type="password" id="input-quick-pin" maxlength="6" readonly class="w-full text-center text-3xl font-black tracking-widest py-3 rounded-2xl border-2 border-slate-300 bg-slate-50 text-slate-800 mb-3 shadow-inner pointer-events-none" placeholder="••••">
+
+        <!-- Touch keypad -->
+        <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto">
+          <button type="button" onclick="appendLoginPin('1')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">1</button>
+          <button type="button" onclick="appendLoginPin('2')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">2</button>
+          <button type="button" onclick="appendLoginPin('3')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">3</button>
+          <button type="button" onclick="appendLoginPin('4')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">4</button>
+          <button type="button" onclick="appendLoginPin('5')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">5</button>
+          <button type="button" onclick="appendLoginPin('6')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">6</button>
+          <button type="button" onclick="appendLoginPin('7')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">7</button>
+          <button type="button" onclick="appendLoginPin('8')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">8</button>
+          <button type="button" onclick="appendLoginPin('9')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">9</button>
+          <button type="button" onclick="clearLoginPin()" class="py-3 rounded-xl bg-rose-100 text-rose-700 font-black text-sm uppercase hover:bg-rose-200 active:scale-95 transition">Clear</button>
+          <button type="button" onclick="appendLoginPin('0')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">0</button>
+          <button type="button" onclick="backspaceLoginPin()" class="py-3 rounded-xl bg-slate-300 text-slate-700 font-black text-xl hover:bg-slate-400 active:scale-95 transition"><i class="ph-bold ph-backspace"></i></button>
+        </div>
+      </div>
+
+      <button type="button" onclick="performStaffLogin()" class="w-full py-4 rounded-2xl bg-fest-bavaria text-white font-black text-lg uppercase tracking-wider hover:bg-blue-700 shadow-xl active:scale-[0.98] transition">
+        Activate Station
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MAIN WORKSPACE CONTAINERS FOR THE FOUR STATIONS -->
+  <!-- ============================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5">
+
+    <!-- 1. CASHIER / POS VIEW -->
+    <div id="view-pos" class="space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- Left Column: Menu Items -->
+        <div class="lg:col-span-7 space-y-3">
+          
+          <div class="bg-white p-3.5 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg sm:text-xl font-black text-slate-900">Sausage Menu</h2>
+              <p class="text-xs text-slate-500 font-semibold">Standard price includes crispy roll or served no roll</p>
+            </div>
+            <!-- Toggle default roll preference -->
+            <button onclick="toggleDefaultRollOption()" id="btn-roll-toggle" class="px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300">
+              Default: IN ROLL
+            </button>
           </div>
-<!-- ... existing code ... -->
-      <!-- DYNAMIC TEAM & ROSTER ACCESS CONTROL (MANAGER ONLY) -->
-      <div class="bg-white p-5 rounded-3xl border-2 border-purple-300 shadow-md">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+
+          <!-- Product Grid (Oversized touch cards) -->
+          <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Self-Service Sauce Info Note -->
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold flex items-center gap-2">
+            <i class="ph-bold ph-info text-base text-amber-700"></i>
+            <span>Mustard, Tomato Sauce & Hot Sauce are customer self-service at the counter. Currywurst includes warm house sauce!</span>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Current Order / Till Cart -->
+        <div class="lg:col-span-5 bg-white p-4 sm:p-5 rounded-2xl shadow-md border-2 border-slate-200 flex flex-col justify-between min-h-[500px]">
+          
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <span class="text-xs uppercase font-black tracking-wider text-slate-400">Current Ticket</span>
+                <h3 class="text-2xl font-black text-slate-900" id="cart-order-number-display">#101</h3>
+              </div>
+              <button onclick="clearCurrentCart()" class="text-xs font-bold text-rose-600 hover:text-rose-800 px-2 py-1 rounded-lg hover:bg-rose-50 transition">
+                Clear Cart
+              </button>
+            </div>
+
+            <!-- Cart items list -->
+            <div id="cart-items-container" class="divide-y divide-slate-100 my-3 max-h-[320px] overflow-y-auto custom-scroll">
+              <p class="text-center py-12 text-slate-400 font-semibold text-sm">Cart is empty. Tap items on the left to add.</p>
+            </div>
+          </div>
+
+          <!-- Totals and Checkout Actions -->
+          <div class="pt-3 border-t-2 border-slate-100 space-y-3">
+            <div class="flex items-center justify-between text-slate-600 text-sm font-bold">
+              <span>Total Items:</span>
+              <span id="cart-total-count" class="font-mono text-slate-900">0 sausages</span>
+            </div>
+            <div class="flex items-center justify-between text-2xl font-black text-slate-900">
+              <span>Total Due:</span>
+              <span id="cart-total-price" class="text-emerald-700 font-mono">R0.00</span>
+            </div>
+
+            <!-- Payment Button -->
+            <button onclick="openPaymentModal()" id="btn-open-payment" disabled class="w-full py-4 rounded-2xl bg-fest-bavaria disabled:bg-slate-200 disabled:text-slate-400 text-white font-black text-lg uppercase tracking-wide hover:bg-blue-700 transition shadow-lg active:scale-[0.98]">
+              Proceed to Payment
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. HANDOUT & PREP STATION VIEW -->
+    <div id="view-handout" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+            <i class="ph-bold ph-tray text-emerald-600"></i>
+            <span>Handout & Roll Assembly Queue</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-semibold">Match customer handwritten Post-it note, plate roll/sauce, and mark delivered</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-emerald-100 text-emerald-900">
+            Pending Orders: <b id="handout-pending-count" class="text-sm">0</b>
+          </span>
+        </div>
+      </div>
+
+      <!-- Live Handout Cards Grid -->
+      <div id="handout-orders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- 3. BRAAI STATION HUD VIEW (ZERO-TOUCH LARGE DISPLAY) -->
+    <div id="view-braai" class="hidden space-y-4">
+      
+      <!-- Top Demand Banner -->
+      <div class="bg-fest-navy p-4 rounded-2xl shadow-md text-white flex flex-wrap items-center justify-between gap-3 border-2 border-fest-gold">
+        <div>
+          <h2 class="text-2xl font-black text-amber-300 flex items-center gap-2">
+            <i class="ph-bold ph-flame text-red-500 text-3xl"></i>
+            <span>BRAAI MASTER LIVE DEMAND HUD</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 font-semibold">Zero-touch display. Keep warming trays stocked to meet this live demand.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs sm:text-sm font-black px-3 py-1.5 rounded-xl bg-red-600 text-white uppercase tracking-wider animate-pulse">
+            🔥 Coals Active
+          </span>
+        </div>
+      </div>
+
+      <!-- 4 Giant Aggregate Counters -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        <!-- Bratwurst Box -->
+        <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-amber-400 shadow-md text-center">
+          <span class="block text-xs sm:text-sm font-black text-amber-800 uppercase tracking-wider">Bratwurst (140g)</span>
+          <span id="hud-count-bratwurst" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
+          <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
+        </div>
+
+        <!-- Bockwurst Box -->
+        <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-orange-400 shadow-md text-center">
+          <span class="block text-xs sm:text-sm font-black text-orange-800 uppercase tracking-wider">Bockwurst (140g)</span>
+          <span id="hud-count-bockwurst" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
+          <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
+        </div>
+
+        <!-- Käsegriller Box -->
+        <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-yellow-400 shadow-md text-center">
+          <span class="block text-xs sm:text-sm font-black text-yellow-800 uppercase tracking-wider">Käsegriller (110g)</span>
+          <span id="hud-count-kasegriller" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
+          <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
+        </div>
+
+        <!-- Currywurst Box -->
+        <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-red-500 shadow-md text-center">
+          <span class="block text-xs sm:text-sm font-black text-red-800 uppercase tracking-wider">Currywurst</span>
+          <span id="hud-count-currywurst" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
+          <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
+        </div>
+
+      </div>
+
+      <!-- Recent Orders on Grill (Reference Only) -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+        <h3 class="text-sm font-black uppercase tracking-wider text-slate-500 mb-3">Live Order Stream (Reference)</h3>
+        <div id="braai-incoming-stream" class="flex flex-wrap gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4. MANAGER MASTER VIEW (PIN PROTECTED) -->
+    <div id="view-manager" class="hidden space-y-5">
+      
+      <!-- Top Manager Header -->
+      <div class="bg-purple-900 text-white p-4 sm:p-5 rounded-3xl shadow-lg flex flex-wrap items-center justify-between gap-3 border-2 border-purple-400">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-amber-300 flex items-center gap-2">
+            <i class="ph-bold ph-shield-check text-2xl"></i>
+            <span>MANAGER MASTER AUDIT & FINANCIALS</span>
+          </h2>
+          <p class="text-xs text-purple-200 font-semibold">Live cash-up reconciliation, inventory control, and staff audit</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="downloadOrdersCSV()" class="px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-black shadow flex items-center gap-1.5">
+            <i class="ph-bold ph-download-simple"></i> Orders CSV
+          </button>
+          <button onclick="changeManagerPinPrompt()" class="px-3 py-2 rounded-xl bg-purple-800 hover:bg-purple-750 text-white text-xs font-black border border-purple-400">
+            Change Master PIN
+          </button>
+        </div>
+      </div>
+
+      <!-- Financial Reconciliation / Cash-Up -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm">
+          <span class="text-xs font-black uppercase text-slate-500">Gross Sales</span>
+          <h4 id="mgr-stat-revenue" class="text-2xl sm:text-3xl font-black text-emerald-700 font-mono mt-1">R0.00</h4>
+          <span id="mgr-stat-total-sausages" class="text-xs text-slate-500 font-bold">0 sausages sold</span>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border-2 border-blue-200 shadow-sm">
+          <span class="text-xs font-black uppercase text-blue-700">Yoko Card / QR</span>
+          <h4 id="mgr-stat-yoko" class="text-2xl sm:text-3xl font-black text-blue-800 font-mono mt-1">R0.00</h4>
+          <span class="text-[11px] text-blue-600 font-semibold">Matches Yoko batch report</span>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-sm">
+          <span class="text-xs font-black uppercase text-amber-700">Cash Collected</span>
+          <h4 id="mgr-stat-cash" class="text-2xl sm:text-3xl font-black text-amber-800 font-mono mt-1">R0.00</h4>
+          <span class="text-[11px] text-amber-600 font-semibold">Physical cash received</span>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm">
+          <span class="text-xs font-black uppercase text-slate-600">Starting Till Float</span>
+          <h4 id="mgr-stat-float" class="text-2xl sm:text-3xl font-black text-slate-800 font-mono mt-1">R2,000.00</h4>
+          <button onclick="editStartingFloatPrompt()" class="text-[11px] text-fest-bavaria font-bold hover:underline">Edit Float</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Staff Roster Management -->
+      <div class="bg-white p-5 rounded-3xl border-2 border-purple-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 class="font-black text-lg text-slate-900 flex items-center gap-2">
-              <i class="ph-bold ph-users-three text-purple-600 text-2xl"></i>
+              <i class="ph-bold ph-users-three text-purple-600"></i>
               <span>Staff & Station Access Management</span>
             </h3>
-            <p class="text-xs text-slate-500">Configure team members, permitted stations, and individual access PINs.</p>
+            <p class="text-xs text-slate-500 font-semibold">Add or edit team members and configure their 4-digit station PINs</p>
           </div>
-          <button onclick="openStaffModal()" class="min-h-[46px] px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-xs sm:text-sm flex items-center gap-2 shadow-md">
-            <i class="ph-bold ph-user-plus text-base"></i>
-            <span>Add Team Member</span>
+          <button onclick="openStaffModal()" class="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
+            <i class="ph-bold ph-plus-circle"></i> Add Team Member
           </button>
         </div>
 
@@ -104,19 +447,18 @@
         </div>
       </div>
 
-      <!-- STAFF WORK HOURS & STATION TIME AUDIT -->
-      <div class="bg-white p-5 rounded-3xl border-2 border-blue-300 shadow-md">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+      <!-- Staff Shift & Work Hours Audit Table -->
+      <div class="bg-white p-5 rounded-3xl border-2 border-blue-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <h3 class="font-black text-lg text-slate-900 flex items-center gap-2">
-              <i class="ph-bold ph-hourglass-high text-blue-600 text-2xl"></i>
+              <i class="ph-bold ph-hourglass-high text-blue-600"></i>
               <span>Staff Work Hours & Station Time Audit</span>
             </h3>
-            <p class="text-xs text-slate-500">Live breakdown of active shift hours and exact time spent working at each station.</p>
+            <p class="text-xs text-slate-500 font-semibold">Live tracking of total work hours and time spent at each individual station</p>
           </div>
-          <button onclick="downloadStaffShiftCSV()" class="min-h-[46px] px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs sm:text-sm flex items-center gap-2 shadow-md">
-            <i class="ph-bold ph-file-csv text-fest-gold text-base"></i>
-            <span>Export Staff Shifts CSV</span>
+          <button onclick="downloadStaffShiftCSV()" class="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
+            <i class="ph-bold ph-download-simple"></i> Export Shifts CSV
           </button>
         </div>
 
@@ -125,7 +467,7 @@
             <thead>
               <tr class="border-b-2 border-slate-200 text-slate-400 font-black uppercase text-[10px] tracking-wider">
                 <th class="py-2.5 px-3">Staff Member</th>
-                <th class="py-2.5 px-3">Current Status</th>
+                <th class="py-2.5 px-3">Status</th>
                 <th class="py-2.5 px-3 text-center">Cashier Time</th>
                 <th class="py-2.5 px-3 text-center">Handout Time</th>
                 <th class="py-2.5 px-3 text-center">Braai Time</th>
@@ -140,51 +482,255 @@
         </div>
       </div>
 
-      <!-- HOURLY SALES VELOCITY BREAKDOWN TABLE & TIMELINE -->
-<!-- ... existing code ... -->
-    // Starting cash float for the till
+      <!-- Live Stock & Remaining Units -->
+      <div class="bg-white p-5 rounded-3xl border-2 border-slate-200 shadow-sm">
+        <h3 class="font-black text-base text-slate-900 mb-3 flex items-center gap-2">
+          <i class="ph-bold ph-package text-fest-goldDark"></i>
+          <span>Inventory Tracking (Total Starting vs. Sold vs. Remaining)</span>
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center font-mono">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="block text-xs font-sans font-bold text-slate-500 uppercase">Bratwurst</span>
+            <span id="inv-bratwurst" class="block text-xl font-black text-slate-800 my-1">275 / 275</span>
+            <span id="inv-rem-bratwurst" class="text-[11px] text-emerald-700 font-bold">275 Left</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="block text-xs font-sans font-bold text-slate-500 uppercase">Bockwurst</span>
+            <span id="inv-bockwurst" class="block text-xl font-black text-slate-800 my-1">75 / 75</span>
+            <span id="inv-rem-bockwurst" class="text-[11px] text-emerald-700 font-bold">75 Left</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="block text-xs font-sans font-bold text-slate-500 uppercase">Käsegriller</span>
+            <span id="inv-kasegriller" class="block text-xl font-black text-slate-800 my-1">250 / 250</span>
+            <span id="inv-rem-kasegriller" class="text-[11px] text-emerald-700 font-bold">250 Left</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="block text-xs font-sans font-bold text-slate-500 uppercase">Total Sausages</span>
+            <span id="inv-total" class="block text-xl font-black text-purple-900 my-1">600 / 600</span>
+            <span id="inv-rem-total" class="text-[11px] text-purple-700 font-bold">600 Left</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: PAYMENT SELECTION (YOKO VS CASH DRAWER) -->
+  <!-- ============================================== -->
+  <div id="modal-payment" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border-4 border-fest-gold">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <span class="text-xs uppercase font-black text-slate-400">Confirm Payment for</span>
+          <h3 class="text-2xl font-black text-slate-900" id="pay-modal-order-num">#101</h3>
+        </div>
+        <div class="text-right">
+          <span class="text-xs uppercase font-black text-slate-400">Total Due</span>
+          <div class="text-2xl font-black text-emerald-700 font-mono" id="pay-modal-total-due">R0.00</div>
+        </div>
+      </div>
+
+      <!-- Payment Method Switch -->
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <button type="button" onclick="selectPaymentMethod('yoko')" id="pay-method-btn-yoko" class="py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2">
+          <i class="ph-bold ph-credit-card text-xl"></i>
+          <span>Yoko App / Card</span>
+        </button>
+        <button type="button" onclick="selectPaymentMethod('cash')" id="pay-method-btn-cash" class="py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2">
+          <i class="ph-bold ph-money text-xl"></i>
+          <span>Cash Till</span>
+        </button>
+      </div>
+
+      <!-- YOKO DETAILS PANEL -->
+      <div id="panel-yoko-payment" class="space-y-3 p-4 rounded-2xl bg-blue-50/60 border border-blue-200 mb-4">
+        <p class="text-xs font-bold text-slate-700">1. Enter total <b class="font-mono text-fest-bavaria" id="yoko-prompt-amount">R0.00</b> into your Yoko Neo / Yoko App.</p>
+        <p class="text-xs font-bold text-slate-700">2. Customer taps card or scans Yoko QR.</p>
+        <p class="text-xs font-bold text-emerald-700">3. Once Yoko screen says APPROVED, tap confirm below.</p>
+      </div>
+
+      <!-- CASH TILL PANEL (WITH CHANGE CALCULATOR) -->
+      <div id="panel-cash-payment" class="hidden space-y-3 mb-4">
+        <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-black uppercase text-amber-900">Cash Received (Tendered)</span>
+            <span id="cash-tendered-display" class="font-mono font-black text-xl text-amber-900">R0.00</span>
+          </div>
+
+          <!-- Quick Tender Buttons -->
+          <div class="grid grid-cols-4 gap-1.5 mb-2">
+            <button type="button" onclick="setCashTenderExact()" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">Exact</button>
+            <button type="button" onclick="setCashTenderAmount(100)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R100</button>
+            <button type="button" onclick="setCashTenderAmount(200)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R200</button>
+            <button type="button" onclick="setCashTenderAmount(500)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R500</button>
+          </div>
+
+          <!-- Change Due Display -->
+          <div class="p-3 rounded-xl bg-white border border-amber-300 flex items-center justify-between">
+            <span class="text-xs font-black uppercase text-slate-600">Change Due to Customer:</span>
+            <span id="cash-change-display" class="font-mono font-black text-2xl text-emerald-700">R0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="closePaymentModal()" class="py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-black text-sm uppercase hover:bg-slate-200">
+          Cancel
+        </button>
+        <button type="button" onclick="confirmPaymentAndReleaseTicket()" class="py-3.5 rounded-2xl bg-emerald-600 text-white font-black text-sm uppercase hover:bg-emerald-700 shadow-lg">
+          Confirm & Print #
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: POST-IT NUMBER HELPER (FOR CASHIER)     -->
+  <!-- ============================================== -->
+  <div id="modal-postit" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-amber-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border-4 border-amber-300 text-center relative rotate-[-1deg]">
+      <span class="text-xs uppercase font-black text-amber-800 tracking-wider">Write on Customer Post-it Note</span>
+      
+      <!-- GIANT ORDER NUMBER -->
+      <h2 id="postit-order-number" class="text-7xl font-black text-slate-900 font-mono my-3 tracking-tighter">
+        #101
+      </h2>
+
+      <!-- Order Summary -->
+      <div id="postit-summary-lines" class="p-3 bg-white/80 rounded-2xl border border-amber-200 text-left text-xs font-bold text-slate-800 space-y-1 mb-5">
+        <!-- Lines inserted by JS -->
+      </div>
+
+      <button type="button" onclick="closePostItModal()" class="w-full py-4 rounded-2xl bg-fest-navy text-amber-300 font-black text-base uppercase tracking-wider hover:bg-slate-900 shadow-xl">
+        Done & Hand Note to Customer
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: ADD / EDIT STAFF MEMBER (MANAGER ONLY)  -->
+  <!-- ============================================== -->
+  <div id="modal-staff-edit" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-purple-300">
+      <h3 id="modal-staff-title" class="text-xl font-black text-slate-900 mb-4">Add Team Member</h3>
+      <input type="hidden" id="edit-staff-index" value="-1">
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-black uppercase text-slate-500 mb-1">Staff Member Name</label>
+          <input type="text" id="edit-staff-name" class="w-full p-3 rounded-xl border border-slate-300 font-bold text-sm" placeholder="e.g. Nicole">
+        </div>
+        <div>
+          <label class="block text-xs font-black uppercase text-slate-500 mb-1">Role / Job Title</label>
+          <input type="text" id="edit-staff-role" class="w-full p-3 rounded-xl border border-slate-300 font-bold text-sm" placeholder="e.g. Sales & Handout">
+        </div>
+        <div>
+          <label class="block text-xs font-black uppercase text-slate-500 mb-1">4-Digit Access PIN</label>
+          <input type="text" id="edit-staff-pin" maxlength="6" class="w-full p-3 rounded-xl border border-slate-300 font-mono font-bold text-sm" placeholder="e.g. 1234">
+        </div>
+
+        <div>
+          <label class="block text-xs font-black uppercase text-slate-500 mb-1">Permitted Stations</label>
+          <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200">
+              <input type="checkbox" id="chk-perm-pos" checked class="rounded text-fest-bavaria"> Cashier / Till
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200">
+              <input type="checkbox" id="chk-perm-handout" checked class="rounded text-emerald-600"> Handout & Prep
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200">
+              <input type="checkbox" id="chk-perm-braai" checked class="rounded text-red-600"> Braai HUD
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200">
+              <input type="checkbox" id="chk-perm-manager" class="rounded text-purple-600"> Manager Master
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 mt-5">
+        <button type="button" onclick="closeStaffModal()" class="py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs uppercase">Cancel</button>
+        <button type="button" onclick="saveStaffMember()" class="py-3 rounded-xl bg-purple-700 text-white font-bold text-xs uppercase hover:bg-purple-800">Save Member</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-700 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none">
+    <span id="toast-icon" class="text-xl">🌭</span>
+    <div>
+      <h5 id="toast-title" class="font-black text-xs text-amber-300 uppercase leading-none">Notification</h5>
+      <p id="toast-msg" class="text-xs text-slate-200 font-medium mt-0.5">Details here</p>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT APPLICATION LOGIC & STATE ENGINE   -->
+  <!-- ============================================== -->
+  <script>
+    /* =======================================================
+       1. CORE MENU PRODUCTS (EXACT 4 ITEMS - SAME PRICE W/ ROLL)
+       ======================================================= */
+    const PRODUCTS = [
+      { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60, tag: 'Traditional Pork & Veal', color: 'border-amber-400 bg-amber-50/50' },
+      { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60, tag: 'Smoked German Sausage', color: 'border-orange-400 bg-orange-50/50' },
+      { id: 'kasegriller', name: 'Käsegriller (110g)', price: 60, tag: 'Cheddar Cheese Pork Sausage', color: 'border-yellow-400 bg-yellow-50/50' },
+      { id: 'currywurst', name: 'Currywurst', price: 70, tag: 'Sliced + Warm Curry Sauce', color: 'border-red-400 bg-red-50/50' }
+    ];
+
+    let initialInventory = {
+      bratwurst: 275,
+      bockwurst: 75,
+      kasegriller: 250,
+      currywurst: 0 // Currywurst drawn from Bratwurst/Bockwurst stock
+    };
+
     let startingCashFloat = 2000.00;
 
-    // LocalStorage Keys
-    const STORAGE_KEY_ORDERS = 'oktoberfest_kds_orders_gqeberha';
-    const STORAGE_KEY_NEXT_NUM = 'oktoberfest_kds_next_num_gqeberha';
-    const STORAGE_KEY_AUDIO = 'oktoberfest_kds_audio_gqeberha';
-    const STORAGE_KEY_STAFF = 'oktoberfest_kds_staff_name';
-    const STORAGE_KEY_STATION = 'oktoberfest_kds_station_role';
-    const STORAGE_KEY_STOCK = 'oktoberfest_kds_starting_stock';
-    const STORAGE_KEY_PIN = 'oktoberfest_kds_manager_pin';
-    const STORAGE_KEY_FLOAT = 'oktoberfest_kds_starting_float';
-    const STORAGE_KEY_ROSTER = 'oktoberfest_kds_team_roster';
-    const STORAGE_KEY_SHIFTS = 'oktoberfest_kds_staff_shifts';
+    // Local Storage Keys
+    const STORAGE_KEY_ORDERS   = 'okt_kds_orders_pe';
+    const STORAGE_KEY_NEXT_NUM = 'okt_kds_next_num_pe';
+    const STORAGE_KEY_AUDIO    = 'okt_kds_audio_pe';
+    const STORAGE_KEY_STAFF    = 'okt_kds_staff_name';
+    const STORAGE_KEY_STATION  = 'okt_kds_station_role';
+    const STORAGE_KEY_STOCK    = 'okt_kds_stock';
+    const STORAGE_KEY_PIN      = 'okt_kds_master_pin';
+    const STORAGE_KEY_FLOAT    = 'okt_kds_starting_float';
+    const STORAGE_KEY_ROSTER   = 'okt_kds_roster';
+    const STORAGE_KEY_SHIFTS   = 'okt_kds_shifts';
 
-    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('oktoberfest_gqeberha_channel') : null;
+    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('oktoberfest_pe_sync') : null;
 
-    // State Variables
+    // Runtime App State
     let orders = [];
     let currentCart = [];
     let nextOrderNumber = 101;
     let audioEnabled = true;
     let defaultWithRoll = true;
     let currentStaffName = '';
-    let currentStationRole = 'pos'; // 'pos', 'braai', 'handout', 'manager'
-    let managerPin = '1978';        // Initial default Master PIN
-    let staffRoster = [];           // Dynamically configured by Manager
-    let staffShiftLogs = [];        // Work sessions: [{ name, station, startTime, endTime }]
-    let lastCompletedOrder = null;
-    let activePaymentMethod = 'yoko'; // 'yoko' or 'cash'
+    let currentStationRole = 'pos';
+    let managerPin = '1978';
+    let staffRoster = [];
+    let staffShiftLogs = [];
+    let activePaymentMethod = 'yoko';
     let selectedLoginStationId = 'pos';
+    let currentTenderedAmount = 0;
 
     /* =======================================================
-       2. INITIALIZATION & RESTRUCTURED LOGIN FLOW
+       2. INITIALIZATION & LIFECYCLE
        ======================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
       renderMenu();
       updateCartUI();
-      renderBraaiStation();
-      renderHandoutStation();
+      renderBraaiHUD();
+      renderHandoutQueue();
       renderManagerDashboard();
-      updateBadges();
 
       selectLoginStation(currentStationRole || 'pos');
 
@@ -196,30 +742,29 @@
 
       if (syncChannel) {
         syncChannel.onmessage = (event) => {
-          if (event.data && event.data.type === 'ORDERS_UPDATED') {
-            handleRemoteOrdersUpdate(event.data.orders);
-          } else if (event.data && event.data.type === 'ROSTER_UPDATED') {
+          if (!event.data) return;
+          if (event.data.type === 'ORDERS_UPDATED') {
+            orders = event.data.orders;
+            saveState(false);
+            renderBraaiHUD();
+            renderHandoutQueue();
+            renderManagerDashboard();
+          } else if (event.data.type === 'ROSTER_UPDATED') {
             staffRoster = event.data.roster;
-            saveState();
+            saveState(false);
             renderRosterManagementUI();
-            renderStaffShiftsTable();
             populateAllStaffNameChips();
-          } else if (event.data && event.data.type === 'SHIFTS_UPDATED') {
+          } else if (event.data.type === 'SHIFTS_UPDATED') {
             staffShiftLogs = event.data.shifts;
-            saveState();
+            saveState(false);
             renderStaffShiftsTable();
           }
         };
       }
 
-      window.addEventListener('storage', (e) => {
-        if (e.key === STORAGE_KEY_ORDERS && e.newValue) {
-          handleRemoteOrdersUpdate(JSON.parse(e.newValue));
-        }
-      });
-
+      // Live 1-second refresh for timers
       setInterval(() => {
-        updateTimers();
+        updateTicketTimers();
         if (currentStationRole === 'manager') {
           renderStaffShiftsTable();
         }
@@ -228,54 +773,54 @@
 
     function loadState() {
       try {
-        const savedOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
-        if (savedOrders) orders = JSON.parse(savedOrders);
+        const sOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
+        if (sOrders) orders = JSON.parse(sOrders);
 
-        const savedNext = localStorage.getItem(STORAGE_KEY_NEXT_NUM);
-        if (savedNext) nextOrderNumber = parseInt(savedNext, 10);
+        const sNext = localStorage.getItem(STORAGE_KEY_NEXT_NUM);
+        if (sNext) nextOrderNumber = parseInt(sNext, 10);
 
-        const savedAudio = localStorage.getItem(STORAGE_KEY_AUDIO);
-        if (savedAudio !== null) audioEnabled = (savedAudio === 'true');
+        const sAudio = localStorage.getItem(STORAGE_KEY_AUDIO);
+        if (sAudio !== null) audioEnabled = (sAudio === 'true');
 
-        const savedStaff = localStorage.getItem(STORAGE_KEY_STAFF);
-        if (savedStaff) currentStaffName = savedStaff;
+        const sStaff = localStorage.getItem(STORAGE_KEY_STAFF);
+        if (sStaff) currentStaffName = sStaff;
 
-        const savedStation = localStorage.getItem(STORAGE_KEY_STATION);
-        if (savedStation) currentStationRole = savedStation;
+        const sStation = localStorage.getItem(STORAGE_KEY_STATION);
+        if (sStation) currentStationRole = sStation;
 
-        const savedStock = localStorage.getItem(STORAGE_KEY_STOCK);
-        if (savedStock) initialInventory = JSON.parse(savedStock);
+        const sStock = localStorage.getItem(STORAGE_KEY_STOCK);
+        if (sStock) initialInventory = JSON.parse(sStock);
 
-        const savedPin = localStorage.getItem(STORAGE_KEY_PIN);
-        if (savedPin) managerPin = savedPin;
+        const sPin = localStorage.getItem(STORAGE_KEY_PIN);
+        if (sPin) managerPin = sPin;
 
-        const savedFloat = localStorage.getItem(STORAGE_KEY_FLOAT);
-        if (savedFloat) startingCashFloat = parseFloat(savedFloat);
+        const sFloat = localStorage.getItem(STORAGE_KEY_FLOAT);
+        if (sFloat) startingCashFloat = parseFloat(sFloat);
 
-        const savedRoster = localStorage.getItem(STORAGE_KEY_ROSTER);
-        if (savedRoster) {
-          staffRoster = JSON.parse(savedRoster);
+        const sRoster = localStorage.getItem(STORAGE_KEY_ROSTER);
+        if (sRoster) {
+          staffRoster = JSON.parse(sRoster);
         } else {
-          // Clean starter template with open station permissions
+          // Default Starter Roster
           staffRoster = [
-            { name: 'Manager Lead', role: 'Event Manager', stations: ['pos', 'handout', 'braai', 'manager'], pin: managerPin },
-            { name: 'Cashier Till 1', role: 'POS Cashier', stations: ['pos', 'handout', 'braai'], pin: '1234' },
-            { name: 'Handout Station', role: 'Packer & Delivery', stations: ['pos', 'handout', 'braai'], pin: '1234' },
-            { name: 'Braai Grill Team', role: 'Grill Master (Shared)', stations: ['pos', 'handout', 'braai'], pin: '1234' }
+            { name: 'Nicolas', role: 'Management & Till', stations: ['pos', 'handout', 'braai', 'manager'], pin: '1978' },
+            { name: 'Candice', role: 'Management & Cashier', stations: ['pos', 'handout', 'braai', 'manager'], pin: '1978' },
+            { name: 'Bernus', role: 'POS & Handout', stations: ['pos', 'handout'], pin: '1234' },
+            { name: 'Nicole', role: 'Sales & Handout', stations: ['pos', 'handout'], pin: '1234' },
+            { name: 'Margret', role: 'Prep Station & Roll Assembly', stations: ['handout'], pin: '1234' },
+            { name: 'Braai Team (Joost & Nick)', role: 'Braai Master Grill Station', stations: ['braai'], pin: '1234' }
           ];
           localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
         }
 
-        const savedShifts = localStorage.getItem(STORAGE_KEY_SHIFTS);
-        if (savedShifts) {
-          staffShiftLogs = JSON.parse(savedShifts);
-        }
-      } catch (err) {
-        console.error("State loading error:", err);
+        const sShifts = localStorage.getItem(STORAGE_KEY_SHIFTS);
+        if (sShifts) staffShiftLogs = JSON.parse(sShifts);
+      } catch (e) {
+        console.error("Error reading localStorage:", e);
       }
     }
 
-    function saveState() {
+    function saveState(broadcast = true) {
       try {
         localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
         localStorage.setItem(STORAGE_KEY_NEXT_NUM, nextOrderNumber.toString());
@@ -285,24 +830,26 @@
         localStorage.setItem(STORAGE_KEY_FLOAT, startingCashFloat.toString());
         localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
         localStorage.setItem(STORAGE_KEY_SHIFTS, JSON.stringify(staffShiftLogs));
-      } catch (err) {
-        console.error("Error saving state:", err);
+
+        if (broadcast && syncChannel) {
+          syncChannel.postMessage({ type: 'ORDERS_UPDATED', orders });
+        }
+      } catch (e) {
+        console.error("Error writing localStorage:", e);
       }
     }
 
-    /* Shift logging helper: records transitions when a user switches station */
+    /* Shift logging helper */
     function recordShiftTransition(staffName, newStation) {
       if (!staffName) return;
       const now = new Date().toISOString();
 
-      // Close any open shift log for this staff member
       staffShiftLogs.forEach(entry => {
         if (entry.name.toLowerCase() === staffName.toLowerCase() && !entry.endTime) {
           entry.endTime = now;
         }
       });
 
-      // Start new active shift segment
       staffShiftLogs.push({
         name: staffName,
         station: newStation,
@@ -310,13 +857,20 @@
         endTime: null
       });
 
-      saveState();
-
+      saveState(false);
       if (syncChannel) {
-        syncChannel.postMessage({
-          type: 'SHIFTS_UPDATED',
-          shifts: staffShiftLogs
-        });
+        syncChannel.postMessage({ type: 'SHIFTS_UPDATED', shifts: staffShiftLogs });
+      }
+    }
+
+    /* =======================================================
+       3. LOGIN & ROTATION HANDLERS
+       ======================================================= */
+    function showLoginScreen() {
+      const scr = document.getElementById('screen-login');
+      if (scr) {
+        scr.classList.remove('hidden');
+        selectLoginStation(currentStationRole || 'pos');
       }
     }
 
@@ -324,48 +878,38 @@
       selectedLoginStationId = stationId;
 
       document.querySelectorAll('.station-select-btn').forEach(btn => {
-        btn.classList.remove('border-fest-bavaria', 'border-emerald-500', 'border-red-500', 'border-purple-500', 'bg-blue-50/70', 'bg-emerald-50/70', 'bg-red-50/70', 'bg-purple-50/70');
+        btn.classList.remove('border-fest-bavaria', 'border-emerald-500', 'border-red-500', 'border-purple-500', 'bg-blue-50/80', 'bg-emerald-50/80', 'bg-red-50/80', 'bg-purple-50/80');
         btn.classList.add('border-slate-200', 'bg-white');
       });
 
       const activeCard = document.getElementById(`card-station-${stationId}`);
       if (activeCard) {
         activeCard.classList.remove('border-slate-200', 'bg-white');
-        if (stationId === 'pos') activeCard.classList.add('border-fest-bavaria', 'bg-blue-50/70');
-        if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-emerald-50/70');
-        if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/70');
-        if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/70');
+        if (stationId === 'pos') activeCard.classList.add('border-fest-bavaria', 'bg-blue-50/80');
+        if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-emerald-50/80');
+        if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/80');
+        if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/80');
       }
 
-      // Populate Step 2: Show ALL staff members regardless of assigned stations
       populateAllStaffNameChips();
       clearLoginPin();
     }
 
     function populateAllStaffNameChips() {
-      const namePickerContainer = document.getElementById('dynamic-name-picker');
-      if (!namePickerContainer) return;
-      namePickerContainer.innerHTML = '';
-
-      if (staffRoster.length === 0) {
-        namePickerContainer.innerHTML = `
-          <div class="col-span-full p-4 rounded-xl bg-amber-50 border border-amber-300 text-xs font-bold text-amber-900 text-center">
-            No staff entered in system yet. Login with Master PIN to add team members in Manager.
-          </div>
-        `;
-        return;
-      }
+      const container = document.getElementById('dynamic-name-picker');
+      if (!container) return;
+      container.innerHTML = '';
 
       staffRoster.forEach(person => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.onclick = () => selectLoginName(person.name);
-        btn.className = "name-select-chip min-h-[58px] p-3 rounded-2xl text-left border-2 border-slate-200 bg-slate-50 hover:bg-amber-100 hover:border-amber-400 transition";
+        btn.className = "name-select-chip min-h-[50px] p-2.5 rounded-xl text-left border-2 border-slate-200 bg-slate-50 hover:bg-amber-100 hover:border-amber-400 transition";
         btn.innerHTML = `
-          <span class="block font-black text-sm text-slate-900">${person.name}</span>
-          <span class="text-[10px] uppercase font-bold text-slate-500">${person.role || 'Team Member'}</span>
+          <span class="block font-black text-xs text-slate-900 leading-tight">${person.name}</span>
+          <span class="text-[9px] uppercase font-bold text-slate-500">${person.role || 'Staff'}</span>
         `;
-        namePickerContainer.appendChild(btn);
+        container.appendChild(btn);
       });
 
       if (currentStaffName) {
@@ -385,311 +929,644 @@
     }
 
     function appendLoginPin(digit) {
-      const pinField = document.getElementById('input-quick-pin');
-      if (pinField.value.length < 6) {
-        pinField.value += digit;
-      }
+      const field = document.getElementById('input-quick-pin');
+      if (field.value.length < 6) field.value += digit;
     }
 
     function clearLoginPin() {
-      const pinField = document.getElementById('input-quick-pin');
-      if (pinField) pinField.value = '';
+      const field = document.getElementById('input-quick-pin');
+      if (field) field.value = '';
     }
 
     function backspaceLoginPin() {
-      const pinField = document.getElementById('input-quick-pin');
-      if (pinField && pinField.value.length > 0) {
-        pinField.value = pinField.value.slice(0, -1);
+      const field = document.getElementById('input-quick-pin');
+      if (field && field.value.length > 0) {
+        field.value = field.value.slice(0, -1);
       }
     }
 
     function performStaffLogin() {
-      const nameInput = document.getElementById('input-staff-name').value.trim();
-      const enteredPin = document.getElementById('input-quick-pin').value.trim();
+      const name = document.getElementById('input-staff-name').value.trim();
+      const pin = document.getElementById('input-quick-pin').value.trim();
 
-      if (!nameInput) {
-        showToast('Please Select Name', 'Tap your name from the roster', '⚠️');
+      if (!name) {
+        showToast('Select Name', 'Please tap your name from the roster', '⚠️');
         return;
       }
 
-      if (!enteredPin) {
-        showToast('PIN Required', 'Enter your assigned 4-digit PIN', '🔒');
+      if (!pin) {
+        showToast('PIN Required', 'Please enter your 4-digit PIN', '🔒');
         return;
       }
 
-      // Check entered PIN against staff record or Manager PIN
-      const staffMember = staffRoster.find(s => s.name.toLowerCase() === nameInput.toLowerCase());
+      const staff = staffRoster.find(s => s.name.toLowerCase() === name.toLowerCase());
 
       if (selectedLoginStationId === 'manager') {
-        const isManagerAuth = (staffMember && staffMember.stations && staffMember.stations.includes('manager') && staffMember.pin === enteredPin) || (enteredPin === managerPin);
-        if (!isManagerAuth) {
-          showToast('Invalid PIN', 'Access denied to Manager Master', '🔒');
+        const isMgr = (staff && staff.stations && staff.stations.includes('manager') && staff.pin === pin) || (pin === managerPin);
+        if (!isMgr) {
+          showToast('Access Denied', 'Manager PIN required', '🔒');
           clearLoginPin();
           return;
         }
       } else {
-        const isValidStaffPin = (staffMember && staffMember.pin === enteredPin) || (enteredPin === managerPin);
-        if (!isValidStaffPin) {
-          showToast('Invalid PIN', 'Incorrect PIN for this staff member', '⚠️');
+        const isAuth = (staff && staff.pin === pin) || (pin === managerPin);
+        if (!isAuth) {
+          showToast('Invalid PIN', 'Incorrect PIN entered', '⚠️');
           clearLoginPin();
           return;
         }
       }
 
-      currentStaffName = nameInput;
+      currentStaffName = name;
       currentStationRole = selectedLoginStationId;
-
       localStorage.setItem(STORAGE_KEY_STAFF, currentStaffName);
       localStorage.setItem(STORAGE_KEY_STATION, currentStationRole);
 
-      // Start shift log tracking
       recordShiftTransition(currentStaffName, currentStationRole);
-
       document.getElementById('screen-login').classList.add('hidden');
       applyStationRole(currentStationRole, currentStaffName);
-      showToast('Station Active', `${currentStaffName} &bull; ${getStationLabel(currentStationRole)}`, '🚀');
+      showToast('Station Active', `${currentStaffName} @ ${getStationLabel(currentStationRole)}`, '🚀');
     }
 
-    function quickSwitchPosition(newPosition) {
-      if (newPosition === 'manager') {
-        const pin = prompt("Manager Master Access:\nEnter Manager PIN:");
+    function quickSwitchPosition(newPos) {
+      if (newPos === 'manager') {
+        const pin = prompt("Enter Manager Access PIN:");
         if (pin !== managerPin) {
-          const managerUser = staffRoster.find(s => s.stations && s.stations.includes('manager') && s.pin === pin);
-          if (!managerUser) {
-            showToast('Access Denied', 'Manager PIN required', '🔒');
+          const mgr = staffRoster.find(s => s.stations && s.stations.includes('manager') && s.pin === pin);
+          if (!mgr) {
+            showToast('Access Denied', 'Invalid Manager PIN', '🔒');
             return;
           }
         }
       }
 
-      currentStationRole = newPosition;
+      currentStationRole = newPos;
       localStorage.setItem(STORAGE_KEY_STATION, currentStationRole);
-
-      // Log station shift transition
       recordShiftTransition(currentStaffName, currentStationRole);
-
       applyStationRole(currentStationRole, currentStaffName || 'Staff');
-      showToast('Swapped Position', `Now on ${getStationLabel(newPosition)}`, '🔄');
+      showToast('Position Changed', `Active Station: ${getStationLabel(newPos)}`, '🔄');
+    }
+
+    function applyStationRole(station, name) {
+      document.getElementById('header-user-display').innerText = name || 'Logged In';
+      document.getElementById('header-station-badge').innerText = getStationLabel(station);
+
+      // Hide all station containers
+      ['pos', 'handout', 'braai', 'manager'].forEach(s => {
+        const view = document.getElementById(`view-${s}`);
+        const tab = document.getElementById(`tab-nav-${s}`);
+        if (view) view.classList.add('hidden');
+        if (tab) {
+          tab.classList.remove('bg-fest-bavaria', 'text-white', 'shadow');
+          tab.classList.add('bg-slate-800', 'text-slate-300');
+        }
+      });
+
+      // Show active container
+      const activeView = document.getElementById(`view-${station}`);
+      const activeTab = document.getElementById(`tab-nav-${station}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeTab) {
+        activeTab.classList.remove('bg-slate-800', 'text-slate-300');
+        activeTab.classList.add('bg-fest-bavaria', 'text-white', 'shadow');
+      }
+
+      if (station === 'braai') renderBraaiHUD();
+      if (station === 'handout') renderHandoutQueue();
+      if (station === 'manager') renderManagerDashboard();
+    }
+
+    function getStationLabel(stationKey) {
+      if (stationKey === 'pos') return 'CASHIER / POS';
+      if (stationKey === 'handout') return 'HANDOUT & PREP';
+      if (stationKey === 'braai') return 'BRAAI HUD 🔥';
+      if (stationKey === 'manager') return 'MANAGER MASTER';
+      return 'STAFF';
+    }
+
+    /* =======================================================
+       4. CASHIER & POS OPERATIONS
+       ======================================================= */
+    function toggleDefaultRollOption() {
+      defaultWithRoll = !defaultWithRoll;
+      const btn = document.getElementById('btn-roll-toggle');
+      if (defaultWithRoll) {
+        btn.innerText = "Default: IN ROLL";
+        btn.className = "px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300";
+      } else {
+        btn.innerText = "Default: NO ROLL";
+        btn.className = "px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-amber-100 text-amber-900 border border-amber-300";
+      }
+    }
+
+    function renderMenu() {
+      const grid = document.getElementById('menu-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      PRODUCTS.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `p-4 sm:p-5 rounded-2xl border-4 ${item.color} shadow-sm flex flex-col justify-between`;
+        card.innerHTML = `
+          <div>
+            <div class="flex items-start justify-between gap-1">
+              <h3 class="font-black text-lg sm:text-xl text-slate-900 leading-tight">${item.name}</h3>
+              <span class="font-black text-lg sm:text-xl font-mono text-emerald-700">R${item.price}</span>
+            </div>
+            <p class="text-xs text-slate-600 font-bold mt-1">${item.tag}</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-4">
+            <button onclick="addItemToCart('${item.id}', true)" class="py-3 rounded-xl bg-slate-900 hover:bg-fest-navy text-white font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow">
+              + In Roll
+            </button>
+            <button onclick="addItemToCart('${item.id}', false)" class="py-3 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95">
+              + No Roll
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function addItemToCart(productId, withRoll) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+
+      const existing = currentCart.find(i => i.productId === productId && i.withRoll === withRoll);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        currentCart.push({
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          qty: 1,
+          withRoll: withRoll
+        });
+      }
+
+      playTone(600, 0.08);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const container = document.getElementById('cart-items-container');
+      const countEl = document.getElementById('cart-total-count');
+      const priceEl = document.getElementById('cart-total-price');
+      const checkoutBtn = document.getElementById('btn-open-payment');
+      const orderNumEl = document.getElementById('cart-order-number-display');
+
+      if (orderNumEl) orderNumEl.innerText = `#${nextOrderNumber}`;
+
+      if (!container) return;
+
+      if (currentCart.length === 0) {
+        container.innerHTML = `<p class="text-center py-12 text-slate-400 font-semibold text-sm">Cart is empty. Tap items on the left to add.</p>`;
+        countEl.innerText = '0 sausages';
+        priceEl.innerText = 'R0.00';
+        checkoutBtn.disabled = true;
+        return;
+      }
+
+      let totalCount = 0;
+      let totalPrice = 0;
+
+      container.innerHTML = currentCart.map((item, idx) => {
+        totalCount += item.qty;
+        totalPrice += (item.qty * item.price);
+
+        return `
+          <div class="py-2.5 flex items-center justify-between gap-2">
+            <div>
+              <span class="font-black text-slate-800 text-sm">${item.name}</span>
+              <span class="block text-[11px] font-bold ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}">
+                ${item.withRoll ? '🥖 In Crispy Roll' : '❌ No Roll'}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-xs text-slate-500">R${item.price * item.qty}</span>
+              <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50">
+                <button onclick="adjustCartQty(${idx}, -1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200">-</button>
+                <span class="w-7 text-center font-black font-mono text-xs">${item.qty}</span>
+                <button onclick="adjustCartQty(${idx}, 1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      countEl.innerText = `${totalCount} sausage${totalCount === 1 ? '' : 's'}`;
+      priceEl.innerText = `R${totalPrice.toFixed(2)}`;
+      checkoutBtn.disabled = false;
+    }
+
+    function adjustCartQty(index, delta) {
+      if (!currentCart[index]) return;
+      currentCart[index].qty += delta;
+      if (currentCart[index].qty <= 0) {
+        currentCart.splice(index, 1);
+      }
+      updateCartUI();
+    }
+
+    function clearCurrentCart() {
+      currentCart = [];
+      updateCartUI();
+    }
+
+    /* =======================================================
+       5. PAYMENT & POST-IT MODAL LOGIC
+       ======================================================= */
+    function openPaymentModal() {
+      if (currentCart.length === 0) return;
+
+      const total = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      document.getElementById('pay-modal-order-num').innerText = `#${nextOrderNumber}`;
+      document.getElementById('pay-modal-total-due').innerText = `R${total.toFixed(2)}`;
+      document.getElementById('yoko-prompt-amount').innerText = `R${total.toFixed(2)}`;
+
+      selectPaymentMethod('yoko');
+      document.getElementById('modal-payment').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('modal-payment').classList.add('hidden');
+    }
+
+    function selectPaymentMethod(method) {
+      activePaymentMethod = method;
+      const btnYoko = document.getElementById('pay-method-btn-yoko');
+      const btnCash = document.getElementById('pay-method-btn-cash');
+      const pnlYoko = document.getElementById('panel-yoko-payment');
+      const pnlCash = document.getElementById('panel-cash-payment');
+
+      if (method === 'yoko') {
+        btnYoko.className = "py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2";
+        btnCash.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
+        pnlYoko.classList.remove('hidden');
+        pnlCash.classList.add('hidden');
+      } else {
+        btnCash.className = "py-3 rounded-2xl border-4 border-amber-500 bg-amber-50 text-amber-900 font-black text-sm uppercase flex items-center justify-center gap-2";
+        btnYoko.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
+        pnlCash.classList.remove('hidden');
+        pnlYoko.classList.add('hidden');
+        setCashTenderExact();
+      }
+    }
+
+    function getCartTotal() {
+      return currentCart.reduce((s, i) => s + (i.price * i.qty), 0);
+    }
+
+    function setCashTenderExact() {
+      setCashTenderAmount(getCartTotal());
+    }
+
+    function setCashTenderAmount(amount) {
+      currentTenderedAmount = amount;
+      const total = getCartTotal();
+      const change = Math.max(0, currentTenderedAmount - total);
+
+      document.getElementById('cash-tendered-display').innerText = `R${amount.toFixed(2)}`;
+      document.getElementById('cash-change-display').innerText = `R${change.toFixed(2)}`;
+    }
+
+    function confirmPaymentAndReleaseTicket() {
+      const total = getCartTotal();
+      let tendered = total;
+      let change = 0;
+
+      if (activePaymentMethod === 'cash') {
+        if (currentTenderedAmount < total) {
+          showToast('Cash Short', `Tendered must be at least R${total.toFixed(2)}`, '⚠️');
+          return;
+        }
+        tendered = currentTenderedAmount;
+        change = tendered - total;
+      }
+
+      const orderRecord = {
+        orderNum: nextOrderNumber,
+        timestamp: new Date().toISOString(),
+        timeStr: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        items: [...currentCart],
+        totalAmount: total,
+        paymentMethod: activePaymentMethod,
+        tendered: tendered,
+        change: change,
+        cashier: currentStaffName || 'Cashier',
+        status: 'pending' // 'pending' -> 'delivered'
+      };
+
+      orders.unshift(orderRecord);
+      nextOrderNumber += 1;
+
+      saveState(true);
+      playChime();
+
+      // Show Post-it Helper Modal
+      showPostItModal(orderRecord);
+
+      // Reset Cart & UI
+      currentCart = [];
+      updateCartUI();
+      closePaymentModal();
+
+      renderBraaiHUD();
+      renderHandoutQueue();
+      renderManagerDashboard();
+    }
+
+    function showPostItModal(order) {
+      document.getElementById('postit-order-number').innerText = `#${order.orderNum}`;
+      const summaryContainer = document.getElementById('postit-summary-lines');
+
+      summaryContainer.innerHTML = order.items.map(i => `
+        <div class="flex items-center justify-between">
+          <span>${i.qty}x ${i.name}</span>
+          <span class="text-[10px] font-black uppercase ${i.withRoll ? 'text-emerald-700' : 'text-amber-800'}">
+            ${i.withRoll ? 'In Roll' : 'No Roll'}
+          </span>
+        </div>
+      `).join('');
+
+      document.getElementById('modal-postit').classList.remove('hidden');
+    }
+
+    function closePostItModal() {
+      document.getElementById('modal-postit').classList.add('hidden');
+    }
+
+    /* =======================================================
+       6. BRAAI MASTER HUD (ZERO TOUCH)
+       ======================================================= */
+    function renderBraaiHUD() {
+      const counts = { bratwurst: 0, bockwurst: 0, kasegriller: 0, currywurst: 0 };
+
+      // Calculate aggregate pending sausages
+      orders.filter(o => o.status === 'pending').forEach(o => {
+        o.items.forEach(item => {
+          if (counts[item.productId] !== undefined) {
+            counts[item.productId] += item.qty;
+          }
+        });
+      });
+
+      const elBrat = document.getElementById('hud-count-bratwurst');
+      const elBock = document.getElementById('hud-count-bockwurst');
+      const elKase = document.getElementById('hud-count-kasegriller');
+      const elCurr = document.getElementById('hud-count-currywurst');
+
+      if (elBrat) elBrat.innerText = counts.bratwurst;
+      if (elBock) elBock.innerText = counts.bockwurst;
+      if (elKase) elKase.innerText = counts.kasegriller;
+      if (elCurr) elCurr.innerText = counts.currywurst;
+
+      // Stream of incoming tickets for reference
+      const stream = document.getElementById('braai-incoming-stream');
+      if (stream) {
+        const pending = orders.filter(o => o.status === 'pending').slice(0, 10);
+        if (pending.length === 0) {
+          stream.innerHTML = `<span class="text-xs text-slate-400 italic">No orders currently waiting on coals.</span>`;
+        } else {
+          stream.innerHTML = pending.map(o => `
+            <span class="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-300 font-mono font-black text-sm text-slate-800">
+              #${o.orderNum} (${o.items.reduce((s, i) => s + i.qty, 0)} sausages)
+            </span>
+          `).join('');
+        }
+      }
+    }
+
+    /* =======================================================
+       7. HANDOUT & PREP STATION QUEUE
+       ======================================================= */
+    function renderHandoutQueue() {
+      const grid = document.getElementById('handout-orders-grid');
+      const countEl = document.getElementById('handout-pending-count');
+      if (!grid) return;
+
+      const pending = orders.filter(o => o.status === 'pending');
+      if (countEl) countEl.innerText = pending.length;
+
+      if (pending.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-white rounded-3xl border-2 border-dashed border-slate-300">
+            <i class="ph-bold ph-check-circle text-4xl text-emerald-500 mb-2"></i>
+            <h4 class="font-black text-slate-700 text-lg">All Orders Handed Out</h4>
+            <p class="text-xs text-slate-400 font-semibold">New orders will pop up here as cashier confirms payments.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = pending.map(order => {
+        const elapsedMins = Math.floor((Date.now() - new Date(order.timestamp).getTime()) / 60000);
+        const hasCurry = order.items.some(i => i.productId === 'currywurst');
+
+        return `
+          <div class="bg-white p-5 rounded-3xl border-4 ${hasCurry ? 'border-amber-400 shadow-md' : 'border-slate-300 shadow-sm'} flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div>
+                  <span class="text-xs uppercase font-black text-slate-400">Post-It Ticket</span>
+                  <h3 class="text-4xl font-black text-slate-900 font-mono">#${order.orderNum}</h3>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-mono font-black ${elapsedMins >= 5 ? 'bg-rose-100 text-rose-700 animate-pulse' : 'bg-slate-100 text-slate-600'}">
+                    ⏱️ ${elapsedMins}m ago
+                  </span>
+                  <span class="block text-[10px] text-slate-400 font-bold mt-1">${order.timeStr}</span>
+                </div>
+              </div>
+
+              <!-- Currywurst Alert Banner if applicable -->
+              ${hasCurry ? `
+                <div class="my-2.5 p-2 rounded-xl bg-red-100 border border-red-300 text-red-900 font-black text-xs uppercase flex items-center gap-1.5 animate-bounce">
+                  <span>⚠️ LADLE WARM CURRY SAUCE!</span>
+                </div>
+              ` : ''}
+
+              <!-- Item Checklist -->
+              <div class="divide-y divide-slate-100 my-3">
+                ${order.items.map(item => `
+                  <div class="py-1.5 flex items-center justify-between text-sm">
+                    <span class="font-black text-slate-900">
+                      <b class="text-base text-fest-bavaria font-mono">${item.qty}x</b> ${item.name}
+                    </span>
+                    <span class="text-xs font-black uppercase px-2 py-0.5 rounded ${item.withRoll ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'}">
+                      ${item.withRoll ? 'Roll' : 'No Roll'}
+                    </span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Complete Handout Button -->
+            <button onclick="markOrderDelivered(${order.orderNum})" class="w-full mt-2 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
+              Match Post-it & Mark Handed Out
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function markOrderDelivered(orderNum) {
+      const order = orders.find(o => o.orderNum === orderNum);
+      if (order) {
+        order.status = 'delivered';
+        order.deliveredAt = new Date().toISOString();
+        saveState(true);
+        playTone(900, 0.1);
+        renderBraaiHUD();
+        renderHandoutQueue();
+        renderManagerDashboard();
+        showToast('Delivered', `Order #${orderNum} delivered to customer`, '✅');
+      }
+    }
+
+    function updateTicketTimers() {
+      if (currentStationRole === 'handout') {
+        renderHandoutQueue();
+      }
+    }
+
+    /* =======================================================
+       8. MANAGER MASTER & AUDITING
+       ======================================================= */
+    function renderManagerDashboard() {
+      const revEl = document.getElementById('mgr-stat-revenue');
+      const yokoEl = document.getElementById('mgr-stat-yoko');
+      const cashEl = document.getElementById('mgr-stat-cash');
+      const floatEl = document.getElementById('mgr-stat-float');
+      const totalSausEl = document.getElementById('mgr-stat-total-sausages');
+
+      let grossRev = 0;
+      let yokoRev = 0;
+      let cashRev = 0;
+      let sausagesSold = 0;
+
+      const sausageCounts = { bratwurst: 0, bockwurst: 0, kasegriller: 0, currywurst: 0 };
+
+      orders.forEach(o => {
+        grossRev += o.totalAmount;
+        if (o.paymentMethod === 'yoko') yokoRev += o.totalAmount;
+        if (o.paymentMethod === 'cash') cashRev += o.totalAmount;
+
+        o.items.forEach(i => {
+          sausagesSold += i.qty;
+          if (sausageCounts[i.productId] !== undefined) {
+            sausageCounts[i.productId] += i.qty;
+          }
+        });
+      });
+
+      if (revEl) revEl.innerText = `R${grossRev.toFixed(2)}`;
+      if (yokoEl) yokoEl.innerText = `R${yokoRev.toFixed(2)}`;
+      if (cashEl) cashEl.innerText = `R${cashRev.toFixed(2)}`;
+      if (floatEl) floatEl.innerText = `R${startingCashFloat.toFixed(2)}`;
+      if (totalSausEl) totalSausEl.innerText = `${sausagesSold} sausages sold`;
+
+      // Update remaining inventory
+      const remBrat = Math.max(0, initialInventory.bratwurst - sausageCounts.bratwurst);
+      const remBock = Math.max(0, initialInventory.bockwurst - sausageCounts.bockwurst);
+      const remKase = Math.max(0, initialInventory.kasegriller - sausageCounts.kasegriller);
+      const totalStart = initialInventory.bratwurst + initialInventory.bockwurst + initialInventory.kasegriller;
+      const totalRem = remBrat + remBock + remKase;
+
+      const elInvBrat = document.getElementById('inv-bratwurst');
+      const elRemBrat = document.getElementById('inv-rem-bratwurst');
+      if (elInvBrat) elInvBrat.innerText = `${sausageCounts.bratwurst} / ${initialInventory.bratwurst}`;
+      if (elRemBrat) elRemBrat.innerText = `${remBrat} Left`;
+
+      const elInvBock = document.getElementById('inv-bockwurst');
+      const elRemBock = document.getElementById('inv-rem-bockwurst');
+      if (elInvBock) elInvBock.innerText = `${sausageCounts.bockwurst} / ${initialInventory.bockwurst}`;
+      if (elRemBock) elRemBock.innerText = `${remBock} Left`;
+
+      const elInvKase = document.getElementById('inv-kasegriller');
+      const elRemKase = document.getElementById('inv-rem-kasegriller');
+      if (elInvKase) elInvKase.innerText = `${sausageCounts.kasegriller} / ${initialInventory.kasegriller}`;
+      if (elRemKase) elRemKase.innerText = `${remKase} Left`;
+
+      const elInvTot = document.getElementById('inv-total');
+      const elRemTot = document.getElementById('inv-rem-total');
+      if (elInvTot) elInvTot.innerText = `${sausagesSold} / ${totalStart}`;
+      if (elRemTot) elRemTot.innerText = `${totalRem} Left`;
+
+      renderRosterManagementUI();
+      renderStaffShiftsTable();
+    }
+
+    function editStartingFloatPrompt() {
+      const val = prompt("Enter starting cash drawer float (ZAR):", startingCashFloat.toString());
+      if (val !== null && !isNaN(parseFloat(val))) {
+        startingCashFloat = parseFloat(val);
+        saveState(false);
+        renderManagerDashboard();
+        showToast('Float Updated', `Starting float set to R${startingCashFloat.toFixed(2)}`, '💰');
+      }
     }
 
     function changeManagerPinPrompt() {
-      const current = prompt("Enter current Master Manager PIN:");
+      const current = prompt("Enter current Master PIN:");
       if (current !== managerPin) {
         showToast('Incorrect PIN', 'Access denied', '🔒');
         return;
       }
-      const newPin = prompt("Enter new 4-digit Master Manager PIN:");
-      if (newPin && newPin.length >= 4) {
-        managerPin = newPin;
-        localStorage.setItem(STORAGE_KEY_PIN, managerPin);
-        saveState();
-        showToast('PIN Updated', 'New Manager Master PIN saved', '🔑');
-      } else {
-        showToast('Invalid PIN', 'PIN must be at least 4 digits', '⚠️');
+      const newP = prompt("Enter new 4-digit Master PIN:");
+      if (newP && newP.length >= 4) {
+        managerPin = newP;
+        saveState(false);
+        showToast('PIN Saved', 'Master PIN updated successfully', '🔑');
       }
     }
 
-    /* =======================================================
-       STAFF ROSTER MANAGEMENT (MANAGER ONLY)
-       ======================================================= */
     function renderRosterManagementUI() {
       const tbody = document.getElementById('staff-roster-tbody');
       if (!tbody) return;
 
-      if (staffRoster.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="py-6 text-center text-slate-400 italic">
-              No staff members registered. Click "Add Team Member" above.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      tbody.innerHTML = staffRoster.map((s, idx) => {
-        const stationBadges = (s.stations || []).map(st => {
-          let color = 'bg-blue-100 text-blue-900';
-          if (st === 'handout') color = 'bg-emerald-100 text-emerald-900';
-          if (st === 'braai') color = 'bg-red-100 text-red-900';
-          if (st === 'manager') color = 'bg-purple-100 text-purple-900';
-          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-black uppercase ${color}">${st}</span>`;
-        }).join(' ');
-
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="py-2.5 px-3 font-black text-slate-800 text-sm">${s.name}</td>
-            <td class="py-2.5 px-3 text-slate-600 font-semibold">${s.role || 'Team Member'}</td>
-            <td class="py-2.5 px-3 flex flex-wrap gap-1">${stationBadges || '<span class="text-slate-400">All Stations</span>'}</td>
-            <td class="py-2.5 px-3 text-center font-mono font-black text-slate-500">&bull;&bull;&bull;&bull;</td>
-            <td class="py-2.5 px-3 text-right space-x-1.5">
-              <button onclick="editStaffMember(${idx})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold" title="Edit">
-                <i class="ph-bold ph-pencil-simple text-sm"></i>
-              </button>
-              <button onclick="deleteStaffMember(${idx})" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold" title="Delete">
-                <i class="ph-bold ph-trash text-sm"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    /* =======================================================
-       STAFF WORK HOURS & STATION TIME AUDIT
-       ======================================================= */
-    function formatDurationMinutes(ms) {
-      if (ms <= 0) return '0m';
-      const totalMins = Math.floor(ms / 60000);
-      const hours = Math.floor(totalMins / 60);
-      const mins = totalMins % 60;
-      if (hours > 0) {
-        return `${hours}h ${mins}m`;
-      }
-      return `${mins}m`;
-    }
-
-    function calculateStaffShiftMetrics() {
-      const metrics = {};
-      const nowMs = Date.now();
-
-      staffRoster.forEach(staff => {
-        metrics[staff.name] = {
-          name: staff.name,
-          role: staff.role || 'Team Member',
-          isCurrentlyActive: false,
-          currentStation: null,
-          posMs: 0,
-          handoutMs: 0,
-          braaiMs: 0,
-          managerMs: 0,
-          totalMs: 0
-        };
-      });
-
-      staffShiftLogs.forEach(entry => {
-        if (!metrics[entry.name]) {
-          metrics[entry.name] = {
-            name: entry.name,
-            role: 'Team Member',
-            isCurrentlyActive: false,
-            currentStation: null,
-            posMs: 0,
-            handoutMs: 0,
-            braaiMs: 0,
-            managerMs: 0,
-            totalMs: 0
-          };
-        }
-
-        const startMs = new Date(entry.startTime).getTime();
-        const endMs = entry.endTime ? new Date(entry.endTime).getTime() : nowMs;
-        const duration = Math.max(0, endMs - startMs);
-
-        if (!entry.endTime) {
-          metrics[entry.name].isCurrentlyActive = true;
-          metrics[entry.name].currentStation = entry.station;
-        }
-
-        if (entry.station === 'pos') metrics[entry.name].posMs += duration;
-        else if (entry.station === 'handout') metrics[entry.name].handoutMs += duration;
-        else if (entry.station === 'braai') metrics[entry.name].braaiMs += duration;
-        else if (entry.station === 'manager') metrics[entry.name].managerMs += duration;
-
-        metrics[entry.name].totalMs += duration;
-      });
-
-      return Object.values(metrics);
-    }
-
-    function renderStaffShiftsTable() {
-      const tbody = document.getElementById('staff-shifts-tbody');
-      if (!tbody) return;
-
-      const metricsList = calculateStaffShiftMetrics();
-
-      if (metricsList.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="py-6 text-center text-slate-400 italic">
-              No shift logs recorded yet. Station hours will calculate here automatically.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      tbody.innerHTML = metricsList.map(m => {
-        let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-slate-100 text-slate-500">Offline</span>`;
-        if (m.isCurrentlyActive) {
-          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 flex items-center gap-1 w-max">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>Active: ${getStationLabel(m.currentStation)}</span>
-          </span>`;
-        }
-
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="py-2.5 px-3 font-bold text-slate-900 font-sans">
-              ${m.name}
-              <span class="block text-[10px] text-slate-400 font-normal">${m.role}</span>
-            </td>
-            <td class="py-2.5 px-3 font-sans">${statusBadge}</td>
-            <td class="py-2.5 px-3 text-center text-blue-800 font-bold">${formatDurationMinutes(m.posMs)}</td>
-            <td class="py-2.5 px-3 text-center text-emerald-800 font-bold">${formatDurationMinutes(m.handoutMs)}</td>
-            <td class="py-2.5 px-3 text-center text-red-800 font-bold">${formatDurationMinutes(m.braaiMs)}</td>
-            <td class="py-2.5 px-3 text-center text-purple-800 font-bold">${formatDurationMinutes(m.managerMs)}</td>
-            <td class="py-2.5 px-3 text-right font-black text-slate-900 bg-slate-50">${formatDurationMinutes(m.totalMs)}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function downloadStaffShiftCSV() {
-      const metricsList = calculateStaffShiftMetrics();
-      if (metricsList.length === 0) {
-        showToast('No Shift Logs', 'Shifts will log automatically as staff work', '⚠️');
-        return;
-      }
-
-      let csv = "OKTOBERFEST STAFF SHIFTS & STATION HOURS AUDIT\n";
-      csv += `Generated:,"${new Date().toLocaleString()}"\n\n`;
-      csv += "Staff Member,Role,Status,Cashier Time,Handout Time,Braai Time,Manager Time,Total Active Shift Time\n";
-
-      metricsList.forEach(m => {
-        csv += `"${m.name}","${m.role}","${m.isCurrentlyActive ? 'Active (' + getStationLabel(m.currentStation) + ')' : 'Offline'}","${formatDurationMinutes(m.posMs)}","${formatDurationMinutes(m.handoutMs)}","${formatDurationMinutes(m.braaiMs)}","${formatDurationMinutes(m.managerMs)}","${formatDurationMinutes(m.totalMs)}"\n`;
-      });
-
-      downloadCSVFile(csv, `Oktoberfest_Staff_Shifts_Hours_${new Date().toISOString().slice(0,10)}.csv`);
-      showToast('Shift Audit Exported', 'CSV downloaded for payroll & hours verification', '⏱️');
+      tbody.innerHTML = staffRoster.map((s, idx) => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-2.5 px-3 font-black text-slate-800">${s.name}</td>
+          <td class="py-2.5 px-3 text-slate-600 font-semibold">${s.role || 'Staff'}</td>
+          <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-slate-500">${(s.stations || []).join(', ')}</td>
+          <td class="py-2.5 px-3 text-center font-mono font-bold text-slate-400">&bull;&bull;&bull;&bull;</td>
+          <td class="py-2.5 px-3 text-right">
+            <button onclick="editStaffMember(${idx})" class="p-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 mr-1"><i class="ph-bold ph-pencil-simple"></i></button>
+            <button onclick="deleteStaffMember(${idx})" class="p-1 rounded bg-rose-50 hover:bg-rose-100 text-rose-700"><i class="ph-bold ph-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
     }
 
     function openStaffModal(editIndex = -1) {
       document.getElementById('edit-staff-index').value = editIndex;
-      const titleEl = document.getElementById('modal-staff-title');
-      const nameInput = document.getElementById('edit-staff-name');
-      const roleInput = document.getElementById('edit-staff-role');
-      const pinInput = document.getElementById('edit-staff-pin');
+      const title = document.getElementById('modal-staff-title');
+      const nameInp = document.getElementById('edit-staff-name');
+      const roleInp = document.getElementById('edit-staff-role');
+      const pinInp = document.getElementById('edit-staff-pin');
 
-      ['pos', 'handout', 'braai', 'manager'].forEach(st => {
-        document.getElementById(`chk-perm-${st}`).checked = false;
+      ['pos', 'handout', 'braai', 'manager'].forEach(s => {
+        document.getElementById(`chk-perm-${s}`).checked = false;
       });
 
       if (editIndex >= 0 && staffRoster[editIndex]) {
         const item = staffRoster[editIndex];
-        titleEl.innerText = "Edit Team Member";
-        nameInput.value = item.name;
-        roleInput.value = item.role || '';
-        pinInput.value = item.pin || '';
+        title.innerText = "Edit Team Member";
+        nameInp.value = item.name;
+        roleInp.value = item.role || '';
+        pinInp.value = item.pin || '';
         (item.stations || []).forEach(st => {
           const chk = document.getElementById(`chk-perm-${st}`);
           if (chk) chk.checked = true;
         });
       } else {
-        titleEl.innerText = "Add Team Member";
-        nameInput.value = '';
-        roleInput.value = '';
-        pinInput.value = '';
+        title.innerText = "Add Team Member";
+        nameInp.value = '';
+        roleInp.value = '';
+        pinInp.value = '';
         ['pos', 'handout', 'braai'].forEach(st => {
           const chk = document.getElementById(`chk-perm-${st}`);
           if (chk) chk.checked = true;
@@ -709,13 +1586,8 @@
       const role = document.getElementById('edit-staff-role').value.trim();
       const pin = document.getElementById('edit-staff-pin').value.trim();
 
-      if (!name) {
-        showToast('Name Required', 'Enter member name', '⚠️');
-        return;
-      }
-
-      if (!pin || pin.length < 3) {
-        showToast('PIN Required', 'Set an access PIN for this user', '⚠️');
+      if (!name || !pin) {
+        showToast('Required Fields', 'Name and PIN are required', '⚠️');
         return;
       }
 
@@ -726,33 +1598,26 @@
         }
       });
 
-      const memberObj = {
+      const member = {
         name: name,
         role: role || 'Staff Member',
-        stations: permitted.length > 0 ? permitted : ['pos', 'handout', 'braai'],
+        stations: permitted.length > 0 ? permitted : ['pos', 'handout'],
         pin: pin
       };
 
       if (idx >= 0 && staffRoster[idx]) {
-        staffRoster[idx] = memberObj;
-        showToast('Staff Updated', `${name} details saved`, '👤');
+        staffRoster[idx] = member;
       } else {
-        staffRoster.push(memberObj);
-        showToast('Staff Added', `${name} added to roster`, '✅');
+        staffRoster.push(member);
       }
 
-      saveState();
+      saveState(false);
+      if (syncChannel) syncChannel.postMessage({ type: 'ROSTER_UPDATED', roster: staffRoster });
+
       renderRosterManagementUI();
-      renderStaffShiftsTable();
       populateAllStaffNameChips();
       closeStaffModal();
-
-      if (syncChannel) {
-        syncChannel.postMessage({
-          type: 'ROSTER_UPDATED',
-          roster: staffRoster
-        });
-      }
+      showToast('Staff Saved', `${name} updated in team roster`, '👤');
     }
 
     function editStaffMember(idx) {
@@ -760,39 +1625,177 @@
     }
 
     function deleteStaffMember(idx) {
-      if (staffRoster[idx] && confirm(`Remove ${staffRoster[idx].name} from team roster?`)) {
+      if (confirm(`Remove ${staffRoster[idx].name}?`)) {
         staffRoster.splice(idx, 1);
-        saveState();
+        saveState(false);
+        if (syncChannel) syncChannel.postMessage({ type: 'ROSTER_UPDATED', roster: staffRoster });
         renderRosterManagementUI();
-        renderStaffShiftsTable();
         populateAllStaffNameChips();
-        showToast('Staff Removed', 'Member deleted from roster', '🗑️');
+      }
+    }
 
-        if (syncChannel) {
-          syncChannel.postMessage({
-            type: 'ROSTER_UPDATED',
-            roster: staffRoster
-          });
+    /* Shift Hours Calculations */
+    function formatDurationMinutes(ms) {
+      if (ms <= 0) return '0m';
+      const totalMins = Math.floor(ms / 60000);
+      const h = Math.floor(totalMins / 60);
+      const m = totalMins % 60;
+      return h > 0 ? `${h}h ${m}m` : `${m}m`;
+    }
+
+    function calculateStaffShiftMetrics() {
+      const metrics = {};
+      const now = Date.now();
+
+      staffRoster.forEach(staff => {
+        metrics[staff.name] = {
+          name: staff.name,
+          role: staff.role || 'Staff',
+          isActive: false,
+          currentStation: null,
+          posMs: 0, handoutMs: 0, braaiMs: 0, managerMs: 0, totalMs: 0
+        };
+      });
+
+      staffShiftLogs.forEach(entry => {
+        if (!metrics[entry.name]) {
+          metrics[entry.name] = {
+            name: entry.name, role: 'Staff', isActive: false, currentStation: null,
+            posMs: 0, handoutMs: 0, braaiMs: 0, managerMs: 0, totalMs: 0
+          };
         }
-      }
-    }
-<!-- ... existing code ... -->
-      // Render Hourly Velocity Table
-      renderHourlySalesTable();
-      renderRosterManagementUI();
-      renderStaffShiftsTable();
+
+        const start = new Date(entry.startTime).getTime();
+        const end = entry.endTime ? new Date(entry.endTime).getTime() : now;
+        const duration = Math.max(0, end - start);
+
+        if (!entry.endTime) {
+          metrics[entry.name].isActive = true;
+          metrics[entry.name].currentStation = entry.station;
+        }
+
+        if (entry.station === 'pos') metrics[entry.name].posMs += duration;
+        else if (entry.station === 'handout') metrics[entry.name].handoutMs += duration;
+        else if (entry.station === 'braai') metrics[entry.name].braaiMs += duration;
+        else if (entry.station === 'manager') metrics[entry.name].managerMs += duration;
+
+        metrics[entry.name].totalMs += duration;
+      });
+
+      return Object.values(metrics);
     }
 
-    function updateCashVarianceUI() {
-<!-- ... existing code ... -->
-    function showLoginScreen() {
-      const screen = document.getElementById('screen-login');
-      if (screen) {
-        screen.classList.remove('hidden');
-        populateAllStaffNameChips();
-        selectLoginStation(currentStationRole || 'pos');
-      }
+    function renderStaffShiftsTable() {
+      const tbody = document.getElementById('staff-shifts-tbody');
+      if (!tbody) return;
+
+      const list = calculateStaffShiftMetrics();
+      tbody.innerHTML = list.map(m => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-2 px-3 font-bold text-slate-800 font-sans">${m.name}</td>
+          <td class="py-2 px-3 font-sans">
+            ${m.isActive ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">Active (${getStationLabel(m.currentStation)})</span>` : '<span class="text-slate-400 text-[10px]">Offline</span>'}
+          </td>
+          <td class="py-2 px-3 text-center text-blue-800">${formatDurationMinutes(m.posMs)}</td>
+          <td class="py-2 px-3 text-center text-emerald-800">${formatDurationMinutes(m.handoutMs)}</td>
+          <td class="py-2 px-3 text-center text-red-800">${formatDurationMinutes(m.braaiMs)}</td>
+          <td class="py-2 px-3 text-center text-purple-800">${formatDurationMinutes(m.managerMs)}</td>
+          <td class="py-2 px-3 text-right font-black text-slate-900">${formatDurationMinutes(m.totalMs)}</td>
+        </tr>
+      `).join('');
     }
 
-    function applyStationRole(stationRole, staffName) {
-<!-- ... existing code ... -->
+    function downloadOrdersCSV() {
+      if (orders.length === 0) {
+        showToast('No Orders', 'No orders recorded yet to export', '⚠️');
+        return;
+      }
+
+      let csv = "Order #,Timestamp,Staff,Payment Method,Total ZAR,Tendered ZAR,Change ZAR,Status,Items\n";
+      orders.forEach(o => {
+        const itemsStr = o.items.map(i => `${i.qty}x ${i.name} (${i.withRoll ? 'In Roll' : 'No Roll'})`).join('; ');
+        csv += `"${o.orderNum}","${o.timestamp}","${o.cashier}","${o.paymentMethod}","${o.totalAmount.toFixed(2)}","${o.tendered.toFixed(2)}","${o.change.toFixed(2)}","${o.status}","${itemsStr}"\n`;
+      });
+
+      downloadFile(csv, `Oktoberfest_Orders_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv');
+    }
+
+    function downloadStaffShiftCSV() {
+      const list = calculateStaffShiftMetrics();
+      let csv = "Staff Member,Role,Status,Cashier Time,Handout Time,Braai Time,Manager Time,Total Active Shift\n";
+      list.forEach(m => {
+        csv += `"${m.name}","${m.role}","${m.isActive ? 'Active' : 'Offline'}","${formatDurationMinutes(m.posMs)}","${formatDurationMinutes(m.handoutMs)}","${formatDurationMinutes(m.braaiMs)}","${formatDurationMinutes(m.managerMs)}","${formatDurationMinutes(m.totalMs)}"\n`;
+      });
+
+      downloadFile(csv, `Oktoberfest_Staff_Shifts_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv');
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* =======================================================
+       9. AUDIO & TOAST UTILITIES
+       ======================================================= */
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      localStorage.setItem(STORAGE_KEY_AUDIO, audioEnabled.toString());
+      const icon = document.querySelector('#btn-audio i');
+      if (icon) {
+        icon.className = audioEnabled ? 'ph-bold ph-speaker-high text-lg' : 'ph-bold ph-speaker-slash text-lg text-slate-500';
+      }
+      showToast(audioEnabled ? 'Sound Enabled' : 'Sound Muted', '', '🔊');
+    }
+
+    function playTone(freq, duration) {
+      if (!audioEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      playTone(523.25, 0.12);
+      setTimeout(() => playTone(659.25, 0.18), 120);
+    }
+
+    function showToast(title, msg, icon = '🌭') {
+      const toast = document.getElementById('toast');
+      const titleEl = document.getElementById('toast-title');
+      const msgEl = document.getElementById('toast-msg');
+      const iconEl = document.getElementById('toast-icon');
+
+      if (!toast) return;
+
+      titleEl.innerText = title;
+      msgEl.innerText = msg;
+      iconEl.innerText = icon;
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
