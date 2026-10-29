@@ -1,0 +1,798 @@
+<!-- ... existing code ... -->
+        <!-- STEP 1: SELECT STATION FIRST -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="w-8 h-8 rounded-full bg-fest-navy text-amber-300 font-black text-base flex items-center justify-center">1</span>
+            <label class="text-base sm:text-lg font-black uppercase tracking-wide text-slate-900">
+              Select Station for this Device:
+            </label>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="station-picker-grid">
+            
+            <!-- Cashier Station Tile -->
+            <button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-fest-bavaria bg-blue-50/70 shadow-md hover:bg-blue-100 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+                  <i class="ph-bold ph-cash-register text-fest-bavaria text-2xl sm:text-3xl"></i>
+                  <span>Cashier / POS</span>
+                </span>
+                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-blue-600 text-white">Till & Pay</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 font-semibold">Orders & Yoko / Cash payments</p>
+            </button>
+
+            <!-- Handout & Prep Station Tile -->
+            <button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-emerald-500 hover:bg-emerald-50/50 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+                  <i class="ph-bold ph-tray text-emerald-600 text-2xl sm:text-3xl"></i>
+                  <span>Handout & Prep</span>
+                </span>
+                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-emerald-600 text-white">Post-It Match</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 font-semibold">Plate rolls, Curry sauce, deliver order</p>
+            </button>
+
+            <!-- Braai Station HUD Tile -->
+            <button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-red-500 hover:bg-red-50/50 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+                  <i class="ph-bold ph-flame text-red-600 text-2xl sm:text-3xl"></i>
+                  <span>Braai HUD 🔥</span>
+                </span>
+                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-red-600 text-white">Hands-Free</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 font-semibold">Zero-touch live sausage demand counter</p>
+            </button>
+
+            <!-- Manager Master Tile -->
+            <button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-4 sm:p-5 rounded-2xl border-4 border-slate-200 bg-white shadow-sm hover:border-purple-500 hover:bg-purple-50/50 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+                  <i class="ph-bold ph-lock text-purple-600 text-2xl sm:text-3xl"></i>
+                  <span>Manager Master</span>
+                </span>
+                <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-purple-600 text-white">Master PIN</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 font-semibold">Cash-Up, Hourly sales velocity, stock & team</p>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- STEP 2: SELECT NAME BASED ON SELECTED STATION -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="w-8 h-8 rounded-full bg-fest-navy text-amber-300 font-black text-base flex items-center justify-center">2</span>
+            <label class="text-base sm:text-lg font-black uppercase tracking-wide text-slate-900">
+              Who is operating this device?
+            </label>
+          </div>
+<!-- ... existing code ... -->
+      <!-- DYNAMIC TEAM & ROSTER ACCESS CONTROL (MANAGER ONLY) -->
+      <div class="bg-white p-5 rounded-3xl border-2 border-purple-300 shadow-md">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="font-black text-lg text-slate-900 flex items-center gap-2">
+              <i class="ph-bold ph-users-three text-purple-600 text-2xl"></i>
+              <span>Staff & Station Access Management</span>
+            </h3>
+            <p class="text-xs text-slate-500">Configure team members, permitted stations, and individual access PINs.</p>
+          </div>
+          <button onclick="openStaffModal()" class="min-h-[46px] px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-xs sm:text-sm flex items-center gap-2 shadow-md">
+            <i class="ph-bold ph-user-plus text-base"></i>
+            <span>Add Team Member</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b-2 border-slate-200 text-slate-400 font-black uppercase text-[10px] tracking-wider">
+                <th class="py-2.5 px-3">Name</th>
+                <th class="py-2.5 px-3">Role / Label</th>
+                <th class="py-2.5 px-3">Assigned Stations</th>
+                <th class="py-2.5 px-3 text-center">PIN</th>
+                <th class="py-2.5 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="staff-roster-tbody" class="divide-y divide-slate-100">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STAFF WORK HOURS & STATION TIME AUDIT -->
+      <div class="bg-white p-5 rounded-3xl border-2 border-blue-300 shadow-md">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="font-black text-lg text-slate-900 flex items-center gap-2">
+              <i class="ph-bold ph-hourglass-high text-blue-600 text-2xl"></i>
+              <span>Staff Work Hours & Station Time Audit</span>
+            </h3>
+            <p class="text-xs text-slate-500">Live breakdown of active shift hours and exact time spent working at each station.</p>
+          </div>
+          <button onclick="downloadStaffShiftCSV()" class="min-h-[46px] px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs sm:text-sm flex items-center gap-2 shadow-md">
+            <i class="ph-bold ph-file-csv text-fest-gold text-base"></i>
+            <span>Export Staff Shifts CSV</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b-2 border-slate-200 text-slate-400 font-black uppercase text-[10px] tracking-wider">
+                <th class="py-2.5 px-3">Staff Member</th>
+                <th class="py-2.5 px-3">Current Status</th>
+                <th class="py-2.5 px-3 text-center">Cashier Time</th>
+                <th class="py-2.5 px-3 text-center">Handout Time</th>
+                <th class="py-2.5 px-3 text-center">Braai Time</th>
+                <th class="py-2.5 px-3 text-center">Manager Time</th>
+                <th class="py-2.5 px-3 text-right">Total Active Shift</th>
+              </tr>
+            </thead>
+            <tbody id="staff-shifts-tbody" class="divide-y divide-slate-100 font-mono">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HOURLY SALES VELOCITY BREAKDOWN TABLE & TIMELINE -->
+<!-- ... existing code ... -->
+    // Starting cash float for the till
+    let startingCashFloat = 2000.00;
+
+    // LocalStorage Keys
+    const STORAGE_KEY_ORDERS = 'oktoberfest_kds_orders_gqeberha';
+    const STORAGE_KEY_NEXT_NUM = 'oktoberfest_kds_next_num_gqeberha';
+    const STORAGE_KEY_AUDIO = 'oktoberfest_kds_audio_gqeberha';
+    const STORAGE_KEY_STAFF = 'oktoberfest_kds_staff_name';
+    const STORAGE_KEY_STATION = 'oktoberfest_kds_station_role';
+    const STORAGE_KEY_STOCK = 'oktoberfest_kds_starting_stock';
+    const STORAGE_KEY_PIN = 'oktoberfest_kds_manager_pin';
+    const STORAGE_KEY_FLOAT = 'oktoberfest_kds_starting_float';
+    const STORAGE_KEY_ROSTER = 'oktoberfest_kds_team_roster';
+    const STORAGE_KEY_SHIFTS = 'oktoberfest_kds_staff_shifts';
+
+    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('oktoberfest_gqeberha_channel') : null;
+
+    // State Variables
+    let orders = [];
+    let currentCart = [];
+    let nextOrderNumber = 101;
+    let audioEnabled = true;
+    let defaultWithRoll = true;
+    let currentStaffName = '';
+    let currentStationRole = 'pos'; // 'pos', 'braai', 'handout', 'manager'
+    let managerPin = '1978';        // Initial default Master PIN
+    let staffRoster = [];           // Dynamically configured by Manager
+    let staffShiftLogs = [];        // Work sessions: [{ name, station, startTime, endTime }]
+    let lastCompletedOrder = null;
+    let activePaymentMethod = 'yoko'; // 'yoko' or 'cash'
+    let selectedLoginStationId = 'pos';
+
+    /* =======================================================
+       2. INITIALIZATION & RESTRUCTURED LOGIN FLOW
+       ======================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderMenu();
+      updateCartUI();
+      renderBraaiStation();
+      renderHandoutStation();
+      renderManagerDashboard();
+      updateBadges();
+
+      selectLoginStation(currentStationRole || 'pos');
+
+      if (currentStaffName && currentStationRole) {
+        applyStationRole(currentStationRole, currentStaffName);
+      } else {
+        showLoginScreen();
+      }
+
+      if (syncChannel) {
+        syncChannel.onmessage = (event) => {
+          if (event.data && event.data.type === 'ORDERS_UPDATED') {
+            handleRemoteOrdersUpdate(event.data.orders);
+          } else if (event.data && event.data.type === 'ROSTER_UPDATED') {
+            staffRoster = event.data.roster;
+            saveState();
+            renderRosterManagementUI();
+            renderStaffShiftsTable();
+            populateAllStaffNameChips();
+          } else if (event.data && event.data.type === 'SHIFTS_UPDATED') {
+            staffShiftLogs = event.data.shifts;
+            saveState();
+            renderStaffShiftsTable();
+          }
+        };
+      }
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY_ORDERS && e.newValue) {
+          handleRemoteOrdersUpdate(JSON.parse(e.newValue));
+        }
+      });
+
+      setInterval(() => {
+        updateTimers();
+        if (currentStationRole === 'manager') {
+          renderStaffShiftsTable();
+        }
+      }, 1000);
+    });
+
+    function loadState() {
+      try {
+        const savedOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
+        if (savedOrders) orders = JSON.parse(savedOrders);
+
+        const savedNext = localStorage.getItem(STORAGE_KEY_NEXT_NUM);
+        if (savedNext) nextOrderNumber = parseInt(savedNext, 10);
+
+        const savedAudio = localStorage.getItem(STORAGE_KEY_AUDIO);
+        if (savedAudio !== null) audioEnabled = (savedAudio === 'true');
+
+        const savedStaff = localStorage.getItem(STORAGE_KEY_STAFF);
+        if (savedStaff) currentStaffName = savedStaff;
+
+        const savedStation = localStorage.getItem(STORAGE_KEY_STATION);
+        if (savedStation) currentStationRole = savedStation;
+
+        const savedStock = localStorage.getItem(STORAGE_KEY_STOCK);
+        if (savedStock) initialInventory = JSON.parse(savedStock);
+
+        const savedPin = localStorage.getItem(STORAGE_KEY_PIN);
+        if (savedPin) managerPin = savedPin;
+
+        const savedFloat = localStorage.getItem(STORAGE_KEY_FLOAT);
+        if (savedFloat) startingCashFloat = parseFloat(savedFloat);
+
+        const savedRoster = localStorage.getItem(STORAGE_KEY_ROSTER);
+        if (savedRoster) {
+          staffRoster = JSON.parse(savedRoster);
+        } else {
+          // Clean starter template with open station permissions
+          staffRoster = [
+            { name: 'Manager Lead', role: 'Event Manager', stations: ['pos', 'handout', 'braai', 'manager'], pin: managerPin },
+            { name: 'Cashier Till 1', role: 'POS Cashier', stations: ['pos', 'handout', 'braai'], pin: '1234' },
+            { name: 'Handout Station', role: 'Packer & Delivery', stations: ['pos', 'handout', 'braai'], pin: '1234' },
+            { name: 'Braai Grill Team', role: 'Grill Master (Shared)', stations: ['pos', 'handout', 'braai'], pin: '1234' }
+          ];
+          localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
+        }
+
+        const savedShifts = localStorage.getItem(STORAGE_KEY_SHIFTS);
+        if (savedShifts) {
+          staffShiftLogs = JSON.parse(savedShifts);
+        }
+      } catch (err) {
+        console.error("State loading error:", err);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+        localStorage.setItem(STORAGE_KEY_NEXT_NUM, nextOrderNumber.toString());
+        localStorage.setItem(STORAGE_KEY_AUDIO, audioEnabled.toString());
+        localStorage.setItem(STORAGE_KEY_STOCK, JSON.stringify(initialInventory));
+        localStorage.setItem(STORAGE_KEY_PIN, managerPin);
+        localStorage.setItem(STORAGE_KEY_FLOAT, startingCashFloat.toString());
+        localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
+        localStorage.setItem(STORAGE_KEY_SHIFTS, JSON.stringify(staffShiftLogs));
+      } catch (err) {
+        console.error("Error saving state:", err);
+      }
+    }
+
+    /* Shift logging helper: records transitions when a user switches station */
+    function recordShiftTransition(staffName, newStation) {
+      if (!staffName) return;
+      const now = new Date().toISOString();
+
+      // Close any open shift log for this staff member
+      staffShiftLogs.forEach(entry => {
+        if (entry.name.toLowerCase() === staffName.toLowerCase() && !entry.endTime) {
+          entry.endTime = now;
+        }
+      });
+
+      // Start new active shift segment
+      staffShiftLogs.push({
+        name: staffName,
+        station: newStation,
+        startTime: now,
+        endTime: null
+      });
+
+      saveState();
+
+      if (syncChannel) {
+        syncChannel.postMessage({
+          type: 'SHIFTS_UPDATED',
+          shifts: staffShiftLogs
+        });
+      }
+    }
+
+    function selectLoginStation(stationId) {
+      selectedLoginStationId = stationId;
+
+      document.querySelectorAll('.station-select-btn').forEach(btn => {
+        btn.classList.remove('border-fest-bavaria', 'border-emerald-500', 'border-red-500', 'border-purple-500', 'bg-blue-50/70', 'bg-emerald-50/70', 'bg-red-50/70', 'bg-purple-50/70');
+        btn.classList.add('border-slate-200', 'bg-white');
+      });
+
+      const activeCard = document.getElementById(`card-station-${stationId}`);
+      if (activeCard) {
+        activeCard.classList.remove('border-slate-200', 'bg-white');
+        if (stationId === 'pos') activeCard.classList.add('border-fest-bavaria', 'bg-blue-50/70');
+        if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-emerald-50/70');
+        if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/70');
+        if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/70');
+      }
+
+      // Populate Step 2: Show ALL staff members regardless of assigned stations
+      populateAllStaffNameChips();
+      clearLoginPin();
+    }
+
+    function populateAllStaffNameChips() {
+      const namePickerContainer = document.getElementById('dynamic-name-picker');
+      if (!namePickerContainer) return;
+      namePickerContainer.innerHTML = '';
+
+      if (staffRoster.length === 0) {
+        namePickerContainer.innerHTML = `
+          <div class="col-span-full p-4 rounded-xl bg-amber-50 border border-amber-300 text-xs font-bold text-amber-900 text-center">
+            No staff entered in system yet. Login with Master PIN to add team members in Manager.
+          </div>
+        `;
+        return;
+      }
+
+      staffRoster.forEach(person => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectLoginName(person.name);
+        btn.className = "name-select-chip min-h-[58px] p-3 rounded-2xl text-left border-2 border-slate-200 bg-slate-50 hover:bg-amber-100 hover:border-amber-400 transition";
+        btn.innerHTML = `
+          <span class="block font-black text-sm text-slate-900">${person.name}</span>
+          <span class="text-[10px] uppercase font-bold text-slate-500">${person.role || 'Team Member'}</span>
+        `;
+        namePickerContainer.appendChild(btn);
+      });
+
+      if (currentStaffName) {
+        selectLoginName(currentStaffName);
+      }
+    }
+
+    function selectLoginName(name) {
+      document.getElementById('input-staff-name').value = name;
+      document.querySelectorAll('.name-select-chip').forEach(btn => {
+        if (btn.innerText.includes(name)) {
+          btn.classList.add('border-fest-bavaria', 'bg-amber-100');
+        } else {
+          btn.classList.remove('border-fest-bavaria', 'bg-amber-100');
+        }
+      });
+    }
+
+    function appendLoginPin(digit) {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField.value.length < 6) {
+        pinField.value += digit;
+      }
+    }
+
+    function clearLoginPin() {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField) pinField.value = '';
+    }
+
+    function backspaceLoginPin() {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField && pinField.value.length > 0) {
+        pinField.value = pinField.value.slice(0, -1);
+      }
+    }
+
+    function performStaffLogin() {
+      const nameInput = document.getElementById('input-staff-name').value.trim();
+      const enteredPin = document.getElementById('input-quick-pin').value.trim();
+
+      if (!nameInput) {
+        showToast('Please Select Name', 'Tap your name from the roster', '⚠️');
+        return;
+      }
+
+      if (!enteredPin) {
+        showToast('PIN Required', 'Enter your assigned 4-digit PIN', '🔒');
+        return;
+      }
+
+      // Check entered PIN against staff record or Manager PIN
+      const staffMember = staffRoster.find(s => s.name.toLowerCase() === nameInput.toLowerCase());
+
+      if (selectedLoginStationId === 'manager') {
+        const isManagerAuth = (staffMember && staffMember.stations && staffMember.stations.includes('manager') && staffMember.pin === enteredPin) || (enteredPin === managerPin);
+        if (!isManagerAuth) {
+          showToast('Invalid PIN', 'Access denied to Manager Master', '🔒');
+          clearLoginPin();
+          return;
+        }
+      } else {
+        const isValidStaffPin = (staffMember && staffMember.pin === enteredPin) || (enteredPin === managerPin);
+        if (!isValidStaffPin) {
+          showToast('Invalid PIN', 'Incorrect PIN for this staff member', '⚠️');
+          clearLoginPin();
+          return;
+        }
+      }
+
+      currentStaffName = nameInput;
+      currentStationRole = selectedLoginStationId;
+
+      localStorage.setItem(STORAGE_KEY_STAFF, currentStaffName);
+      localStorage.setItem(STORAGE_KEY_STATION, currentStationRole);
+
+      // Start shift log tracking
+      recordShiftTransition(currentStaffName, currentStationRole);
+
+      document.getElementById('screen-login').classList.add('hidden');
+      applyStationRole(currentStationRole, currentStaffName);
+      showToast('Station Active', `${currentStaffName} &bull; ${getStationLabel(currentStationRole)}`, '🚀');
+    }
+
+    function quickSwitchPosition(newPosition) {
+      if (newPosition === 'manager') {
+        const pin = prompt("Manager Master Access:\nEnter Manager PIN:");
+        if (pin !== managerPin) {
+          const managerUser = staffRoster.find(s => s.stations && s.stations.includes('manager') && s.pin === pin);
+          if (!managerUser) {
+            showToast('Access Denied', 'Manager PIN required', '🔒');
+            return;
+          }
+        }
+      }
+
+      currentStationRole = newPosition;
+      localStorage.setItem(STORAGE_KEY_STATION, currentStationRole);
+
+      // Log station shift transition
+      recordShiftTransition(currentStaffName, currentStationRole);
+
+      applyStationRole(currentStationRole, currentStaffName || 'Staff');
+      showToast('Swapped Position', `Now on ${getStationLabel(newPosition)}`, '🔄');
+    }
+
+    function changeManagerPinPrompt() {
+      const current = prompt("Enter current Master Manager PIN:");
+      if (current !== managerPin) {
+        showToast('Incorrect PIN', 'Access denied', '🔒');
+        return;
+      }
+      const newPin = prompt("Enter new 4-digit Master Manager PIN:");
+      if (newPin && newPin.length >= 4) {
+        managerPin = newPin;
+        localStorage.setItem(STORAGE_KEY_PIN, managerPin);
+        saveState();
+        showToast('PIN Updated', 'New Manager Master PIN saved', '🔑');
+      } else {
+        showToast('Invalid PIN', 'PIN must be at least 4 digits', '⚠️');
+      }
+    }
+
+    /* =======================================================
+       STAFF ROSTER MANAGEMENT (MANAGER ONLY)
+       ======================================================= */
+    function renderRosterManagementUI() {
+      const tbody = document.getElementById('staff-roster-tbody');
+      if (!tbody) return;
+
+      if (staffRoster.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-6 text-center text-slate-400 italic">
+              No staff members registered. Click "Add Team Member" above.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = staffRoster.map((s, idx) => {
+        const stationBadges = (s.stations || []).map(st => {
+          let color = 'bg-blue-100 text-blue-900';
+          if (st === 'handout') color = 'bg-emerald-100 text-emerald-900';
+          if (st === 'braai') color = 'bg-red-100 text-red-900';
+          if (st === 'manager') color = 'bg-purple-100 text-purple-900';
+          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-black uppercase ${color}">${st}</span>`;
+        }).join(' ');
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 font-black text-slate-800 text-sm">${s.name}</td>
+            <td class="py-2.5 px-3 text-slate-600 font-semibold">${s.role || 'Team Member'}</td>
+            <td class="py-2.5 px-3 flex flex-wrap gap-1">${stationBadges || '<span class="text-slate-400">All Stations</span>'}</td>
+            <td class="py-2.5 px-3 text-center font-mono font-black text-slate-500">&bull;&bull;&bull;&bull;</td>
+            <td class="py-2.5 px-3 text-right space-x-1.5">
+              <button onclick="editStaffMember(${idx})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold" title="Edit">
+                <i class="ph-bold ph-pencil-simple text-sm"></i>
+              </button>
+              <button onclick="deleteStaffMember(${idx})" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold" title="Delete">
+                <i class="ph-bold ph-trash text-sm"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* =======================================================
+       STAFF WORK HOURS & STATION TIME AUDIT
+       ======================================================= */
+    function formatDurationMinutes(ms) {
+      if (ms <= 0) return '0m';
+      const totalMins = Math.floor(ms / 60000);
+      const hours = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      if (hours > 0) {
+        return `${hours}h ${mins}m`;
+      }
+      return `${mins}m`;
+    }
+
+    function calculateStaffShiftMetrics() {
+      const metrics = {};
+      const nowMs = Date.now();
+
+      staffRoster.forEach(staff => {
+        metrics[staff.name] = {
+          name: staff.name,
+          role: staff.role || 'Team Member',
+          isCurrentlyActive: false,
+          currentStation: null,
+          posMs: 0,
+          handoutMs: 0,
+          braaiMs: 0,
+          managerMs: 0,
+          totalMs: 0
+        };
+      });
+
+      staffShiftLogs.forEach(entry => {
+        if (!metrics[entry.name]) {
+          metrics[entry.name] = {
+            name: entry.name,
+            role: 'Team Member',
+            isCurrentlyActive: false,
+            currentStation: null,
+            posMs: 0,
+            handoutMs: 0,
+            braaiMs: 0,
+            managerMs: 0,
+            totalMs: 0
+          };
+        }
+
+        const startMs = new Date(entry.startTime).getTime();
+        const endMs = entry.endTime ? new Date(entry.endTime).getTime() : nowMs;
+        const duration = Math.max(0, endMs - startMs);
+
+        if (!entry.endTime) {
+          metrics[entry.name].isCurrentlyActive = true;
+          metrics[entry.name].currentStation = entry.station;
+        }
+
+        if (entry.station === 'pos') metrics[entry.name].posMs += duration;
+        else if (entry.station === 'handout') metrics[entry.name].handoutMs += duration;
+        else if (entry.station === 'braai') metrics[entry.name].braaiMs += duration;
+        else if (entry.station === 'manager') metrics[entry.name].managerMs += duration;
+
+        metrics[entry.name].totalMs += duration;
+      });
+
+      return Object.values(metrics);
+    }
+
+    function renderStaffShiftsTable() {
+      const tbody = document.getElementById('staff-shifts-tbody');
+      if (!tbody) return;
+
+      const metricsList = calculateStaffShiftMetrics();
+
+      if (metricsList.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-6 text-center text-slate-400 italic">
+              No shift logs recorded yet. Station hours will calculate here automatically.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = metricsList.map(m => {
+        let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-slate-100 text-slate-500">Offline</span>`;
+        if (m.isCurrentlyActive) {
+          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 flex items-center gap-1 w-max">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>Active: ${getStationLabel(m.currentStation)}</span>
+          </span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 font-bold text-slate-900 font-sans">
+              ${m.name}
+              <span class="block text-[10px] text-slate-400 font-normal">${m.role}</span>
+            </td>
+            <td class="py-2.5 px-3 font-sans">${statusBadge}</td>
+            <td class="py-2.5 px-3 text-center text-blue-800 font-bold">${formatDurationMinutes(m.posMs)}</td>
+            <td class="py-2.5 px-3 text-center text-emerald-800 font-bold">${formatDurationMinutes(m.handoutMs)}</td>
+            <td class="py-2.5 px-3 text-center text-red-800 font-bold">${formatDurationMinutes(m.braaiMs)}</td>
+            <td class="py-2.5 px-3 text-center text-purple-800 font-bold">${formatDurationMinutes(m.managerMs)}</td>
+            <td class="py-2.5 px-3 text-right font-black text-slate-900 bg-slate-50">${formatDurationMinutes(m.totalMs)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function downloadStaffShiftCSV() {
+      const metricsList = calculateStaffShiftMetrics();
+      if (metricsList.length === 0) {
+        showToast('No Shift Logs', 'Shifts will log automatically as staff work', '⚠️');
+        return;
+      }
+
+      let csv = "OKTOBERFEST STAFF SHIFTS & STATION HOURS AUDIT\n";
+      csv += `Generated:,"${new Date().toLocaleString()}"\n\n`;
+      csv += "Staff Member,Role,Status,Cashier Time,Handout Time,Braai Time,Manager Time,Total Active Shift Time\n";
+
+      metricsList.forEach(m => {
+        csv += `"${m.name}","${m.role}","${m.isCurrentlyActive ? 'Active (' + getStationLabel(m.currentStation) + ')' : 'Offline'}","${formatDurationMinutes(m.posMs)}","${formatDurationMinutes(m.handoutMs)}","${formatDurationMinutes(m.braaiMs)}","${formatDurationMinutes(m.managerMs)}","${formatDurationMinutes(m.totalMs)}"\n`;
+      });
+
+      downloadCSVFile(csv, `Oktoberfest_Staff_Shifts_Hours_${new Date().toISOString().slice(0,10)}.csv`);
+      showToast('Shift Audit Exported', 'CSV downloaded for payroll & hours verification', '⏱️');
+    }
+
+    function openStaffModal(editIndex = -1) {
+      document.getElementById('edit-staff-index').value = editIndex;
+      const titleEl = document.getElementById('modal-staff-title');
+      const nameInput = document.getElementById('edit-staff-name');
+      const roleInput = document.getElementById('edit-staff-role');
+      const pinInput = document.getElementById('edit-staff-pin');
+
+      ['pos', 'handout', 'braai', 'manager'].forEach(st => {
+        document.getElementById(`chk-perm-${st}`).checked = false;
+      });
+
+      if (editIndex >= 0 && staffRoster[editIndex]) {
+        const item = staffRoster[editIndex];
+        titleEl.innerText = "Edit Team Member";
+        nameInput.value = item.name;
+        roleInput.value = item.role || '';
+        pinInput.value = item.pin || '';
+        (item.stations || []).forEach(st => {
+          const chk = document.getElementById(`chk-perm-${st}`);
+          if (chk) chk.checked = true;
+        });
+      } else {
+        titleEl.innerText = "Add Team Member";
+        nameInput.value = '';
+        roleInput.value = '';
+        pinInput.value = '';
+        ['pos', 'handout', 'braai'].forEach(st => {
+          const chk = document.getElementById(`chk-perm-${st}`);
+          if (chk) chk.checked = true;
+        });
+      }
+
+      document.getElementById('modal-staff-edit').classList.remove('hidden');
+    }
+
+    function closeStaffModal() {
+      document.getElementById('modal-staff-edit').classList.add('hidden');
+    }
+
+    function saveStaffMember() {
+      const idx = parseInt(document.getElementById('edit-staff-index').value, 10);
+      const name = document.getElementById('edit-staff-name').value.trim();
+      const role = document.getElementById('edit-staff-role').value.trim();
+      const pin = document.getElementById('edit-staff-pin').value.trim();
+
+      if (!name) {
+        showToast('Name Required', 'Enter member name', '⚠️');
+        return;
+      }
+
+      if (!pin || pin.length < 3) {
+        showToast('PIN Required', 'Set an access PIN for this user', '⚠️');
+        return;
+      }
+
+      const permitted = [];
+      ['pos', 'handout', 'braai', 'manager'].forEach(st => {
+        if (document.getElementById(`chk-perm-${st}`).checked) {
+          permitted.push(st);
+        }
+      });
+
+      const memberObj = {
+        name: name,
+        role: role || 'Staff Member',
+        stations: permitted.length > 0 ? permitted : ['pos', 'handout', 'braai'],
+        pin: pin
+      };
+
+      if (idx >= 0 && staffRoster[idx]) {
+        staffRoster[idx] = memberObj;
+        showToast('Staff Updated', `${name} details saved`, '👤');
+      } else {
+        staffRoster.push(memberObj);
+        showToast('Staff Added', `${name} added to roster`, '✅');
+      }
+
+      saveState();
+      renderRosterManagementUI();
+      renderStaffShiftsTable();
+      populateAllStaffNameChips();
+      closeStaffModal();
+
+      if (syncChannel) {
+        syncChannel.postMessage({
+          type: 'ROSTER_UPDATED',
+          roster: staffRoster
+        });
+      }
+    }
+
+    function editStaffMember(idx) {
+      openStaffModal(idx);
+    }
+
+    function deleteStaffMember(idx) {
+      if (staffRoster[idx] && confirm(`Remove ${staffRoster[idx].name} from team roster?`)) {
+        staffRoster.splice(idx, 1);
+        saveState();
+        renderRosterManagementUI();
+        renderStaffShiftsTable();
+        populateAllStaffNameChips();
+        showToast('Staff Removed', 'Member deleted from roster', '🗑️');
+
+        if (syncChannel) {
+          syncChannel.postMessage({
+            type: 'ROSTER_UPDATED',
+            roster: staffRoster
+          });
+        }
+      }
+    }
+<!-- ... existing code ... -->
+      // Render Hourly Velocity Table
+      renderHourlySalesTable();
+      renderRosterManagementUI();
+      renderStaffShiftsTable();
+    }
+
+    function updateCashVarianceUI() {
+<!-- ... existing code ... -->
+    function showLoginScreen() {
+      const screen = document.getElementById('screen-login');
+      if (screen) {
+        screen.classList.remove('hidden');
+        populateAllStaffNameChips();
+        selectLoginStation(currentStationRole || 'pos');
+      }
+    }
+
+    function applyStationRole(stationRole, staffName) {
+<!-- ... existing code ... -->
