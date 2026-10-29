@@ -30,6 +30,12 @@ fire: '#e63946'
 html, body {
 overscroll-behavior-y: contain;
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+touch-action: manipulation;
+}
+.touch-btn {
+touch-action: manipulation;
+-webkit-tap-highlight-color: rgba(0,0,0,0.1);
+cursor: pointer;
 }
 .custom-scroll::-webkit-scrollbar {
 width: 6px;
@@ -41,14 +47,14 @@ border-radius: 4px;
 }
 </style>
 </head>
-​<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col select-none">
+​<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 ​<!-- ========================================== -->
 <!-- TOP APP HEADER WITH EASY STATION SWITCHING -->
 <!-- ========================================== -->
 <header class="bg-fest-navy text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-lg sticky top-0 z-40 border-b-4 border-fest-gold">
 <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
 ​<!-- Brand & Active Station Name -->
-<div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="showLoginScreen()">
+<div class="flex items-center gap-2 sm:gap-3 cursor-pointer touch-btn" onclick="showLoginScreen()">
 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-fest-gold text-fest-navy flex items-center justify-center font-black text-xl shadow">
 🌭
 </div>
@@ -69,33 +75,33 @@ Tap to Sign In
 </div>
 ​<!-- Quick Station Switch Tabs -->
 <div class="flex items-center gap-1 sm:gap-2">
-<button type="button" onclick="quickSwitchPosition('pos')" id="tab-nav-pos" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow hover:opacity-90 transition">
+<button type="button" onclick="quickSwitchPosition('pos')" id="tab-nav-pos" class="touch-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow hover:opacity-90 transition">
 Till
 </button>
-<button type="button" onclick="quickSwitchPosition('handout')" id="tab-nav-handout" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+<button type="button" onclick="quickSwitchPosition('handout')" id="tab-nav-handout" class="touch-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
 Handout
 </button>
-<button type="button" onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+<button type="button" onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="touch-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
 Braai 🔥
 </button>
-<button type="button" onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
+<button type="button" onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="touch-btn px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
 <i class="ph-bold ph-lock-key"></i>
 </button>
 ​<!-- Switch User / Station Button -->
-<button type="button" onclick="showLoginScreen()" class="px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-amber-500 hover:bg-amber-400 text-fest-navy transition flex items-center gap-1" title="Switch Staff or Station">
+<button type="button" onclick="showLoginScreen()" class="touch-btn px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-amber-500 hover:bg-amber-400 text-fest-navy transition flex items-center gap-1" title="Switch Staff or Station">
 <i class="ph-bold ph-arrows-clockwise text-base"></i>
-<span class="hidden md:inline">Switch</span>
+<span>Switch</span>
 </button>
 ​<!-- Keep Awake (Wake Lock) Indicator & Toggle -->
-<button type="button" onclick="toggleWakeLockManual()" id="btn-wakelock" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition" title="Keep Screen Awake (No Sleep)">
+<button type="button" onclick="toggleWakeLockManual()" id="btn-wakelock" class="touch-btn p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition" title="Keep Screen Awake (No Sleep)">
 <i class="ph-bold ph-sun text-lg"></i>
 </button>
 ​<!-- Fullscreen toggle -->
-<button type="button" onclick="toggleFullScreen()" id="btn-fullscreen" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 hidden sm:inline-flex" title="Toggle Fullscreen">
+<button type="button" onclick="toggleFullScreen()" id="btn-fullscreen" class="touch-btn p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 hidden sm:inline-flex" title="Toggle Fullscreen">
 <i class="ph-bold ph-arrows-out text-lg"></i>
 </button>
 ​<!-- Sound toggle -->
-<button type="button" onclick="toggleAudio()" id="btn-audio" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 ml-1" title="Sound alerts">
+<button type="button" onclick="toggleAudio()" id="btn-audio" class="touch-btn p-2 sm:p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 ml-1" title="Sound alerts">
 <i class="ph-bold ph-speaker-high text-lg"></i>
 </button>
 </div>
@@ -104,95 +110,96 @@ Braai 🔥
 ​<!-- ======================================================== -->
 <!-- LOGIN OVERLAY MODAL (STATION FIRST -> NAME -> 4-DIGIT PIN) -->
 <!-- ======================================================== -->
-<div id="screen-login" class="fixed inset-0 z-50 bg-fest-navy/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-<div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border-4 border-fest-gold max-h-[95vh] overflow-y-auto custom-scroll relative">
+<div id="screen-login" class="fixed inset-0 z-50 bg-fest-navy/95 backdrop-blur-md flex items-center justify-center p-2.5 sm:p-6 overflow-y-auto">
+<div class="bg-white rounded-3xl max-w-xl w-full p-4 sm:p-8 shadow-2xl border-4 border-fest-gold my-auto relative max-h-[96vh] overflow-y-auto custom-scroll">
 ​<!-- Close button if already logged in -->
-<button type="button" onclick="dismissLoginScreenIfLoggedIn()" id="btn-close-login-modal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-lg flex items-center justify-center">
+<button type="button" onclick="dismissLoginScreenIfLoggedIn()" id="btn-close-login-modal" class="touch-btn absolute top-3 right-3 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xl flex items-center justify-center z-10">
 ✕
 </button>
-​<div class="text-center mb-5">
-<div class="inline-block p-3 rounded-2xl bg-amber-100 text-fest-navy text-3xl font-black mb-1">
+​<div class="text-center mb-4">
+<div class="inline-block p-2.5 rounded-2xl bg-amber-100 text-fest-navy text-3xl font-black mb-1">
 🍺 🌭
 </div>
 <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Staff Station Sign-In</h2>
 <p class="text-xs sm:text-sm text-slate-500 font-semibold mt-0.5">Select station, choose your name, and enter your 4-digit PIN</p>
 </div>
 ​<!-- STEP 1: SELECT STATION FIRST -->
-<div class="mb-5">
-<div class="flex items-center gap-2 mb-2.5">
-<span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">1</span>
-<label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+<div class="mb-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-6 h-6 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">1</span>
+<label class="text-xs sm:text-sm font-black uppercase tracking-wide text-slate-900">
 Select Station for this Device:
 </label>
 </div>
-​<div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-<button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-fest-bavaria bg-blue-50/80 shadow transition cursor-pointer">
-<span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
-<i class="ph-bold ph-cash-register text-fest-bavaria text-2xl"></i> Till / POS
+​<div class="grid grid-cols-2 gap-2">
+<button type="button" id="card-station-pos" onclick="selectLoginStation('pos')" class="station-select-btn touch-btn text-left p-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50/90 shadow transition">
+<span class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
+<i class="ph-bold ph-cash-register text-fest-bavaria text-xl"></i> Till / POS
 </span>
-<p class="text-[11px] text-slate-500 font-bold mt-0.5">Take orders & Yoko/Cash</p>
+<p class="text-[11px] text-slate-600 font-bold mt-0.5">Take orders & Yoko/Cash</p>
 </button>
-​<button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
-<span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
-<i class="ph-bold ph-tray text-emerald-600 text-2xl"></i> Handout
+​<button type="button" id="card-station-handout" onclick="selectLoginStation('handout')" class="station-select-btn touch-btn text-left p-3 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+<span class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
+<i class="ph-bold ph-tray text-emerald-600 text-xl"></i> Handout
 </span>
-<p class="text-[11px] text-slate-500 font-bold mt-0.5">Post-it match & plating</p>
+<p class="text-[11px] text-slate-600 font-bold mt-0.5">Post-it match & plating</p>
 </button>
-​<button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
-<span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
-<i class="ph-bold ph-flame text-red-600 text-2xl"></i> Braai 🔥
+​<button type="button" id="card-station-braai" onclick="selectLoginStation('braai')" class="station-select-btn touch-btn text-left p-3 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+<span class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
+<i class="ph-bold ph-flame text-red-600 text-xl"></i> Braai 🔥
 </span>
-<p class="text-[11px] text-slate-500 font-bold mt-0.5">Live grill demand tally</p>
+<p class="text-[11px] text-slate-600 font-bold mt-0.5">Live grill demand tally</p>
 </button>
-​<button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
-<span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
-<i class="ph-bold ph-lock text-purple-600 text-2xl"></i> Manager
+​<button type="button" id="card-station-manager" onclick="selectLoginStation('manager')" class="station-select-btn touch-btn text-left p-3 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+<span class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
+<i class="ph-bold ph-lock text-purple-600 text-xl"></i> Manager
 </span>
-<p class="text-[11px] text-slate-500 font-bold mt-0.5">Cash-up, audit & stock</p>
+<p class="text-[11px] text-slate-600 font-bold mt-0.5">Cash-up, audit & stock</p>
 </button>
 </div>
 </div>
 ​<!-- STEP 2: SELECT NAME FROM ROSTER -->
-<div class="mb-5">
-<div class="flex items-center gap-2 mb-2.5">
-<span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">2</span>
-<label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+<div class="mb-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-6 h-6 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">2</span>
+<label class="text-xs sm:text-sm font-black uppercase tracking-wide text-slate-900">
 Who is operating this device?
 </label>
 </div>
-<div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+<div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
 <!-- Populated by JS -->
 </div>
-<div id="selected-staff-display-banner" class="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-center font-bold text-xs sm:text-sm text-amber-950">
-Selected: <span id="lbl-active-selected-name" class="font-black text-fest-navy">None</span>
+<div class="mt-2 p-2 rounded-xl bg-amber-50 border border-amber-300 text-center font-bold text-xs text-amber-950 flex items-center justify-center gap-2">
+<span>Selected:</span>
+<span id="lbl-active-selected-name" class="font-black text-fest-navy text-sm">None</span>
 </div>
 </div>
-​<!-- STEP 3: PIN ENTRY (TOUCH KEYPAD + PHYSICAL KEYBOARD INPUT) -->
-<div class="mb-5">
-<div class="flex items-center gap-2 mb-2.5">
-<span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">3</span>
-<label class="text-sm sm:text-base font-black uppercase tracking-wide text-slate-900">
+​<!-- STEP 3: PIN ENTRY (TOUCH KEYPAD + PHYSICAL INPUT) -->
+<div class="mb-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-6 h-6 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">3</span>
+<label class="text-xs sm:text-sm font-black uppercase tracking-wide text-slate-900">
 Enter 4-Digit Security PIN:
 </label>
 </div>
-​<input type="password" id="input-quick-pin" maxlength="6" inputmode="numeric" class="w-full text-center text-3xl font-black tracking-widest py-3 rounded-2xl border-2 border-slate-300 bg-slate-50 text-slate-800 mb-3 shadow-inner focus:outline-none focus:border-fest-bavaria" placeholder="••••">
+​<input type="password" id="input-quick-pin" maxlength="6" inputmode="numeric" class="w-full text-center text-3xl font-black tracking-widest py-2.5 rounded-2xl border-2 border-slate-300 bg-slate-50 text-slate-800 mb-2 shadow-inner focus:outline-none focus:border-fest-bavaria" placeholder="••••">
 ​<!-- Touch keypad -->
-<div class="grid grid-cols-3 gap-2 max-w-xs mx-auto">
-<button type="button" onclick="appendLoginPin('1')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">1</button>
-<button type="button" onclick="appendLoginPin('2')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">2</button>
-<button type="button" onclick="appendLoginPin('3')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">3</button>
-<button type="button" onclick="appendLoginPin('4')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">4</button>
-<button type="button" onclick="appendLoginPin('5')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">5</button>
-<button type="button" onclick="appendLoginPin('6')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">6</button>
-<button type="button" onclick="appendLoginPin('7')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">7</button>
-<button type="button" onclick="appendLoginPin('8')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">8</button>
-<button type="button" onclick="appendLoginPin('9')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">9</button>
-<button type="button" onclick="clearLoginPin()" class="py-3 rounded-xl bg-rose-100 text-rose-700 font-black text-sm uppercase hover:bg-rose-200 active:scale-95 transition cursor-pointer">Clear</button>
-<button type="button" onclick="appendLoginPin('0')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">0</button>
-<button type="button" onclick="backspaceLoginPin()" class="py-3 rounded-xl bg-slate-300 text-slate-700 font-black text-xl hover:bg-slate-400 active:scale-95 transition cursor-pointer"><i class="ph-bold ph-backspace"></i></button>
+<div class="grid grid-cols-3 gap-1.5 max-w-xs mx-auto">
+<button type="button" onclick="appendLoginPin('1')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">1</button>
+<button type="button" onclick="appendLoginPin('2')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">2</button>
+<button type="button" onclick="appendLoginPin('3')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">3</button>
+<button type="button" onclick="appendLoginPin('4')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">4</button>
+<button type="button" onclick="appendLoginPin('5')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">5</button>
+<button type="button" onclick="appendLoginPin('6')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">6</button>
+<button type="button" onclick="appendLoginPin('7')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">7</button>
+<button type="button" onclick="appendLoginPin('8')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">8</button>
+<button type="button" onclick="appendLoginPin('9')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">9</button>
+<button type="button" onclick="clearLoginPin()" class="touch-btn py-2.5 rounded-xl bg-rose-100 text-rose-700 font-black text-xs uppercase hover:bg-rose-200 active:scale-95 transition">Clear</button>
+<button type="button" onclick="appendLoginPin('0')" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">0</button>
+<button type="button" onclick="backspaceLoginPin()" class="touch-btn py-2.5 rounded-xl bg-slate-300 text-slate-700 font-black text-xl hover:bg-slate-400 active:scale-95 transition"><i class="ph-bold ph-backspace"></i></button>
 </div>
 </div>
-​<button type="button" onclick="performStaffLogin()" class="w-full py-4 rounded-2xl bg-fest-bavaria text-white font-black text-lg uppercase tracking-wider hover:bg-blue-700 shadow-xl active:scale-[0.98] transition cursor-pointer">
+​<button type="button" onclick="performStaffLogin()" class="touch-btn w-full py-3.5 rounded-2xl bg-fest-bavaria text-white font-black text-lg uppercase tracking-wider hover:bg-blue-700 shadow-xl active:scale-[0.98] transition">
 Activate Station
 </button>
 ​</div>
@@ -212,10 +219,10 @@ Activate Station
 <p class="text-xs text-slate-500 font-semibold">Standard price includes crispy roll or served no roll</p>
 </div>
 <div class="flex items-center gap-2">
-<button onclick="promptQuickOrderLookup()" class="px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 flex items-center gap-1 shadow-sm transition">
+<button onclick="promptQuickOrderLookup()" class="touch-btn px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 flex items-center gap-1 shadow-sm transition">
 <i class="ph-bold ph-pencil-simple text-sm"></i> Change / Cancel #
 </button>
-<button onclick="toggleDefaultRollOption()" id="btn-roll-toggle" class="px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300">
+<button onclick="toggleDefaultRollOption()" id="btn-roll-toggle" class="touch-btn px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300">
 Default: IN ROLL
 </button>
 </div>
@@ -231,19 +238,19 @@ Default: IN ROLL
 </div>
 ​</div>
 ​<!-- Right Column: Current Order / Till Cart -->
-<div class="lg:col-span-5 bg-white p-4 sm:p-5 rounded-2xl shadow-md border-2 border-slate-200 flex flex-col justify-between min-h-[500px]">
+<div class="lg:col-span-5 bg-white p-4 sm:p-5 rounded-2xl shadow-md border-2 border-slate-200 flex flex-col justify-between min-h-[480px]">
 ​<div>
 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
 <div>
 <span class="text-xs uppercase font-black tracking-wider text-slate-400">Current Ticket</span>
 <h3 class="text-2xl font-black text-slate-900" id="cart-order-number-display">#101</h3>
 </div>
-<button onclick="clearCurrentCart()" class="text-xs font-bold text-rose-600 hover:text-rose-800 px-2 py-1 rounded-lg hover:bg-rose-50 transition">
+<button onclick="clearCurrentCart()" class="touch-btn text-xs font-bold text-rose-600 hover:text-rose-800 px-2 py-1 rounded-lg hover:bg-rose-50 transition">
 Clear Cart
 </button>
 </div>
 ​<!-- Cart items list -->
-<div id="cart-items-container" class="divide-y divide-slate-100 my-3 max-h-[320px] overflow-y-auto custom-scroll">
+<div id="cart-items-container" class="divide-y divide-slate-100 my-3 max-h-[300px] overflow-y-auto custom-scroll">
 <p class="text-center py-12 text-slate-400 font-semibold text-sm">Cart is empty. Tap items on the left to add.</p>
 </div>
 </div>
@@ -258,7 +265,7 @@ Clear Cart
 <span id="cart-total-price" class="text-emerald-700 font-mono">R0.00</span>
 </div>
 ​<!-- Payment Button -->
-<button onclick="openPaymentModal()" id="btn-open-payment" disabled class="w-full py-4 rounded-2xl bg-fest-bavaria disabled:bg-slate-200 disabled:text-slate-400 text-white font-black text-lg uppercase tracking-wide hover:bg-blue-700 transition shadow-lg active:scale-[0.98]">
+<button onclick="openPaymentModal()" id="btn-open-payment" disabled class="touch-btn w-full py-3.5 rounded-2xl bg-fest-bavaria disabled:bg-slate-200 disabled:text-slate-400 text-white font-black text-lg uppercase tracking-wide hover:bg-blue-700 transition shadow-lg active:scale-[0.98]">
 Proceed to Payment
 </button>
 </div>
@@ -298,7 +305,7 @@ Pending Orders: <b id="handout-pending-count" class="text-sm">0</b>
 <p id="braai-mode-desc" class="text-xs sm:text-sm text-slate-300 font-semibold">Keep warming trays stocked to meet this live demand.</p>
 </div>
 <div class="flex items-center gap-2 sm:gap-3">
-<button onclick="toggleBraaiConfirmationMode()" id="btn-braai-mode-toggle" class="px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-amber-400 bg-slate-800 text-amber-300 hover:bg-slate-700">
+<button onclick="toggleBraaiConfirmationMode()" id="btn-braai-mode-toggle" class="touch-btn px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-amber-400 bg-slate-800 text-amber-300 hover:bg-slate-700">
 Mode: Zero-Touch
 </button>
 <span class="text-xs sm:text-sm font-black px-3 py-1.5 rounded-xl bg-red-600 text-white uppercase tracking-wider animate-pulse">
@@ -376,10 +383,10 @@ Total Bratwurst on Coals: <span id="hud-total-brat-combined">0</span>
 <p class="text-xs text-purple-200 font-semibold">Live cash-up reconciliation, inventory control, and staff audit</p>
 </div>
 <div class="flex items-center gap-2">
-<button onclick="downloadOrdersCSV()" class="px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-black shadow flex items-center gap-1.5">
+<button onclick="downloadOrdersCSV()" class="touch-btn px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-black shadow flex items-center gap-1.5">
 <i class="ph-bold ph-download-simple"></i> Orders CSV
 </button>
-<button onclick="changeManagerPinPrompt()" class="px-3 py-2 rounded-xl bg-purple-800 hover:bg-purple-750 text-white text-xs font-black border border-purple-400">
+<button onclick="changeManagerPinPrompt()" class="touch-btn px-3 py-2 rounded-xl bg-purple-800 hover:bg-purple-750 text-white text-xs font-black border border-purple-400">
 Change Master PIN
 </button>
 </div>
@@ -394,19 +401,19 @@ Change Master PIN
 <p class="text-xs text-amber-800 font-semibold mt-0.5">Simulate test orders for training, edit existing tickets, or reset all practice data before event opening</p>
 </div>
 <div class="flex flex-wrap items-center gap-2">
-<button onclick="generateRandomTestOrder()" class="px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
+<button onclick="generateRandomTestOrder()" class="touch-btn px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
 <i class="ph-bold ph-plus-circle"></i> + Generate Test Order
 </button>
-<button onclick="openAdvanceOrderModal()" class="px-3 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
+<button onclick="openAdvanceOrderModal()" class="touch-btn px-3 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
 <i class="ph-bold ph-calendar-plus"></i> + Advance Pre-Order
 </button>
-<button onclick="setStartingOrderNumberPrompt()" class="px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-amber-300 text-xs font-black shadow-sm transition">
+<button onclick="setStartingOrderNumberPrompt()" class="touch-btn px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-amber-300 text-xs font-black shadow-sm transition">
 Set Next Ticket #
 </button>
-<button onclick="resetAllOrdersPrompt()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
+<button onclick="resetAllOrdersPrompt()" class="touch-btn px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
 <i class="ph-bold ph-trash"></i> Reset / Clear All Orders
 </button>
-<button onclick="toggleBraaiConfirmationMode()" id="btn-mgr-braai-mode" class="px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
+<button onclick="toggleBraaiConfirmationMode()" id="btn-mgr-braai-mode" class="touch-btn px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-black shadow flex items-center gap-1.5 transition">
 <i class="ph-bold ph-sliders"></i> Braai Flow: Zero-Touch
 </button>
 </div>
@@ -431,7 +438,7 @@ Set Next Ticket #
 ​<div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm">
 <span class="text-xs font-black uppercase text-slate-600">Starting Till Float</span>
 <h4 id="mgr-stat-float" class="text-2xl sm:text-3xl font-black text-slate-800 font-mono mt-1">R2,000.00</h4>
-<button onclick="editStartingFloatPrompt()" class="text-[11px] text-fest-bavaria font-bold hover:underline">Edit Float</button>
+<button onclick="editStartingFloatPrompt()" class="touch-btn text-[11px] text-fest-bavaria font-bold hover:underline">Edit Float</button>
 </div>
 </div>
 ​<!-- Dynamic Staff Roster Management -->
@@ -444,7 +451,7 @@ Set Next Ticket #
 </h3>
 <p class="text-xs text-slate-500 font-semibold">Add or edit team members and configure their 4-digit station PINs</p>
 </div>
-<button onclick="openStaffModal()" class="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
+<button onclick="openStaffModal()" class="touch-btn px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
 <i class="ph-bold ph-plus-circle"></i> Add Team Member
 </button>
 </div>
@@ -475,7 +482,7 @@ Set Next Ticket #
 </h3>
 <p class="text-xs text-slate-500 font-semibold">Live tracking of total work hours and time spent at each individual station</p>
 </div>
-<button onclick="downloadStaffShiftCSV()" class="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
+<button onclick="downloadStaffShiftCSV()" class="touch-btn px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
 <i class="ph-bold ph-download-simple"></i> Export Shifts CSV
 </button>
 </div>
@@ -508,7 +515,7 @@ Set Next Ticket #
 </h3>
 <p class="text-xs text-slate-500 font-semibold">Total baseline stock vs. sold vs. remaining on hand</p>
 </div>
-<button onclick="openManualStockModal()" class="px-3.5 py-2 rounded-xl bg-fest-bavaria hover:bg-blue-700 text-white font-black text-xs uppercase flex items-center gap-1.5 shadow">
+<button onclick="openManualStockModal()" class="touch-btn px-3.5 py-2 rounded-xl bg-fest-bavaria hover:bg-blue-700 text-white font-black text-xs uppercase flex items-center gap-1.5 shadow">
 <i class="ph-bold ph-plus-circle text-base"></i> + Add / Adjust Stock
 </button>
 </div>
@@ -596,7 +603,7 @@ Total Orders: <b id="mgr-orders-count-badge" class="text-slate-900">0</b>
 <span class="text-xs uppercase font-black text-slate-400">Modify / Cancel Order</span>
 <h3 class="text-2xl font-black text-slate-900 font-mono" id="edit-order-modal-title">#101</h3>
 </div>
-<button onclick="closeEditOrderModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
+<button onclick="closeEditOrderModal()" class="touch-btn w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
 ✕
 </button>
 </div>
@@ -614,16 +621,16 @@ Total Orders: <b id="mgr-orders-count-badge" class="text-slate-900">0</b>
 <div>
 <label class="block text-[11px] font-black uppercase text-slate-400 mb-1.5">+ Add Another Sausage</label>
 <div class="grid grid-cols-2 gap-1.5">
-<button type="button" onclick="addItemToEditedOrder('bratwurst', true)" class="py-2 px-2.5 rounded-xl bg-white border border-amber-300 font-bold text-xs text-left hover:bg-amber-50">
+<button type="button" onclick="addItemToEditedOrder('bratwurst', true)" class="touch-btn py-2 px-2.5 rounded-xl bg-white border border-amber-300 font-bold text-xs text-left hover:bg-amber-50">
 + Bratwurst (Roll)
 </button>
-<button type="button" onclick="addItemToEditedOrder('bockwurst', true)" class="py-2 px-2.5 rounded-xl bg-white border border-orange-300 font-bold text-xs text-left hover:bg-orange-50">
+<button type="button" onclick="addItemToEditedOrder('bockwurst', true)" class="touch-btn py-2 px-2.5 rounded-xl bg-white border border-orange-300 font-bold text-xs text-left hover:bg-orange-50">
 + Bockwurst (Roll)
 </button>
-<button type="button" onclick="addItemToEditedOrder('cheesegriller', true)" class="py-2 px-2.5 rounded-xl bg-white border border-yellow-300 font-bold text-xs text-left hover:bg-yellow-50">
+<button type="button" onclick="addItemToEditedOrder('cheesegriller', true)" class="touch-btn py-2 px-2.5 rounded-xl bg-white border border-yellow-300 font-bold text-xs text-left hover:bg-yellow-50">
 + Cheesegriller (Roll)
 </button>
-<button type="button" onclick="addItemToEditedOrder('currywurst', true)" class="py-2 px-2.5 rounded-xl bg-white border border-red-300 font-bold text-xs text-left hover:bg-red-50">
+<button type="button" onclick="addItemToEditedOrder('currywurst', true)" class="touch-btn py-2 px-2.5 rounded-xl bg-white border border-red-300 font-bold text-xs text-left hover:bg-red-50">
 + Bratwurst with Curry Sauce
 </button>
 </div>
@@ -647,14 +654,14 @@ Total Orders: <b id="mgr-orders-count-badge" class="text-slate-900">0</b>
 ​<!-- Action Buttons: Cancel Order / Save Changes -->
 <div class="space-y-2">
 <div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="closeEditOrderModal()" class="py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300 transition">
+<button type="button" onclick="closeEditOrderModal()" class="touch-btn py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300 transition">
 Close
 </button>
-<button type="button" onclick="saveEditedOrder()" class="py-3 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase hover:bg-blue-700 shadow-md transition">
+<button type="button" onclick="saveEditedOrder()" class="touch-btn py-3 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase hover:bg-blue-700 shadow-md transition">
 Save & Update Ticket
 </button>
 </div>
-​<button type="button" onclick="confirmCancelCurrentOrder()" class="w-full py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition">
+​<button type="button" onclick="confirmCancelCurrentOrder()" class="touch-btn w-full py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition">
 <i class="ph-bold ph-x-circle text-base"></i> Cancel This Order (Refund / Return)
 </button>
 </div>
@@ -677,11 +684,11 @@ Save & Update Ticket
 </div>
 ​<!-- Payment Method Switch -->
 <div class="grid grid-cols-2 gap-2 mb-4">
-<button type="button" onclick="selectPaymentMethod('yoko')" id="pay-method-btn-yoko" class="py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2">
+<button type="button" onclick="selectPaymentMethod('yoko')" id="pay-method-btn-yoko" class="touch-btn py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2">
 <i class="ph-bold ph-credit-card text-xl"></i>
 <span>Yoko App / Card</span>
 </button>
-<button type="button" onclick="selectPaymentMethod('cash')" id="pay-method-btn-cash" class="py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2">
+<button type="button" onclick="selectPaymentMethod('cash')" id="pay-method-btn-cash" class="touch-btn py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2">
 <i class="ph-bold ph-money text-xl"></i>
 <span>Cash Till</span>
 </button>
@@ -701,10 +708,10 @@ Save & Update Ticket
 </div>
 ​<!-- Quick Tender Buttons -->
 <div class="grid grid-cols-4 gap-1.5 mb-2">
-<button type="button" onclick="setCashTenderExact()" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">Exact</button>
-<button type="button" onclick="setCashTenderAmount(100)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R100</button>
-<button type="button" onclick="setCashTenderAmount(200)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R200</button>
-<button type="button" onclick="setCashTenderAmount(500)" class="py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R500</button>
+<button type="button" onclick="setCashTenderExact()" class="touch-btn py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">Exact</button>
+<button type="button" onclick="setCashTenderAmount(100)" class="touch-btn py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R100</button>
+<button type="button" onclick="setCashTenderAmount(200)" class="touch-btn py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R200</button>
+<button type="button" onclick="setCashTenderAmount(500)" class="touch-btn py-2 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs">R500</button>
 </div>
 ​<!-- Change Due Display -->
 <div class="p-3 rounded-xl bg-white border border-amber-300 flex items-center justify-between">
@@ -715,10 +722,10 @@ Save & Update Ticket
 </div>
 ​<!-- Actions -->
 <div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="closePaymentModal()" class="py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-black text-sm uppercase hover:bg-slate-200">
+<button type="button" onclick="closePaymentModal()" class="touch-btn py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-black text-sm uppercase hover:bg-slate-200">
 Cancel
 </button>
-<button type="button" onclick="confirmPaymentAndReleaseTicket()" class="py-3.5 rounded-2xl bg-emerald-600 text-white font-black text-sm uppercase hover:bg-emerald-700 shadow-lg">
+<button type="button" onclick="confirmPaymentAndReleaseTicket()" class="touch-btn py-3.5 rounded-2xl bg-emerald-600 text-white font-black text-sm uppercase hover:bg-emerald-700 shadow-lg">
 Confirm & Print #
 </button>
 </div>
@@ -738,7 +745,7 @@ Confirm & Print #
 <div id="postit-summary-lines" class="p-3 bg-white/80 rounded-2xl border border-amber-200 text-left text-xs font-bold text-slate-800 space-y-1 mb-5">
 <!-- Lines inserted by JS -->
 </div>
-​<button type="button" onclick="closePostItModal()" class="w-full py-4 rounded-2xl bg-fest-navy text-amber-300 font-black text-base uppercase tracking-wider hover:bg-slate-900 shadow-xl">
+​<button type="button" onclick="closePostItModal()" class="touch-btn w-full py-4 rounded-2xl bg-fest-navy text-amber-300 font-black text-base uppercase tracking-wider hover:bg-slate-900 shadow-xl">
 Done & Hand Note to Customer
 </button>
 </div>
@@ -753,7 +760,7 @@ Done & Hand Note to Customer
 <span class="text-xs uppercase font-black text-purple-600">Roster Management</span>
 <h3 class="text-2xl font-black text-slate-900" id="staff-modal-title">Add Team Member</h3>
 </div>
-<button onclick="closeStaffModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
+<button onclick="closeStaffModal()" class="touch-btn w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
 </div>
 ​<input type="hidden" id="staff-edit-original-name" value="">
 ​<div class="space-y-3 mb-5">
@@ -792,10 +799,10 @@ Done & Hand Note to Customer
 </div>
 </div>
 ​<div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="closeStaffModal()" class="py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
+<button type="button" onclick="closeStaffModal()" class="touch-btn py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
 Cancel
 </button>
-<button type="button" onclick="saveStaffMember()" class="py-3 rounded-xl bg-purple-700 text-white font-black text-xs uppercase hover:bg-purple-800 shadow-md">
+<button type="button" onclick="saveStaffMember()" class="touch-btn py-3 rounded-xl bg-purple-700 text-white font-black text-xs uppercase hover:bg-purple-800 shadow-md">
 Save Member
 </button>
 </div>
@@ -811,7 +818,7 @@ Save Member
 <span class="text-xs uppercase font-black text-blue-600">Advance Stock Order</span>
 <h3 class="text-2xl font-black text-slate-900">Pre-Order Sausages</h3>
 </div>
-<button onclick="closeAdvanceOrderModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
+<button onclick="closeAdvanceOrderModal()" class="touch-btn w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
 </div>
 ​<div class="space-y-3 mb-4">
 <div>
@@ -852,10 +859,10 @@ Save Member
 </div>
 </div>
 ​<div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="closeAdvanceOrderModal()" class="py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
+<button type="button" onclick="closeAdvanceOrderModal()" class="touch-btn py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
 Cancel
 </button>
-<button type="button" onclick="submitAdvanceOrder()" class="py-3 rounded-xl bg-blue-700 text-white font-black text-xs uppercase hover:bg-blue-800 shadow-md">
+<button type="button" onclick="submitAdvanceOrder()" class="touch-btn py-3 rounded-xl bg-blue-700 text-white font-black text-xs uppercase hover:bg-blue-800 shadow-md">
 Save Pre-Order (Hold)
 </button>
 </div>
@@ -871,7 +878,7 @@ Save Pre-Order (Hold)
 <span class="text-xs uppercase font-black text-fest-bavaria">Stock Inflow</span>
 <h3 class="text-2xl font-black text-slate-900">Add / Adjust Stock</h3>
 </div>
-<button onclick="closeManualStockModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
+<button onclick="closeManualStockModal()" class="touch-btn w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold">✕</button>
 </div>
 ​<div class="space-y-3 mb-4">
 <p class="text-xs text-slate-600 font-semibold">Add units arriving from the cold room or butchery delivery:</p>
@@ -913,10 +920,10 @@ Save Pre-Order (Hold)
 </div>
 </div>
 ​<div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="closeManualStockModal()" class="py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
+<button type="button" onclick="closeManualStockModal()" class="touch-btn py-3 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase hover:bg-slate-300">
 Cancel
 </button>
-<button type="button" onclick="confirmManualStockAddition()" class="py-3 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase hover:bg-blue-700 shadow-md">
+<button type="button" onclick="confirmManualStockAddition()" class="touch-btn py-3 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase hover:bg-blue-700 shadow-md">
 Acknowledge & Add
 </button>
 </div>
@@ -1059,6 +1066,8 @@ updateCartUI();
 renderBraaiHUD();
 renderHandoutQueue();
 renderManagerDashboard();
+​populateAllStaffNameChips();
+selectLoginStation(currentStationRole || 'pos');
 ​if (currentStaffName && currentStationRole) {
 applyStationRole(currentStationRole, currentStaffName);
 } else {
@@ -1230,8 +1239,8 @@ const descEl = document.getElementById('braai-mode-desc');
 if (braaiBtn) {
 braaiBtn.innerText = modeText;
 braaiBtn.className = braaiManualConfirmEnabled
-? "px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-emerald-400 bg-emerald-700 text-white"
-: "px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-amber-400 bg-slate-800 text-amber-300 hover:bg-slate-700";
+? "touch-btn px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-emerald-400 bg-emerald-700 text-white"
+: "touch-btn px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border border-amber-400 bg-slate-800 text-amber-300 hover:bg-slate-700";
 }
 if (mgrBtn) {
 mgrBtn.innerHTML = <i class="ph-bold ph-sliders"></i> Braai Flow: ${braaiManualConfirmEnabled ? 'Manual Ready' : 'Zero-Touch'};
@@ -1266,8 +1275,8 @@ function showLoginScreen() {
 const scr = document.getElementById('screen-login');
 if (scr) {
 scr.classList.remove('hidden');
-selectLoginStation(currentStationRole || 'pos');
 populateAllStaffNameChips();
+selectLoginStation(currentStationRole || 'pos');
 if (currentStaffName) {
 selectLoginName(currentStaffName);
 }
@@ -1282,17 +1291,21 @@ showToast('Login Required', 'Please select name & PIN to start', 'ℹ️');
 }
 ​function selectLoginStation(stationId) {
 selectedLoginStationId = stationId;
-​document.querySelectorAll('.station-select-btn').forEach(btn => {
-btn.classList.remove('border-fest-bavaria', 'border-emerald-500', 'border-red-500', 'border-purple-500', 'bg-blue-50/80', 'bg-emerald-50/80', 'bg-red-50/80', 'bg-purple-50/80');
-btn.classList.add('border-slate-200', 'bg-white');
+​const stations = ['pos', 'handout', 'braai', 'manager'];
+stations.forEach(s => {
+const el = document.getElementById(card-station-${s});
+if (el) {
+el.classList.remove('border-fest-bavaria', 'border-emerald-500', 'border-red-500', 'border-purple-500', 'bg-blue-50/90', 'bg-emerald-50/90', 'bg-red-50/90', 'bg-purple-50/90');
+el.classList.add('border-slate-200', 'bg-white');
+}
 });
 ​const activeCard = document.getElementById(card-station-${stationId});
 if (activeCard) {
 activeCard.classList.remove('border-slate-200', 'bg-white');
-if (stationId === 'pos') activeCard.classList.add('border-fest-bavaria', 'bg-blue-50/80');
-if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-emerald-50/80');
-if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/80');
-if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/80');
+if (stationId === 'pos') activeCard.classList.add('border-fest-bavaria', 'bg-blue-50/90');
+if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-emerald-50/90');
+if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/90');
+if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/90');
 }
 ​clearLoginPin();
 }
@@ -1300,13 +1313,24 @@ if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-p
 const container = document.getElementById('dynamic-name-picker');
 if (!container) return;
 container.innerHTML = '';
+​if (!staffRoster || staffRoster.length === 0) {
+staffRoster = [
+{ name: 'Nicolas', role: 'Management & Till', stations: ['pos', 'handout', 'braai', 'manager'], pin: '1978' },
+{ name: 'Candice', role: 'Management & Cashier', stations: ['pos', 'handout', 'braai', 'manager'], pin: '1978' },
+{ name: 'Bernus', role: 'POS & Handout', stations: ['pos', 'handout'], pin: '1234' },
+{ name: 'Nicole', role: 'Sales & Handout', stations: ['pos', 'handout'], pin: '1234' },
+{ name: 'Margret', role: 'Prep Station & Roll Assembly', stations: ['handout'], pin: '1234' },
+{ name: 'Nick', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' },
+{ name: 'Joost', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' }
+];
+}
 ​staffRoster.forEach(person => {
 const btn = document.createElement('button');
 btn.type = 'button';
 btn.setAttribute('data-name', person.name);
-btn.onclick = () => selectLoginName(person.name);
-btn.className = "name-select-chip min-h-[58px] p-3 rounded-2xl text-center border-2 border-slate-200 bg-white hover:bg-amber-100 hover:border-amber-400 transition flex items-center justify-center shadow-sm cursor-pointer";
-btn.innerHTML = <span class="font-black text-base sm:text-lg text-slate-900 leading-snug pointer-events-none">${person.name}</span>;
+btn.onclick = function() { selectLoginName(person.name); };
+btn.className = "name-select-chip touch-btn min-h-[52px] p-2.5 rounded-2xl text-center border-4 border-slate-200 bg-white hover:bg-amber-100 hover:border-amber-400 transition flex items-center justify-center shadow-sm";
+btn.innerHTML = <span class="font-black text-base sm:text-lg text-slate-900 pointer-events-none">${person.name}</span>;
 container.appendChild(btn);
 });
 ​if (selectedLoginStaffName) {
@@ -1443,10 +1467,10 @@ defaultWithRoll = !defaultWithRoll;
 const btn = document.getElementById('btn-roll-toggle');
 if (defaultWithRoll) {
 btn.innerText = "Default: IN ROLL";
-btn.className = "px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300";
+btn.className = "touch-btn px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-emerald-100 text-emerald-900 border border-emerald-300";
 } else {
 btn.innerText = "Default: NO ROLL";
-btn.className = "px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-amber-100 text-amber-900 border border-amber-300";
+btn.className = "touch-btn px-3 py-1.5 rounded-xl font-black text-xs uppercase bg-amber-100 text-amber-900 border border-amber-300";
 }
 }
 ​function renderMenu() {
@@ -1465,10 +1489,10 @@ card.innerHTML = `
 <p class="text-xs text-slate-600 font-bold mt-1">${item.tag}</p>
 </div>
 ​<div class="grid grid-cols-2 gap-2 mt-4">
-<button onclick="addItemToCart('${item.id}', true)" class="py-3 rounded-xl bg-slate-900 hover:bg-fest-navy text-white font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow cursor-pointer">
+<button onclick="addItemToCart('${item.id}', true)" class="touch-btn py-3 rounded-xl bg-slate-900 hover:bg-fest-navy text-white font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow">
 + In Roll
 </button>
-<button onclick="addItemToCart('${item.id}', false)" class="py-3 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 cursor-pointer">
+<button onclick="addItemToCart('${item.id}', false)" class="touch-btn py-3 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95">
 + No Roll
 </button>
 </div>
@@ -1514,7 +1538,7 @@ let totalPrice = 0;
 ​container.innerHTML = currentCart.map((item, idx) => {
 totalCount += item.qty;
 totalPrice += (item.qty * item.price);
-​return <div class="py-2.5 flex items-center justify-between gap-2"> <div> <span class="font-black text-slate-800 text-sm">${item.name}</span> <span class="block text-[11px] font-bold ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Crispy Roll' : '❌ No Roll'} </span> </div> <div class="flex items-center gap-2"> <span class="font-mono font-bold text-xs text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50"> <button onclick="adjustCartQty(${idx}, -1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200 cursor-pointer">-</button> <span class="w-7 text-center font-black font-mono text-xs">${item.qty}</span> <button onclick="adjustCartQty(${idx}, 1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200 cursor-pointer">+</button> </div> </div> </div>;
+​return <div class="py-2.5 flex items-center justify-between gap-2"> <div> <span class="font-black text-slate-800 text-sm">${item.name}</span> <span class="block text-[11px] font-bold ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Crispy Roll' : '❌ No Roll'} </span> </div> <div class="flex items-center gap-2"> <span class="font-mono font-bold text-xs text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50"> <button onclick="adjustCartQty(${idx}, -1)" class="touch-btn w-7 h-7 font-black text-sm hover:bg-slate-200">-</button> <span class="w-7 text-center font-black font-mono text-xs">${item.qty}</span> <button onclick="adjustCartQty(${idx}, 1)" class="touch-btn w-7 h-7 font-black text-sm hover:bg-slate-200">+</button> </div> </div> </div>;
 }).join('');
 ​countEl.innerText = ${totalCount} sausage${totalCount === 1 ? '' : 's'};
 priceEl.innerText = R${totalPrice.toFixed(2)};
@@ -1552,13 +1576,13 @@ const btnCash = document.getElementById('pay-method-btn-cash');
 const pnlYoko = document.getElementById('panel-yoko-payment');
 const pnlCash = document.getElementById('panel-cash-payment');
 ​if (method === 'yoko') {
-btnYoko.className = "py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
-btnCash.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
+btnYoko.className = "touch-btn py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2";
+btnCash.className = "touch-btn py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
 pnlYoko.classList.remove('hidden');
 pnlCash.classList.add('hidden');
 } else {
-btnCash.className = "py-3 rounded-2xl border-4 border-amber-500 bg-amber-50 text-amber-900 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
-btnYoko.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
+btnCash.className = "touch-btn py-3 rounded-2xl border-4 border-amber-500 bg-amber-50 text-amber-900 font-black text-sm uppercase flex items-center justify-center gap-2";
+btnYoko.className = "touch-btn py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
 pnlCash.classList.remove('hidden');
 pnlYoko.classList.add('hidden');
 setCashTenderExact();
@@ -1623,7 +1647,7 @@ const summaryContainer = document.getElementById('postit-summary-lines');
 ​function closePostItModal() {
 document.getElementById('modal-postit').classList.add('hidden');
 }
-​/* 6. BRAAI HUD (ZERO TOUCH & MANUAL CONFIRM) */
+​/* 6. BRAAI (ZERO TOUCH & MANUAL CONFIRM) */
 function renderBraaiHUD() {
 updateBraaiModeButtonsUI();
 const counts = { bratwurst: 0, bockwurst: 0, cheesegriller: 0, currywurst: 0 };
@@ -1675,7 +1699,7 @@ return <div class="p-4 rounded-2xl bg-white border-2 border-red-300 shadow-sm fl
 <span>${i.qty}x {i.name}</span>
 <span class="text-[10px] text-slate-500 uppercase">{i.withRoll ? 'Roll' : 'No Roll'}</span>
 </div>
-).join('')} </div> </div> <button onclick="markBraaiReady(${order.orderNum})" class="w-full mt-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow active:scale-95 transition flex items-center justify-center gap-1.5 cursor-pointer"> <i class="ph-bold ph-check"></i> 🔥 Ready & Pass to Handout </button> </div> ;
+).join('')} </div> </div> <button onclick="markBraaiReady(${order.orderNum})" class="touch-btn w-full mt-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow active:scale-95 transition flex items-center justify-center gap-1.5"> <i class="ph-bold ph-check"></i> 🔥 Ready & Pass to Handout </button> </div> ;
 }).join('');
 }
 }
@@ -1729,14 +1753,14 @@ ${order.items.map(item => <div class="py-1.5 flex items-center justify-between t
 </div>
 </div>
 ​<div class="mt-2 space-y-2">
-<button onclick="markOrderDelivered(${order.orderNum})" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition cursor-pointer">
+<button onclick="markOrderDelivered(${order.orderNum})" class="touch-btn w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
 Match Post-it & Mark Handed Out
 </button>
 <div class="grid grid-cols-2 gap-2 pt-1">
-<button onclick="openEditOrderModal(${order.orderNum})" class="py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center gap-1 cursor-pointer">
+<button onclick="openEditOrderModal(${order.orderNum})" class="touch-btn py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center gap-1">
 <i class="ph-bold ph-pencil-simple"></i> Edit Items
 </button>
-<button onclick="deleteSingleOrder(${order.orderNum})" class="py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black flex items-center justify-center gap-1 cursor-pointer">
+<button onclick="deleteSingleOrder(${order.orderNum})" class="touch-btn py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black flex items-center justify-center gap-1">
 <i class="ph-bold ph-trash"></i> Cancel Order
 </button>
 </div>
@@ -1836,9 +1860,9 @@ const isCancelled = order.status === 'cancelled';
 if (isCancelled) {
 statusBadge = <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-100 text-rose-700">Cancelled</span>;
 } else {
-statusBadge = <button onclick="toggleOrderStatus(${order.orderNum})" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase transition cursor-pointer ${isDelivered ? 'bg-slate-200 text-slate-600 hover:bg-slate-300' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}"> ${isDelivered ? 'Delivered' : 'Pending'} </button>;
+statusBadge = <button onclick="toggleOrderStatus(${order.orderNum})" class="touch-btn px-2 py-0.5 rounded-full text-[10px] font-black uppercase transition ${isDelivered ? 'bg-slate-200 text-slate-600 hover:bg-slate-300' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}"> ${isDelivered ? 'Delivered' : 'Pending'} </button>;
 }
-​return <tr class="hover:bg-slate-50 transition font-mono ${isCancelled ? 'opacity-50 line-through' : ''}"> <td class="py-2.5 px-3 font-black text-slate-900">#${order.orderNum}</td> <td class="py-2.5 px-3 text-slate-500 text-[11px]">${order.timeStr}</td> <td class="py-2.5 px-3 font-sans font-bold text-slate-800 truncate max-w-[220px]" title="${itemsSummary}">${itemsSummary}</td> <td class="py-2.5 px-3 text-center"> <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${order.paymentMethod === 'yoko' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'}"> ${order.paymentMethod} </span> </td> <td class="py-2.5 px-3 text-right font-black ${isCancelled ? 'text-slate-400' : 'text-emerald-700'}">R${order.totalAmount.toFixed(2)}</td> <td class="py-2.5 px-3 text-center"> ${statusBadge} </td> <td class="py-2.5 px-3 text-right font-sans"> <button onclick="openEditOrderModal(${order.orderNum})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 mr-1 cursor-pointer" title="Edit or Cancel Order"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteSingleOrder(${order.orderNum})" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer" title="Delete Order Completely"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr>;
+​return <tr class="hover:bg-slate-50 transition font-mono ${isCancelled ? 'opacity-50 line-through' : ''}"> <td class="py-2.5 px-3 font-black text-slate-900">#${order.orderNum}</td> <td class="py-2.5 px-3 text-slate-500 text-[11px]">${order.timeStr}</td> <td class="py-2.5 px-3 font-sans font-bold text-slate-800 truncate max-w-[220px]" title="${itemsSummary}">${itemsSummary}</td> <td class="py-2.5 px-3 text-center"> <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${order.paymentMethod === 'yoko' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'}"> ${order.paymentMethod} </span> </td> <td class="py-2.5 px-3 text-right font-black ${isCancelled ? 'text-slate-400' : 'text-emerald-700'}">R${order.totalAmount.toFixed(2)}</td> <td class="py-2.5 px-3 text-center"> ${statusBadge} </td> <td class="py-2.5 px-3 text-right font-sans"> <button onclick="openEditOrderModal(${order.orderNum})" class="touch-btn p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 mr-1" title="Edit or Cancel Order"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteSingleOrder(${order.orderNum})" class="touch-btn p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700" title="Delete Order Completely"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr>;
 }).join('');
 }
 ​function toggleOrderStatus(orderNum) {
@@ -1924,7 +1948,7 @@ return;
 }
 ​container.innerHTML = onHold.map((adv) => {
 const itemsStr = adv.items.map(i => ${i.qty}x ${i.name} (${i.withRoll ? 'In Roll' : 'No Roll'})).join(', ');
-return <div class="p-3 bg-white rounded-2xl border border-blue-200 flex flex-wrap items-center justify-between gap-2 shadow-sm"> <div> <span class="font-black text-sm text-slate-900 block">${adv.note}</span> <span class="text-xs text-slate-600 font-bold">${itemsStr} &bull; <b class="text-emerald-700">R${adv.totalAmount.toFixed(2)}</b></span> <span class="block text-[10px] text-blue-700 font-black uppercase mt-0.5">Target: ${adv.targetTime}</span> </div> <div class="flex items-center gap-1.5"> <button onclick="acknowledgeAndReleaseAdvanceOrder('${adv.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase shadow flex items-center gap-1 cursor-pointer"> <i class="ph-bold ph-fire"></i> Acknowledge & Release to Braai </button> <button onclick="deleteAdvanceOrder('${adv.id}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black cursor-pointer"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
+return <div class="p-3 bg-white rounded-2xl border border-blue-200 flex flex-wrap items-center justify-between gap-2 shadow-sm"> <div> <span class="font-black text-sm text-slate-900 block">${adv.note}</span> <span class="text-xs text-slate-600 font-bold">${itemsStr} &bull; <b class="text-emerald-700">R${adv.totalAmount.toFixed(2)}</b></span> <span class="block text-[10px] text-blue-700 font-black uppercase mt-0.5">Target: ${adv.targetTime}</span> </div> <div class="flex items-center gap-1.5"> <button onclick="acknowledgeAndReleaseAdvanceOrder('${adv.id}')" class="touch-btn px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase shadow flex items-center gap-1"> <i class="ph-bold ph-fire"></i> Acknowledge & Release to Braai </button> <button onclick="deleteAdvanceOrder('${adv.id}')" class="touch-btn p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
 }).join('');
 }
 ​function acknowledgeAndReleaseAdvanceOrder(advId) {
@@ -2031,7 +2055,7 @@ return;
 ​let total = 0;
 listEl.innerHTML = tempEditingItems.map((item, idx) => {
 total += (item.qty * item.price);
-return <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200"> <div> <span class="font-black text-xs text-slate-900">${item.name}</span> <button type="button" onclick="toggleEditItemRoll(${idx})" class="block text-[10px] font-black uppercase underline cursor-pointer ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Roll (Tap to change)' : '❌ No Roll (Tap to change)'} </button> </div> <div class="flex items-center gap-2"> <span class="font-mono text-xs font-bold text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden"> <button type="button" onclick="adjustEditItemQty(${idx}, -1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs cursor-pointer">-</button> <span class="w-6 text-center font-black font-mono text-xs">${item.qty}</span> <button type="button" onclick="adjustEditItemQty(${idx}, 1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs cursor-pointer">+</button> </div> <button type="button" onclick="removeEditItem(${idx})" class="text-rose-600 hover:text-rose-800 p-1 cursor-pointer"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
+return <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200"> <div> <span class="font-black text-xs text-slate-900">${item.name}</span> <button type="button" onclick="toggleEditItemRoll(${idx})" class="touch-btn block text-[10px] font-black uppercase underline ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Roll (Tap to change)' : '❌ No Roll (Tap to change)'} </button> </div> <div class="flex items-center gap-2"> <span class="font-mono text-xs font-bold text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden"> <button type="button" onclick="adjustEditItemQty(${idx}, -1)" class="touch-btn w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs">-</button> <span class="w-6 text-center font-black font-mono text-xs">${item.qty}</span> <button type="button" onclick="adjustEditItemQty(${idx}, 1)" class="touch-btn w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs">+</button> </div> <button type="button" onclick="removeEditItem(${idx})" class="touch-btn text-rose-600 hover:text-rose-800 p-1"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
 }).join('');
 ​totalEl.innerText = R${total.toFixed(2)};
 ​if (diffLabelEl && diffDisplayEl) {
@@ -2245,7 +2269,7 @@ const tbody = document.getElementById('staff-roster-tbody');
 if (!tbody) return;
 ​tbody.innerHTML = staffRoster.map(s => <tr class="hover:bg-slate-50 transition"> <td class="py-2 px-3 font-black text-slate-900">${s.name}</td> <td class="py-2 px-3 font-semibold text-slate-600">${s.role}</td> <td class="py-2 px-3"> <div class="flex flex-wrap gap-1"> ${(s.stations || []).map(st =>
 <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700">${st}</span>
-).join('')} </div> </td> <td class="py-2 px-3 text-center font-mono font-bold text-slate-400">••••</td> <td class="py-2 px-3 text-right"> <button onclick="editStaffMember('${s.name}')" class="p-1 rounded hover:bg-slate-200 text-slate-700 mr-1 cursor-pointer" title="Edit Staff & PIN"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteStaffMember('${s.name}')" class="p-1 rounded hover:bg-rose-100 text-rose-600 cursor-pointer" title="Delete Member"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr> ).join('');
+).join('')} </div> </td> <td class="py-2 px-3 text-center font-mono font-bold text-slate-400">••••</td> <td class="py-2 px-3 text-right"> <button onclick="editStaffMember('${s.name}')" class="touch-btn p-1 rounded hover:bg-slate-200 text-slate-700 mr-1" title="Edit Staff & PIN"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteStaffMember('${s.name}')" class="touch-btn p-1 rounded hover:bg-rose-100 text-rose-600" title="Delete Member"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr> ).join('');
 }
 ​function openStaffModal(editingName = null) {
 const title = document.getElementById('staff-modal-title');
