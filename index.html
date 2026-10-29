@@ -84,7 +84,7 @@
           Handout
         </button>
         <button onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
-          Braai HUD 🔥
+          Braai 🔥
         </button>
         <button onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
           <i class="ph-bold ph-lock-key"></i>
@@ -149,9 +149,9 @@
 
           <button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
             <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
-              <i class="ph-bold ph-flame text-red-600 text-2xl"></i> Braai HUD 🔥
+              <i class="ph-bold ph-flame text-red-600 text-2xl"></i> Braai 🔥
             </span>
-            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Zero-touch grill tally</p>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Live grill demand tally</p>
           </button>
 
           <button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
@@ -243,7 +243,7 @@
           <!-- Self-Service Sauce Info Note -->
           <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold flex items-center gap-2">
             <i class="ph-bold ph-info text-base text-amber-700"></i>
-            <span>Mustard, Tomato Sauce & Hot Sauce are customer self-service at the counter. Currywurst includes warm house sauce!</span>
+            <span>Mustard, Tomato Sauce & Hot Sauce are customer self-service at the counter. Bratwurst with Curry Sauce includes warm house sauce!</span>
           </div>
 
         </div>
@@ -321,9 +321,9 @@
         <div>
           <h2 class="text-2xl font-black text-amber-300 flex items-center gap-2">
             <i class="ph-bold ph-flame text-red-500 text-3xl"></i>
-            <span>BRAAI MASTER LIVE DEMAND HUD</span>
+            <span>BRAAI LIVE DEMAND</span>
           </h2>
-          <p id="braai-mode-desc" class="text-xs sm:text-sm text-slate-300 font-semibold">Zero-touch display. Keep warming trays stocked to meet this live demand.</p>
+          <p id="braai-mode-desc" class="text-xs sm:text-sm text-slate-300 font-semibold">Keep warming trays stocked to meet this live demand.</p>
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
           <!-- Toggle confirmation mode directly on braai station if needed -->
@@ -360,9 +360,9 @@
           <span class="text-xs font-bold text-slate-500 uppercase">Needed Now</span>
         </div>
 
-        <!-- Currywurst Box -->
+        <!-- Currywurst / Bratwurst with Curry Sauce Box -->
         <div class="bg-white p-4 sm:p-6 rounded-3xl border-4 border-red-500 shadow-md text-center">
-          <span class="block text-xs sm:text-sm font-black text-red-800 uppercase tracking-wider">Currywurst</span>
+          <span class="block text-xs sm:text-sm font-black text-red-800 uppercase tracking-wider">Bratwurst with Curry Sauce</span>
           <span id="hud-count-currywurst" class="block text-5xl sm:text-7xl font-black text-slate-900 font-mono my-2">0</span>
           <span class="text-xs font-bold text-slate-500 uppercase">Sliced + Curry Sauce</span>
         </div>
@@ -373,7 +373,7 @@
       <div class="p-3 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-950 flex items-center justify-between font-bold text-xs sm:text-sm">
         <span class="flex items-center gap-2">
           <i class="ph-bold ph-info text-amber-700 text-lg"></i>
-          <span><b>Note for Braai:</b> Currywurst is made using a grilled Bratwurst!</span>
+          <span><b>Note for Braai:</b> Bratwurst with Curry Sauce uses a standard grilled Bratwurst!</span>
         </span>
         <span class="bg-amber-200 px-3 py-1 rounded-xl font-black text-amber-950 font-mono">
           Total Bratwurst on Coals: <span id="hud-total-brat-combined">0</span>
@@ -683,7 +683,7 @@
               + Käsegriller (Roll)
             </button>
             <button type="button" onclick="addItemToEditedOrder('currywurst', true)" class="py-2 px-2.5 rounded-xl bg-white border border-red-300 font-bold text-xs text-left hover:bg-red-50">
-              + Currywurst
+              + Bratwurst with Curry Sauce
             </button>
           </div>
         </div>
@@ -847,7 +847,7 @@
             </div>
 
             <div class="p-2.5 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between">
-              <span class="font-black text-red-950">Currywurst</span>
+              <span class="font-black text-red-950">Bratwurst with Curry Sauce</span>
               <input type="number" min="0" value="0" id="adv-qty-currywurst" class="w-16 p-1.5 rounded-lg border border-red-300 font-mono font-black text-center text-sm">
             </div>
           </div>
@@ -961,11 +961,11 @@
       { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60, tag: 'Traditional Pork & Veal', color: 'border-amber-400 bg-amber-50/50' },
       { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60, tag: 'Smoked German Sausage', color: 'border-orange-400 bg-orange-50/50' },
       { id: 'kasegriller', name: 'Käsegriller (110g)', price: 60, tag: 'Cheddar Cheese Pork Sausage', color: 'border-yellow-400 bg-yellow-50/50' },
-      { id: 'currywurst', name: 'Currywurst', price: 70, tag: 'Bratwurst + Warm Curry Tomato Sauce', color: 'border-red-400 bg-red-50/50' }
+      { id: 'currywurst', name: 'Bratwurst with Curry Sauce', price: 70, tag: 'Bratwurst + Warm Curry Tomato Sauce', color: 'border-red-400 bg-red-50/50' }
     ];
 
     let initialInventory = {
-      bratwurst: 275, // Bratwurst stock covers both Bratwurst & Currywurst
+      bratwurst: 275, // Bratwurst stock covers both Bratwurst & Bratwurst with Curry Sauce
       bockwurst: 75,
       kasegriller: 250
     };
@@ -1105,13 +1105,17 @@
           if (legacyIdx !== -1) {
             staffRoster.splice(legacyIdx, 1);
             if (!staffRoster.some(s => s.name.toLowerCase() === 'nick')) {
-              staffRoster.push({ name: 'Nick', role: 'Braai HUD', stations: ['braai', 'handout', 'pos'], pin: '1234' });
+              staffRoster.push({ name: 'Nick', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' });
             }
             if (!staffRoster.some(s => s.name.toLowerCase() === 'joost')) {
-              staffRoster.push({ name: 'Joost', role: 'Braai HUD', stations: ['braai', 'handout', 'pos'], pin: '1234' });
+              staffRoster.push({ name: 'Joost', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' });
             }
             localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
           }
+          // Clean up any old labels mentioning "Braai HUD"
+          staffRoster.forEach(s => {
+            if (s.role === 'Braai HUD') s.role = 'Braai';
+          });
         } else {
           // Default Starter Roster
           staffRoster = [
@@ -1120,8 +1124,8 @@
             { name: 'Bernus', role: 'POS & Handout', stations: ['pos', 'handout'], pin: '1234' },
             { name: 'Nicole', role: 'Sales & Handout', stations: ['pos', 'handout'], pin: '1234' },
             { name: 'Margret', role: 'Prep Station & Roll Assembly', stations: ['handout'], pin: '1234' },
-            { name: 'Nick', role: 'Braai HUD', stations: ['braai', 'handout', 'pos'], pin: '1234' },
-            { name: 'Joost', role: 'Braai HUD', stations: ['braai', 'handout', 'pos'], pin: '1234' }
+            { name: 'Nick', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' },
+            { name: 'Joost', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' }
           ];
           localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
         }
@@ -1417,7 +1421,7 @@
     function getStationLabel(stationKey) {
       if (stationKey === 'pos') return 'CASHIER / POS';
       if (stationKey === 'handout') return 'HANDOUT & PREP';
-      if (stationKey === 'braai') return 'BRAAI HUD 🔥';
+      if (stationKey === 'braai') return 'BRAAI 🔥';
       if (stationKey === 'manager') return 'MANAGER MASTER';
       return 'STAFF';
     }
@@ -1708,7 +1712,7 @@
       if (elBock) elBock.innerText = counts.bockwurst;
       if (elKase) elKase.innerText = counts.kasegriller;
       if (elCurr) elCurr.innerText = counts.currywurst;
-      if (elCombinedBrat) elCombinedBrat.innerText = `${counts.bratwurst + counts.currywurst} (${counts.bratwurst} Brat + ${counts.currywurst} Curry)`;
+      if (elCombinedBrat) elCombinedBrat.innerText = `${counts.bratwurst + counts.currywurst} (${counts.bratwurst} Brat + ${counts.currywurst} Curry Sauce)`;
 
       // Stream of incoming tickets for reference
       const stream = document.getElementById('braai-incoming-stream');
@@ -1943,7 +1947,7 @@
       const elInvBrat = document.getElementById('inv-bratwurst');
       const elRemBrat = document.getElementById('inv-rem-bratwurst');
       if (elInvBrat) elInvBrat.innerText = `${totalBratwurstsUsed} / ${initialInventory.bratwurst}`;
-      if (elRemBrat) elRemBrat.innerText = `${remBrat} Left (${sausageCounts.bratwurst} standard + ${sausageCounts.currywurst} curry)`;
+      if (elRemBrat) elRemBrat.innerText = `${remBrat} Left (${sausageCounts.bratwurst} standard + ${sausageCounts.currywurst} curry sauce)`;
 
       const elInvBock = document.getElementById('inv-bockwurst');
       const elRemBock = document.getElementById('inv-rem-bockwurst');
@@ -2048,7 +2052,7 @@
       if (qBrat > 0) items.push({ productId: 'bratwurst', name: 'Bratwurst (140g)', price: 60, qty: qBrat, withRoll });
       if (qBock > 0) items.push({ productId: 'bockwurst', name: 'Bockwurst (140g)', price: 60, qty: qBock, withRoll });
       if (qKase > 0) items.push({ productId: 'kasegriller', name: 'Käsegriller (110g)', price: 60, qty: qKase, withRoll });
-      if (qCurr > 0) items.push({ productId: 'currywurst', name: 'Currywurst', price: 70, qty: qCurr, withRoll });
+      if (qCurr > 0) items.push({ productId: 'currywurst', name: 'Bratwurst with Curry Sauce', price: 70, qty: qCurr, withRoll });
 
       if (items.length === 0) {
         showToast('Empty Pre-Order', 'Please enter at least 1 sausage', '⚠️');
@@ -2340,7 +2344,7 @@
       const randomProducts = [
         { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60, withRoll: true },
         { id: 'kasegriller', name: 'Käsegriller (110g)', price: 60, withRoll: true },
-        { id: 'currywurst', name: 'Currywurst', price: 70, withRoll: true },
+        { id: 'currywurst', name: 'Bratwurst with Curry Sauce', price: 70, withRoll: true },
         { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60, withRoll: false }
       ];
 
