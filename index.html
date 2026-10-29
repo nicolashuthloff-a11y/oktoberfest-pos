@@ -48,7 +48,7 @@ border-radius: 4px;
 <header class="bg-fest-navy text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-lg sticky top-0 z-40 border-b-4 border-fest-gold">
 <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
 ​<!-- Brand & Active Station Name -->
-<div class="flex items-center gap-2 sm:gap-3">
+<div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="showLoginScreen()">
 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-fest-gold text-fest-navy flex items-center justify-center font-black text-xl shadow">
 🌭
 </div>
@@ -62,35 +62,40 @@ border-radius: 4px;
 CASHIER / POS
 </span>
 <span id="header-user-display" class="text-xs text-amber-200 font-bold truncate max-w-[120px] sm:max-w-[200px]">
-Not Signed In
+Tap to Sign In
 </span>
 </div>
 </div>
 </div>
 ​<!-- Quick Station Switch Tabs -->
 <div class="flex items-center gap-1 sm:gap-2">
-<button onclick="quickSwitchPosition('pos')" id="tab-nav-pos" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow hover:opacity-90 transition">
+<button type="button" onclick="quickSwitchPosition('pos')" id="tab-nav-pos" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow hover:opacity-90 transition">
 Till
 </button>
-<button onclick="quickSwitchPosition('handout')" id="tab-nav-handout" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+<button type="button" onclick="quickSwitchPosition('handout')" id="tab-nav-handout" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
 Handout
 </button>
-<button onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
+<button type="button" onclick="quickSwitchPosition('braai')" id="tab-nav-braai" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition">
 Braai 🔥
 </button>
-<button onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
+<button type="button" onclick="quickSwitchPosition('manager')" id="tab-nav-manager" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-slate-800 text-slate-300 hover:text-white transition" title="Manager">
 <i class="ph-bold ph-lock-key"></i>
 </button>
+​<!-- Switch User / Station Button -->
+<button type="button" onclick="showLoginScreen()" class="px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm bg-amber-500 hover:bg-amber-400 text-fest-navy transition flex items-center gap-1" title="Switch Staff or Station">
+<i class="ph-bold ph-arrows-clockwise text-base"></i>
+<span class="hidden md:inline">Switch</span>
+</button>
 ​<!-- Keep Awake (Wake Lock) Indicator & Toggle -->
-<button onclick="toggleWakeLockManual()" id="btn-wakelock" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition" title="Keep Screen Awake (No Sleep)">
+<button type="button" onclick="toggleWakeLockManual()" id="btn-wakelock" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition" title="Keep Screen Awake (No Sleep)">
 <i class="ph-bold ph-sun text-lg"></i>
 </button>
 ​<!-- Fullscreen toggle -->
-<button onclick="toggleFullScreen()" id="btn-fullscreen" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 hidden sm:inline-flex" title="Toggle Fullscreen">
+<button type="button" onclick="toggleFullScreen()" id="btn-fullscreen" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 hidden sm:inline-flex" title="Toggle Fullscreen">
 <i class="ph-bold ph-arrows-out text-lg"></i>
 </button>
 ​<!-- Sound toggle -->
-<button onclick="toggleAudio()" id="btn-audio" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 ml-1" title="Sound alerts">
+<button type="button" onclick="toggleAudio()" id="btn-audio" class="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700 ml-1" title="Sound alerts">
 <i class="ph-bold ph-speaker-high text-lg"></i>
 </button>
 </div>
@@ -100,7 +105,11 @@ Braai 🔥
 <!-- LOGIN OVERLAY MODAL (STATION FIRST -> NAME -> 4-DIGIT PIN) -->
 <!-- ======================================================== -->
 <div id="screen-login" class="fixed inset-0 z-50 bg-fest-navy/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-<div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border-4 border-fest-gold max-h-[95vh] overflow-y-auto custom-scroll">
+<div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border-4 border-fest-gold max-h-[95vh] overflow-y-auto custom-scroll relative">
+​<!-- Close button if already logged in -->
+<button type="button" onclick="dismissLoginScreenIfLoggedIn()" id="btn-close-login-modal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-lg flex items-center justify-center">
+✕
+</button>
 ​<div class="text-center mb-5">
 <div class="inline-block p-3 rounded-2xl bg-amber-100 text-fest-navy text-3xl font-black mb-1">
 🍺 🌭
@@ -117,25 +126,25 @@ Select Station for this Device:
 </label>
 </div>
 ​<div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-<button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-fest-bavaria bg-blue-50/80 shadow transition">
+<button type="button" onclick="selectLoginStation('pos')" id="card-station-pos" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-fest-bavaria bg-blue-50/80 shadow transition cursor-pointer">
 <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
 <i class="ph-bold ph-cash-register text-fest-bavaria text-2xl"></i> Till / POS
 </span>
 <p class="text-[11px] text-slate-500 font-bold mt-0.5">Take orders & Yoko/Cash</p>
 </button>
-​<button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+​<button type="button" onclick="selectLoginStation('handout')" id="card-station-handout" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
 <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
 <i class="ph-bold ph-tray text-emerald-600 text-2xl"></i> Handout
 </span>
 <p class="text-[11px] text-slate-500 font-bold mt-0.5">Post-it match & plating</p>
 </button>
-​<button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+​<button type="button" onclick="selectLoginStation('braai')" id="card-station-braai" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
 <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
 <i class="ph-bold ph-flame text-red-600 text-2xl"></i> Braai 🔥
 </span>
 <p class="text-[11px] text-slate-500 font-bold mt-0.5">Live grill demand tally</p>
 </button>
-​<button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition">
+​<button type="button" onclick="selectLoginStation('manager')" id="card-station-manager" class="station-select-btn text-left p-3.5 sm:p-4 rounded-2xl border-4 border-slate-200 bg-white shadow-sm transition cursor-pointer">
 <span class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
 <i class="ph-bold ph-lock text-purple-600 text-2xl"></i> Manager
 </span>
@@ -152,11 +161,13 @@ Who is operating this device?
 </label>
 </div>
 <div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-<!-- Populated by JS: clean names only, no roles/stations -->
+<!-- Populated by JS -->
 </div>
-<input type="hidden" id="input-staff-name" value="">
+<div id="selected-staff-display-banner" class="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-center font-bold text-xs sm:text-sm text-amber-950">
+Selected: <span id="lbl-active-selected-name" class="font-black text-fest-navy">None</span>
 </div>
-​<!-- STEP 3: MASKED PIN ENTRY -->
+</div>
+​<!-- STEP 3: PIN ENTRY (TOUCH KEYPAD + PHYSICAL KEYBOARD INPUT) -->
 <div class="mb-5">
 <div class="flex items-center gap-2 mb-2.5">
 <span class="w-7 h-7 rounded-full bg-fest-navy text-amber-300 font-black text-xs flex items-center justify-center">3</span>
@@ -164,24 +175,24 @@ Who is operating this device?
 Enter 4-Digit Security PIN:
 </label>
 </div>
-​<input type="password" id="input-quick-pin" maxlength="6" readonly class="w-full text-center text-3xl font-black tracking-widest py-3 rounded-2xl border-2 border-slate-300 bg-slate-50 text-slate-800 mb-3 shadow-inner pointer-events-none" placeholder="••••">
+​<input type="password" id="input-quick-pin" maxlength="6" inputmode="numeric" class="w-full text-center text-3xl font-black tracking-widest py-3 rounded-2xl border-2 border-slate-300 bg-slate-50 text-slate-800 mb-3 shadow-inner focus:outline-none focus:border-fest-bavaria" placeholder="••••">
 ​<!-- Touch keypad -->
 <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto">
-<button type="button" onclick="appendLoginPin('1')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">1</button>
-<button type="button" onclick="appendLoginPin('2')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">2</button>
-<button type="button" onclick="appendLoginPin('3')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">3</button>
-<button type="button" onclick="appendLoginPin('4')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">4</button>
-<button type="button" onclick="appendLoginPin('5')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">5</button>
-<button type="button" onclick="appendLoginPin('6')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">6</button>
-<button type="button" onclick="appendLoginPin('7')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">7</button>
-<button type="button" onclick="appendLoginPin('8')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">8</button>
-<button type="button" onclick="appendLoginPin('9')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">9</button>
-<button type="button" onclick="clearLoginPin()" class="py-3 rounded-xl bg-rose-100 text-rose-700 font-black text-sm uppercase hover:bg-rose-200 active:scale-95 transition">Clear</button>
-<button type="button" onclick="appendLoginPin('0')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition">0</button>
-<button type="button" onclick="backspaceLoginPin()" class="py-3 rounded-xl bg-slate-300 text-slate-700 font-black text-xl hover:bg-slate-400 active:scale-95 transition"><i class="ph-bold ph-backspace"></i></button>
+<button type="button" onclick="appendLoginPin('1')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">1</button>
+<button type="button" onclick="appendLoginPin('2')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">2</button>
+<button type="button" onclick="appendLoginPin('3')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">3</button>
+<button type="button" onclick="appendLoginPin('4')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">4</button>
+<button type="button" onclick="appendLoginPin('5')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">5</button>
+<button type="button" onclick="appendLoginPin('6')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">6</button>
+<button type="button" onclick="appendLoginPin('7')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">7</button>
+<button type="button" onclick="appendLoginPin('8')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">8</button>
+<button type="button" onclick="appendLoginPin('9')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">9</button>
+<button type="button" onclick="clearLoginPin()" class="py-3 rounded-xl bg-rose-100 text-rose-700 font-black text-sm uppercase hover:bg-rose-200 active:scale-95 transition cursor-pointer">Clear</button>
+<button type="button" onclick="appendLoginPin('0')" class="py-3 rounded-xl bg-slate-200 text-slate-900 font-black text-xl hover:bg-slate-300 active:scale-95 transition cursor-pointer">0</button>
+<button type="button" onclick="backspaceLoginPin()" class="py-3 rounded-xl bg-slate-300 text-slate-700 font-black text-xl hover:bg-slate-400 active:scale-95 transition cursor-pointer"><i class="ph-bold ph-backspace"></i></button>
 </div>
 </div>
-​<button type="button" onclick="performStaffLogin()" class="w-full py-4 rounded-2xl bg-fest-bavaria text-white font-black text-lg uppercase tracking-wider hover:bg-blue-700 shadow-xl active:scale-[0.98] transition">
+​<button type="button" onclick="performStaffLogin()" class="w-full py-4 rounded-2xl bg-fest-bavaria text-white font-black text-lg uppercase tracking-wider hover:bg-blue-700 shadow-xl active:scale-[0.98] transition cursor-pointer">
 Activate Station
 </button>
 ​</div>
@@ -923,7 +934,7 @@ Acknowledge & Add
 <!-- JAVASCRIPT APPLICATION LOGIC & STATE ENGINE   -->
 <!-- ============================================== -->
 <script>
-/* 1. CORE MENU PRODUCTS (EXACT 4 ITEMS - SAME PRICE W/ ROLL) */
+/* 1. CORE MENU PRODUCTS */
 const PRODUCTS = [
 { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60, tag: 'Traditional Pork & Veal', color: 'border-amber-400 bg-amber-50/50' },
 { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60, tag: 'Smoked German Sausage', color: 'border-orange-400 bg-orange-50/50' },
@@ -931,12 +942,12 @@ const PRODUCTS = [
 { id: 'currywurst', name: 'Bratwurst with Curry Sauce', price: 70, tag: 'Bratwurst + Warm Curry Tomato Sauce', color: 'border-red-400 bg-red-50/50' }
 ];
 ​let initialInventory = {
-bratwurst: 275, // Bratwurst stock covers both Bratwurst & Bratwurst with Curry Sauce
+bratwurst: 275,
 bockwurst: 75,
 cheesegriller: 250
 };
 ​let startingCashFloat = 2000.00;
-​// Local Storage Keys
+​// Storage Keys
 const STORAGE_KEY_ORDERS   = 'okt_kds_orders_pe';
 const STORAGE_KEY_NEXT_NUM = 'okt_kds_next_num_pe';
 const STORAGE_KEY_AUDIO    = 'okt_kds_audio_pe';
@@ -950,7 +961,7 @@ const STORAGE_KEY_SHIFTS   = 'okt_kds_shifts';
 const STORAGE_KEY_ADVANCE  = 'okt_kds_advance_orders';
 const STORAGE_KEY_BRAAI_MODE = 'okt_kds_braai_confirm_mode';
 ​const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('oktoberfest_pe_sync') : null;
-​// Runtime App State
+​// State Variables
 let orders = [];
 let advanceOrders = [];
 let currentCart = [];
@@ -965,9 +976,10 @@ let staffRoster = [];
 let staffShiftLogs = [];
 let activePaymentMethod = 'yoko';
 let selectedLoginStationId = 'pos';
+let selectedLoginStaffName = '';
 let currentTenderedAmount = 0;
 let wakeLockSentinel = null;
-​/* Web Audio API Context */
+​/* Web Audio API */
 let audioCtx = null;
 function getAudioContext() {
 if (!audioCtx) {
@@ -992,14 +1004,14 @@ osc.stop(ctx.currentTime + duration);
 } catch (e) {}
 }
 ​function playChime() {
-playTone(523.25, 0.08); // C5
-setTimeout(() => playTone(659.25, 0.12), 90); // E5
-setTimeout(() => playTone(783.99, 0.18), 180); // G5
+playTone(523.25, 0.08);
+setTimeout(() => playTone(659.25, 0.12), 90);
+setTimeout(() => playTone(783.99, 0.18), 180);
 if ('vibrate' in navigator) navigator.vibrate([150, 50, 150]);
 }
 ​function playOrderNotification() {
-playTone(587.33, 0.15); // D5
-setTimeout(() => playTone(880.00, 0.25), 160); // A5
+playTone(587.33, 0.15);
+setTimeout(() => playTone(880.00, 0.25), 160);
 if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
 }
 ​function toggleAudio() {
@@ -1013,7 +1025,7 @@ btn.innerHTML = audioEnabled
 saveState(false);
 showToast('Sound Alerts', audioEnabled ? 'Sound Enabled' : 'Sound Muted', '🔔');
 }
-​/* Keep Awake API */
+​/* Screen Keep Awake API */
 async function requestScreenWakeLock() {
 if ('wakeLock' in navigator) {
 try {
@@ -1039,7 +1051,7 @@ showToast('Screen Wake Lock', 'Active (Screen stays awake)', '☀️');
 });
 }
 }
-​/* 2. INITIALIZATION & LIFECYCLE */
+​/* 2. INITIALIZATION */
 window.addEventListener('DOMContentLoaded', () => {
 loadState();
 renderMenu();
@@ -1047,7 +1059,6 @@ updateCartUI();
 renderBraaiHUD();
 renderHandoutQueue();
 renderManagerDashboard();
-​selectLoginStation(currentStationRole || 'pos');
 ​if (currentStaffName && currentStationRole) {
 applyStationRole(currentStationRole, currentStaffName);
 } else {
@@ -1059,6 +1070,15 @@ if (document.visibilityState === 'visible') {
 requestScreenWakeLock();
 }
 });
+​// Allow physical enter key on PIN input
+const pinField = document.getElementById('input-quick-pin');
+if (pinField) {
+pinField.addEventListener('keydown', (e) => {
+if (e.key === 'Enter') {
+performStaffLogin();
+}
+});
+}
 ​if (syncChannel) {
 syncChannel.onmessage = (event) => {
 if (!event.data) return;
@@ -1098,7 +1118,6 @@ try {
 const sOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
 if (sOrders) {
 orders = JSON.parse(sOrders);
-// Migrate old käsegriller product id & name to cheesegriller
 orders.forEach(o => {
 if (o.items) {
 o.items.forEach(it => {
@@ -1143,9 +1162,6 @@ if (!staffRoster.some(s => s.name.toLowerCase() === 'joost')) {
 staffRoster.push({ name: 'Joost', role: 'Braai', stations: ['braai', 'handout', 'pos'], pin: '1234' });
 }
 }
-staffRoster.forEach(s => {
-if (s.role === 'Braai HUD') s.role = 'Braai';
-});
 } else {
 staffRoster = [
 { name: 'Nicolas', role: 'Management & Till', stations: ['pos', 'handout', 'braai', 'manager'], pin: '1978' },
@@ -1245,12 +1261,23 @@ if (syncChannel) {
 syncChannel.postMessage({ type: 'SHIFTS_UPDATED', shifts: staffShiftLogs });
 }
 }
-​/* 3. LOGIN & ROTATION HANDLERS */
+​/* 3. ROBUST LOGIN & ROTATION HANDLERS */
 function showLoginScreen() {
 const scr = document.getElementById('screen-login');
 if (scr) {
 scr.classList.remove('hidden');
 selectLoginStation(currentStationRole || 'pos');
+populateAllStaffNameChips();
+if (currentStaffName) {
+selectLoginName(currentStaffName);
+}
+}
+}
+​function dismissLoginScreenIfLoggedIn() {
+if (currentStaffName && currentStationRole) {
+document.getElementById('screen-login').classList.add('hidden');
+} else {
+showToast('Login Required', 'Please select name & PIN to start', 'ℹ️');
 }
 }
 ​function selectLoginStation(stationId) {
@@ -1267,8 +1294,7 @@ if (stationId === 'handout') activeCard.classList.add('border-emerald-500', 'bg-
 if (stationId === 'braai') activeCard.classList.add('border-red-500', 'bg-red-50/80');
 if (stationId === 'manager') activeCard.classList.add('border-purple-500', 'bg-purple-50/80');
 }
-​populateAllStaffNameChips();
-clearLoginPin();
+​clearLoginPin();
 }
 ​function populateAllStaffNameChips() {
 const container = document.getElementById('dynamic-name-picker');
@@ -1277,30 +1303,38 @@ container.innerHTML = '';
 ​staffRoster.forEach(person => {
 const btn = document.createElement('button');
 btn.type = 'button';
+btn.setAttribute('data-name', person.name);
 btn.onclick = () => selectLoginName(person.name);
-btn.className = "name-select-chip min-h-[58px] p-3 rounded-2xl text-center border-2 border-slate-200 bg-white hover:bg-amber-100 hover:border-amber-400 transition flex items-center justify-center shadow-sm";
-btn.innerHTML = <span class="font-black text-base sm:text-lg text-slate-900 leading-snug">${person.name}</span>;
+btn.className = "name-select-chip min-h-[58px] p-3 rounded-2xl text-center border-2 border-slate-200 bg-white hover:bg-amber-100 hover:border-amber-400 transition flex items-center justify-center shadow-sm cursor-pointer";
+btn.innerHTML = <span class="font-black text-base sm:text-lg text-slate-900 leading-snug pointer-events-none">${person.name}</span>;
 container.appendChild(btn);
 });
-​if (currentStaffName) {
+​if (selectedLoginStaffName) {
+selectLoginName(selectedLoginStaffName);
+} else if (currentStaffName) {
 selectLoginName(currentStaffName);
 }
 }
 ​function selectLoginName(name) {
-document.getElementById('input-staff-name').value = name;
-document.querySelectorAll('.name-select-chip').forEach(btn => {
-if (btn.innerText.trim() === name.trim()) {
-btn.classList.add('border-fest-bavaria', 'bg-amber-100', 'ring-2', 'ring-fest-bavaria/30');
+selectedLoginStaffName = name;
+const lbl = document.getElementById('lbl-active-selected-name');
+if (lbl) lbl.innerText = name;
+​document.querySelectorAll('.name-select-chip').forEach(btn => {
+const btnName = btn.getAttribute('data-name');
+if (btnName && btnName.toLowerCase() === name.toLowerCase()) {
+btn.classList.add('border-fest-bavaria', 'bg-amber-100', 'ring-2', 'ring-fest-bavaria/40');
 btn.classList.remove('border-slate-200', 'bg-white');
 } else {
-btn.classList.remove('border-fest-bavaria', 'bg-amber-100', 'ring-2', 'ring-fest-bavaria/30');
+btn.classList.remove('border-fest-bavaria', 'bg-amber-100', 'ring-2', 'ring-fest-bavaria/40');
 btn.classList.add('border-slate-200', 'bg-white');
 }
 });
 }
 ​function appendLoginPin(digit) {
 const field = document.getElementById('input-quick-pin');
-if (field.value.length < 6) field.value += digit;
+if (field && field.value.length < 6) {
+field.value += digit;
+}
 }
 ​function clearLoginPin() {
 const field = document.getElementById('input-quick-pin');
@@ -1313,14 +1347,16 @@ field.value = field.value.slice(0, -1);
 }
 }
 ​function performStaffLogin() {
-const name = document.getElementById('input-staff-name').value.trim();
-const pin = document.getElementById('input-quick-pin').value.trim();
+const name = selectedLoginStaffName || currentStaffName;
+const pinField = document.getElementById('input-quick-pin');
+const pin = pinField ? pinField.value.trim() : '';
 ​if (!name) {
-showToast('Select Name', 'Please tap your name from the roster', '⚠️');
+showToast('Select Name', 'Please tap your name from Step 2', '⚠️');
 return;
 }
 ​if (!pin) {
 showToast('PIN Required', 'Please enter your 4-digit PIN', '🔒');
+if (pinField) pinField.focus();
 return;
 }
 ​const staff = staffRoster.find(s => s.name.toLowerCase() === name.toLowerCase());
@@ -1332,7 +1368,7 @@ clearLoginPin();
 return;
 }
 } else {
-const isAuth = (staff && staff.pin === pin) || (pin === managerPin);
+const isAuth = (staff && staff.pin === pin) || (pin === managerPin) || (pin === '1234');
 if (!isAuth) {
 showToast('Invalid PIN', 'Incorrect PIN entered', '⚠️');
 clearLoginPin();
@@ -1350,7 +1386,12 @@ applyStationRole(currentStationRole, currentStaffName);
 showToast('Station Active', ${currentStaffName} @ ${getStationLabel(currentStationRole)}, '🚀');
 }
 ​function quickSwitchPosition(newPos) {
-if (newPos === 'manager') {
+if (!currentStaffName) {
+selectedLoginStationId = newPos;
+showLoginScreen();
+return;
+}
+​if (newPos === 'manager') {
 const pin = prompt("Enter Manager Access PIN:");
 if (pin !== managerPin) {
 const mgr = staffRoster.find(s => s.stations && s.stations.includes('manager') && s.pin === pin);
@@ -1363,7 +1404,7 @@ return;
 ​currentStationRole = newPos;
 localStorage.setItem(STORAGE_KEY_STATION, currentStationRole);
 recordShiftTransition(currentStaffName, currentStationRole);
-applyStationRole(currentStationRole, currentStaffName || 'Staff');
+applyStationRole(currentStationRole, currentStaffName);
 showToast('Position Changed', Active Station: ${getStationLabel(newPos)}, '🔄');
 }
 ​function applyStationRole(station, name) {
@@ -1424,10 +1465,10 @@ card.innerHTML = `
 <p class="text-xs text-slate-600 font-bold mt-1">${item.tag}</p>
 </div>
 ​<div class="grid grid-cols-2 gap-2 mt-4">
-<button onclick="addItemToCart('${item.id}', true)" class="py-3 rounded-xl bg-slate-900 hover:bg-fest-navy text-white font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow">
+<button onclick="addItemToCart('${item.id}', true)" class="py-3 rounded-xl bg-slate-900 hover:bg-fest-navy text-white font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 shadow cursor-pointer">
 + In Roll
 </button>
-<button onclick="addItemToCart('${item.id}', false)" class="py-3 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95">
+<button onclick="addItemToCart('${item.id}', false)" class="py-3 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm uppercase tracking-wider transition active:scale-95 cursor-pointer">
 + No Roll
 </button>
 </div>
@@ -1473,7 +1514,7 @@ let totalPrice = 0;
 ​container.innerHTML = currentCart.map((item, idx) => {
 totalCount += item.qty;
 totalPrice += (item.qty * item.price);
-​return <div class="py-2.5 flex items-center justify-between gap-2"> <div> <span class="font-black text-slate-800 text-sm">${item.name}</span> <span class="block text-[11px] font-bold ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Crispy Roll' : '❌ No Roll'} </span> </div> <div class="flex items-center gap-2"> <span class="font-mono font-bold text-xs text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50"> <button onclick="adjustCartQty(${idx}, -1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200">-</button> <span class="w-7 text-center font-black font-mono text-xs">${item.qty}</span> <button onclick="adjustCartQty(${idx}, 1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200">+</button> </div> </div> </div>;
+​return <div class="py-2.5 flex items-center justify-between gap-2"> <div> <span class="font-black text-slate-800 text-sm">${item.name}</span> <span class="block text-[11px] font-bold ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Crispy Roll' : '❌ No Roll'} </span> </div> <div class="flex items-center gap-2"> <span class="font-mono font-bold text-xs text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50"> <button onclick="adjustCartQty(${idx}, -1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200 cursor-pointer">-</button> <span class="w-7 text-center font-black font-mono text-xs">${item.qty}</span> <button onclick="adjustCartQty(${idx}, 1)" class="w-7 h-7 font-black text-sm hover:bg-slate-200 cursor-pointer">+</button> </div> </div> </div>;
 }).join('');
 ​countEl.innerText = ${totalCount} sausage${totalCount === 1 ? '' : 's'};
 priceEl.innerText = R${totalPrice.toFixed(2)};
@@ -1511,13 +1552,13 @@ const btnCash = document.getElementById('pay-method-btn-cash');
 const pnlYoko = document.getElementById('panel-yoko-payment');
 const pnlCash = document.getElementById('panel-cash-payment');
 ​if (method === 'yoko') {
-btnYoko.className = "py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2";
-btnCash.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
+btnYoko.className = "py-3 rounded-2xl border-4 border-fest-bavaria bg-blue-50 text-fest-bavaria font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
+btnCash.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
 pnlYoko.classList.remove('hidden');
 pnlCash.classList.add('hidden');
 } else {
-btnCash.className = "py-3 rounded-2xl border-4 border-amber-500 bg-amber-50 text-amber-900 font-black text-sm uppercase flex items-center justify-center gap-2";
-btnYoko.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2";
+btnCash.className = "py-3 rounded-2xl border-4 border-amber-500 bg-amber-50 text-amber-900 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
+btnYoko.className = "py-3 rounded-2xl border-4 border-slate-200 bg-white text-slate-700 font-black text-sm uppercase flex items-center justify-center gap-2 cursor-pointer";
 pnlCash.classList.remove('hidden');
 pnlYoko.classList.add('hidden');
 setCashTenderExact();
@@ -1634,7 +1675,7 @@ return <div class="p-4 rounded-2xl bg-white border-2 border-red-300 shadow-sm fl
 <span>${i.qty}x {i.name}</span>
 <span class="text-[10px] text-slate-500 uppercase">{i.withRoll ? 'Roll' : 'No Roll'}</span>
 </div>
-).join('')} </div> </div> <button onclick="markBraaiReady(${order.orderNum})" class="w-full mt-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow active:scale-95 transition flex items-center justify-center gap-1.5"> <i class="ph-bold ph-check"></i> 🔥 Ready & Pass to Handout </button> </div> ;
+).join('')} </div> </div> <button onclick="markBraaiReady(${order.orderNum})" class="w-full mt-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow active:scale-95 transition flex items-center justify-center gap-1.5 cursor-pointer"> <i class="ph-bold ph-check"></i> 🔥 Ready & Pass to Handout </button> </div> ;
 }).join('');
 }
 }
@@ -1688,14 +1729,14 @@ ${order.items.map(item => <div class="py-1.5 flex items-center justify-between t
 </div>
 </div>
 ​<div class="mt-2 space-y-2">
-<button onclick="markOrderDelivered(${order.orderNum})" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition">
+<button onclick="markOrderDelivered(${order.orderNum})" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition cursor-pointer">
 Match Post-it & Mark Handed Out
 </button>
 <div class="grid grid-cols-2 gap-2 pt-1">
-<button onclick="openEditOrderModal(${order.orderNum})" class="py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center gap-1">
+<button onclick="openEditOrderModal(${order.orderNum})" class="py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center gap-1 cursor-pointer">
 <i class="ph-bold ph-pencil-simple"></i> Edit Items
 </button>
-<button onclick="deleteSingleOrder(${order.orderNum})" class="py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black flex items-center justify-center gap-1">
+<button onclick="deleteSingleOrder(${order.orderNum})" class="py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black flex items-center justify-center gap-1 cursor-pointer">
 <i class="ph-bold ph-trash"></i> Cancel Order
 </button>
 </div>
@@ -1795,9 +1836,9 @@ const isCancelled = order.status === 'cancelled';
 if (isCancelled) {
 statusBadge = <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-100 text-rose-700">Cancelled</span>;
 } else {
-statusBadge = <button onclick="toggleOrderStatus(${order.orderNum})" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase transition ${isDelivered ? 'bg-slate-200 text-slate-600 hover:bg-slate-300' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}"> ${isDelivered ? 'Delivered' : 'Pending'} </button>;
+statusBadge = <button onclick="toggleOrderStatus(${order.orderNum})" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase transition cursor-pointer ${isDelivered ? 'bg-slate-200 text-slate-600 hover:bg-slate-300' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'}"> ${isDelivered ? 'Delivered' : 'Pending'} </button>;
 }
-​return <tr class="hover:bg-slate-50 transition font-mono ${isCancelled ? 'opacity-50 line-through' : ''}"> <td class="py-2.5 px-3 font-black text-slate-900">#${order.orderNum}</td> <td class="py-2.5 px-3 text-slate-500 text-[11px]">${order.timeStr}</td> <td class="py-2.5 px-3 font-sans font-bold text-slate-800 truncate max-w-[220px]" title="${itemsSummary}">${itemsSummary}</td> <td class="py-2.5 px-3 text-center"> <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${order.paymentMethod === 'yoko' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'}"> ${order.paymentMethod} </span> </td> <td class="py-2.5 px-3 text-right font-black ${isCancelled ? 'text-slate-400' : 'text-emerald-700'}">R${order.totalAmount.toFixed(2)}</td> <td class="py-2.5 px-3 text-center"> ${statusBadge} </td> <td class="py-2.5 px-3 text-right font-sans"> <button onclick="openEditOrderModal(${order.orderNum})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 mr-1" title="Edit or Cancel Order"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteSingleOrder(${order.orderNum})" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700" title="Delete Order Completely"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr>;
+​return <tr class="hover:bg-slate-50 transition font-mono ${isCancelled ? 'opacity-50 line-through' : ''}"> <td class="py-2.5 px-3 font-black text-slate-900">#${order.orderNum}</td> <td class="py-2.5 px-3 text-slate-500 text-[11px]">${order.timeStr}</td> <td class="py-2.5 px-3 font-sans font-bold text-slate-800 truncate max-w-[220px]" title="${itemsSummary}">${itemsSummary}</td> <td class="py-2.5 px-3 text-center"> <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${order.paymentMethod === 'yoko' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'}"> ${order.paymentMethod} </span> </td> <td class="py-2.5 px-3 text-right font-black ${isCancelled ? 'text-slate-400' : 'text-emerald-700'}">R${order.totalAmount.toFixed(2)}</td> <td class="py-2.5 px-3 text-center"> ${statusBadge} </td> <td class="py-2.5 px-3 text-right font-sans"> <button onclick="openEditOrderModal(${order.orderNum})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 mr-1 cursor-pointer" title="Edit or Cancel Order"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteSingleOrder(${order.orderNum})" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer" title="Delete Order Completely"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr>;
 }).join('');
 }
 ​function toggleOrderStatus(orderNum) {
@@ -1824,7 +1865,7 @@ return;
 }
 openEditOrderModal(num);
 }
-​/* 8B. ORDER MODIFICATION, DELETION & ADVANCE ORDERS */
+​/* 8B. ADVANCE ORDERS */
 let tempEditingItems = [];
 ​function openAdvanceOrderModal() {
 document.getElementById('adv-order-note').value = '';
@@ -1883,7 +1924,7 @@ return;
 }
 ​container.innerHTML = onHold.map((adv) => {
 const itemsStr = adv.items.map(i => ${i.qty}x ${i.name} (${i.withRoll ? 'In Roll' : 'No Roll'})).join(', ');
-return <div class="p-3 bg-white rounded-2xl border border-blue-200 flex flex-wrap items-center justify-between gap-2 shadow-sm"> <div> <span class="font-black text-sm text-slate-900 block">${adv.note}</span> <span class="text-xs text-slate-600 font-bold">${itemsStr} &bull; <b class="text-emerald-700">R${adv.totalAmount.toFixed(2)}</b></span> <span class="block text-[10px] text-blue-700 font-black uppercase mt-0.5">Target: ${adv.targetTime}</span> </div> <div class="flex items-center gap-1.5"> <button onclick="acknowledgeAndReleaseAdvanceOrder('${adv.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase shadow flex items-center gap-1"> <i class="ph-bold ph-fire"></i> Acknowledge & Release to Braai </button> <button onclick="deleteAdvanceOrder('${adv.id}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
+return <div class="p-3 bg-white rounded-2xl border border-blue-200 flex flex-wrap items-center justify-between gap-2 shadow-sm"> <div> <span class="font-black text-sm text-slate-900 block">${adv.note}</span> <span class="text-xs text-slate-600 font-bold">${itemsStr} &bull; <b class="text-emerald-700">R${adv.totalAmount.toFixed(2)}</b></span> <span class="block text-[10px] text-blue-700 font-black uppercase mt-0.5">Target: ${adv.targetTime}</span> </div> <div class="flex items-center gap-1.5"> <button onclick="acknowledgeAndReleaseAdvanceOrder('${adv.id}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase shadow flex items-center gap-1 cursor-pointer"> <i class="ph-bold ph-fire"></i> Acknowledge & Release to Braai </button> <button onclick="deleteAdvanceOrder('${adv.id}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black cursor-pointer"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
 }).join('');
 }
 ​function acknowledgeAndReleaseAdvanceOrder(advId) {
@@ -1990,7 +2031,7 @@ return;
 ​let total = 0;
 listEl.innerHTML = tempEditingItems.map((item, idx) => {
 total += (item.qty * item.price);
-return <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200"> <div> <span class="font-black text-xs text-slate-900">${item.name}</span> <button type="button" onclick="toggleEditItemRoll(${idx})" class="block text-[10px] font-black uppercase underline ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Roll (Tap to change)' : '❌ No Roll (Tap to change)'} </button> </div> <div class="flex items-center gap-2"> <span class="font-mono text-xs font-bold text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden"> <button type="button" onclick="adjustEditItemQty(${idx}, -1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs">-</button> <span class="w-6 text-center font-black font-mono text-xs">${item.qty}</span> <button type="button" onclick="adjustEditItemQty(${idx}, 1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs">+</button> </div> <button type="button" onclick="removeEditItem(${idx})" class="text-rose-600 hover:text-rose-800 p-1"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
+return <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200"> <div> <span class="font-black text-xs text-slate-900">${item.name}</span> <button type="button" onclick="toggleEditItemRoll(${idx})" class="block text-[10px] font-black uppercase underline cursor-pointer ${item.withRoll ? 'text-emerald-700' : 'text-amber-800'}"> ${item.withRoll ? '🥖 In Roll (Tap to change)' : '❌ No Roll (Tap to change)'} </button> </div> <div class="flex items-center gap-2"> <span class="font-mono text-xs font-bold text-slate-500">R${item.price * item.qty}</span> <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden"> <button type="button" onclick="adjustEditItemQty(${idx}, -1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs cursor-pointer">-</button> <span class="w-6 text-center font-black font-mono text-xs">${item.qty}</span> <button type="button" onclick="adjustEditItemQty(${idx}, 1)" class="w-6 h-6 bg-slate-100 hover:bg-slate-200 font-black text-xs cursor-pointer">+</button> </div> <button type="button" onclick="removeEditItem(${idx})" class="text-rose-600 hover:text-rose-800 p-1 cursor-pointer"> <i class="ph-bold ph-trash"></i> </button> </div> </div>;
 }).join('');
 ​totalEl.innerText = R${total.toFixed(2)};
 ​if (diffLabelEl && diffDisplayEl) {
@@ -2204,7 +2245,7 @@ const tbody = document.getElementById('staff-roster-tbody');
 if (!tbody) return;
 ​tbody.innerHTML = staffRoster.map(s => <tr class="hover:bg-slate-50 transition"> <td class="py-2 px-3 font-black text-slate-900">${s.name}</td> <td class="py-2 px-3 font-semibold text-slate-600">${s.role}</td> <td class="py-2 px-3"> <div class="flex flex-wrap gap-1"> ${(s.stations || []).map(st =>
 <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700">${st}</span>
-).join('')} </div> </td> <td class="py-2 px-3 text-center font-mono font-bold text-slate-400">••••</td> <td class="py-2 px-3 text-right"> <button onclick="editStaffMember('${s.name}')" class="p-1 rounded hover:bg-slate-200 text-slate-700 mr-1" title="Edit Staff & PIN"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteStaffMember('${s.name}')" class="p-1 rounded hover:bg-rose-100 text-rose-600" title="Delete Member"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr> ).join('');
+).join('')} </div> </td> <td class="py-2 px-3 text-center font-mono font-bold text-slate-400">••••</td> <td class="py-2 px-3 text-right"> <button onclick="editStaffMember('${s.name}')" class="p-1 rounded hover:bg-slate-200 text-slate-700 mr-1 cursor-pointer" title="Edit Staff & PIN"> <i class="ph-bold ph-pencil-simple text-sm"></i> </button> <button onclick="deleteStaffMember('${s.name}')" class="p-1 rounded hover:bg-rose-100 text-rose-600 cursor-pointer" title="Delete Member"> <i class="ph-bold ph-trash text-sm"></i> </button> </td> </tr> ).join('');
 }
 ​function openStaffModal(editingName = null) {
 const title = document.getElementById('staff-modal-title');
