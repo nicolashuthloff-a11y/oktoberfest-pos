@@ -328,11 +328,14 @@
 
       <!-- Inventory Control -->
       <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
           <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
             <span>📦</span> Physical Stock Tracking
           </h3>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="openOpeningStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 font-black text-xs hover:bg-emerald-100">
+              ⚙️ Set Opening Stock
+            </button>
             <button type="button" onclick="openManualStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-blue-50 text-fest-bavaria border border-blue-200 font-black text-xs hover:bg-blue-100">
               + Add / Adjust Stock
             </button>
@@ -576,17 +579,18 @@
   <div id="modal-manual-stock" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
-        <h3 class="font-black text-slate-900 text-base">Add Raw Sausage Stock</h3>
+        <h3 class="font-black text-slate-900 text-base">Add Raw Sausage / Roll Stock</h3>
         <button type="button" onclick="closeManualStockModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
       </div>
 
       <div class="space-y-2.5 mb-4 text-xs font-bold">
         <div>
-          <label class="block text-slate-600 mb-1">Select Sausage Variety:</label>
+          <label class="block text-slate-600 mb-1">Select Item:</label>
           <select id="select-stock-variety" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
-            <option value="bratwurst">Bratwurst (covers Standard & Curry)</option>
-            <option value="bockwurst">Bockwurst</option>
-            <option value="cheesegriller">Cheesegriller</option>
+            <option value="bratwurst">Bratwurst (Raw Sausage)</option>
+            <option value="bockwurst">Bockwurst (Raw Sausage)</option>
+            <option value="cheesegriller">Cheesegriller (Raw Sausage)</option>
+            <option value="rolls">Fresh Rolls / Buns</option>
           </select>
         </div>
         <div>
@@ -598,6 +602,49 @@
       <button type="button" onclick="applyManualStockAddition()" class="touch-btn w-full py-2.5 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase">
         Acknowledge & Add
       </button>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: SET OPENING STOCK AT EVENT START -->
+  <!-- ======================================================== -->
+  <div id="modal-opening-stock" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+        <div>
+          <h3 class="font-black text-slate-900 text-base">Set Beginning Stock (Opening Baseline)</h3>
+          <p class="text-xs text-slate-500 font-bold">Enter initial sausages and rolls on hand before sales begin.</p>
+        </div>
+        <button type="button" onclick="closeOpeningStockModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="space-y-3 mb-4 text-xs font-bold">
+        <div>
+          <label class="block text-slate-700 mb-1">🥖 Fresh Rolls / Buns (Total Units):</label>
+          <input type="number" id="input-opening-rolls" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+        </div>
+        <div>
+          <label class="block text-slate-700 mb-1">🌭 Bratwurst Sausages (Covers Standard & Currywurst):</label>
+          <input type="number" id="input-opening-bratwurst" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+        </div>
+        <div>
+          <label class="block text-slate-700 mb-1">🌭 Bockwurst Sausages:</label>
+          <input type="number" id="input-opening-bockwurst" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+        </div>
+        <div>
+          <label class="block text-slate-700 mb-1">🧀 Cheesegriller Sausages:</label>
+          <input type="number" id="input-opening-cheesegriller" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="saveOpeningStockValues()" class="touch-btn py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase shadow transition">
+          Save Beginning Stock
+        </button>
+        <button type="button" onclick="closeOpeningStockModal()" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 
@@ -640,7 +687,8 @@
     let inventoryStock = {
       bratwurst: 275,
       bockwurst: 150,
-      cheesegriller: 175
+      cheesegriller: 175,
+      rolls: 600
     };
 
     // Cross-tab broadcast channel for real-time multi-device sync
@@ -711,7 +759,12 @@
         }
 
         const savedStock = localStorage.getItem(STORAGE_KEY_STOCK);
-        if (savedStock) inventoryStock = JSON.parse(savedStock);
+        if (savedStock) {
+          inventoryStock = JSON.parse(savedStock);
+          if (inventoryStock.rolls === undefined) {
+            inventoryStock.rolls = 600;
+          }
+        }
 
         const savedShifts = localStorage.getItem(STORAGE_KEY_SHIFTS);
         if (savedShifts) shiftLogs = JSON.parse(savedShifts);
@@ -1473,6 +1526,7 @@
       let currySold = 0;
       let bockSold = 0;
       let cheeseSold = 0;
+      let rollsUsed = 0;
 
       orders.forEach(o => {
         if (o.status !== 'cancelled') {
@@ -1481,6 +1535,7 @@
             if (it.id === 'currywurst') currySold += it.qty;
             if (it.id === 'bockwurst') bockSold += it.qty;
             if (it.id === 'cheesegriller') cheeseSold += it.qty;
+            if (it.inRoll) rollsUsed += it.qty;
           });
         }
       });
@@ -1489,34 +1544,41 @@
       const bratRemaining = inventoryStock.bratwurst - totalBratRawUsed;
       const bockRemaining = inventoryStock.bockwurst - bockSold;
       const cheeseRemaining = inventoryStock.cheesegriller - cheeseSold;
+      const rollsRemaining = (inventoryStock.rolls || 600) - rollsUsed;
 
       container.innerHTML = `
         <table class="w-full text-xs text-left">
           <thead class="bg-slate-100 font-black text-slate-700 uppercase">
             <tr>
-              <th class="p-2">Variety</th>
-              <th class="p-2">Starting Stock</th>
-              <th class="p-2">Units Sold</th>
-              <th class="p-2">Remaining Units</th>
+              <th class="p-2">Item</th>
+              <th class="p-2">Beginning Stock</th>
+              <th class="p-2">Units Used / Sold</th>
+              <th class="p-2">Remaining In Stock</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 font-semibold">
+            <tr class="bg-amber-50/40">
+              <td class="p-2 font-black text-amber-900">🥖 Fresh Rolls / Buns</td>
+              <td class="p-2 font-black">${inventoryStock.rolls || 600}</td>
+              <td class="p-2 text-rose-600 font-bold">${rollsUsed} rolls</td>
+              <td class="p-2 font-black ${rollsRemaining < 30 ? 'text-rose-600' : 'text-emerald-700'}">${rollsRemaining}</td>
+            </tr>
             <tr>
-              <td class="p-2 font-black">Bratwurst (Std & Curry)</td>
-              <td class="p-2">${inventoryStock.bratwurst}</td>
-              <td class="p-2 text-rose-600">${totalBratRawUsed} (${bratSold} std + ${currySold} curry)</td>
+              <td class="p-2 font-black">🌭 Bratwurst (Std & Curry)</td>
+              <td class="p-2 font-black">${inventoryStock.bratwurst}</td>
+              <td class="p-2 text-rose-600 font-bold">${totalBratRawUsed} (${bratSold} std + ${currySold} curry)</td>
               <td class="p-2 font-black ${bratRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${bratRemaining}</td>
             </tr>
             <tr>
-              <td class="p-2 font-black">Bockwurst</td>
-              <td class="p-2">${inventoryStock.bockwurst}</td>
-              <td class="p-2 text-rose-600">${bockSold}</td>
+              <td class="p-2 font-black">🌭 Bockwurst</td>
+              <td class="p-2 font-black">${inventoryStock.bockwurst}</td>
+              <td class="p-2 text-rose-600 font-bold">${bockSold}</td>
               <td class="p-2 font-black ${bockRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${bockRemaining}</td>
             </tr>
             <tr>
-              <td class="p-2 font-black">Cheesegriller</td>
-              <td class="p-2">${inventoryStock.cheesegriller}</td>
-              <td class="p-2 text-rose-600">${cheeseSold}</td>
+              <td class="p-2 font-black">🧀 Cheesegriller</td>
+              <td class="p-2 font-black">${inventoryStock.cheesegriller}</td>
+              <td class="p-2 text-rose-600 font-bold">${cheeseSold}</td>
               <td class="p-2 font-black ${cheeseRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${cheeseRemaining}</td>
             </tr>
           </tbody>
@@ -1680,6 +1742,40 @@
 
     function closeManualStockModal() {
       document.getElementById('modal-manual-stock').classList.add('hidden');
+    }
+
+    function openOpeningStockModal() {
+      document.getElementById('input-opening-rolls').value = inventoryStock.rolls !== undefined ? inventoryStock.rolls : 600;
+      document.getElementById('input-opening-bratwurst').value = inventoryStock.bratwurst || 275;
+      document.getElementById('input-opening-bockwurst').value = inventoryStock.bockwurst || 150;
+      document.getElementById('input-opening-cheesegriller').value = inventoryStock.cheesegriller || 175;
+      document.getElementById('modal-opening-stock').classList.remove('hidden');
+    }
+
+    function closeOpeningStockModal() {
+      document.getElementById('modal-opening-stock').classList.add('hidden');
+    }
+
+    function saveOpeningStockValues() {
+      const rolls = parseInt(document.getElementById('input-opening-rolls').value, 10);
+      const brat = parseInt(document.getElementById('input-opening-bratwurst').value, 10);
+      const bock = parseInt(document.getElementById('input-opening-bockwurst').value, 10);
+      const cheese = parseInt(document.getElementById('input-opening-cheesegriller').value, 10);
+
+      if (isNaN(rolls) || isNaN(brat) || isNaN(bock) || isNaN(cheese) || rolls < 0 || brat < 0 || bock < 0 || cheese < 0) {
+        alert('Please enter valid positive numbers for all inventory items.');
+        return;
+      }
+
+      inventoryStock.rolls = rolls;
+      inventoryStock.bratwurst = brat;
+      inventoryStock.bockwurst = bock;
+      inventoryStock.cheesegriller = cheese;
+
+      closeOpeningStockModal();
+      broadcastState('STOCK_UPDATED');
+      playBeep('success');
+      renderManagerDashboard();
     }
 
     function applyManualStockAddition() {
