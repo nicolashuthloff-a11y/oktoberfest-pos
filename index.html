@@ -26,7 +26,7 @@
     }
   </script>
   <style>
-    /* Mobile-first optimizations */
+    /* Mobile & Kiosk optimizations */
     body {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -40,9 +40,9 @@
       transition: transform 0.05s ease, background-color 0.1s ease;
     }
     .touch-btn:active {
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
-    /* Hide scrollbars for clean kiosk look */
+    /* Hide scrollbars for clean kiosk appearance */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -109,7 +109,7 @@
   <div id="banner-training-mode" class="hidden bg-amber-500 text-slate-950 text-xs font-black py-1.5 px-3 flex items-center justify-between border-b border-amber-600 shadow-sm">
     <div class="flex items-center gap-2">
       <span class="text-sm">🧪</span>
-      <span>TRAINING / TEST MODE ACTIVE — Practice ringing orders and grilling. Financials will not count toward live sales.</span>
+      <span>TRAINING / TEST MODE ACTIVE — Orders do not affect official live takings.</span>
     </div>
     <button type="button" onclick="promptSwitchLiveMode()" class="touch-btn bg-slate-950 text-amber-400 hover:bg-slate-900 px-2 py-0.5 rounded font-black text-[11px] uppercase tracking-wider">
       🚀 Set Live
@@ -218,9 +218,85 @@
           <span id="handout-queue-count" class="text-xs font-black px-2.5 py-1 rounded-full bg-fest-bavaria text-white shadow-sm">
             0 Pending Orders
           </span>
+          <button type="button" onclick="openTransferStockModal()" class="touch-btn bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-sm">
+            <span>🚚</span> <span>Move Rolls from Storage</span>
+          </button>
           <button type="button" onclick="openOrderHistoryModal()" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold px-2.5 py-1 rounded-lg">
             📜 History
           </button>
+        </div>
+      </div>
+
+      <!-- COMPREHENSIVE 3-METRIC LIVE SIGNAGE FOR ROLLS (PREP & HANDOUT) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- STANDARD WHITE ROLLS 3-METRIC MONITOR -->
+        <div class="bg-slate-800 border-2 border-amber-400/80 rounded-2xl p-3.5 shadow-xl">
+          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-700">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥖</span>
+              <span class="text-sm sm:text-base font-black uppercase text-amber-200 tracking-wider">White Rolls Live Monitor</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', -1)" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 w-7 h-7 rounded text-xs font-bold">-1</button>
+              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', 10)" class="touch-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded text-xs shadow">+10 Sliced</button>
+              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', 20)" class="touch-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded text-xs shadow">+20 Sliced</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- 1. Ordered -->
+            <div class="bg-slate-900/90 border-2 border-amber-400 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300">Ordered</span>
+              <div id="handout-count-std-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">Active Demand</span>
+            </div>
+            <!-- 2. Prepared (Sliced on Serviettes) -->
+            <div class="bg-slate-900/90 border-2 border-yellow-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-yellow-300">Prepared</span>
+              <div id="handout-sliced-std-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-300 my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">On Serviettes</span>
+            </div>
+            <!-- 3. Local Table Storage -->
+            <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-300">Local Stock</span>
+              <div id="handout-local-std-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-400 my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">Ready at Prep</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GERMAN CRUSTY / RYE ROLLS 3-METRIC MONITOR -->
+        <div class="bg-slate-800 border-2 border-amber-600/80 rounded-2xl p-3.5 shadow-xl">
+          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-700">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥨</span>
+              <span class="text-sm sm:text-base font-black uppercase text-amber-400 tracking-wider">Crusty Rolls Live Monitor</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', -1)" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 w-7 h-7 rounded text-xs font-bold">-1</button>
+              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', 10)" class="touch-btn bg-amber-700 hover:bg-amber-600 text-white font-black px-2.5 py-1 rounded text-xs shadow">+10 Sliced</button>
+              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', 20)" class="touch-btn bg-amber-700 hover:bg-amber-600 text-white font-black px-2.5 py-1 rounded text-xs shadow">+20 Sliced</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- 1. Ordered -->
+            <div class="bg-slate-900/90 border-2 border-amber-600 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-400">Ordered</span>
+              <div id="handout-count-cru-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-amber-400 my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">Active Demand</span>
+            </div>
+            <!-- 2. Prepared (Sliced on Serviettes) -->
+            <div class="bg-slate-900/90 border-2 border-yellow-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-yellow-300">Prepared</span>
+              <div id="handout-sliced-cru-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-300 my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">On Serviettes</span>
+            </div>
+            <!-- 3. Local Table Storage -->
+            <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
+              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-300">Local Stock</span>
+              <div id="handout-local-cru-roll" class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-400 my-0.5 font-mono tracking-tight leading-none">0</div>
+              <span class="text-[9px] text-slate-400 font-semibold">Ready at Prep</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -263,427 +339,190 @@
         <div id="braai-cooler-alert-pill"></div>
       </div>
 
-      <!-- PRE-STAGE PREP BUFFER: PRECOOKED SAUSAGES & SLICED ROLLS ON SERVIETTES -->
-      <div class="bg-slate-800 border-2 border-fest-beer/60 rounded-xl p-3 shadow-md flex flex-col gap-2.5">
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-700">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🍽️</span>
-            <div>
-              <span class="font-black text-white text-sm">Prep Buffer (Precooked in Warmer & Rolls on Serviettes)</span>
-              <span class="text-[10px] text-slate-400 block">Sausages kept warm in chafing trays + sliced buns ready to assemble</span>
-            </div>
-          </div>
-          <div id="prep-engine-rush-badge" class="flex items-center gap-1.5">
-            <!-- Injected via updatePredictivePrepEngine() -->
-          </div>
-        </div>
-
-        <!-- Buffer Counts Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-          <!-- Precooked Bratwurst -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-slate-300 uppercase">Precooked Brat</span>
-              <span id="buf-count-bratwurst" class="text-xl font-black text-white">0</span>
-            </div>
-            <div class="flex items-center gap-1 mt-1.5">
-              <button type="button" onclick="adjustPrepBuffer('precooked_bratwurst', -1)" class="touch-btn bg-slate-800 text-slate-300 w-6 h-6 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('precooked_bratwurst', 10)" class="touch-btn bg-fest-bavaria text-white px-2 py-0.5 rounded text-xs font-black flex-1">+10</button>
-            </div>
-          </div>
-
-          <!-- Precooked Bockwurst -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-red-400 uppercase">Precooked Bock</span>
-              <span id="buf-count-bockwurst" class="text-xl font-black text-red-400">0</span>
-            </div>
-            <div class="flex items-center gap-1 mt-1.5">
-              <button type="button" onclick="adjustPrepBuffer('precooked_bockwurst', -1)" class="touch-btn bg-slate-800 text-slate-300 w-6 h-6 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('precooked_bockwurst', 10)" class="touch-btn bg-red-700 text-white px-2 py-0.5 rounded text-xs font-black flex-1">+10</button>
-            </div>
-          </div>
-
-          <!-- Precooked Cheesegriller -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-yellow-400 uppercase">Precooked Cheese</span>
-              <span id="buf-count-cheesegriller" class="text-xl font-black text-yellow-400">0</span>
-            </div>
-            <div class="flex items-center gap-1 mt-1.5">
-              <button type="button" onclick="adjustPrepBuffer('precooked_cheesegriller', -1)" class="touch-btn bg-slate-800 text-slate-300 w-6 h-6 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('precooked_cheesegriller', 10)" class="touch-btn bg-yellow-600 text-slate-950 px-2 py-0.5 rounded text-xs font-black flex-1">+10</button>
-            </div>
-          </div>
-
-          <!-- Sliced White Rolls on Serviettes -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-amber-200 uppercase">Sliced White Rolls</span>
-              <span id="buf-count-std-roll" class="text-xl font-black text-amber-200">0</span>
-            </div>
-            <div class="flex items-center gap-1 mt-1.5">
-              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', -1)" class="touch-btn bg-slate-800 text-slate-300 w-6 h-6 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', 15)" class="touch-btn bg-amber-700 text-white px-2 py-0.5 rounded text-xs font-black flex-1">+15</button>
-            </div>
-          </div>
-
-          <!-- Sliced German Crusty Rolls on Serviettes -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2 flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-amber-400 uppercase">Sliced Crusty Rolls</span>
-              <span id="buf-count-cru-roll" class="text-xl font-black text-amber-400">0</span>
-            </div>
-            <div class="flex items-center gap-1 mt-1.5">
-              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', -1)" class="touch-btn bg-slate-800 text-slate-300 w-6 h-6 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', 15)" class="touch-btn bg-amber-800 text-white px-2 py-0.5 rounded text-xs font-black flex-1">+15</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Predictive Rush AI Recommendation Bar -->
-        <div id="prep-predictive-advice-box" class="bg-slate-900/80 p-2 rounded-lg border border-slate-700 text-xs flex flex-wrap items-center justify-between gap-2">
-          <!-- Populated dynamically via updatePredictivePrepEngine() -->
-        </div>
-      </div>
-
-      <!-- ACTIVE SAUSAGES ON COALS CONTROLS & MASTER NOTIFICATION TRIGGER -->
-      <div class="bg-slate-800 border-2 border-fest-braai/60 rounded-xl p-3 shadow-md flex flex-col gap-2">
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-700">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🔥</span>
-            <div>
-              <span class="font-black text-white text-sm">Add Sausages to Braai</span>
-              <span class="text-[10px] text-slate-400 block">Tap + to add fresh sausages onto the fire. Master receives immediate alert.</span>
-            </div>
-          </div>
-          <span class="text-[10px] bg-red-950 text-red-300 border border-red-800 px-2 py-0.5 rounded-full font-bold">
-            Live Grill Capacity
-          </span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <!-- Bratwurst on coals -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 flex flex-col justify-between gap-2">
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="text-xs font-black text-white uppercase tracking-wider">Add Bratwurst to Braai</span>
-                <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-1 font-semibold">
-                  <span>Precooked: <strong id="braai-precooked-stat-bratwurst" class="text-white font-mono">0</strong></span>
-                  <span>•</span>
-                  <span>Left in Cooler Box: <strong id="braai-cooler-stat-bratwurst" class="text-emerald-400 font-mono">0</strong></span>
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="text-[9px] uppercase font-bold text-slate-400 block">On Braai</span>
-                <div id="coals-count-bratwurst" class="text-2xl font-black text-white">0</div>
-              </div>
-            </div>
-            <div class="flex items-center justify-end gap-1.5 pt-1 border-t border-slate-800">
-              <button type="button" onclick="adjustSausagesOnCoals('bratwurst', -1)" class="touch-btn bg-slate-800 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustSausagesOnCoals('bratwurst', 5)" class="touch-btn bg-fest-braai hover:bg-red-700 text-white px-2.5 py-1.5 rounded text-xs font-black">+5 to Braai</button>
-              <button type="button" onclick="adjustSausagesOnCoals('bratwurst', 10)" class="touch-btn bg-fest-braai hover:bg-red-700 text-white px-2.5 py-1.5 rounded text-xs font-black">+10 to Braai</button>
-            </div>
-          </div>
-
-          <!-- Bockwurst on coals -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 flex flex-col justify-between gap-2">
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="text-xs font-black text-red-400 uppercase tracking-wider">Add Bockwurst to Braai</span>
-                <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-1 font-semibold">
-                  <span>Precooked: <strong id="braai-precooked-stat-bockwurst" class="text-red-300 font-mono">0</strong></span>
-                  <span>•</span>
-                  <span>Left in Cooler Box: <strong id="braai-cooler-stat-bockwurst" class="text-emerald-400 font-mono">0</strong></span>
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="text-[9px] uppercase font-bold text-red-400 block">On Braai</span>
-                <div id="coals-count-bockwurst" class="text-2xl font-black text-red-400">0</div>
-              </div>
-            </div>
-            <div class="flex items-center justify-end gap-1.5 pt-1 border-t border-slate-800">
-              <button type="button" onclick="adjustSausagesOnCoals('bockwurst', -1)" class="touch-btn bg-slate-800 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustSausagesOnCoals('bockwurst', 5)" class="touch-btn bg-red-700 hover:bg-red-600 text-white px-2.5 py-1.5 rounded text-xs font-black">+5 to Braai</button>
-              <button type="button" onclick="adjustSausagesOnCoals('bockwurst', 10)" class="touch-btn bg-red-700 hover:bg-red-600 text-white px-2.5 py-1.5 rounded text-xs font-black">+10 to Braai</button>
-            </div>
-          </div>
-
-          <!-- Cheesegriller on coals -->
-          <div class="bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 flex flex-col justify-between gap-2">
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="text-xs font-black text-yellow-400 uppercase tracking-wider">Add Cheesegriller to Braai</span>
-                <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-1 font-semibold">
-                  <span>Precooked: <strong id="braai-precooked-stat-cheesegriller" class="text-yellow-300 font-mono">0</strong></span>
-                  <span>•</span>
-                  <span>Left in Cooler Box: <strong id="braai-cooler-stat-cheesegriller" class="text-emerald-400 font-mono">0</strong></span>
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="text-[9px] uppercase font-bold text-yellow-400 block">On Braai</span>
-                <div id="coals-count-cheesegriller" class="text-2xl font-black text-yellow-400">0</div>
-              </div>
-            </div>
-            <div class="flex items-center justify-end gap-1.5 pt-1 border-t border-slate-800">
-              <button type="button" onclick="adjustSausagesOnCoals('cheesegriller', -1)" class="touch-btn bg-slate-800 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustSausagesOnCoals('cheesegriller', 5)" class="touch-btn bg-yellow-600 hover:bg-yellow-500 text-slate-950 px-2.5 py-1.5 rounded text-xs font-black">+5 to Braai</button>
-              <button type="button" onclick="adjustSausagesOnCoals('cheesegriller', 10)" class="touch-btn bg-yellow-600 hover:bg-yellow-500 text-slate-950 px-2.5 py-1.5 rounded text-xs font-black">+10 to Braai</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mode A: Zero-Touch Big Counters -->
+      <!-- Mode A: Zero-Touch Big Counters & Direct Braai Controls -->
       <div id="braai-demand-counters-container" class="flex-1 flex flex-col gap-3">
-        <!-- Giant Sausage Demand Counters (Braai only needs Bratwurst, Bockwurst, Cheesegriller) -->
-        <div class="flex flex-col gap-3">
-          <!-- BRATWURST COMPREHENSIVE 4-METRIC SIGNAGE (EQUAL PROMINENCE & CLARITY) -->
-          <div class="bg-slate-800 border-2 border-fest-bavaria/80 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-700">
-              <div class="flex items-center gap-2">
-                <span class="text-xl">🌭</span>
-                <span class="text-base sm:text-lg font-black uppercase text-white tracking-wider">Bratwurst Live Monitor</span>
-              </div>
-              <span id="braai-currywurst-note" class="text-xs text-amber-300 font-bold bg-amber-950/60 border border-amber-800/80 px-2.5 py-1 rounded-full">Includes 0 Currywurst on coals</span>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-            <!-- 4 Equal Giant High-Visibility Stat Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-              <!-- 1. Ordered -->
-              <div class="bg-slate-900/90 border-2 border-fest-bavaria rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-blue-300">Ordered</span>
-                <div id="braai-count-bratwurst" class="text-5xl sm:text-6xl font-black text-white my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Active Demand</span>
+          <!-- 1. BRATWURST CARD -->
+          <div class="bg-slate-800 border-2 border-fest-bavaria/80 rounded-2xl p-3 shadow-xl flex flex-col justify-between gap-2.5">
+            <div>
+              <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-lg">🌭</span>
+                  <span class="text-sm sm:text-base font-black uppercase text-white tracking-wider">Bratwurst</span>
+                </div>
+                <span id="braai-currywurst-note" class="text-[10px] text-amber-300 font-bold bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-full">Incl 0 Currywurst</span>
               </div>
 
-              <!-- 2. Precooked -->
-              <div class="bg-slate-900/90 border-2 border-amber-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-300">Precooked</span>
-                <div id="braai-big-precooked-bratwurst" class="text-5xl sm:text-6xl font-black text-amber-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">In Warmers</span>
-              </div>
-
-              <!-- 3. Local Cooler Storage -->
-              <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">Local Cooler</span>
-                <div id="braai-big-local-bratwurst" class="text-5xl sm:text-6xl font-black text-emerald-400 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Ready at Braai</span>
-              </div>
-
-              <!-- 4. General Main Storage -->
-              <div class="bg-slate-900/90 border-2 border-indigo-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-300">General Storage</span>
-                <div id="braai-big-general-bratwurst" class="text-5xl sm:text-6xl font-black text-indigo-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Main Cold Storage</span>
+              <!-- 4 Metrics: Ordered, On Braai, Precooked, Local Cooler -->
+              <div class="grid grid-cols-4 gap-1.5 my-2">
+                <div class="bg-slate-900/90 border border-fest-bavaria rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-blue-300 block">Ordered</span>
+                  <div id="braai-count-bratwurst" class="text-2xl sm:text-3xl font-black text-white font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-red-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-red-300 block">On Braai</span>
+                  <div id="coals-count-bratwurst" class="text-2xl sm:text-3xl font-black text-red-400 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-amber-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-amber-300 block">Precooked</span>
+                  <div id="braai-big-precooked-bratwurst" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-emerald-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-emerald-300 block">Cooler</span>
+                  <div id="braai-big-local-bratwurst" class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono leading-tight">0</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- BOCKWURST COMPREHENSIVE 4-METRIC SIGNAGE -->
-          <div class="bg-slate-800 border-2 border-red-700/80 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-700">
-              <div class="flex items-center gap-2">
-                <span class="text-xl">🌶️</span>
-                <span class="text-base sm:text-lg font-black uppercase text-red-400 tracking-wider">Bockwurst Live Monitor</span>
-              </div>
-              <span class="text-xs text-red-300 font-bold bg-red-950/60 border border-red-800/80 px-2.5 py-1 rounded-full">Smoked German Red</span>
-            </div>
-
-            <!-- 4 Equal Giant High-Visibility Stat Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-              <!-- 1. Ordered -->
-              <div class="bg-slate-900/90 border-2 border-red-600 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-red-300">Ordered</span>
-                <div id="braai-count-bockwurst" class="text-5xl sm:text-6xl font-black text-red-400 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Active Demand</span>
+            <!-- Big Buttons: Add to Braai & Stage Transfers -->
+            <div class="flex flex-col gap-1.5">
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="adjustSausagesOnCoals('bratwurst', 5)" class="touch-btn bg-fest-braai hover:bg-red-700 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +5 To Braai</span>
+                </button>
+                <button type="button" onclick="adjustSausagesOnCoals('bratwurst', 10)" class="touch-btn bg-fest-braai hover:bg-red-700 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +10 To Braai</span>
+                </button>
               </div>
 
-              <!-- 2. Precooked -->
-              <div class="bg-slate-900/90 border-2 border-amber-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-300">Precooked</span>
-                <div id="braai-big-precooked-bockwurst" class="text-5xl sm:text-6xl font-black text-amber-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">In Warmers</span>
-              </div>
-
-              <!-- 3. Local Cooler Storage -->
-              <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">Local Cooler</span>
-                <div id="braai-big-local-bockwurst" class="text-5xl sm:text-6xl font-black text-emerald-400 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Ready at Braai</span>
-              </div>
-
-              <!-- 4. General Main Storage -->
-              <div class="bg-slate-900/90 border-2 border-indigo-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-300">General Storage</span>
-                <div id="braai-big-general-bockwurst" class="text-5xl sm:text-6xl font-black text-indigo-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Main Cold Storage</span>
+              <!-- Movement Flow Buttons -->
+              <div class="grid grid-cols-3 gap-1 pt-1 border-t border-slate-700/60 text-[10px]">
+                <button type="button" onclick="moveSausagesFlow('bratwurst', 'coals_to_precook', 5)" class="touch-btn bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-700 py-1 px-1 rounded-lg font-bold">
+                  🍲 To Precook (+5)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('bratwurst', 'coals_to_handout', 1)" class="touch-btn bg-blue-900/70 hover:bg-blue-800 text-blue-200 border border-blue-700 py-1 px-1 rounded-lg font-bold">
+                  📦 To Handout (+1)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('bratwurst', 'precook_to_handout', 1)" class="touch-btn bg-emerald-900/70 hover:bg-emerald-800 text-emerald-200 border border-emerald-700 py-1 px-1 rounded-lg font-bold">
+                  🍽️ Precook → Handout
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- CHEESEGRILLER COMPREHENSIVE 4-METRIC SIGNAGE -->
-          <div class="bg-slate-800 border-2 border-yellow-500/80 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-700">
-              <div class="flex items-center gap-2">
-                <span class="text-xl">🧀</span>
-                <span class="text-base sm:text-lg font-black uppercase text-yellow-400 tracking-wider">Cheesegriller Live Monitor</span>
+          <!-- 2. BOCKWURST CARD -->
+          <div class="bg-slate-800 border-2 border-red-700/80 rounded-2xl p-3 shadow-xl flex flex-col justify-between gap-2.5">
+            <div>
+              <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-lg">🌶️</span>
+                  <span class="text-sm sm:text-base font-black uppercase text-red-400 tracking-wider">Bockwurst</span>
+                </div>
+                <span class="text-[10px] text-red-300 font-bold bg-red-950/60 border border-red-800/80 px-2 py-0.5 rounded-full">Smoked German Red</span>
               </div>
-              <span class="text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-800/80 px-2.5 py-1 rounded-full">Cheddar Cheese Grill</span>
+
+              <!-- 4 Metrics: Ordered, On Braai, Precooked, Local Cooler -->
+              <div class="grid grid-cols-4 gap-1.5 my-2">
+                <div class="bg-slate-900/90 border border-red-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-red-300 block">Ordered</span>
+                  <div id="braai-count-bockwurst" class="text-2xl sm:text-3xl font-black text-red-400 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-red-600 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-red-300 block">On Braai</span>
+                  <div id="coals-count-bockwurst" class="text-2xl sm:text-3xl font-black text-red-400 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-amber-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-amber-300 block">Precooked</span>
+                  <div id="braai-big-precooked-bockwurst" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-emerald-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-emerald-300 block">Cooler</span>
+                  <div id="braai-big-local-bockwurst" class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono leading-tight">0</div>
+                </div>
+              </div>
             </div>
 
-            <!-- 4 Equal Giant High-Visibility Stat Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-              <!-- 1. Ordered -->
-              <div class="bg-slate-900/90 border-2 border-yellow-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-yellow-300">Ordered</span>
-                <div id="braai-count-cheesegriller" class="text-5xl sm:text-6xl font-black text-yellow-400 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Active Demand</span>
+            <!-- Big Buttons: Add to Braai & Stage Transfers -->
+            <div class="flex flex-col gap-1.5">
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="adjustSausagesOnCoals('bockwurst', 5)" class="touch-btn bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +5 To Braai</span>
+                </button>
+                <button type="button" onclick="adjustSausagesOnCoals('bockwurst', 10)" class="touch-btn bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +10 To Braai</span>
+                </button>
               </div>
 
-              <!-- 2. Precooked -->
-              <div class="bg-slate-900/90 border-2 border-amber-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-300">Precooked</span>
-                <div id="braai-big-precooked-cheesegriller" class="text-5xl sm:text-6xl font-black text-amber-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">In Warmers</span>
-              </div>
-
-              <!-- 3. Local Cooler Storage -->
-              <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">Local Cooler</span>
-                <div id="braai-big-local-cheesegriller" class="text-5xl sm:text-6xl font-black text-emerald-400 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Ready at Braai</span>
-              </div>
-
-              <!-- 4. General Main Storage -->
-              <div class="bg-slate-900/90 border-2 border-indigo-500 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center shadow-md">
-                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-indigo-300">General Storage</span>
-                <div id="braai-big-general-cheesegriller" class="text-5xl sm:text-6xl font-black text-indigo-300 my-1 font-mono tracking-tight leading-none">0</div>
-                <span class="text-[10px] text-slate-400 font-semibold">Main Cold Storage</span>
+              <!-- Movement Flow Buttons -->
+              <div class="grid grid-cols-3 gap-1 pt-1 border-t border-slate-700/60 text-[10px]">
+                <button type="button" onclick="moveSausagesFlow('bockwurst', 'coals_to_precook', 5)" class="touch-btn bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-700 py-1 px-1 rounded-lg font-bold">
+                  🍲 To Precook (+5)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('bockwurst', 'coals_to_handout', 1)" class="touch-btn bg-blue-900/70 hover:bg-blue-800 text-blue-200 border border-blue-700 py-1 px-1 rounded-lg font-bold">
+                  📦 To Handout (+1)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('bockwurst', 'precook_to_handout', 1)" class="touch-btn bg-emerald-900/70 hover:bg-emerald-800 text-emerald-200 border border-emerald-700 py-1 px-1 rounded-lg font-bold">
+                  🍽️ Precook → Handout
+                </button>
               </div>
             </div>
           </div>
+
+          <!-- 3. CHEESEGRILLER CARD -->
+          <div class="bg-slate-800 border-2 border-yellow-500/80 rounded-2xl p-3 shadow-xl flex flex-col justify-between gap-2.5">
+            <div>
+              <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-lg">🧀</span>
+                  <span class="text-sm sm:text-base font-black uppercase text-yellow-400 tracking-wider">Cheesegriller</span>
+                </div>
+                <span class="text-[10px] text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-800/80 px-2 py-0.5 rounded-full">Cheddar Grill</span>
+              </div>
+
+              <!-- 4 Metrics: Ordered, On Braai, Precooked, Local Cooler -->
+              <div class="grid grid-cols-4 gap-1.5 my-2">
+                <div class="bg-slate-900/90 border border-yellow-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-yellow-300 block">Ordered</span>
+                  <div id="braai-count-cheesegriller" class="text-2xl sm:text-3xl font-black text-yellow-400 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-yellow-600 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-yellow-300 block">On Braai</span>
+                  <div id="coals-count-cheesegriller" class="text-2xl sm:text-3xl font-black text-yellow-400 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-amber-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-amber-300 block">Precooked</span>
+                  <div id="braai-big-precooked-cheesegriller" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono leading-tight">0</div>
+                </div>
+                <div class="bg-slate-900/90 border border-emerald-500 rounded-lg p-1.5 text-center">
+                  <span class="text-[9px] uppercase font-black text-emerald-300 block">Cooler</span>
+                  <div id="braai-big-local-cheesegriller" class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono leading-tight">0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Big Buttons: Add to Braai & Stage Transfers -->
+            <div class="flex flex-col gap-1.5">
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="adjustSausagesOnCoals('cheesegriller', 5)" class="touch-btn bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +5 To Braai</span>
+                </button>
+                <button type="button" onclick="adjustSausagesOnCoals('cheesegriller', 10)" class="touch-btn bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-1 shadow-md">
+                  <span>🔥 +10 To Braai</span>
+                </button>
+              </div>
+
+              <!-- Movement Flow Buttons -->
+              <div class="grid grid-cols-3 gap-1 pt-1 border-t border-slate-700/60 text-[10px]">
+                <button type="button" onclick="moveSausagesFlow('cheesegriller', 'coals_to_precook', 5)" class="touch-btn bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-700 py-1 px-1 rounded-lg font-bold">
+                  🍲 To Precook (+5)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('cheesegriller', 'coals_to_handout', 1)" class="touch-btn bg-blue-900/70 hover:bg-blue-800 text-blue-200 border border-blue-700 py-1 px-1 rounded-lg font-bold">
+                  📦 To Handout (+1)
+                </button>
+                <button type="button" onclick="moveSausagesFlow('cheesegriller', 'precook_to_handout', 1)" class="touch-btn bg-emerald-900/70 hover:bg-emerald-800 text-emerald-200 border border-emerald-700 py-1 px-1 rounded-lg font-bold">
+                  🍽️ Precook → Handout
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <!-- Mode B: Manual Order Cards Container -->
       <div id="braai-manual-orders-container" class="hidden flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto">
         <!-- Rendered via renderBraaiManualCards() -->
-      </div>
-    </section>
-
-    <!-- 2. HANDOUT / PREP STATION VIEW -->
-    <section id="station-handout" class="station-view hidden flex-1 flex flex-col gap-3">
-      <!-- Station Header & Filter -->
-      <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-800 p-2.5 rounded-xl border border-slate-700">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">📦</span>
-          <div>
-            <h1 class="text-base font-black text-white leading-tight">Handout & Assembly</h1>
-            <p class="text-[11px] text-slate-400">Match Post-it ticket numbers, assemble sausages with rolls, and pass to customers</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span id="handout-queue-count" class="text-xs font-black px-2.5 py-1 rounded-full bg-fest-bavaria text-white shadow-sm">
-            0 Pending Orders
-          </span>
-          <button type="button" onclick="openTransferStockModal()" class="touch-btn bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-sm">
-            <span>🚚</span> <span>Move Rolls from Storage</span>
-          </button>
-          <button type="button" onclick="openOrderHistoryModal()" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold px-2.5 py-1 rounded-lg">
-            📜 History
-          </button>
-        </div>
-      </div>
-
-      <!-- COMPREHENSIVE 4-METRIC LIVE SIGNAGE FOR ROLLS (PREP & HANDOUT) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <!-- STANDARD WHITE ROLLS 4-METRIC MONITOR -->
-        <div class="bg-slate-800 border-2 border-amber-400/80 rounded-2xl p-3.5 shadow-xl">
-          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-700">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🥖</span>
-              <span class="text-sm sm:text-base font-black uppercase text-amber-200 tracking-wider">White Rolls Live Monitor</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', -1)" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 w-7 h-7 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', 10)" class="touch-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded text-xs shadow">+10 Sliced</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_std_rolls', 20)" class="touch-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded text-xs shadow">+20 Sliced</button>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <!-- 1. Ordered -->
-            <div class="bg-slate-900/90 border-2 border-amber-400 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-300">Ordered</span>
-              <div id="handout-count-std-roll" class="text-4xl sm:text-5xl font-black text-white my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Active Demand</span>
-            </div>
-            <!-- 2. Prepared (Sliced on Serviettes) -->
-            <div class="bg-slate-900/90 border-2 border-yellow-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-yellow-300">Prepared</span>
-              <div id="handout-sliced-std-roll" class="text-4xl sm:text-5xl font-black text-yellow-300 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">On Serviettes</span>
-            </div>
-            <!-- 3. Local Cooler / Table Storage -->
-            <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-300">Local Stock</span>
-              <div id="handout-local-std-roll" class="text-4xl sm:text-5xl font-black text-emerald-400 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Ready at Prep</span>
-            </div>
-            <!-- 4. General Main Storage -->
-            <div class="bg-slate-900/90 border-2 border-indigo-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-indigo-300">General Storage</span>
-              <div id="handout-general-std-roll" class="text-4xl sm:text-5xl font-black text-indigo-300 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Main Storage</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- GERMAN CRUSTY / RYE ROLLS 4-METRIC MONITOR -->
-        <div class="bg-slate-800 border-2 border-amber-600/80 rounded-2xl p-3.5 shadow-xl">
-          <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-700">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🥨</span>
-              <span class="text-sm sm:text-base font-black uppercase text-amber-400 tracking-wider">Crusty Rolls Live Monitor</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', -1)" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 w-7 h-7 rounded text-xs font-bold">-1</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', 10)" class="touch-btn bg-amber-700 hover:bg-amber-600 text-white font-black px-2.5 py-1 rounded text-xs shadow">+10 Sliced</button>
-              <button type="button" onclick="adjustPrepBuffer('sliced_cru_rolls', 20)" class="touch-btn bg-amber-700 hover:bg-amber-600 text-white font-black px-2.5 py-1 rounded text-xs shadow">+20 Sliced</button>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <!-- 1. Ordered -->
-            <div class="bg-slate-900/90 border-2 border-amber-600 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-400">Ordered</span>
-              <div id="handout-count-cru-roll" class="text-4xl sm:text-5xl font-black text-amber-400 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Active Demand</span>
-            </div>
-            <!-- 2. Prepared (Sliced on Serviettes) -->
-            <div class="bg-slate-900/90 border-2 border-yellow-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-yellow-300">Prepared</span>
-              <div id="handout-sliced-cru-roll" class="text-4xl sm:text-5xl font-black text-yellow-300 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">On Serviettes</span>
-            </div>
-            <!-- 3. Local Cooler / Table Storage -->
-            <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-300">Local Stock</span>
-              <div id="handout-local-cru-roll" class="text-4xl sm:text-5xl font-black text-emerald-400 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Ready at Prep</span>
-            </div>
-            <!-- 4. General Main Storage -->
-            <div class="bg-slate-900/90 border-2 border-indigo-500 rounded-xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-md">
-              <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-indigo-300">General Storage</span>
-              <div id="handout-general-cru-roll" class="text-4xl sm:text-5xl font-black text-indigo-300 my-0.5 font-mono tracking-tight leading-none">0</div>
-              <span class="text-[9px] text-slate-400 font-semibold">Main Storage</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orders Ticket Queue Grid -->
-      <div id="handout-orders-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 overflow-y-auto">
-        <!-- Rendered via renderHandoutStation() -->
       </div>
     </section>
 
@@ -844,35 +683,7 @@
         </div>
       </div>
 
-      <!-- LIVE GRILL ACTIVITY & MASTER NOTIFICATIONS DISPLAY -->
-      <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 flex flex-col gap-2 shadow-sm">
-        <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🔥</span>
-            <span class="font-black text-sm text-white">Live Grill Monitor (Sausages on Fire & Master Feed)</span>
-          </div>
-          <button type="button" onclick="clearGrillAlerts()" class="text-[10px] text-slate-400 hover:text-slate-200">Clear Feed</button>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-700/60 text-center">
-            <span class="text-[10px] text-slate-400 uppercase font-bold">Bratwurst on Coals</span>
-            <div id="mgr-coals-brat" class="text-xl font-black text-white">0</div>
-          </div>
-          <div class="bg-slate-900/80 p-2 rounded-lg border border-red-700/40 text-center">
-            <span class="text-[10px] text-red-400 uppercase font-bold">Bockwurst on Coals</span>
-            <div id="mgr-coals-bock" class="text-xl font-black text-red-400">0</div>
-          </div>
-          <div class="bg-slate-900/80 p-2 rounded-lg border border-yellow-500/40 text-center">
-            <span class="text-[10px] text-yellow-400 uppercase font-bold">Cheesegriller on Coals</span>
-            <div id="mgr-coals-cheese" class="text-xl font-black text-yellow-400">0</div>
-          </div>
-        </div>
-        <div id="mgr-braai-activity-feed" class="flex flex-col gap-1 max-h-[120px] overflow-y-auto pt-1">
-          <!-- Live grill logs -->
-        </div>
-      </div>
-
-      <!-- INVENTORY MANAGEMENT SECTION (COLD ROOM VS ON-SITE COOLERS) -->
+      <!-- INVENTORY MANAGEMENT SECTION (MAIN STORAGE VS ON-SITE) -->
       <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 flex flex-col gap-3">
         <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-700">
           <div class="flex items-center gap-2">
@@ -1563,11 +1374,9 @@
           osc.start();
           osc.stop(audioCtx.currentTime + 0.2);
         }
-      } catch (e) {
-        // AudioContext not allowed or not supported yet
-      }
+      } catch (e) {}
 
-      // Haptic Vibration for phones in aprons
+      // Haptic Vibration
       if (navigator.vibrate) {
         navigator.vibrate([150, 80, 150]);
       }
@@ -1740,6 +1549,7 @@
     /* SHARED OPERATORS & MULTI-PERSON HEADER SWITCHER */
     function renderSharedOperatorsHeader() {
       const container = document.getElementById('header-shared-operators');
+      if (!container) return;
       container.innerHTML = '';
 
       if (currentActiveOperators.length <= 1) {
@@ -1936,24 +1746,19 @@
       const container = document.getElementById('dynamic-name-picker');
       container.innerHTML = '';
 
-      // Filter staff permitted for selected station
-      const permittedStaff = staffRoster.filter(p => {
-        if (!p.assignedStations || p.assignedStations.length === 0) return true;
-        return p.assignedStations.includes(selectedLoginStation);
-      });
-
-      const listToDisplay = permittedStaff.length > 0 ? permittedStaff : staffRoster;
-
-      listToDisplay.forEach(person => {
+      // Display all staff members so anyone can sign in without filter lockout
+      staffRoster.forEach(person => {
         const isChecked = selectedLoginOperators.includes(person.name);
+        const isAssigned = (person.assignedStations || []).includes(selectedLoginStation);
+
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = `touch-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border transition ${
+        chip.className = `touch-btn px-2.5 py-1.5 rounded-lg text-xs font-bold border transition flex items-center gap-1 ${
           isChecked 
             ? 'bg-fest-bavaria text-white border-fest-bavaria shadow-sm' 
             : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
         }`;
-        chip.innerText = person.name;
+        chip.innerHTML = `${isAssigned ? '<span class="text-emerald-400 text-[10px]">●</span>' : ''}<span>${person.name}</span>`;
         chip.onclick = () => {
           if (isMultiOperatorLoginMode) {
             if (selectedLoginOperators.includes(person.name)) {
@@ -2147,7 +1952,6 @@
         alert("Please select at least one sausage before checking out.");
         return;
       }
-
       finalizeOrderCreation(tenderType, false, null);
     }
 
@@ -2175,7 +1979,7 @@
         combinedNotes = combinedNotes ? `${notePrefix} - ${combinedNotes}` : notePrefix;
       }
 
-      // Generate Ticket Number (Continues sequentially starting at #101)
+      // Generate sequential ticket number starting at #101
       let nextNumber = 101;
       if (orders.length > 0) {
         const highest = Math.max(...orders.map(o => o.number || 100));
@@ -2193,31 +1997,20 @@
         items: JSON.parse(JSON.stringify(currentCart)),
         notes: combinedNotes,
         total: totalAmount,
-        status: 'pending', // 'pending', 'delivered', 'cancelled'
+        status: 'pending',
         deliveredAt: null,
-        braaiConfirmed: (braaiWorkflowMode === 'zero_touch'), // Automatically cooked in zero-touch
+        braaiConfirmed: (braaiWorkflowMode === 'zero_touch'),
         isTraining: isTrainingTestMode
       };
 
-      // Deduct inventory cooler stock
       deductInventoryForOrder(newOrder);
-
-      // Automatically consume from prep buffers (precooked & staged rolls)
       consumePrepBufferForOrder(newOrder);
 
       orders.push(newOrder);
       saveStateToStorage();
 
-      // Show Large Post-it Number Popup
       displayPostItSlip(newOrder);
-
-      // Play alert tone
       playBeepTone('success');
-
-      // Re-evaluate prep velocity & rush engine
-      updatePredictivePrepEngine();
-
-      // Reset Cart
       clearCart();
     }
 
@@ -2273,7 +2066,6 @@
 
     function consumePrepBufferForOrder(order) {
       order.items.forEach(it => {
-        // Precooked warmers
         if (it.productId === 'bratwurst' || it.productId === 'currywurst') {
           prepBuffer.precooked_bratwurst = Math.max(0, prepBuffer.precooked_bratwurst - it.qty);
         } else if (it.productId === 'bockwurst') {
@@ -2282,7 +2074,6 @@
           prepBuffer.precooked_cheesegriller = Math.max(0, prepBuffer.precooked_cheesegriller - it.qty);
         }
 
-        // Sliced rolls on serviettes
         if (it.rollType === 'standard_roll') {
           prepBuffer.sliced_std_rolls = Math.max(0, prepBuffer.sliced_std_rolls - it.qty);
         } else if (it.rollType === 'crusty_roll') {
@@ -2291,158 +2082,47 @@
       });
     }
 
-    /* PREP BUFFER MANAGEMENT & OKTOBERFEST RUSH ENGINE */
+    /* PREP BUFFER MANAGEMENT */
     function adjustPrepBuffer(key, delta) {
       if (!prepBuffer[key]) prepBuffer[key] = 0;
       prepBuffer[key] = Math.max(0, prepBuffer[key] + delta);
       saveStateToStorage();
-      renderPrepBufferUI();
-      updatePredictivePrepEngine();
+      refreshActiveStationUI();
     }
 
-    function renderPrepBufferUI() {
-      const bBrat = document.getElementById('buf-count-bratwurst');
-      const bBock = document.getElementById('buf-count-bockwurst');
-      const bCheese = document.getElementById('buf-count-cheesegriller');
-      const bStd = document.getElementById('buf-count-std-roll');
-      const bCru = document.getElementById('buf-count-cru-roll');
+    /* SAUSAGE WORKFLOW MOVEMENT (Braai Coals -> Precooked / Handout) */
+    function moveSausagesFlow(sausageKey, flowType, count = 1) {
+      if (!sausagesOnCoals[sausageKey]) sausagesOnCoals[sausageKey] = 0;
+      const precookKey = `precooked_${sausageKey}`;
 
-      if (bBrat) bBrat.innerText = prepBuffer.precooked_bratwurst;
-      if (bBock) bBock.innerText = prepBuffer.precooked_bockwurst;
-      if (bCheese) bCheese.innerText = prepBuffer.precooked_cheesegriller;
-      if (bStd) bStd.innerText = prepBuffer.sliced_std_rolls;
-      if (bCru) bCru.innerText = prepBuffer.sliced_cru_rolls;
-
-      // Handout mini ribbons
-      const hStd = document.getElementById('handout-sliced-white');
-      const hCru = document.getElementById('handout-sliced-crusty');
-      const hWarm = document.getElementById('handout-warm-sausages');
-
-      const totalWarm = prepBuffer.precooked_bratwurst + prepBuffer.precooked_bockwurst + prepBuffer.precooked_cheesegriller;
-      if (hStd) hStd.innerText = prepBuffer.sliced_std_rolls;
-      if (hCru) hCru.innerText = prepBuffer.sliced_cru_rolls;
-      if (hWarm) hWarm.innerText = totalWarm;
-    }
-
-    function updatePredictivePrepEngine() {
-      renderPrepBufferUI();
-
-      // 1. Calculate Recent Sales Velocity (last 15 minutes)
-      const fifteenMinsAgo = Date.now() - (15 * 60 * 1000);
-      const recentOrders = orders.filter(o => o.timestamp >= fifteenMinsAgo && o.status !== 'cancelled');
-
-      let recentSausagesSold = 0;
-      let recentRollsSold = 0;
-
-      recentOrders.forEach(o => {
-        o.items.forEach(it => {
-          recentSausagesSold += it.qty;
-          if (it.rollType !== 'none') recentRollsSold += it.qty;
-        });
-      });
-
-      // Burn rate per minute
-      const sausageRatePerMin = (recentSausagesSold / 15).toFixed(1);
-      const rollRatePerMin = (recentRollsSold / 15).toFixed(1);
-
-      // 2. Festival Time of Day Rush Curve (Oktoberfest Experience Heuristics)
-      const currentHour = new Date().getHours();
-      const currentMin = new Date().getMinutes();
-      const timeDecimal = currentHour + (currentMin / 60);
-
-      let rushPeriodName = "Steady Festival Flow";
-      let rushMultiplier = 1.0;
-      let rushAdvice = "";
-
-      if (timeDecimal >= 12.0 && timeDecimal <= 14.5) {
-        rushPeriodName = "Lunch Peak Rush (12:30 - 14:00)";
-        rushMultiplier = 1.8;
-        rushAdvice = "High turnover period! Visitors arriving hungry for lunch.";
-      } else if (timeDecimal >= 17.25 && timeDecimal <= 19.5) {
-        rushPeriodName = "Dinner / Band Kickoff Peak (17:30 - 19:30)";
-        rushMultiplier = 2.2;
-        rushAdvice = "MAIN EVENT PEAK! The band begins and hunger peaks after early beers.";
-      } else if (timeDecimal >= 20.5 && timeDecimal <= 22.5) {
-        rushPeriodName = "Late Beer Rush (20:30 - 22:00)";
-        rushMultiplier = 1.9;
-        rushAdvice = "Late-night hunger wave! High demand for Currywurst & Cheesegrillers.";
-      }
-
-      // Total ready buffers
-      const totalPrecooked = prepBuffer.precooked_bratwurst + prepBuffer.precooked_bockwurst + prepBuffer.precooked_cheesegriller;
-      const totalSlicedRolls = prepBuffer.sliced_std_rolls + prepBuffer.sliced_cru_rolls;
-
-      // Recommended minimum buffer based on velocity & rush curve
-      const recommendedRollBuffer = Math.max(20, Math.round((recentRollsSold * 1.5 + 10) * (rushMultiplier > 1 ? 1.4 : 1.0)));
-      const recommendedSausageBuffer = Math.max(15, Math.round((recentSausagesSold * 1.3 + 8) * (rushMultiplier > 1 ? 1.3 : 1.0)));
-
-      // 3. Status Evaluation
-      const badgeContainer = document.getElementById('prep-engine-rush-badge');
-      const adviceBox = document.getElementById('prep-predictive-advice-box');
-
-      let statusLevel = 'healthy'; // 'healthy', 'warning', 'critical'
-      if (totalSlicedRolls < (recommendedRollBuffer * 0.4) || totalPrecooked < (recommendedSausageBuffer * 0.4)) {
-        statusLevel = 'critical';
-      } else if (totalSlicedRolls < recommendedRollBuffer || totalPrecooked < recommendedSausageBuffer) {
-        statusLevel = 'warning';
-      }
-
-      if (badgeContainer) {
-        if (statusLevel === 'critical') {
-          badgeContainer.innerHTML = `
-            <span class="bg-red-950 text-red-300 border border-red-600 px-2.5 py-1 rounded-full text-xs font-black animate-pulse flex items-center gap-1 shadow">
-              <span>🚨</span> <span>PREP BUFFER LOW! PRECOOK & SLICE NOW</span>
-            </span>
-          `;
-        } else if (statusLevel === 'warning') {
-          badgeContainer.innerHTML = `
-            <span class="bg-amber-950 text-amber-300 border border-amber-600 px-2.5 py-1 rounded-full text-xs font-black flex items-center gap-1 shadow">
-              <span>⚡</span> <span>PREP WARNING: REPLENISH BUFFER</span>
-            </span>
-          `;
-        } else {
-          badgeContainer.innerHTML = `
-            <span class="bg-emerald-950 text-emerald-300 border border-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-              <span>✓</span> <span>Prep Buffer Healthy</span>
-            </span>
-          `;
+      if (flowType === 'coals_to_precook') {
+        const canMove = Math.min(count, sausagesOnCoals[sausageKey]);
+        if (canMove <= 0) {
+          alert(`No ${sausageKey} currently on the braai coals to move to precooked!`);
+          return;
         }
+        sausagesOnCoals[sausageKey] -= canMove;
+        prepBuffer[precookKey] = (prepBuffer[precookKey] || 0) + canMove;
+      } else if (flowType === 'coals_to_handout') {
+        if (sausagesOnCoals[sausageKey] <= 0) {
+          alert(`No ${sausageKey} currently on the coals!`);
+          return;
+        }
+        sausagesOnCoals[sausageKey] = Math.max(0, sausagesOnCoals[sausageKey] - count);
+      } else if (flowType === 'precook_to_handout') {
+        if ((prepBuffer[precookKey] || 0) <= 0) {
+          alert(`No precooked ${sausageKey} resting in warmers!`);
+          return;
+        }
+        prepBuffer[precookKey] = Math.max(0, prepBuffer[precookKey] - count);
       }
 
-      if (adviceBox) {
-        adviceBox.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-base">${statusLevel === 'critical' ? '🔥' : '📈'}</span>
-            <div>
-              <div class="text-white font-bold">
-                ${rushPeriodName} — Burn Rate: <span class="text-amber-400 font-mono">${sausageRatePerMin} sausages/min</span>, <span class="text-amber-300 font-mono">${rollRatePerMin} rolls/min</span>
-              </div>
-              <div class="text-[11px] text-slate-400">
-                ${rushAdvice || 'Steady pace. Keep rolls pre-cut on napkins and sausages warm in chafing trays.'}
-              </div>
-            </div>
-          </div>
-          <div class="text-right">
-            <div class="text-xs font-black text-white">Target Buffer: <span class="text-fest-gold">${recommendedSausageBuffer} Sausages</span> | <span class="text-amber-300">${recommendedRollBuffer} Sliced Rolls</span></div>
-            <div class="text-[10px] text-slate-400">Current: ${totalPrecooked} warm / ${totalSlicedRolls} rolls</div>
-          </div>
-        `;
-      }
-
-      // Audible & Toast Alert if Critical and haven't alerted in 7 minutes
-      if (statusLevel === 'critical' && (Date.now() - lastPrepAlertTime > 7 * 60 * 1000)) {
-        lastPrepAlertTime = Date.now();
-        playBeepTone('alert');
-        triggerMasterGrillAlert(
-          `⚡ PREP ALERT: Only ${totalSlicedRolls} sliced rolls & ${totalPrecooked} warm sausages ready! Prep team: please slice rolls and restock warmer trays!`,
-          'prep_buffer',
-          0
-        );
-      }
+      playBeepTone('alert');
+      saveStateToStorage();
+      renderBraaiStation();
     }
 
     function renderBraaiStation() {
-      // Calculate live demand across all open (pending) orders
       let bratCount = 0;
       let curryCount = 0;
       let bockCount = 0;
@@ -2459,8 +2139,6 @@
         });
       });
 
-      // Braai station only displays the 3 raw sausages on the grill:
-      // Bratwurst count displays the total physical bratwursts needed (Plain + Currywurst)
       const totalBratwurst = bratCount + curryCount;
       const elBrat = document.getElementById('braai-count-bratwurst');
       const elBock = document.getElementById('braai-count-bockwurst');
@@ -2472,38 +2150,29 @@
       if (elCheese) elCheese.innerText = cheeseCount;
       if (elCurryNote) {
         elCurryNote.innerText = curryCount > 0 
-          ? `Includes ${curryCount} for Currywurst on coals` 
+          ? `Incl ${curryCount} Currywurst` 
           : 'Standard grill';
       }
 
-      // Synchronize Big Bratwurst Signage: Precooked, Local Cooler Storage, General Main Storage
+      // Bratwurst
       const bigBratPrecooked = document.getElementById('braai-big-precooked-bratwurst');
       const bigBratLocal = document.getElementById('braai-big-local-bratwurst');
-      const bigBratGeneral = document.getElementById('braai-big-general-bratwurst');
-
       if (bigBratPrecooked) bigBratPrecooked.innerText = prepBuffer.precooked_bratwurst || 0;
       if (bigBratLocal) bigBratLocal.innerText = stockLevels.bratwurst?.cooler || 0;
-      if (bigBratGeneral) bigBratGeneral.innerText = stockLevels.bratwurst?.coldRoom || 0;
 
-      // Synchronize Big Bockwurst Signage: Precooked, Local Cooler Storage, General Main Storage
+      // Bockwurst
       const bigBockPrecooked = document.getElementById('braai-big-precooked-bockwurst');
       const bigBockLocal = document.getElementById('braai-big-local-bockwurst');
-      const bigBockGeneral = document.getElementById('braai-big-general-bockwurst');
-
       if (bigBockPrecooked) bigBockPrecooked.innerText = prepBuffer.precooked_bockwurst || 0;
       if (bigBockLocal) bigBockLocal.innerText = stockLevels.bockwurst?.cooler || 0;
-      if (bigBockGeneral) bigBockGeneral.innerText = stockLevels.bockwurst?.coldRoom || 0;
 
-      // Synchronize Big Cheesegriller Signage: Precooked, Local Cooler Storage, General Main Storage
+      // Cheesegriller
       const bigCheesePrecooked = document.getElementById('braai-big-precooked-cheesegriller');
       const bigCheeseLocal = document.getElementById('braai-big-local-cheesegriller');
-      const bigCheeseGeneral = document.getElementById('braai-big-general-cheesegriller');
-
       if (bigCheesePrecooked) bigCheesePrecooked.innerText = prepBuffer.precooked_cheesegriller || 0;
       if (bigCheeseLocal) bigCheeseLocal.innerText = stockLevels.cheesegriller?.cooler || 0;
-      if (bigCheeseGeneral) bigCheeseGeneral.innerText = stockLevels.cheesegriller?.coldRoom || 0;
 
-      // Update On Coals Numbers on Braai screen
+      // Coals
       const cBrat = document.getElementById('coals-count-bratwurst');
       const cBock = document.getElementById('coals-count-bockwurst');
       const cCheese = document.getElementById('coals-count-cheesegriller');
@@ -2511,25 +2180,7 @@
       if (cBock) cBock.innerText = sausagesOnCoals.bockwurst || 0;
       if (cCheese) cCheese.innerText = sausagesOnCoals.cheesegriller || 0;
 
-      // Update Precooked and Left in Cooler Box stats under Add to Braai cards
-      const pBrat = document.getElementById('braai-precooked-stat-bratwurst');
-      const pBock = document.getElementById('braai-precooked-stat-bockwurst');
-      const pCheese = document.getElementById('braai-precooked-stat-cheesegriller');
-      if (pBrat) pBrat.innerText = prepBuffer.precooked_bratwurst || 0;
-      if (pBock) pBock.innerText = prepBuffer.precooked_bockwurst || 0;
-      if (pCheese) pCheese.innerText = prepBuffer.precooked_cheesegriller || 0;
-
-      const coolerBrat = document.getElementById('braai-cooler-stat-bratwurst');
-      const coolerBock = document.getElementById('braai-cooler-stat-bockwurst');
-      const coolerCheese = document.getElementById('braai-cooler-stat-cheesegriller');
-      if (coolerBrat) coolerBrat.innerText = stockLevels.bratwurst?.cooler || 0;
-      if (coolerBock) coolerBock.innerText = stockLevels.bockwurst?.cooler || 0;
-      if (coolerCheese) coolerCheese.innerText = stockLevels.cheesegriller?.cooler || 0;
-
-      // Update Prep Buffer and Predictive Engine
-      updatePredictivePrepEngine();
-
-      // Update General On-Site Stock Indicators (Sausages + Rolls)
+      // Inline General On-Site Stock
       const countsInline = document.getElementById('braai-cooler-counts-inline');
       if (countsInline) {
         countsInline.innerHTML = `
@@ -2560,7 +2211,7 @@
         }
       }
 
-      // Toggle Mode A vs Mode B containers
+      // Mode A vs Mode B containers
       const countersContainer = document.getElementById('braai-demand-counters-container');
       const manualContainer = document.getElementById('braai-manual-orders-container');
 
@@ -2624,10 +2275,9 @@
       if (!sausagesOnCoals[sausageKey]) sausagesOnCoals[sausageKey] = 0;
 
       if (delta > 0) {
-        // Check if on-site cooler has enough
         const coolerAvailable = stockLevels[sausageKey]?.cooler || 0;
         if (coolerAvailable <= 0) {
-          alert(`No more ${sausageKey} available in the on-site cooler! Please transfer stock from the cold room first.`);
+          alert(`No more ${sausageKey} available in the on-site cooler! Please transfer stock from main storage.`);
           return;
         }
 
@@ -2638,14 +2288,12 @@
         const opName = currentActiveCashier || 'Braai Team';
         const msg = `${opName} added +${toAdd} ${niceNames[sausageKey]} onto the fire coals! (Now ${sausagesOnCoals[sausageKey]} sizzling)`;
 
-        // Log entry
         grillActivityLog.unshift({
           time: Date.now(),
           text: msg
         });
         if (grillActivityLog.length > 20) grillActivityLog.pop();
 
-        // Broadcast to master & other tabs
         if (syncChannel) {
           syncChannel.postMessage({
             type: 'BRAAI_COALS_ALERT',
@@ -2678,7 +2326,6 @@
         }, 6000);
       }
 
-      // Update manager UI if manager station is open
       renderGrillActivityMonitor();
     }
 
@@ -2737,7 +2384,6 @@
       const pendingOrders = orders.filter(o => o.status === 'pending');
       if (queueBadge) queueBadge.innerText = `${pendingOrders.length} Pending Orders`;
 
-      // 1. Calculate active roll demand across pending orders
       let stdRollsOrdered = 0;
       let cruRollsOrdered = 0;
 
@@ -2748,28 +2394,22 @@
         });
       });
 
-      // 2. Synchronize Handout & Prep 4-Metric Roll Signage
-      // Standard White Rolls
+      // Synchronize Handout 3-Metric Roll Signage
       const hCountStd = document.getElementById('handout-count-std-roll');
       const hSlicedStd = document.getElementById('handout-sliced-std-roll');
       const hLocalStd = document.getElementById('handout-local-std-roll');
-      const hGeneralStd = document.getElementById('handout-general-std-roll');
 
       if (hCountStd) hCountStd.innerText = stdRollsOrdered;
       if (hSlicedStd) hSlicedStd.innerText = prepBuffer.sliced_std_rolls || 0;
       if (hLocalStd) hLocalStd.innerText = stockLevels.standard_roll?.cooler || 0;
-      if (hGeneralStd) hGeneralStd.innerText = stockLevels.standard_roll?.coldRoom || 0;
 
-      // German Crusty Rolls
       const hCountCru = document.getElementById('handout-count-cru-roll');
       const hSlicedCru = document.getElementById('handout-sliced-cru-roll');
       const hLocalCru = document.getElementById('handout-local-cru-roll');
-      const hGeneralCru = document.getElementById('handout-general-cru-roll');
 
       if (hCountCru) hCountCru.innerText = cruRollsOrdered;
       if (hSlicedCru) hSlicedCru.innerText = prepBuffer.sliced_cru_rolls || 0;
       if (hLocalCru) hLocalCru.innerText = stockLevels.crusty_roll?.cooler || 0;
-      if (hGeneralCru) hGeneralCru.innerText = stockLevels.crusty_roll?.coldRoom || 0;
 
       if (pendingOrders.length === 0) {
         container.innerHTML = `
@@ -2866,7 +2506,6 @@
 
     /* ==================== SHARED DUAL STATION ==================== */
     function renderSharedBraaiHandout() {
-      // 1. Render Left Braai Summary (3 raw sausages on the grill)
       let bratCount = 0;
       let curryCount = 0;
       let bockCount = 0;
@@ -2905,7 +2544,6 @@
         `;
       }
 
-      // 2. Render Right Handout Queue
       const handoutList = document.getElementById('shared-handout-list');
       const handoutCount = document.getElementById('shared-handout-count');
       if (!handoutList) return;
@@ -2941,7 +2579,6 @@
 
     /* ==================== MANAGER DASHBOARD & AUDIT ==================== */
     function renderManagerDashboard() {
-      // 1. Financial KPIs
       let grossRevenue = 0;
       let totalCostOfGoods = 0;
       let bandTabAmount = 0;
@@ -2951,13 +2588,11 @@
       orders.forEach(ord => {
         if (ord.status === 'cancelled') return;
 
-        // Revenue calculation
         if (ord.tenderType === 'Band Tab (Club)') {
           bandTabAmount += ord.total;
         }
         grossRevenue += ord.total;
 
-        // Cost of goods sold (COGS)
         ord.items.forEach(it => {
           let itemCost = (it.cost || 0) * it.qty;
           let rollCost = 0;
@@ -2967,7 +2602,6 @@
           totalCostOfGoods += (itemCost + rollCost);
         });
 
-        // Speed calculation
         if (ord.status === 'delivered' && ord.deliveredAt) {
           totalFulfillmentTime += (ord.deliveredAt - ord.timestamp);
           fulfilledOrdersCount += 1;
@@ -2992,23 +2626,15 @@
         document.getElementById('mgr-stat-avg-speed').innerText = `--:--`;
       }
 
-      // 2. Render Stock Table
       renderStockTable();
-
-      // Synchronize Master Rolls 4-Metric Monitor
       renderMasterRollsMonitor();
-
-      // 3. Render Grill Activity & Coals Status
       renderGrillActivityMonitor();
-
-      // 4. Render Products, Stations and Staff
       renderManagerProductsList();
       renderStationsManagementTable();
       renderStaffManagementTable();
     }
 
     function renderMasterRollsMonitor() {
-      // Calculate active roll demand from all pending orders
       let stdRollsOrdered = 0;
       let cruRollsOrdered = 0;
 
@@ -3019,7 +2645,6 @@
         });
       });
 
-      // Standard White Rolls
       const mStdOrd = document.getElementById('mgr-rolls-std-ordered');
       const mStdSliced = document.getElementById('mgr-rolls-std-sliced');
       const mStdLoc = document.getElementById('mgr-rolls-std-local');
@@ -3030,7 +2655,6 @@
       if (mStdLoc) mStdLoc.innerText = stockLevels.standard_roll?.cooler || 0;
       if (mStdGen) mStdGen.innerText = stockLevels.standard_roll?.coldRoom || 0;
 
-      // German Crusty / Rye Rolls
       const mCruOrd = document.getElementById('mgr-rolls-cru-ordered');
       const mCruSliced = document.getElementById('mgr-rolls-cru-sliced');
       const mCruLoc = document.getElementById('mgr-rolls-cru-local');
@@ -3047,7 +2671,6 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      // Tally items sold
       const usedCounts = {
         bratwurst: 0,
         bockwurst: 0,
@@ -3510,7 +3133,7 @@
 
         // Restock inventory cooler box
         order.items.forEach(it => {
-          const key = (it.productId === 'currywurst') ? 'bratwurst' : item.productId;
+          const key = (it.productId === 'currywurst') ? 'bratwurst' : it.productId;
           if (stockLevels[key]) stockLevels[key].cooler += it.qty;
           if (it.rollType === 'standard_roll' && stockLevels.standard_roll) stockLevels.standard_roll.cooler += it.qty;
           if (it.rollType === 'crusty_roll' && stockLevels.crusty_roll) stockLevels.crusty_roll.cooler += it.qty;
