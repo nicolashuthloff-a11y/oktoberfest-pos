@@ -728,7 +728,7 @@
             <span class="text-lg">🌭</span>
             <div>
               <span class="font-black text-sm text-white">Menu & Product Catalog</span>
-              <span class="text-[11px] text-slate-400 block">Synchronized with stock & pricing</span>
+              <span class="text-[11px] text-slate-400 block">Synchronized with stock & pricing (sausages & rolls)</span>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -1095,6 +1095,59 @@
     </div>
   </div>
 
+  <!-- CUSTOMIZE ROLL TYPES MODAL -->
+  <div id="modal-edit-rolls" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-sm p-4 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-700">
+        <h3 class="font-black text-sm text-white flex items-center gap-1.5">
+          <span>🥖</span> Customize Roll Names & Details
+        </h3>
+        <button type="button" onclick="closeRollsConfigModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <div class="flex flex-col gap-3 text-xs">
+        <!-- Roll 1 (Standard) -->
+        <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col gap-1.5">
+          <span class="text-[10px] font-black uppercase text-amber-300">Roll Option 1 (Standard)</span>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Display Name:</label>
+            <input type="text" id="input-roll-std-name" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white font-semibold">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Short Button Label (Till / Grid):</label>
+            <input type="text" id="input-roll-std-short" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Description:</label>
+            <input type="text" id="input-roll-std-desc" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          </div>
+        </div>
+
+        <!-- Roll 2 (Specialty / Crusty) -->
+        <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col gap-1.5">
+          <span class="text-[10px] font-black uppercase text-amber-400">Roll Option 2 (Specialty / Crusty)</span>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Display Name:</label>
+            <input type="text" id="input-roll-cru-name" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white font-semibold">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Short Button Label (Till / Grid):</label>
+            <input type="text" id="input-roll-cru-short" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px]">Description:</label>
+            <input type="text" id="input-roll-cru-desc" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-700">
+        <button type="button" onclick="closeRollsConfigModal()" class="touch-btn bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg">Cancel</button>
+        <button type="button" onclick="saveRollsConfig()" class="touch-btn bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">Save Roll Settings</button>
+      </div>
+    </div>
+  </div>
+
   <!-- UNIT COST PRICES CONFIGURATION MODAL (COGS) -->
   <div id="modal-cost-config" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-sm p-4 shadow-2xl flex flex-col gap-3">
@@ -1248,8 +1301,12 @@
 
       <div class="flex flex-col gap-2 text-xs">
         <div>
-          <label class="block text-slate-300 mb-0.5">Name:</label>
+          <label class="block text-slate-300 mb-0.5">Full Name:</label>
           <input type="text" id="input-staff-name-edit" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-0.5">Role / Position Description:</label>
+          <input type="text" id="input-staff-role-edit" placeholder="e.g. Head Cashier / Grill Lead" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
         </div>
         <div>
           <label class="block text-slate-300 mb-0.5">4-Digit PIN:</label>
@@ -1334,6 +1391,20 @@
       { id: 'cheesegriller', name: 'Cheesegriller (110g)', price: 60.00, cost: 24.00, desc: 'Savoury grill sausage packed with melted cheddar cheese', color: 'yellow' }
     ];
 
+    /* DEFAULT ROLL CONFIGURATIONS */
+    const defaultRollConfig = {
+      standard: {
+        name: 'Standard White Roll',
+        shortLabel: '🥖 White',
+        desc: 'Traditional freshly baked white roll'
+      },
+      crusty: {
+        name: 'German Crusty / Rye Roll',
+        shortLabel: '🥨 Crusty',
+        desc: 'Artisan German crusty roll with rye malt'
+      }
+    };
+
     /* DEFAULT UNIT COSTS */
     const defaultCosts = {
       bratwurst: 22.00,
@@ -1377,6 +1448,7 @@
     let stationsList = [];
     let staffRoster = [];
     let productCatalog = [];
+    let rollConfig = {};
     let unitCosts = {};
     let orders = [];
     let stockLevels = {};
@@ -1475,6 +1547,7 @@
       stationsList = JSON.parse(localStorage.getItem('okt_stations') || JSON.stringify(defaultStations));
       staffRoster = JSON.parse(localStorage.getItem('okt_staff') || JSON.stringify(defaultStaff));
       productCatalog = JSON.parse(localStorage.getItem('okt_products') || JSON.stringify(defaultProducts));
+      rollConfig = JSON.parse(localStorage.getItem('okt_roll_config') || JSON.stringify(defaultRollConfig));
       unitCosts = JSON.parse(localStorage.getItem('okt_costs') || JSON.stringify(defaultCosts));
       orders = JSON.parse(localStorage.getItem('okt_orders') || '[]');
       isTrainingTestMode = JSON.parse(localStorage.getItem('okt_training_mode') || 'false');
@@ -1516,6 +1589,7 @@
       localStorage.setItem('okt_stations', JSON.stringify(stationsList));
       localStorage.setItem('okt_staff', JSON.stringify(staffRoster));
       localStorage.setItem('okt_products', JSON.stringify(productCatalog));
+      localStorage.setItem('okt_roll_config', JSON.stringify(rollConfig));
       localStorage.setItem('okt_costs', JSON.stringify(unitCosts));
       localStorage.setItem('okt_orders', JSON.stringify(orders));
       localStorage.setItem('okt_stock', JSON.stringify(stockLevels));
@@ -1889,6 +1963,10 @@
       if (!container) return;
       container.innerHTML = '';
 
+      const stdShort = rollConfig.standard?.shortLabel || '🥖 White';
+      const cruShort = rollConfig.crusty?.shortLabel || '🥨 Crusty';
+
+      // 1. Render Sausages with Roll Choice Buttons
       productCatalog.forEach(prod => {
         const card = document.createElement('div');
         card.className = "bg-slate-800 border border-slate-700 rounded-xl p-3 flex flex-col justify-between shadow-sm";
@@ -1904,21 +1982,68 @@
           <!-- Roll Selection Quick Buttons -->
           <div class="grid grid-cols-3 gap-1.5 mt-3 pt-2 border-t border-slate-700/60">
             <button type="button" onclick="addToCart('${prod.id}', 'standard_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-1.5 px-1 rounded-lg text-xs flex flex-col items-center">
-              <span>🥖 White</span>
-              <span class="text-[9px] text-slate-300">Roll</span>
+              <span>${stdShort}</span>
+              <span class="text-[9px] text-slate-300">Included</span>
             </button>
             <button type="button" onclick="addToCart('${prod.id}', 'crusty_roll')" class="touch-btn bg-amber-900/60 hover:bg-amber-800 text-amber-200 border border-amber-700/50 font-bold py-1.5 px-1 rounded-lg text-xs flex flex-col items-center">
-              <span>🥨 Crusty</span>
-              <span class="text-[9px] text-amber-300">Rye Roll</span>
+              <span>${cruShort}</span>
+              <span class="text-[9px] text-amber-300">Included</span>
             </button>
             <button type="button" onclick="addToCart('${prod.id}', 'none')" class="touch-btn bg-slate-900 hover:bg-slate-750 text-slate-300 font-bold py-1.5 px-1 rounded-lg text-xs flex flex-col items-center">
               <span>🍽️ No Roll</span>
-              <span class="text-[9px] text-slate-400">Sausage</span>
+              <span class="text-[9px] text-slate-400">Sausage only</span>
             </button>
           </div>
         `;
         container.appendChild(card);
       });
+
+      // 2. Extra Standalone Rolls Row for Cashier
+      const extraRollsCard = document.createElement('div');
+      extraRollsCard.className = "col-span-1 sm:col-span-2 bg-slate-850 border border-amber-700/40 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-sm bg-slate-800/80";
+      extraRollsCard.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="text-base">🥖</span>
+          <div>
+            <div class="text-xs font-black text-amber-300 uppercase tracking-wide">Extra / Standalone Rolls</div>
+            <div class="text-[10px] text-slate-400">Tap to ring up individual rolls without sausage</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="addStandaloneRollToCart('standard_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
+            <span>🥖</span> <span>${rollConfig.standard?.name || 'Standard White Roll'}</span>
+            <span class="text-fest-gold font-mono font-bold">R${(rollConfig.standard?.price || 10).toFixed(2)}</span>
+          </button>
+          <button type="button" onclick="addStandaloneRollToCart('crusty_roll')" class="touch-btn bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-700/60 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
+            <span>🥨</span> <span>${rollConfig.crusty?.name || 'German Crusty Roll'}</span>
+            <span class="text-fest-gold font-mono font-bold">R${(rollConfig.crusty?.price || 15).toFixed(2)}</span>
+          </button>
+        </div>
+      `;
+      container.appendChild(extraRollsCard);
+    }
+
+    function addStandaloneRollToCart(rollKey) {
+      const isStd = (rollKey === 'standard_roll');
+      const name = isStd ? (rollConfig.standard?.name || 'Standard White Roll') : (rollConfig.crusty?.name || 'German Crusty Roll');
+      const price = isStd ? (rollConfig.standard?.price || 10.00) : (rollConfig.crusty?.price || 15.00);
+      const cost = isStd ? (unitCosts.standard_roll || 3.50) : (unitCosts.crusty_roll || 5.50);
+
+      const existingIndex = currentCart.findIndex(item => item.productId === rollKey && item.rollType === 'standalone');
+      if (existingIndex > -1) {
+        currentCart[existingIndex].qty += 1;
+      } else {
+        currentCart.push({
+          productId: rollKey,
+          name: name,
+          price: price,
+          cost: cost,
+          rollType: 'standalone',
+          qty: 1
+        });
+      }
+      playBeepTone('alert');
+      updateCartUI();
     }
 
     function addToCart(productId, rollType) {
@@ -1933,7 +2058,7 @@
           productId: prod.id,
           name: prod.name,
           price: prod.price,
-          cost: prod.cost || 0,
+          cost: prod.cost,
           rollType: rollType,
           qty: 1
         });
@@ -2064,41 +2189,79 @@
 
       orders.push(newOrder);
       saveStateToStorage();
-
-      displayPostItSlip(newOrder);
       playBeepTone('success');
+      displayPostItSlip(newOrder);
       clearCart();
+      refreshActiveStationUI();
     }
 
     function deductInventoryForOrder(order) {
       order.items.forEach(it => {
-        const key = (it.productId === 'currywurst') ? 'bratwurst' : it.productId;
+        let key = it.productId;
+        if (key === 'currywurst') key = 'bratwurst';
         if (stockLevels[key]) {
-          stockLevels[key].cooler = Math.max(0, (stockLevels[key].cooler || 0) - it.qty);
+          if (stockLevels[key].cooler >= it.qty) {
+            stockLevels[key].cooler -= it.qty;
+          } else {
+            const remainder = it.qty - stockLevels[key].cooler;
+            stockLevels[key].cooler = 0;
+            stockLevels[key].coldRoom = Math.max(0, (stockLevels[key].coldRoom || 0) - remainder);
+          }
         }
+
         if (it.rollType === 'standard_roll' && stockLevels.standard_roll) {
-          stockLevels.standard_roll.cooler = Math.max(0, (stockLevels.standard_roll.cooler || 0) - it.qty);
+          if (stockLevels.standard_roll.cooler >= it.qty) {
+            stockLevels.standard_roll.cooler -= it.qty;
+          } else {
+            const rem = it.qty - stockLevels.standard_roll.cooler;
+            stockLevels.standard_roll.cooler = 0;
+            stockLevels.standard_roll.coldRoom = Math.max(0, (stockLevels.standard_roll.coldRoom || 0) - rem);
+          }
         } else if (it.rollType === 'crusty_roll' && stockLevels.crusty_roll) {
-          stockLevels.crusty_roll.cooler = Math.max(0, (stockLevels.crusty_roll.cooler || 0) - it.qty);
+          if (stockLevels.crusty_roll.cooler >= it.qty) {
+            stockLevels.crusty_roll.cooler -= it.qty;
+          } else {
+            const rem = it.qty - stockLevels.crusty_roll.cooler;
+            stockLevels.crusty_roll.cooler = 0;
+            stockLevels.crusty_roll.coldRoom = Math.max(0, (stockLevels.crusty_roll.coldRoom || 0) - rem);
+          }
         }
       });
     }
 
-    function displayPostItSlip(order) {
-      const modal = document.getElementById('modal-postit');
-      const numEl = document.getElementById('postit-order-number');
-      const sumEl = document.getElementById('postit-order-summary');
-      if (!modal || !numEl || !sumEl) return;
+    function consumePrepBufferForOrder(order) {
+      order.items.forEach(it => {
+        let sausageKey = it.productId;
+        if (sausageKey === 'currywurst') sausageKey = 'bratwurst';
+        const precookKey = `precooked_${sausageKey}`;
+        if (prepBuffer[precookKey]) {
+          prepBuffer[precookKey] = Math.max(0, prepBuffer[precookKey] - it.qty);
+        }
 
-      numEl.innerText = `#${order.number}`;
-      const summary = order.items.map(it => `${it.qty}x ${it.name} (${it.rollType === 'crusty_roll' ? 'Crusty' : it.rollType === 'none' ? 'No Roll' : 'White'})`).join(', ');
-      sumEl.innerText = summary + (order.notes ? ` • Note: ${order.notes}` : '');
-      modal.classList.remove('hidden');
+        if (it.rollType === 'standard_roll') {
+          prepBuffer.sliced_std_rolls = Math.max(0, (prepBuffer.sliced_std_rolls || 0) - it.qty);
+        } else if (it.rollType === 'crusty_roll') {
+          prepBuffer.sliced_cru_rolls = Math.max(0, (prepBuffer.sliced_cru_rolls || 0) - it.qty);
+        }
+      });
+    }
+
+    function adjustPrepBuffer(key, delta) {
+      prepBuffer[key] = Math.max(0, (prepBuffer[key] || 0) + delta);
+      playBeepTone('alert');
+      saveStateToStorage();
+      refreshActiveStationUI();
+    }
+
+    function displayPostItSlip(order) {
+      document.getElementById('postit-order-number').innerText = `#${order.number}`;
+      const summaryText = order.items.map(it => `${it.qty}x ${it.name} (${it.rollType === 'crusty_roll' ? 'Crusty' : it.rollType === 'none' ? 'No Roll' : 'White Roll'})`).join(', ');
+      document.getElementById('postit-order-summary').innerText = summaryText;
+      document.getElementById('modal-postit').classList.remove('hidden');
     }
 
     function closePostItModal() {
-      const modal = document.getElementById('modal-postit');
-      if (modal) modal.classList.add('hidden');
+      document.getElementById('modal-postit').classList.add('hidden');
     }
 
     function toggleBraaiWorkflowMode() {
@@ -2110,39 +2273,94 @@
 
     function updateBraaiModeUI() {
       const label = document.getElementById('label-braai-mode-text');
-      if (!label) return;
-      if (braaiWorkflowMode === 'zero_touch') {
-        label.innerText = 'Zero-Touch (Passive)';
-        label.className = 'text-amber-400 font-bold';
-      } else {
-        label.innerText = 'Order-by-Order Confirmation';
-        label.className = 'text-emerald-400 font-bold';
+      if (label) {
+        label.innerText = (braaiWorkflowMode === 'zero_touch') 
+          ? 'Zero-Touch (Passive)' 
+          : 'Order Cards (Manual)';
       }
     }
 
-    function consumePrepBufferForOrder(order) {
-      order.items.forEach(it => {
-        if (it.productId === 'bratwurst' || it.productId === 'currywurst') {
-          prepBuffer.precooked_bratwurst = Math.max(0, prepBuffer.precooked_bratwurst - it.qty);
-        } else if (it.productId === 'bockwurst') {
-          prepBuffer.precooked_bockwurst = Math.max(0, prepBuffer.precooked_bockwurst - it.qty);
-        } else if (it.productId === 'cheesegriller') {
-          prepBuffer.precooked_cheesegriller = Math.max(0, prepBuffer.precooked_cheesegriller - it.qty);
-        }
+    function openRollsConfigModal() {
+      document.getElementById('input-roll-std-name').value = rollConfig.standard?.name || 'Standard White Roll';
+      document.getElementById('input-roll-std-short').value = rollConfig.standard?.shortLabel || '🥖 White';
+      document.getElementById('input-roll-std-desc').value = rollConfig.standard?.desc || 'Traditional freshly baked white roll';
 
-        if (it.rollType === 'standard_roll') {
-          prepBuffer.sliced_std_rolls = Math.max(0, prepBuffer.sliced_std_rolls - it.qty);
-        } else if (it.rollType === 'crusty_roll') {
-          prepBuffer.sliced_cru_rolls = Math.max(0, prepBuffer.sliced_cru_rolls - it.qty);
-        }
-      });
+      document.getElementById('input-roll-cru-name').value = rollConfig.crusty?.name || 'German Crusty / Rye Roll';
+      document.getElementById('input-roll-cru-short').value = rollConfig.crusty?.shortLabel || '🥨 Crusty';
+      document.getElementById('input-roll-cru-desc').value = rollConfig.crusty?.desc || 'Artisan German crusty roll with rye malt';
+
+      document.getElementById('modal-edit-rolls').classList.remove('hidden');
     }
 
-    /* PREP BUFFER MANAGEMENT */
-    function adjustPrepBuffer(key, delta) {
-      if (!prepBuffer[key]) prepBuffer[key] = 0;
-      prepBuffer[key] = Math.max(0, prepBuffer[key] + delta);
+    function closeRollsConfigModal() {
+      document.getElementById('modal-edit-rolls').classList.add('hidden');
+    }
+
+    function saveRollsConfig() {
+      rollConfig = {
+        standard: {
+          name: document.getElementById('input-roll-std-name').value.trim() || 'Standard White Roll',
+          shortLabel: document.getElementById('input-roll-std-short').value.trim() || '🥖 White',
+          desc: document.getElementById('input-roll-std-desc').value.trim() || ''
+        },
+        crusty: {
+          name: document.getElementById('input-roll-cru-name').value.trim() || 'German Crusty / Rye Roll',
+          shortLabel: document.getElementById('input-roll-cru-short').value.trim() || '🥨 Crusty',
+          desc: document.getElementById('input-roll-cru-desc').value.trim() || ''
+        }
+      };
+
       saveStateToStorage();
+      closeRollsConfigModal();
+      renderMenu();
+      renderStockTable();
+      refreshActiveStationUI();
+      alert("Roll options and button names updated!");
+    }
+
+    function openOpeningStockModal() {
+      document.getElementById('open-stock-brat-cold').value = stockLevels.bratwurst?.coldRoom || 0;
+      document.getElementById('open-stock-brat-cooler').value = stockLevels.bratwurst?.cooler || 0;
+      document.getElementById('open-stock-bock-cold').value = stockLevels.bockwurst?.coldRoom || 0;
+      document.getElementById('open-stock-bock-cooler').value = stockLevels.bockwurst?.cooler || 0;
+      document.getElementById('open-stock-cheese-cold').value = stockLevels.cheesegriller?.coldRoom || 0;
+      document.getElementById('open-stock-cheese-cooler').value = stockLevels.cheesegriller?.cooler || 0;
+      document.getElementById('open-stock-roll-std-cold').value = stockLevels.standard_roll?.coldRoom || 0;
+      document.getElementById('open-stock-roll-std-cooler').value = stockLevels.standard_roll?.cooler || 0;
+      document.getElementById('open-stock-roll-cru-cold').value = stockLevels.crusty_roll?.coldRoom || 0;
+      document.getElementById('open-stock-roll-cru-cooler').value = stockLevels.crusty_roll?.cooler || 0;
+      document.getElementById('modal-opening-stock').classList.remove('hidden');
+    }
+
+    function closeOpeningStockModal() {
+      document.getElementById('modal-opening-stock').classList.add('hidden');
+    }
+
+    function saveOpeningStockValues() {
+      stockLevels.bratwurst = {
+        coldRoom: parseInt(document.getElementById('open-stock-brat-cold').value) || 0,
+        cooler: parseInt(document.getElementById('open-stock-brat-cooler').value) || 0
+      };
+      stockLevels.bockwurst = {
+        coldRoom: parseInt(document.getElementById('open-stock-bock-cold').value) || 0,
+        cooler: parseInt(document.getElementById('open-stock-bock-cooler').value) || 0
+      };
+      stockLevels.cheesegriller = {
+        coldRoom: parseInt(document.getElementById('open-stock-cheese-cold').value) || 0,
+        cooler: parseInt(document.getElementById('open-stock-cheese-cooler').value) || 0
+      };
+      stockLevels.standard_roll = {
+        coldRoom: parseInt(document.getElementById('open-stock-roll-std-cold').value) || 0,
+        cooler: parseInt(document.getElementById('open-stock-roll-std-cooler').value) || 0
+      };
+      stockLevels.crusty_roll = {
+        coldRoom: parseInt(document.getElementById('open-stock-roll-cru-cold').value) || 0,
+        cooler: parseInt(document.getElementById('open-stock-roll-cru-cooler').value) || 0
+      };
+
+      saveStateToStorage();
+      closeOpeningStockModal();
+      renderStockTable();
       refreshActiveStationUI();
     }
 
@@ -2756,9 +2974,11 @@
         });
       });
 
-      // Add Roll Items
-      displayList.push({ key: 'standard_roll', label: '🥖 Standard White Rolls', isProduct: false });
-      displayList.push({ key: 'crusty_roll', label: '🥨 German Crusty / Rye Rolls', isProduct: false });
+      // Add Roll Items with customized labels
+      const stdName = rollConfig.standard?.name || 'Standard White Rolls';
+      const cruName = rollConfig.crusty?.name || 'German Crusty / Rye Rolls';
+      displayList.push({ key: 'standard_roll', label: `🥖 ${stdName}`, isProduct: false });
+      displayList.push({ key: 'crusty_roll', label: `🥨 ${cruName}`, isProduct: false });
 
       displayList.forEach(item => {
         const cold = stockLevels[item.key]?.coldRoom || 0;
@@ -2815,6 +3035,7 @@
       closeItemStockAdjustModal();
       refreshActiveStationUI();
     }
+
     /* ==================== STOCK TRANSFER & OPENING MODALS ==================== */
     function openTransferStockModal(preselectKey = null) {
       const select = document.getElementById('transfer-stock-item-id');
@@ -2844,6 +3065,53 @@
 
       document.getElementById('transfer-stock-qty').value = "50";
       document.getElementById('modal-transfer-stock').classList.remove('hidden');
+    }
+
+    function closeTransferStockModal() {
+      document.getElementById('modal-transfer-stock').classList.add('hidden');
+    }
+
+    function setTransferQty(qty) {
+      const input = document.getElementById('transfer-stock-qty');
+      if (input) input.value = qty;
+    }
+
+    function executeStockTransfer() {
+      const itemId = document.getElementById('transfer-stock-item-id').value;
+      const qty = parseInt(document.getElementById('transfer-stock-qty').value) || 0;
+
+      if (qty <= 0) {
+        alert("Please enter a quantity greater than zero.");
+        return;
+      }
+
+      if (!stockLevels[itemId]) {
+        stockLevels[itemId] = { coldRoom: 0, cooler: 0 };
+      }
+
+      const availableInStorage = stockLevels[itemId].coldRoom || 0;
+      if (qty > availableInStorage) {
+        alert(`Warning: Only ${availableInStorage} available in Main Storage. Transferring all remaining ${availableInStorage}.`);
+      }
+
+      const transferAmount = Math.min(qty, availableInStorage);
+      stockLevels[itemId].coldRoom -= transferAmount;
+      stockLevels[itemId].cooler += transferAmount;
+
+      saveStateToStorage();
+      closeTransferStockModal();
+      playBeepTone('success');
+      refreshActiveStationUI();
+    }
+
+    function openCostConfigModal() {
+      document.getElementById('cost-input-bratwurst').value = unitCosts.bratwurst || 22.00;
+      document.getElementById('cost-input-bockwurst').value = unitCosts.bockwurst || 22.00;
+      document.getElementById('cost-input-cheesegriller').value = unitCosts.cheesegriller || 24.00;
+      document.getElementById('cost-input-currysauce').value = unitCosts.currysauce || 4.00;
+      document.getElementById('cost-input-std-roll').value = unitCosts.standard_roll || 3.50;
+      document.getElementById('cost-input-cru-roll').value = unitCosts.crusty_roll || 5.50;
+      document.getElementById('modal-cost-config').classList.remove('hidden');
     }
 
     function closeCostConfigModal() {
@@ -3030,6 +3298,24 @@
     /* ==================== PRODUCT CATALOG & STATIONS MANAGEMENT ==================== */
     function openProductEditModal(productId) {
       editingProductId = productId;
+
+      // Handle editing rolls
+      if (productId === 'standard_roll' || productId === 'crusty_roll') {
+        const isStd = (productId === 'standard_roll');
+        const rollObj = isStd ? rollConfig.standard : rollConfig.crusty;
+        const currentCost = isStd ? (unitCosts.standard_roll || 3.50) : (unitCosts.crusty_roll || 5.50);
+
+        document.getElementById('modal-product-title').innerText = isStd ? "Edit Standard White Roll" : "Edit German Crusty Roll";
+        document.getElementById('input-prod-name').value = rollObj?.name || (isStd ? 'Standard White Roll' : 'German Crusty / Rye Roll');
+        document.getElementById('input-prod-price').value = rollObj?.price !== undefined ? rollObj.price : (isStd ? 10 : 15);
+        document.getElementById('input-prod-cost').value = currentCost;
+        document.getElementById('input-prod-desc').value = rollObj?.desc || '';
+        document.getElementById('input-prod-stock-cold').value = stockLevels[productId]?.coldRoom || 0;
+        document.getElementById('input-prod-stock-cooler').value = stockLevels[productId]?.cooler || 0;
+        document.getElementById('modal-edit-product').classList.remove('hidden');
+        return;
+      }
+
       if (productId) {
         const prod = productCatalog.find(p => p.id === productId);
         if (!prod) return;
@@ -3070,6 +3356,37 @@
         return;
       }
 
+      // 1. If editing roll configuration
+      if (editingProductId === 'standard_roll' || editingProductId === 'crusty_roll') {
+        const isStd = (editingProductId === 'standard_roll');
+        if (isStd) {
+          if (!rollConfig.standard) rollConfig.standard = {};
+          rollConfig.standard.name = name;
+          rollConfig.standard.price = price;
+          rollConfig.standard.desc = desc;
+          unitCosts.standard_roll = cost;
+        } else {
+          if (!rollConfig.crusty) rollConfig.crusty = {};
+          rollConfig.crusty.name = name;
+          rollConfig.crusty.price = price;
+          rollConfig.crusty.desc = desc;
+          unitCosts.crusty_roll = cost;
+        }
+
+        if (!stockLevels[editingProductId]) stockLevels[editingProductId] = { coldRoom: 0, cooler: 0 };
+        stockLevels[editingProductId].coldRoom = Math.max(0, stockCold);
+        stockLevels[editingProductId].cooler = Math.max(0, stockCooler);
+
+        saveStateToStorage();
+        closeProductEditModal();
+        renderMenu();
+        renderManagerProductsList();
+        renderStockTable();
+        refreshActiveStationUI();
+        return;
+      }
+
+      // 2. Regular product edit / create
       let targetId = editingProductId;
 
       if (editingProductId) {
@@ -3109,6 +3426,10 @@
     }
 
     function deleteProduct(productId) {
+      if (productId === 'standard_roll' || productId === 'crusty_roll') {
+        alert("The core rolls are required for sausage assembly and cannot be deleted. You can edit their name, price, cost, or stock instead.");
+        return;
+      }
       if (!confirm("Are you sure you want to remove this item? It will be removed from both the till menu and the stock ledger.")) return;
       productCatalog = productCatalog.filter(p => p.id !== productId);
       delete stockLevels[productId];
@@ -3125,6 +3446,7 @@
       if (!container) return;
       container.innerHTML = '';
 
+      // 1. Render Catalog Sausages & Items
       productCatalog.forEach(p => {
         const card = document.createElement('div');
         card.className = "bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 flex flex-col justify-between";
@@ -3151,6 +3473,71 @@
         `;
         container.appendChild(card);
       });
+
+      // 2. Render Roll Items into the Catalog List (Standard White Roll & German Crusty Roll)
+      const stdName = rollConfig.standard?.name || 'Standard White Roll';
+      const stdPrice = rollConfig.standard?.price !== undefined ? rollConfig.standard.price : 10.00;
+      const stdCost = unitCosts.standard_roll || 3.50;
+      const stdDesc = rollConfig.standard?.desc || 'Freshly baked traditional white roll';
+
+      const cruName = rollConfig.crusty?.name || 'German Crusty / Rye Roll';
+      const cruPrice = rollConfig.crusty?.price !== undefined ? rollConfig.crusty.price : 15.00;
+      const cruCost = unitCosts.crusty_roll || 5.50;
+      const cruDesc = rollConfig.crusty?.desc || 'Artisan German crusty roll with rye malt';
+
+      // Standard Roll Card
+      const stdCard = document.createElement('div');
+      stdCard.className = "bg-slate-900/90 border border-amber-500/60 rounded-xl p-3 flex flex-col justify-between";
+      stdCard.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span>🥖</span>
+              <span class="font-black text-amber-200 text-xs sm:text-sm">${stdName}</span>
+            </div>
+            <span class="font-mono font-bold text-fest-gold text-xs">R${Number(stdPrice).toFixed(2)}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${stdDesc}</p>
+          <div class="mt-2 text-[10px] text-slate-400 flex items-center justify-between">
+            <span>Unit Cost: R${Number(stdCost).toFixed(2)}</span>
+            <span>On-Site: <strong class="text-white">${stockLevels.standard_roll?.cooler || 0}</strong></span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800">
+          <span class="text-[9px] uppercase font-bold text-amber-400 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/80">Roll Option</span>
+          <button type="button" onclick="openProductEditModal('standard_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded">
+            ✏️ Edit
+          </button>
+        </div>
+      `;
+      container.appendChild(stdCard);
+
+      // German Crusty Roll Card
+      const cruCard = document.createElement('div');
+      cruCard.className = "bg-slate-900/90 border border-amber-600/60 rounded-xl p-3 flex flex-col justify-between";
+      cruCard.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span>🥨</span>
+              <span class="font-black text-amber-400 text-xs sm:text-sm">${cruName}</span>
+            </div>
+            <span class="font-mono font-bold text-fest-gold text-xs">R${Number(cruPrice).toFixed(2)}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${cruDesc}</p>
+          <div class="mt-2 text-[10px] text-slate-400 flex items-center justify-between">
+            <span>Unit Cost: R${Number(cruCost).toFixed(2)}</span>
+            <span>On-Site: <strong class="text-white">${stockLevels.crusty_roll?.cooler || 0}</strong></span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-800">
+          <span class="text-[9px] uppercase font-bold text-amber-500 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/80">Roll Option</span>
+          <button type="button" onclick="openProductEditModal('crusty_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded">
+            ✏️ Edit
+          </button>
+        </div>
+      `;
+      container.appendChild(cruCard);
     }
 
     function renderStationsManagementTable() {
@@ -3205,7 +3592,7 @@
         tr.innerHTML = `
           <td class="p-2">
             <div class="font-bold text-white">${person.name}</div>
-            <div class="text-[10px] text-slate-400">PIN: ****</div>
+            <div class="text-[10px] text-slate-400">${person.role || 'Team Member'} • PIN: ****</div>
           </td>
           <td class="p-2 text-[11px] text-slate-300">${assignedLabels}</td>
           <td class="p-2 text-right">
@@ -3219,6 +3606,84 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function openStaffModal(staffName) {
+      editingStaffName = staffName;
+      const checkboxesContainer = document.getElementById('staff-edit-stations-checkboxes');
+      checkboxesContainer.innerHTML = '';
+
+      let currentPerms = [];
+
+      if (staffName) {
+        const person = staffRoster.find(p => p.name === staffName);
+        if (!person) return;
+        document.getElementById('modal-staff-title').innerText = "Edit Staff Member";
+        document.getElementById('input-staff-name-edit').value = person.name;
+        document.getElementById('input-staff-role-edit').value = person.role || '';
+        document.getElementById('input-staff-pin-edit').value = person.pin;
+        currentPerms = person.assignedStations || [];
+      } else {
+        document.getElementById('modal-staff-title').innerText = "Add Staff Member";
+        document.getElementById('input-staff-name-edit').value = '';
+        document.getElementById('input-staff-role-edit').value = 'Team Member';
+        document.getElementById('input-staff-pin-edit').value = '1234';
+        currentPerms = ['till', 'handout', 'braai', 'shared'];
+      }
+
+      stationsList.forEach(st => {
+        const isChecked = currentPerms.includes(st.id);
+        const label = document.createElement('label');
+        label.className = "flex items-center gap-1.5 p-1 rounded bg-slate-800 border border-slate-700 text-[11px] text-white";
+        label.innerHTML = `
+          <input type="checkbox" value="${st.id}" ${isChecked ? 'checked' : ''} class="checkbox-staff-station">
+          <span>${st.name}</span>
+        `;
+        checkboxesContainer.appendChild(label);
+      });
+
+      document.getElementById('modal-staff').classList.remove('hidden');
+    }
+
+    function closeStaffModal() {
+      document.getElementById('modal-staff').classList.add('hidden');
+      editingStaffName = null;
+    }
+
+    function saveStaffEdit() {
+      const name = document.getElementById('input-staff-name-edit').value.trim();
+      const role = document.getElementById('input-staff-role-edit').value.trim() || 'Team Member';
+      const pin = document.getElementById('input-staff-pin-edit').value.trim();
+
+      if (!name || !pin) {
+        alert("Name and PIN are required.");
+        return;
+      }
+
+      const checkedStations = Array.from(document.querySelectorAll('.checkbox-staff-station:checked')).map(cb => cb.value);
+
+      if (editingStaffName) {
+        const person = staffRoster.find(p => p.name === editingStaffName);
+        if (person) {
+          person.name = name;
+          person.role = role;
+          person.pin = pin;
+          person.assignedStations = checkedStations;
+        }
+      } else {
+        staffRoster.push({
+          name: name,
+          role: role,
+          pin: pin,
+          assignedStations: checkedStations
+        });
+      }
+
+      saveStateToStorage();
+      closeStaffModal();
+      renderStaffManagementTable();
+      populateLoginNames();
+      renderSharedOperatorsHeader();
     }
 
     function deleteStaffMember(name) {
@@ -3337,78 +3802,6 @@
       closeStationEditModal();
       renderHeaderStationTabs();
       renderStationsManagementTable();
-    }
-
-    function openStaffModal(staffName) {
-      editingStaffName = staffName;
-      const checkboxesContainer = document.getElementById('staff-edit-stations-checkboxes');
-      checkboxesContainer.innerHTML = '';
-
-      let currentPerms = [];
-
-      if (staffName) {
-        const person = staffRoster.find(p => p.name === staffName);
-        if (!person) return;
-        document.getElementById('modal-staff-title').innerText = "Edit Staff Member";
-        document.getElementById('input-staff-name-edit').value = person.name;
-        document.getElementById('input-staff-pin-edit').value = person.pin;
-        currentPerms = person.assignedStations || [];
-      } else {
-        document.getElementById('modal-staff-title').innerText = "Add Staff Member";
-        document.getElementById('input-staff-name-edit').value = '';
-        document.getElementById('input-staff-pin-edit').value = '1234';
-        currentPerms = ['till', 'handout', 'braai', 'shared'];
-      }
-
-      stationsList.forEach(st => {
-        const isChecked = currentPerms.includes(st.id);
-        const label = document.createElement('label');
-        label.className = "flex items-center gap-1.5 p-1 rounded bg-slate-800 border border-slate-700 text-[11px] text-white";
-        label.innerHTML = `
-          <input type="checkbox" value="${st.id}" ${isChecked ? 'checked' : ''} class="checkbox-staff-station">
-          <span>${st.name}</span>
-        `;
-        checkboxesContainer.appendChild(label);
-      });
-
-      document.getElementById('modal-staff').classList.remove('hidden');
-    }
-
-    function closeStaffModal() {
-      document.getElementById('modal-staff').classList.add('hidden');
-      editingStaffName = null;
-    }
-
-    function saveStaffEdit() {
-      const name = document.getElementById('input-staff-name-edit').value.trim();
-      const pin = document.getElementById('input-staff-pin-edit').value.trim();
-
-      if (!name || !pin) {
-        alert("Name and PIN are required.");
-        return;
-      }
-
-      const checkedStations = Array.from(document.querySelectorAll('.checkbox-staff-station:checked')).map(cb => cb.value);
-
-      if (editingStaffName) {
-        const person = staffRoster.find(p => p.name === editingStaffName);
-        if (person) {
-          person.name = name;
-          person.pin = pin;
-          person.assignedStations = checkedStations;
-        }
-      } else {
-        staffRoster.push({
-          name: name,
-          pin: pin,
-          role: 'Team Member',
-          assignedStations: checkedStations
-        });
-      }
-
-      saveStateToStorage();
-      closeStaffModal();
-      renderStaffManagementTable();
     }
 
     /* ==================== MASTER PIN DIALOG ==================== */
