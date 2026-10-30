@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,23 +74,27 @@
         </div>
       </div>
 
-      <!-- Station Navigation Buttons -->
+      <!-- NEW: MULTI-OPERATOR SHARED QUICK-BAR IN HEADER (IF MULTIPLE PEOPLE LOGGED IN ON THIS DEVICE) -->
+      <div id="header-co-operators-container" class="hidden flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-fest-gold/50">
+        <span class="text-[10px] font-black text-fest-gold pl-1 uppercase hidden md:inline">Active Cashier:</span>
+        <div id="header-co-operators-chips" class="flex items-center gap-1">
+          <!-- Populated with 1-tap switch buttons for each person on this shared device -->
+        </div>
+      </div>
+
+      <!-- Dynamic Station Navigation Buttons -->
       <div class="flex items-center gap-1 sm:gap-2">
-        <button type="button" onclick="switchStation('pos')" id="tab-nav-pos" class="touch-btn px-2.5 sm:px-4 py-1.5 rounded-xl font-black text-xs sm:text-sm bg-fest-bavaria text-white shadow transition">
-          💳 Till
-        </button>
-        <button type="button" onclick="switchStation('handout')" id="tab-nav-handout" class="touch-btn px-2.5 sm:px-4 py-1.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
-          📦 Handout <span id="badge-nav-handout-count" class="ml-1 px-1.5 py-0.2 rounded-full bg-fest-red text-white text-[10px]">0</span>
-        </button>
-        <button type="button" onclick="switchStation('braai')" id="tab-nav-braai" class="touch-btn px-2.5 sm:px-4 py-1.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
-          🔥 Braai <span id="badge-nav-braai-count" class="ml-1 px-1.5 py-0.2 rounded-full bg-fest-gold text-slate-900 text-[10px]">0</span>
-        </button>
-        <button type="button" onclick="switchStation('manager')" id="tab-nav-manager" class="touch-btn px-2 sm:px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700 hover:bg-slate-600 text-purple-300 transition">
-          🔒
+        <div id="header-stations-nav-container" class="flex items-center gap-1 sm:gap-2">
+          <!-- Rendered dynamically by renderHeaderNavigation() -->
+        </div>
+
+        <!-- NEW: Dedicated All Orders & History Button -->
+        <button type="button" onclick="openOrderHistoryModal()" title="View All Previous Orders" class="touch-btn px-2.5 py-1.5 rounded-xl bg-blue-800 hover:bg-blue-700 text-white font-black text-xs shadow flex items-center gap-1">
+          <span>📜</span> <span class="hidden md:inline">Order History</span>
         </button>
 
-        <!-- Utility: Switch Staff, WakeLock, Fullscreen -->
-        <button type="button" onclick="showLoginScreen()" title="Switch Staff or Station" class="touch-btn px-2 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-fest-navy font-black text-xs">
+        <!-- Utility: Switch Staff, WakeLock -->
+        <button type="button" onclick="showLoginScreen()" title="Switch Staff or Station" class="touch-btn px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-fest-navy font-black text-xs shadow">
           🔄 Switch
         </button>
         <button type="button" onclick="toggleWakeLock()" id="btn-wakelock" title="Keep Screen Awake" class="touch-btn px-2 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs">
@@ -107,6 +110,16 @@
   <!-- ======================================================== -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-4">
 
+    <!-- NEW: SHARED DEVICE DUAL QUICK-SWITCH DOCK (VISIBLE ON SHARED DEVICES) -->
+    <div id="shared-station-switcher-bar" class="hidden mb-3 bg-fest-charcoal p-2 rounded-2xl border-2 border-fest-gold flex items-center justify-between gap-2 shadow-md">
+      <div class="flex items-center gap-1.5 text-fest-gold text-xs font-black">
+        <span>🤝 SHARED DEVICE:</span>
+      </div>
+      <div id="shared-station-buttons-container" class="flex items-center gap-1.5 flex-1 justify-end">
+        <!-- Rendered dynamically for shared devices -->
+      </div>
+    </div>
+
     <!-- STATION 1: CASHIER / TILL (POS) -->
     <section id="station-view-pos" class="station-view grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
       
@@ -117,9 +130,14 @@
             <span class="text-xl">🌭</span>
             <span class="font-black text-slate-800 text-sm sm:text-base">Sausage Menu</span>
           </div>
-          <button type="button" onclick="promptOrderLookupForEdit()" class="touch-btn px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-black text-xs border border-amber-300 transition">
-            ✏️ Change / Cancel Order #
-          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="openOrderHistoryModal()" class="touch-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs border border-slate-300 transition flex items-center gap-1">
+              📜 View Past Orders
+            </button>
+            <button type="button" onclick="promptOrderLookupForEdit()" class="touch-btn px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-black text-xs border border-amber-300 transition">
+              ✏️ Change / Cancel #
+            </button>
+          </div>
         </div>
 
         <!-- Menu Cards Grid -->
@@ -173,6 +191,16 @@
             </button>
           </div>
 
+          <!-- FREE / SPECIAL TENDERS: STAFF MEAL & BAND TAB -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="initiateSpecialCheckout('staff')" title="Free meal for working festival staff" class="touch-btn py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-300 font-black text-xs uppercase tracking-wide transition flex items-center justify-center gap-1">
+              <span>👥</span> Staff Meal (Free)
+            </button>
+            <button type="button" onclick="initiateSpecialCheckout('band')" title="Band / Performer pickup - club invoiced" class="touch-btn py-2 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border border-indigo-300 font-black text-xs uppercase tracking-wide transition flex items-center justify-center gap-1">
+              <span>🎺</span> Band Tab (Club)
+            </button>
+          </div>
+
           <button type="button" onclick="clearCart()" class="w-full py-1 text-[11px] text-rose-500 hover:text-rose-700 font-bold text-center">
             Clear Ticket
           </button>
@@ -192,6 +220,9 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
+          <button type="button" onclick="openOrderHistoryModal()" class="touch-btn px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-800 font-black text-xs border border-slate-300">
+            📜 History
+          </button>
           <span class="text-xs font-black text-slate-500">Filter:</span>
           <select id="select-handout-filter" onchange="renderHandoutStation()" class="text-xs font-bold px-2 py-1.5 rounded-xl border border-slate-300 bg-slate-50">
             <option value="pending">Awaiting Pickup</option>
@@ -261,6 +292,20 @@
 
       </div>
 
+      <!-- NEW: ON-SITE COOLER BOX INVENTORY STATUS FOR BRAAI TEAM -->
+      <div class="bg-slate-800 border-2 border-fest-gold p-3 rounded-2xl flex items-center justify-between text-white flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🧊</span>
+          <div>
+            <span class="font-black text-xs sm:text-sm text-fest-gold block">ON-SITE COOLER BOX STOCK (AT BRAAI)</span>
+            <span id="braai-cooler-summary-text" class="text-xs text-slate-300 font-bold">Loading cooler counts...</span>
+          </div>
+        </div>
+        <button type="button" onclick="openTransferStockModal()" class="touch-btn px-3 py-1.5 rounded-xl bg-fest-bavaria hover:bg-blue-600 text-white font-black text-xs shadow flex items-center gap-1">
+          <span>🚚</span> Transfer from Cold Room
+        </button>
+      </div>
+
       <!-- Total Bratwursts banner -->
       <div class="bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl flex items-center justify-between text-amber-950">
         <span class="font-black text-xs sm:text-sm">🔥 TOTAL BRATWURSTS REQUIRED ON COALS:</span>
@@ -275,6 +320,109 @@
         </div>
       </div>
 
+    </section>
+
+    <!-- NEW: SHARED DUAL VIEW (SPLIT-SCREEN: BRAAI + HANDOUT PREP) -->
+    <section id="station-view-shared-braai-handout" class="station-view hidden flex-col gap-3">
+      <div class="bg-gradient-to-r from-amber-700 via-fest-charcoal to-fest-navy text-white p-3 rounded-2xl border-2 border-fest-gold shadow-md flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🤝</span>
+          <div>
+            <h2 class="font-black text-base sm:text-lg text-fest-gold">Shared Station: Braai & Handout Prep</h2>
+            <p class="text-xs text-slate-200 font-bold">Dual View &bull; Live grill demand on left &bull; Handout tickets on right</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="toggleBraaiConfirmationMode()" id="btn-toggle-braai-mode-shared" class="touch-btn px-3 py-1 rounded-xl font-black text-xs bg-fest-gold text-slate-900 shadow">
+            Mode: Zero-Touch
+          </button>
+        </div>
+      </div>
+
+      <!-- Split Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+        <!-- Left 5 Cols: Braai Demand Counters & Cooler Stock -->
+        <div class="lg:col-span-5 flex flex-col gap-3">
+          <div class="bg-white p-3 rounded-2xl border-2 border-amber-400 shadow-sm">
+            <span class="text-xs font-black text-amber-900 uppercase block mb-1">🔥 Live Sausages Needed on Coals</span>
+            
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2.5 rounded-xl bg-amber-50 border-2 border-amber-300">
+                <span class="text-[10px] font-black uppercase text-slate-500 block">Bratwurst</span>
+                <span id="shared-braai-count-bratwurst" class="text-3xl font-black text-slate-900 block my-0.5">0</span>
+                <span class="text-[9px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded-full">Standard</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-rose-50 border-2 border-fest-red">
+                <span class="text-[10px] font-black uppercase text-slate-500 block">Curry Sauce</span>
+                <span id="shared-braai-count-curry" class="text-3xl font-black text-fest-red block my-0.5">0</span>
+                <span class="text-[9px] font-bold text-rose-800 bg-rose-100 px-1.5 py-0.2 rounded-full">Uses Brat</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-blue-50 border-2 border-fest-bavaria">
+                <span class="text-[10px] font-black uppercase text-slate-500 block">Bockwurst</span>
+                <span id="shared-braai-count-bockwurst" class="text-3xl font-black text-fest-bavaria block my-0.5">0</span>
+                <span class="text-[9px] font-bold text-blue-800 bg-blue-100 px-1.5 py-0.2 rounded-full">Smoked</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-amber-100/60 border-2 border-fest-gold">
+                <span class="text-[10px] font-black uppercase text-slate-500 block">Cheesegriller</span>
+                <span id="shared-braai-count-cheesegriller" class="text-3xl font-black text-amber-600 block my-0.5">0</span>
+                <span class="text-[9px] font-bold text-amber-900 bg-amber-200 px-1.5 py-0.2 rounded-full">Cheese</span>
+              </div>
+            </div>
+
+            <div class="mt-2 p-2 rounded-xl bg-amber-100 text-amber-950 font-black text-xs text-center border border-amber-300">
+              Total Brats on Coals: <span id="shared-braai-total-brats-calc" class="text-sm">0</span>
+            </div>
+          </div>
+
+          <!-- Cooler Box status -->
+          <div class="bg-slate-800 text-white p-3 rounded-2xl border border-fest-gold flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-black text-fest-gold uppercase block">Cooler Box (On-Site)</span>
+              <span id="shared-cooler-summary-text" class="text-xs font-bold text-slate-200">Loading counts...</span>
+            </div>
+            <button type="button" onclick="openTransferStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-fest-bavaria text-white font-black text-xs">
+              🚚 Transfer
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 7 Cols: Handout Tickets & Plating -->
+        <div class="lg:col-span-7 flex flex-col gap-2">
+          <div class="flex items-center justify-between bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm">
+            <span class="font-black text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
+              <span>📦</span> Handout Orders Queue
+            </span>
+            <span id="shared-handout-pending-pill" class="text-xs font-black px-2 py-0.5 rounded-full bg-fest-red text-white">
+              0 Awaiting Pickup
+            </span>
+          </div>
+
+          <div id="shared-handout-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[65vh] overflow-y-auto pr-1 custom-scroll">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOM DYNAMIC STATIONS CONTAINER -->
+    <section id="station-view-custom" class="station-view hidden flex-col gap-3">
+      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm text-center">
+        <span id="custom-station-icon" class="text-4xl block mb-2">⭐</span>
+        <h2 id="custom-station-title" class="font-black text-slate-900 text-xl mb-1">Custom Station</h2>
+        <p id="custom-station-desc" class="text-xs text-slate-500 font-bold max-w-md mx-auto mb-4">
+          Station is active for this device.
+        </p>
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 max-w-sm mx-auto text-left text-xs font-bold space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Current Operator:</span>
+            <span id="custom-station-op" class="font-black text-slate-900">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Station ID:</span>
+            <span id="custom-station-id-lbl" class="font-mono text-slate-700">—</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- STATION 4: MANAGER & AUDIT CONSOLE -->
@@ -326,18 +474,46 @@
         </div>
       </div>
 
+      <!-- NEW: BAND & STAFF ACCOUNTS SUMMARY CARD -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+        <div class="bg-indigo-50 border-2 border-indigo-200 p-3.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <span class="text-xs font-black uppercase text-indigo-900 block flex items-center gap-1">🎺 Band Tab (To Be Invoiced to Club)</span>
+            <span id="mgr-stat-band-total" class="text-xl font-black text-indigo-950 block my-0.5">R 0.00</span>
+            <span id="mgr-stat-band-count" class="text-[11px] text-indigo-700 font-bold">0 Sausages to Band</span>
+          </div>
+          <button type="button" onclick="exportBandInvoiceCsv()" class="touch-btn px-2.5 py-1.5 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white font-black text-xs shadow">
+            Export Band Invoice
+          </button>
+        </div>
+        <div class="bg-purple-50 border-2 border-purple-200 p-3.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <span class="text-xs font-black uppercase text-purple-900 block flex items-center gap-1">👥 Staff Complimentary Meals</span>
+            <span id="mgr-stat-staff-meals-count" class="text-xl font-black text-purple-950 block my-0.5">0 Meals (R 0.00 Comped)</span>
+            <span class="text-[11px] text-purple-700 font-bold">Free for working volunteers</span>
+          </div>
+          <span class="text-2xl">🌭</span>
+        </div>
+      </div>
+
       <!-- Inventory Control -->
       <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
         <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
-            <span>📦</span> Physical Stock Tracking
-          </h3>
+          <div>
+            <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
+              <span>📦</span> Multi-Location Stock Tracking
+            </h3>
+            <p class="text-xs text-slate-500 font-bold">Main Cold Room Fridge vs. On-Site Braai Cooler Boxes</p>
+          </div>
           <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="openTransferStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-900 border border-indigo-300 font-black text-xs hover:bg-indigo-100 flex items-center gap-1">
+              🚚 Transfer Fridge &rarr; Cooler
+            </button>
             <button type="button" onclick="openOpeningStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 font-black text-xs hover:bg-emerald-100">
               ⚙️ Set Opening Stock
             </button>
             <button type="button" onclick="openManualStockModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-blue-50 text-fest-bavaria border border-blue-200 font-black text-xs hover:bg-blue-100">
-              + Add / Adjust Stock
+              + Add / Delivery
             </button>
             <button type="button" onclick="openAdvanceOrderModal()" class="touch-btn px-2.5 py-1 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-black text-xs hover:bg-amber-100">
               + Advance Pre-Order
@@ -350,33 +526,33 @@
         </div>
       </div>
 
-      <!-- Staff Shifts & Time Tracking -->
+      <!-- DYNAMIC STATIONS MANAGEMENT -->
       <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
             <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
-              <span>⏱️</span> Staff Work Hours & Station Time Audit
+              <span>📍</span> Station Configuration & Management
             </h3>
-            <p class="text-xs text-slate-500 font-bold">Time spent at Till, Handout, Braai and Manager</p>
+            <p class="text-xs text-slate-500 font-bold">Create custom stations, rename, edit icons, or remove stations</p>
           </div>
-          <button type="button" onclick="exportStaffShiftsCsv()" class="touch-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white font-black text-xs hover:bg-slate-700">
-            Export Shifts CSV
+          <button type="button" onclick="openStationModalForAdd()" class="touch-btn px-3 py-1.5 rounded-xl bg-fest-bavaria text-white font-black text-xs hover:bg-blue-700">
+            + Create Station
           </button>
         </div>
 
-        <div id="mgr-shifts-table-container" class="overflow-x-auto">
+        <div id="mgr-stations-table-container" class="overflow-x-auto">
           <!-- Populated by JS -->
         </div>
       </div>
 
-      <!-- Staff Roster & PIN Management -->
+      <!-- STAFF & ASSIGNED STATIONS MANAGEMENT -->
       <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
             <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
-              <span>👥</span> Staff & PIN Management
+              <span>👥</span> Staff Roster & Station Assignment
             </h3>
-            <p class="text-xs text-slate-500 font-bold">Add, edit, change PINs or station access</p>
+            <p class="text-xs text-slate-500 font-bold">Add, edit, change PINs, and assign allowed stations to staff</p>
           </div>
           <button type="button" onclick="openStaffModalForAdd()" class="touch-btn px-3 py-1.5 rounded-xl bg-fest-bavaria text-white font-black text-xs hover:bg-blue-700">
             + Add Team Member
@@ -388,11 +564,35 @@
         </div>
       </div>
 
+      <!-- Staff Shifts & Time Tracking -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
+              <span>⏱️</span> Staff Work Hours & Station Time Audit
+            </h3>
+            <p class="text-xs text-slate-500 font-bold">Shift history and station assignments breakdown</p>
+          </div>
+          <button type="button" onclick="exportStaffShiftsCsv()" class="touch-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white font-black text-xs hover:bg-slate-700">
+            Export Shifts CSV
+          </button>
+        </div>
+
+        <div id="mgr-shifts-table-container" class="overflow-x-auto">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
       <!-- Order History & Cancellation / Edit Table -->
       <div class="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
-        <h3 class="font-black text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-1.5">
-          <span>🧾</span> All Orders Audit Ledger
-        </h3>
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+          <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-1.5">
+            <span>🧾</span> All Orders Audit Ledger
+          </h3>
+          <button type="button" onclick="exportOrdersCsv()" class="touch-btn px-3 py-1.5 rounded-xl bg-fest-bavaria text-white font-black text-xs hover:bg-blue-700">
+            Export Orders CSV
+          </button>
+        </div>
         <div id="mgr-orders-table-container" class="overflow-x-auto max-h-96 custom-scroll">
           <!-- Populated by JS -->
         </div>
@@ -401,6 +601,63 @@
     </section>
 
   </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ALL PREVIOUS ORDERS & DETAIL EXPLORER -->
+  <!-- ======================================================== -->
+  <div id="modal-order-history" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl border-4 border-fest-gold max-h-[92vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📜</span>
+          <div>
+            <h2 class="font-black text-base sm:text-lg text-slate-900 leading-tight">All Previous Orders & Line Items</h2>
+            <p class="text-xs text-slate-500 font-bold">Complete history of tickets, sausages ordered, rolls, and tenders.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeOrderHistoryModal()" class="touch-btn w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-lg flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+
+      <!-- Search & Filters Toolbar -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3 bg-slate-50 p-2.5 rounded-2xl border border-slate-200">
+        <div class="sm:col-span-2 relative">
+          <input type="text" id="input-history-search" oninput="renderHistoryModalOrders()" placeholder="Search order #, customer note, cashier, or sausage type..." class="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 focus:outline-none focus:border-fest-bavaria">
+          <span class="absolute left-2.5 top-2.5 text-xs text-slate-400">🔍</span>
+        </div>
+        <div>
+          <select id="select-history-filter-status" onchange="renderHistoryModalOrders()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900">
+            <option value="all">All Statuses (Pending & Delivered)</option>
+            <option value="pending">Awaiting Pickup / On Braai</option>
+            <option value="delivered">Completed / Handed Out</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Scrollable Orders List Container -->
+      <div id="history-modal-orders-container" class="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scroll min-h-[220px]">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-200 mt-3 flex items-center justify-between text-xs font-bold text-slate-600 flex-wrap gap-2">
+        <span id="history-modal-summary-count">Showing 0 orders</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="exportOrdersCsv()" class="touch-btn px-3 py-1.5 rounded-xl bg-slate-800 text-white font-black text-xs hover:bg-slate-700">
+            Download CSV
+          </button>
+          <button type="button" onclick="closeOrderHistoryModal()" class="touch-btn px-4 py-1.5 rounded-xl bg-fest-bavaria text-white font-black text-xs hover:bg-blue-700">
+            Done
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ======================================================== -->
   <!-- MODAL: LOGIN / SIGN-IN OVERLAY -->
@@ -417,44 +674,32 @@
         <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
           🌭 Station Sign-In
         </h2>
-        <p class="text-xs text-slate-500 font-bold">1. Tap Station &bull; 2. Tap Name &bull; 3. Enter PIN</p>
+        <p class="text-xs text-slate-500 font-bold">1. Tap Station &bull; 2. Choose Person(s) &bull; 3. Enter PIN</p>
       </div>
 
-      <!-- STEP 1: SELECT STATION (Compact 2x2 Grid) -->
+      <!-- STEP 1: SELECT STATION (Dynamic Grid) -->
       <div class="mb-3">
         <label class="text-[11px] font-black uppercase tracking-wide text-slate-700 block mb-1">
-          1. Select Station:
+          1. Select Station for this Device:
         </label>
-        <div class="grid grid-cols-2 gap-1.5">
-          <button type="button" id="card-station-pos" onclick="selectLoginStation('pos')" class="touch-btn text-left p-2 rounded-xl border-2 border-fest-bavaria bg-blue-50">
-            <span class="text-xs sm:text-sm font-black text-slate-900 block leading-tight">💳 Till / POS</span>
-            <span class="text-[10px] text-slate-600 block">Orders & Cash</span>
-          </button>
-          <button type="button" id="card-station-handout" onclick="selectLoginStation('handout')" class="touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white">
-            <span class="text-xs sm:text-sm font-black text-slate-900 block leading-tight">📦 Handout</span>
-            <span class="text-[10px] text-slate-600 block">Plating & Delivery</span>
-          </button>
-          <button type="button" id="card-station-braai" onclick="selectLoginStation('braai')" class="touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white">
-            <span class="text-xs sm:text-sm font-black text-slate-900 block leading-tight">🔥 Braai</span>
-            <span class="text-[10px] text-slate-600 block">Live Grill Counts</span>
-          </button>
-          <button type="button" id="card-station-manager" onclick="selectLoginStation('manager')" class="touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white">
-            <span class="text-xs sm:text-sm font-black text-slate-900 block leading-tight">🔒 Manager</span>
-            <span class="text-[10px] text-slate-600 block">Audit & Float</span>
-          </button>
+        <div id="login-stations-grid" class="grid grid-cols-2 gap-1.5">
+          <!-- Populated by JS -->
         </div>
       </div>
 
-      <!-- STEP 2: SELECT NAME (Names only, no stations) -->
+      <!-- STEP 2: SELECT OPERATORS (Single or Multiple Co-Workers Sharing this Device) -->
       <div class="mb-3">
         <div class="flex items-center justify-between mb-1">
           <label class="text-[11px] font-black uppercase tracking-wide text-slate-700">
-            2. Who is operating this device?
+            2. Who is using this device?
           </label>
-          <span id="lbl-active-selected-name" class="text-[10px] font-black text-fest-bavaria bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200">
-            Select Name
-          </span>
+          <button type="button" id="btn-toggle-multi-mode" onclick="toggleMultiStaffMode()" class="text-[10px] font-black text-fest-bavaria bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-lg border border-blue-200 transition">
+            👥 Single Person Mode
+          </button>
         </div>
+        <p id="lbl-multi-mode-hint" class="text-[10px] text-slate-500 mb-1.5 font-semibold">
+          Tap one person to operate, or tap <b>Single Person Mode</b> to toggle <b>Multi-Person Shared Device</b> (e.g. Nick & Joost sharing Braai, or Candice & Nicole sharing Till).
+        </p>
         <div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
           <!-- Populated by JS -->
         </div>
@@ -462,7 +707,7 @@
 
       <!-- STEP 3: PIN ENTRY (ON-SCREEN KEYPAD + INPUT) -->
       <div class="mb-3">
-        <label class="text-[11px] font-black uppercase tracking-wide text-slate-700 block mb-1">
+        <label id="lbl-pin-entry-heading" class="text-[11px] font-black uppercase tracking-wide text-slate-700 block mb-1">
           3. Enter 4-Digit PIN:
         </label>
         
@@ -488,6 +733,91 @@
         Activate Station
       </button>
 
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD / EDIT STATION -->
+  <!-- ======================================================== -->
+  <div id="modal-station" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+        <h3 class="font-black text-slate-900 text-base" id="modal-station-title">Create New Station</h3>
+        <button type="button" onclick="closeStationModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="space-y-2.5 mb-4 text-xs font-bold">
+        <div>
+          <label class="block text-slate-600 mb-1">Station ID (letters/numbers, no spaces):</label>
+          <input type="text" id="input-station-id-field" placeholder="e.g. drinks, vip, bar" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-mono font-bold text-slate-900">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Station Display Name:</label>
+          <input type="text" id="input-station-name-field" placeholder="e.g. Drink Station" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Station Icon / Emoji:</label>
+          <input type="text" id="input-station-icon-field" placeholder="e.g. 🍺, 🥨, 📦" value="📍" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-bold text-slate-900 text-lg">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Subtitle / Purpose:</label>
+          <input type="text" id="input-station-subtitle-field" placeholder="e.g. Cold beers & soft drinks" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-semibold text-slate-900">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="saveStationFromModal()" class="touch-btn py-2.5 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase">
+          Save Station
+        </button>
+        <button type="button" onclick="closeStationModal()" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD / EDIT STAFF MEMBER & ASSIGN STATIONS -->
+  <!-- ======================================================== -->
+  <div id="modal-staff" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+        <h3 class="font-black text-slate-900 text-base" id="modal-staff-title">Edit Staff Member</h3>
+        <button type="button" onclick="closeStaffModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="space-y-2.5 mb-4 text-xs font-bold">
+        <div>
+          <label class="block text-slate-600 mb-1">Staff Name:</label>
+          <input type="text" id="input-staff-name-field" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Role / Job Title:</label>
+          <input type="text" id="input-staff-role-field" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-semibold text-slate-900">
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">4-Digit Access PIN:</label>
+          <input type="text" id="input-staff-pin-field" maxlength="6" inputmode="numeric" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
+        </div>
+
+        <!-- STATION ASSIGNMENT CHECKBOXES -->
+        <div>
+          <label class="block text-slate-700 font-black mb-1.5">Assign Stations to this Member:</label>
+          <div id="staff-modal-station-assignments" class="grid grid-cols-2 gap-1.5 p-2 rounded-xl bg-slate-50 border border-slate-200">
+            <!-- Dynamically populated checkboxes by JS -->
+          </div>
+          <span class="text-[10px] text-slate-400 font-bold mt-1 block">Staff can only activate stations that are checked. Leave all checked for open access.</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="saveStaffMemberFromModal()" class="touch-btn py-2.5 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase">
+          Save Member
+        </button>
+        <button type="button" onclick="closeStaffModal()" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 
@@ -538,48 +868,12 @@
   </div>
 
   <!-- ======================================================== -->
-  <!-- MODAL: ADD / EDIT STAFF MEMBER -->
-  <!-- ======================================================== -->
-  <div id="modal-staff" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
-        <h3 class="font-black text-slate-900 text-base" id="modal-staff-title">Edit Staff Member</h3>
-        <button type="button" onclick="closeStaffModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
-      </div>
-
-      <div class="space-y-2.5 mb-4 text-xs font-bold">
-        <div>
-          <label class="block text-slate-600 mb-1">Staff Name:</label>
-          <input type="text" id="input-staff-name-field" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
-        </div>
-        <div>
-          <label class="block text-slate-600 mb-1">Role / Job Title:</label>
-          <input type="text" id="input-staff-role-field" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-semibold text-slate-900">
-        </div>
-        <div>
-          <label class="block text-slate-600 mb-1">4-Digit Access PIN:</label>
-          <input type="text" id="input-staff-pin-field" maxlength="6" inputmode="numeric" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="saveStaffMemberFromModal()" class="touch-btn py-2.5 rounded-xl bg-fest-bavaria text-white font-black text-xs uppercase">
-          Save Member
-        </button>
-        <button type="button" onclick="closeStaffModal()" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase">
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================================================== -->
   <!-- MODAL: MANUAL STOCK ADD -->
   <!-- ======================================================== -->
   <div id="modal-manual-stock" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
-        <h3 class="font-black text-slate-900 text-base">Add Raw Sausage / Roll Stock</h3>
+        <h3 class="font-black text-slate-900 text-base">Add New Delivery / Stock</h3>
         <button type="button" onclick="closeManualStockModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
       </div>
 
@@ -591,6 +885,13 @@
             <option value="bockwurst">Bockwurst (Raw Sausage)</option>
             <option value="cheesegriller">Cheesegriller (Raw Sausage)</option>
             <option value="rolls">Fresh Rolls / Buns</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-600 mb-1">Destination Location:</label>
+          <select id="select-stock-destination" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
+            <option value="fridge">Main Cold Room Fridge ❄️</option>
+            <option value="cooler">On-Site Cooler Box 🧊</option>
           </select>
         </div>
         <div>
@@ -606,34 +907,128 @@
   </div>
 
   <!-- ======================================================== -->
+  <!-- NEW MODAL: TRANSFER FROM COLD ROOM FRIDGE TO COOLER BOX -->
+  <!-- ======================================================== -->
+  <div id="modal-transfer-stock" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-5 shadow-2xl border-2 border-fest-bavaria">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xl">🚚</span>
+          <h3 class="font-black text-slate-900 text-base">Move Stock to Cooler Box</h3>
+        </div>
+        <button type="button" onclick="closeTransferStockModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <p class="text-xs text-slate-500 font-bold mb-3">
+        Moving cold stock from the <b>Main Fridge Room</b> into the <b>On-Site Braai Cooler Box</b>.
+      </p>
+
+      <div class="space-y-3 mb-4 text-xs font-bold">
+        <div>
+          <label class="block text-slate-700 mb-1">Select Item to Transfer:</label>
+          <select id="select-transfer-item" onchange="updateTransferAvailabilityHint()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900">
+            <option value="bratwurst">Bratwurst (Raw)</option>
+            <option value="bockwurst">Bockwurst (Raw)</option>
+            <option value="cheesegriller">Cheesegriller (Raw)</option>
+            <option value="rolls">Fresh Rolls / Buns</option>
+          </select>
+          <span id="lbl-transfer-fridge-available" class="text-[11px] text-blue-700 font-bold mt-1 block">Available in Fridge: 0</span>
+        </div>
+        <div>
+          <label class="block text-slate-700 mb-1">Transfer Quantity (Units):</label>
+          <div class="grid grid-cols-4 gap-1.5 mb-1.5">
+            <button type="button" onclick="setTransferPreset(25)" class="touch-btn py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black rounded-lg text-xs">+25</button>
+            <button type="button" onclick="setTransferPreset(50)" class="touch-btn py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black rounded-lg text-xs">+50</button>
+            <button type="button" onclick="setTransferPreset(75)" class="touch-btn py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black rounded-lg text-xs">+75</button>
+            <button type="button" onclick="setTransferPreset(100)" class="touch-btn py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black rounded-lg text-xs">+100</button>
+          </div>
+          <input type="number" id="input-transfer-qty" min="1" value="50" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-lg">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="executeStockTransfer()" class="touch-btn py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase shadow transition">
+          Confirm Transfer
+        </button>
+        <button type="button" onclick="closeTransferStockModal()" class="touch-btn py-2.5 rounded-xl bg-slate-200 text-slate-700 font-black text-xs uppercase">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
   <!-- MODAL: SET OPENING STOCK AT EVENT START -->
   <!-- ======================================================== -->
   <div id="modal-opening-stock" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
         <div>
           <h3 class="font-black text-slate-900 text-base">Set Beginning Stock (Opening Baseline)</h3>
-          <p class="text-xs text-slate-500 font-bold">Enter initial sausages and rolls on hand before sales begin.</p>
+          <p class="text-xs text-slate-500 font-bold">Split baseline between Fridge Room & On-Site Cooler Boxes.</p>
         </div>
         <button type="button" onclick="closeOpeningStockModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center">✕</button>
       </div>
 
       <div class="space-y-3 mb-4 text-xs font-bold">
-        <div>
-          <label class="block text-slate-700 mb-1">🥖 Fresh Rolls / Buns (Total Units):</label>
-          <input type="number" id="input-opening-rolls" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+        <!-- Rolls -->
+        <div class="p-2.5 rounded-2xl bg-amber-50/50 border border-amber-200">
+          <span class="block text-amber-900 font-black mb-1">🥖 Fresh Rolls / Buns</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-500 block">Main Storage / Bakery Bags:</label>
+              <input type="number" id="input-opening-rolls-fridge" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 block">At Handout Table:</label>
+              <input type="number" id="input-opening-rolls-cooler" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-slate-700 mb-1">🌭 Bratwurst Sausages (Covers Standard & Currywurst):</label>
-          <input type="number" id="input-opening-bratwurst" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+
+        <!-- Bratwurst -->
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <span class="block text-slate-900 font-black mb-1">🌭 Bratwurst Sausages (Std & Curry)</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Cold Room Fridge ❄️:</label>
+              <input type="number" id="input-opening-bratwurst-fridge" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Braai Cooler Box 🧊:</label>
+              <input type="number" id="input-opening-bratwurst-cooler" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-slate-700 mb-1">🌭 Bockwurst Sausages:</label>
-          <input type="number" id="input-opening-bockwurst" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+
+        <!-- Bockwurst -->
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <span class="block text-slate-900 font-black mb-1">🌭 Bockwurst Sausages</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Cold Room Fridge ❄️:</label>
+              <input type="number" id="input-opening-bockwurst-fridge" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Braai Cooler Box 🧊:</label>
+              <input type="number" id="input-opening-bockwurst-cooler" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-slate-700 mb-1">🧀 Cheesegriller Sausages:</label>
-          <input type="number" id="input-opening-cheesegriller" min="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-black text-slate-900 text-base">
+
+        <!-- Cheesegriller -->
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+          <span class="block text-slate-900 font-black mb-1">🧀 Cheesegriller Sausages</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Cold Room Fridge ❄️:</label>
+              <input type="number" id="input-opening-cheesegriller-fridge" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 block">In Braai Cooler Box 🧊:</label>
+              <input type="number" id="input-opening-cheesegriller-cooler" min="0" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white font-black text-slate-900">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -655,6 +1050,7 @@
     /* 1. STATE & STORAGE KEYS */
     const STORAGE_KEY_ORDERS = 'oktoberfest_kds_orders';
     const STORAGE_KEY_ROSTER = 'oktoberfest_kds_roster';
+    const STORAGE_KEY_STATIONS = 'oktoberfest_kds_stations';
     const STORAGE_KEY_STOCK = 'oktoberfest_kds_stock';
     const STORAGE_KEY_SHIFTS = 'oktoberfest_kds_shifts';
     const STORAGE_KEY_FLOAT = 'oktoberfest_kds_float';
@@ -669,10 +1065,15 @@
     let braaiModeManual = false;
     let wakeLock = null;
 
-    let currentStationRole = 'pos'; // 'pos', 'handout', 'braai', 'manager'
+    let currentStationRole = 'pos'; // 'pos', 'handout', 'braai', 'manager', or custom
     let currentStaffName = '';
     let selectedLoginStationId = 'pos';
     let selectedLoginStaffName = '';
+    
+    // NEW: Multi-Person Shared Device State
+    let isMultiStaffMode = false;
+    let selectedStaffNamesList = []; // Array of names currently chosen for this device
+    let activeCoOperators = [];      // Array of staff names logged into this shared device
 
     // Menu Catalog
     const MENU_CATALOG = [
@@ -682,13 +1083,32 @@
       { id: 'cheesegriller', name: 'Cheesegriller (110g)', price: 70.00, desc: 'Pork sausage packed with melted cheddar cheese', color: 'border-fest-gold bg-amber-100/50' }
     ];
 
+    // Configurable Dynamic Stations
+    let stationsList = [
+      { id: 'pos', name: 'Till / POS', icon: '💳', subtitle: 'Orders & Cash', isCore: true },
+      { id: 'handout', name: 'Handout', icon: '📦', subtitle: 'Plating & Delivery', isCore: true },
+      { id: 'braai', name: 'Braai', icon: '🔥', subtitle: 'Live Grill Counts', isCore: true },
+      { id: 'manager', name: 'Manager', icon: '🔒', subtitle: 'Audit & Float', isCore: true }
+    ];
+
     let staffRoster = [];
     let shiftLogs = [];
+    let isSharedDevice = false;
+    
+    // Split inventory tracking: Fridge Room (bulk) vs Cooler Box (on-site braai / prep table)
     let inventoryStock = {
-      bratwurst: 275,
-      bockwurst: 150,
-      cheesegriller: 175,
-      rolls: 600
+      fridge: {
+        bratwurst: 175,
+        bockwurst: 100,
+        cheesegriller: 100,
+        rolls: 400
+      },
+      cooler: {
+        bratwurst: 100,
+        bockwurst: 50,
+        cheesegriller: 75,
+        rolls: 200
+      }
     };
 
     // Cross-tab broadcast channel for real-time multi-device sync
@@ -697,6 +1117,7 @@
     /* 2. INITIALIZATION */
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      renderHeaderNavigation();
       renderMenu();
       updateCartUI();
       renderHandoutStation();
@@ -707,6 +1128,7 @@
         syncChannel.onmessage = (event) => {
           if (event && event.data) {
             loadState();
+            renderHeaderNavigation();
             renderHandoutStation();
             renderBraaiStation();
             renderManagerDashboard();
@@ -726,6 +1148,7 @@
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+        localStorage.setItem(STORAGE_KEY_STATIONS, JSON.stringify(stationsList));
         localStorage.setItem(STORAGE_KEY_ROSTER, JSON.stringify(staffRoster));
         localStorage.setItem(STORAGE_KEY_STOCK, JSON.stringify(inventoryStock));
         localStorage.setItem(STORAGE_KEY_SHIFTS, JSON.stringify(shiftLogs));
@@ -742,27 +1165,54 @@
         const savedOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
         if (savedOrders) orders = JSON.parse(savedOrders);
 
+        const savedStations = localStorage.getItem(STORAGE_KEY_STATIONS);
+        if (savedStations) {
+          stationsList = JSON.parse(savedStations);
+        }
+
         const savedRoster = localStorage.getItem(STORAGE_KEY_ROSTER);
         if (savedRoster) {
           staffRoster = JSON.parse(savedRoster);
         } else {
-          // Default roster: names only
           staffRoster = [
-            { name: 'Nicolas', role: 'Management & Till', pin: '1978' },
-            { name: 'Candice', role: 'Management & Cashier', pin: '1978' },
-            { name: 'Bernus', role: 'Till & Handout', pin: '1234' },
-            { name: 'Nicole', role: 'Sales & Handout', pin: '1234' },
-            { name: 'Margret', role: 'Handout & Prep', pin: '1234' },
-            { name: 'Nick', role: 'Braai Grill Team', pin: '1234' },
-            { name: 'Joost', role: 'Braai Grill Team', pin: '1234' }
+            { name: 'Nicolas', role: 'Management & Till', pin: '1978', assignedStations: ['pos', 'manager', 'handout', 'braai'] },
+            { name: 'Candice', role: 'Management & Cashier', pin: '1978', assignedStations: ['pos', 'manager', 'handout', 'braai'] },
+            { name: 'Bernus', role: 'Till & Handout', pin: '1234', assignedStations: ['pos', 'handout'] },
+            { name: 'Nicole', role: 'Sales & Handout', pin: '1234', assignedStations: ['pos', 'handout'] },
+            { name: 'Margret', role: 'Handout & Prep', pin: '1234', assignedStations: ['handout'] },
+            { name: 'Nick', role: 'Braai Grill Team', pin: '1234', assignedStations: ['braai', 'handout'] },
+            { name: 'Joost', role: 'Braai Grill Team', pin: '1234', assignedStations: ['braai', 'handout'] }
           ];
         }
 
+        // Ensure assignedStations array exists on each staff member
+        staffRoster.forEach(s => {
+          if (!s.assignedStations || !Array.isArray(s.assignedStations)) {
+            s.assignedStations = stationsList.map(st => st.id);
+          }
+        });
+
         const savedStock = localStorage.getItem(STORAGE_KEY_STOCK);
         if (savedStock) {
-          inventoryStock = JSON.parse(savedStock);
-          if (inventoryStock.rolls === undefined) {
-            inventoryStock.rolls = 600;
+          const parsedStock = JSON.parse(savedStock);
+          // Automatic migration from flat numbers to dual-location structure if needed
+          if (parsedStock.fridge && parsedStock.cooler) {
+            inventoryStock = parsedStock;
+          } else {
+            inventoryStock = {
+              fridge: {
+                bratwurst: Math.max(0, (parsedStock.bratwurst || 275) - 100),
+                bockwurst: Math.max(0, (parsedStock.bockwurst || 150) - 50),
+                cheesegriller: Math.max(0, (parsedStock.cheesegriller || 175) - 75),
+                rolls: Math.max(0, (parsedStock.rolls || 600) - 200)
+              },
+              cooler: {
+                bratwurst: Math.min(parsedStock.bratwurst || 275, 100),
+                bockwurst: Math.min(parsedStock.bockwurst || 150, 50),
+                cheesegriller: Math.min(parsedStock.cheesegriller || 175, 75),
+                rolls: Math.min(parsedStock.rolls || 600, 200)
+              }
+            };
           }
         }
 
@@ -789,7 +1239,103 @@
       }
     }
 
-    /* 4. AUDIO & NOTIFICATIONS */
+    /* 4. RENDER MENU ITEMS FOR CASHIER / TILL */
+    function renderMenu() {
+      const container = document.getElementById('pos-menu-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      MENU_CATALOG.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = `p-3 sm:p-4 rounded-3xl border-3 ${prod.color} shadow-sm flex flex-col justify-between transition active:scale-[0.99]`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="font-black text-sm sm:text-base text-slate-900 leading-tight">${prod.name}</h3>
+              <span class="font-black text-sm sm:text-base text-fest-bavaria bg-white px-2 py-0.5 rounded-xl border border-blue-100 shadow-sm">
+                R ${prod.price.toFixed(2)}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-600 font-semibold mb-3 leading-snug">${prod.desc}</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-auto">
+            <button type="button" onclick="addToCart('${prod.id}', true)" class="touch-btn py-2 px-2 rounded-2xl bg-slate-900 hover:bg-black text-white font-black text-xs uppercase shadow transition active:scale-95 flex items-center justify-center gap-1">
+              <span>🥖</span> In Roll
+            </button>
+            <button type="button" onclick="addToCart('${prod.id}', false)" class="touch-btn py-2 px-2 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 font-black text-xs uppercase shadow-sm transition active:scale-95 flex items-center justify-center gap-1">
+              <span>🍽️</span> No Roll
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* 5. STATION SWITCHING & SHIFT LOGGING */
+    function switchStation(stationId) {
+      if (!currentStaffName) {
+        selectedLoginStationId = stationId;
+        showLoginScreen();
+        return;
+      }
+
+      if (stationId === 'manager') {
+        const pinEntered = prompt('Enter Manager Master Access PIN:');
+        if (pinEntered !== masterPin && pinEntered !== '1978') {
+          playBeep('error');
+          alert('Incorrect Master PIN.');
+          return;
+        }
+      }
+
+      recordShiftSession(currentStaffName, stationId);
+      applyStationRole(stationId, currentStaffName);
+      broadcastState('STATION_SWITCHED');
+    }
+
+    function recordShiftSession(staffName, newStation) {
+      const now = new Date().toISOString();
+      // Close any active open shift for this staff member
+      shiftLogs.forEach(entry => {
+        if (entry.name.toLowerCase() === staffName.toLowerCase() && !entry.endTime) {
+          entry.endTime = now;
+        }
+      });
+
+      // Start new shift block
+      shiftLogs.push({
+        name: staffName,
+        station: newStation,
+        startTime: now,
+        endTime: null
+      });
+
+      saveState();
+    }
+
+    async function toggleWakeLock() {
+      const btn = document.getElementById('btn-wakelock');
+      try {
+        if (!wakeLock && 'wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          if (btn) btn.className = 'touch-btn px-2 py-1.5 rounded-xl bg-amber-500 text-slate-900 font-bold text-xs ring-2 ring-white';
+          wakeLock.addEventListener('release', () => {
+            wakeLock = null;
+            if (btn) btn.className = 'touch-btn px-2 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs';
+          });
+        } else if (wakeLock) {
+          await wakeLock.release();
+          wakeLock = null;
+          if (btn) btn.className = 'touch-btn px-2 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs';
+        }
+      } catch (err) {
+        console.warn('Wake Lock error:', err);
+      }
+    }
+
+    /* 6. AUDIO & NOTIFICATIONS */
     function playBeep(type = 'success') {
       try {
         if (Tone && Tone.context && Tone.context.state !== 'running') {
@@ -807,13 +1353,45 @@
         // Audio unavailable or blocked
       }
 
-      // Haptic feedback
       if ('vibrate' in navigator) {
         navigator.vibrate([150, 75, 150]);
       }
     }
 
-    /* 5. STATION SWITCHING & LOGIN LOGIC */
+    /* 5. DYNAMIC HEADER NAVIGATION */
+    function renderHeaderNavigation() {
+      const navContainer = document.getElementById('header-stations-nav-container');
+      if (!navContainer) return;
+      navContainer.innerHTML = '';
+
+      stationsList.forEach(st => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => switchStation(st.id);
+        btn.id = `tab-nav-${st.id}`;
+
+        const isActive = currentStationRole === st.id;
+        const baseStyle = "touch-btn px-2.5 sm:px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm transition flex items-center gap-1 ";
+        const activeStyle = isActive ? "bg-fest-bavaria text-white shadow-md ring-2 ring-fest-gold" : "bg-slate-700 hover:bg-slate-600 text-slate-200";
+
+        btn.className = baseStyle + activeStyle;
+
+        let badgeHtml = '';
+        if (st.id === 'handout') {
+          const count = orders.filter(o => o.status === 'pending' || o.status === 'braai_ready').length;
+          badgeHtml = `<span id="badge-nav-handout-count" class="ml-1 px-1.5 py-0.2 rounded-full bg-fest-red text-white text-[10px]">${count}</span>`;
+        } else if (st.id === 'braai') {
+          let braaiCount = 0;
+          orders.filter(o => o.status === 'pending').forEach(o => o.items.forEach(i => braaiCount += i.qty));
+          badgeHtml = `<span id="badge-nav-braai-count" class="ml-1 px-1.5 py-0.2 rounded-full bg-fest-gold text-slate-900 text-[10px]">${braaiCount}</span>`;
+        }
+
+        btn.innerHTML = `<span>${st.icon}</span> <span class="hidden sm:inline">${st.name}</span>${badgeHtml}`;
+        navContainer.appendChild(btn);
+      });
+    }
+
+    /* 6. DYNAMIC LOGIN & STATION SELECTION */
     function showLoginScreen() {
       const scr = document.getElementById('screen-login');
       const closeBtn = document.getElementById('btn-close-login-modal');
@@ -826,7 +1404,7 @@
             closeBtn.classList.add('hidden');
           }
         }
-        populateLoginNames();
+        renderLoginStationsGrid();
         selectLoginStation(currentStationRole || 'pos');
         if (currentStaffName) {
           selectLoginName(currentStaffName);
@@ -840,54 +1418,298 @@
       }
     }
 
+    function renderLoginStationsGrid() {
+      const container = document.getElementById('login-stations-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      stationsList.forEach(st => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = `card-station-${st.id}`;
+        btn.onclick = () => selectLoginStation(st.id);
+        const isSelected = selectedLoginStationId === st.id;
+
+        btn.className = isSelected 
+          ? "touch-btn text-left p-2 rounded-xl border-2 border-fest-bavaria bg-blue-50" 
+          : "touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white";
+
+        btn.innerHTML = `
+          <span class="text-xs sm:text-sm font-black text-slate-900 block leading-tight">${st.icon} ${st.name}</span>
+          <span class="text-[10px] text-slate-600 block">${st.subtitle || ''}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
     function selectLoginStation(stationId) {
       selectedLoginStationId = stationId;
-      const stations = ['pos', 'handout', 'braai', 'manager'];
-      stations.forEach(s => {
-        const btn = document.getElementById(`card-station-${s}`);
+
+      stationsList.forEach(st => {
+        const btn = document.getElementById(`card-station-${st.id}`);
         if (btn) {
-          if (s === stationId) {
-            btn.className = "touch-btn text-left p-2 rounded-xl border-2 border-fest-bavaria bg-blue-50";
-          } else {
-            btn.className = "touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white";
-          }
+          btn.className = (st.id === stationId)
+            ? "touch-btn text-left p-2 rounded-xl border-2 border-fest-bavaria bg-blue-50"
+            : "touch-btn text-left p-2 rounded-xl border-2 border-slate-200 bg-white";
         }
       });
+
+      populateLoginNames(stationId.startsWith('shared') ? null : stationId);
       clearLoginPin();
     }
 
-    function populateLoginNames() {
+    function toggleMultiStaffMode() {
+      isMultiStaffMode = !isMultiStaffMode;
+      const toggleBtn = document.getElementById('btn-toggle-multi-mode');
+      const hint = document.getElementById('lbl-multi-mode-hint');
+      const pinHeading = document.getElementById('lbl-pin-entry-heading');
+
+      if (isMultiStaffMode) {
+        if (toggleBtn) {
+          toggleBtn.innerText = '🤝 Sharing Device (Multi)';
+          toggleBtn.className = 'text-[10px] font-black text-amber-900 bg-amber-200 hover:bg-amber-300 px-2 py-0.5 rounded-lg border border-amber-400 shadow-sm';
+        }
+        if (hint) {
+          hint.innerHTML = '<b class="text-amber-800">MULTI-STAFF MODE ACTIVE:</b> Tap every person who will share this station tablet. Enter PIN to confirm.';
+        }
+        if (pinHeading) {
+          pinHeading.innerText = '3. Enter PIN for selected member or Master PIN:';
+        }
+      } else {
+        if (toggleBtn) {
+          toggleBtn.innerText = '👤 Single Person Mode';
+          toggleBtn.className = 'text-[10px] font-black text-fest-bavaria bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-lg border border-blue-200 transition';
+        }
+        if (hint) {
+          hint.innerText = 'Tap one person to operate, or toggle to Sharing Device if multiple volunteers share this tablet.';
+        }
+        if (pinHeading) {
+          pinHeading.innerText = '3. Enter 4-Digit PIN:';
+        }
+        // If switching back to single mode, keep only the first selected
+        if (selectedStaffNamesList.length > 1) {
+          selectedStaffNamesList = [selectedStaffNamesList[0]];
+        }
+      }
+      populateLoginNames(selectedLoginStationId);
+    }
+
+    function populateLoginNames(filterStationId = null) {
       const container = document.getElementById('dynamic-name-picker');
       if (!container) return;
       container.innerHTML = '';
 
-      staffRoster.forEach(person => {
+      let filtered = staffRoster;
+      if (filterStationId) {
+        filtered = staffRoster.filter(p => !p.assignedStations || p.assignedStations.includes(filterStationId));
+        if (filtered.length === 0) filtered = staffRoster;
+      }
+
+      filtered.forEach(person => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.onclick = () => selectLoginName(person.name);
-        btn.className = "touch-btn p-2 rounded-xl text-center border-2 border-slate-200 bg-slate-50 font-black text-xs sm:text-sm text-slate-800 transition active:scale-95";
-        btn.innerText = person.name;
+        const isSelected = selectedStaffNamesList.some(n => n.toLowerCase() === person.name.toLowerCase());
+
+        btn.className = isSelected 
+          ? "touch-btn p-2 rounded-xl text-center border-2 border-fest-bavaria bg-amber-200 font-black text-xs sm:text-sm text-fest-navy shadow-sm ring-2 ring-fest-gold"
+          : "touch-btn p-2 rounded-xl text-center border-2 border-slate-200 bg-slate-50 font-black text-xs sm:text-sm text-slate-800 transition active:scale-95";
+        
+        btn.innerHTML = `${isSelected ? '✓ ' : ''}${person.name}`;
         container.appendChild(btn);
       });
     }
 
     function selectLoginName(name) {
-      selectedLoginStaffName = name;
-      const lbl = document.getElementById('lbl-active-selected-name');
-      if (lbl) {
-        lbl.innerText = name;
-        lbl.className = "text-[10px] font-black text-white bg-fest-navy px-2 py-0.5 rounded-lg border border-fest-gold";
+      if (isMultiStaffMode) {
+        const idx = selectedStaffNamesList.findIndex(n => n.toLowerCase() === name.toLowerCase());
+        if (idx >= 0) {
+          selectedStaffNamesList.splice(idx, 1);
+        } else {
+          selectedStaffNamesList.push(name);
+        }
+        selectedLoginStaffName = selectedStaffNamesList[0] || '';
+      } else {
+        selectedStaffNamesList = [name];
+        selectedLoginStaffName = name;
       }
 
-      const container = document.getElementById('dynamic-name-picker');
-      if (container) {
-        Array.from(container.children).forEach(btn => {
-          if (btn.innerText.trim().toLowerCase() === name.trim().toLowerCase()) {
-            btn.className = "touch-btn p-2 rounded-xl text-center border-2 border-fest-bavaria bg-amber-200 font-black text-xs sm:text-sm text-fest-navy shadow-sm";
-          } else {
-            btn.className = "touch-btn p-2 rounded-xl text-center border-2 border-slate-200 bg-slate-50 font-black text-xs sm:text-sm text-slate-800";
-          }
+      populateLoginNames(selectedLoginStationId);
+    }
+
+    function appendLoginPin(digit) {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField && pinField.value.length < 6) {
+        pinField.value += digit;
+      }
+    }
+
+    function clearLoginPin() {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField) pinField.value = '';
+    }
+
+    function backspaceLoginPin() {
+      const pinField = document.getElementById('input-quick-pin');
+      if (pinField && pinField.value.length > 0) {
+        pinField.value = pinField.value.slice(0, -1);
+      }
+    }
+
+    function performStaffLogin() {
+      if (selectedStaffNamesList.length === 0) {
+        playBeep('error');
+        alert('Please tap at least one name before activating this device.');
+        return;
+      }
+
+      const pinField = document.getElementById('input-quick-pin');
+      const enteredPin = pinField ? pinField.value.trim() : '';
+
+      // Validate PIN against any of the selected members or master PIN
+      const isValidPin = enteredPin === masterPin || enteredPin === '1978' || selectedStaffNamesList.some(name => {
+        const member = staffRoster.find(s => s.name.toLowerCase() === name.toLowerCase());
+        return member && (member.pin === enteredPin || (!member.pin && enteredPin === '1234'));
+      });
+
+      if (!isValidPin) {
+        playBeep('error');
+        alert('Incorrect PIN. Please re-enter.');
+        clearLoginPin();
+        return;
+      }
+
+      // Check assigned stations if not master PIN
+      if (enteredPin !== masterPin && enteredPin !== '1978') {
+        const unassigned = selectedStaffNamesList.filter(name => {
+          const member = staffRoster.find(s => s.name.toLowerCase() === name.toLowerCase());
+          return member && member.assignedStations && member.assignedStations.length > 0 && !member.assignedStations.includes(selectedLoginStationId);
         });
+
+        if (unassigned.length > 0) {
+          alert(`Note: ${unassigned.join(', ')} is not scheduled for this station. You can assign them in Manager.`);
+        }
+      }
+
+      // Record shifts for ALL people sharing this station device
+      selectedStaffNamesList.forEach(name => {
+        recordShiftSession(name, selectedLoginStationId);
+      });
+
+      activeCoOperators = [...selectedStaffNamesList];
+      const primaryOperator = activeCoOperators[0];
+
+      applyStationRole(selectedLoginStationId, primaryOperator);
+      document.getElementById('screen-login').classList.add('hidden');
+      clearLoginPin();
+      playBeep('success');
+    }
+
+    function applyStationRole(stationId, staffName) {
+      currentStationRole = stationId;
+      currentStaffName = staffName;
+
+      // Handle Shared Device Modes
+      isSharedDevice = stationId.startsWith('shared');
+      const switcherBar = document.getElementById('shared-station-switcher-bar');
+      
+      if (isSharedDevice) {
+        if (switcherBar) switcherBar.classList.remove('hidden');
+        renderSharedStationButtons();
+      } else {
+        if (switcherBar) switcherBar.classList.add('hidden');
+      }
+
+      // Render Header Co-operators quick-switch chips if multiple people are on this device
+      renderHeaderCoOperators();
+
+      const badgeRole = document.getElementById('badge-current-station');
+      const badgeOp = document.getElementById('badge-current-operator');
+      const stationObj = stationsList.find(s => s.id === stationId);
+
+      if (badgeRole) {
+        if (stationId === 'shared-braai-handout') {
+          badgeRole.innerText = '🤝 Braai + Handout';
+        } else if (stationId === 'shared-toggle') {
+          badgeRole.innerText = '🔄 Shared Quick-Flip';
+        } else {
+          badgeRole.innerText = stationObj ? `${stationObj.icon} ${stationObj.name}` : stationId;
+        }
+      }
+      if (badgeOp) {
+        if (activeCoOperators.length > 1) {
+          badgeOp.innerText = `• ${staffName} (+${activeCoOperators.length - 1} sharing)`;
+        } else {
+          badgeOp.innerText = `• ${staffName}`;
+        }
+      }
+
+      renderHeaderNavigation();
+
+      document.querySelectorAll('.station-view').forEach(v => v.classList.add('hidden'));
+
+      if (stationId === 'shared-braai-handout') {
+        const sharedView = document.getElementById('station-view-shared-braai-handout');
+        if (sharedView) sharedView.classList.remove('hidden');
+        renderSharedBraaiHandout();
+      } else {
+        const targetView = document.getElementById(`station-view-${stationId}`);
+        if (targetView) {
+          targetView.classList.remove('hidden');
+        } else {
+          const customView = document.getElementById('station-view-custom');
+          if (customView && stationObj) {
+            customView.classList.remove('hidden');
+            document.getElementById('custom-station-icon').innerText = stationObj.icon || '⭐';
+            document.getElementById('custom-station-title').innerText = stationObj.name;
+            document.getElementById('custom-station-desc').innerText = stationObj.subtitle || 'Custom Station Active';
+            document.getElementById('custom-station-op').innerText = staffName;
+            document.getElementById('custom-station-id-lbl').innerText = stationId;
+          }
+        }
+      }
+
+      if (stationId === 'pos') updateCartUI();
+      if (stationId === 'handout') renderHandoutStation();
+      if (stationId === 'braai') renderBraaiStation();
+      if (stationId === 'manager') renderManagerDashboard();
+    }
+
+    /* RENDER HEADER 1-TAP CO-OPERATOR QUICK SWITCHER */
+    function renderHeaderCoOperators() {
+      const container = document.getElementById('header-co-operators-container');
+      const chips = document.getElementById('header-co-operators-chips');
+      if (!container || !chips) return;
+
+      if (activeCoOperators.length > 1) {
+        container.classList.remove('hidden');
+        chips.innerHTML = '';
+
+        activeCoOperators.forEach(name => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.onclick = () => switchActiveCoOperator(name);
+
+          const isActive = currentStaffName.toLowerCase() === name.toLowerCase();
+          btn.className = isActive 
+            ? "touch-btn px-2.5 py-1 rounded-lg bg-fest-gold text-slate-900 font-black text-xs shadow-sm ring-1 ring-white"
+            : "touch-btn px-2 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-xs";
+          
+          btn.innerHTML = `${isActive ? '● ' : ''}${name}`;
+          chips.appendChild(btn);
+        });
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    function switchActiveCoOperator(name) {
+      currentStaffName = name;
+      playBeep('success');
+      renderHeaderCoOperators();
+      const badgeOp = document.getElementById('badge-current-operator');
+      if (badgeOp) {
+        badgeOp.innerText = `• ${name} (+${activeCoOperators.length - 1} sharing)`;
       }
     }
 
@@ -923,7 +1745,6 @@
       const staffMember = staffRoster.find(s => s.name.toLowerCase() === selectedLoginStaffName.toLowerCase());
       const expectedPin = (staffMember && staffMember.pin) ? staffMember.pin : '1234';
 
-      // Verify PIN (Master PIN 1978 always works)
       if (enteredPin !== expectedPin && enteredPin !== masterPin && enteredPin !== '1978') {
         playBeep('error');
         alert('Incorrect PIN. Please re-enter.');
@@ -931,9 +1752,14 @@
         return;
       }
 
-      // Record Shift Change / Clock-in
-      recordShiftSession(selectedLoginStaffName, selectedLoginStationId);
+      if (staffMember && staffMember.assignedStations && staffMember.assignedStations.length > 0) {
+        if (!staffMember.assignedStations.includes(selectedLoginStationId) && enteredPin !== masterPin && enteredPin !== '1978') {
+          alert(`${selectedLoginStaffName} is not currently assigned to this station. Please choose an assigned station or log in as Manager.`);
+          return;
+        }
+      }
 
+      recordShiftSession(selectedLoginStaffName, selectedLoginStationId);
       applyStationRole(selectedLoginStationId, selectedLoginStaffName);
       document.getElementById('screen-login').classList.add('hidden');
       clearLoginPin();
@@ -944,115 +1770,203 @@
       currentStationRole = stationId;
       currentStaffName = staffName;
 
-      // Update Header
+      // Handle Shared Device Modes
+      isSharedDevice = stationId.startsWith('shared');
+      const switcherBar = document.getElementById('shared-station-switcher-bar');
+      
+      if (isSharedDevice) {
+        if (switcherBar) switcherBar.classList.remove('hidden');
+        renderSharedStationButtons();
+      } else {
+        if (switcherBar) switcherBar.classList.add('hidden');
+      }
+
       const badgeRole = document.getElementById('badge-current-station');
       const badgeOp = document.getElementById('badge-current-operator');
+      const stationObj = stationsList.find(s => s.id === stationId);
+
       if (badgeRole) {
-        const names = { pos: 'Till / POS', handout: 'Handout', braai: 'Braai', manager: 'Manager' };
-        badgeRole.innerText = names[stationId] || stationId;
+        if (stationId === 'shared-braai-handout') {
+          badgeRole.innerText = '🤝 Braai + Handout';
+        } else if (stationId === 'shared-toggle') {
+          badgeRole.innerText = '🔄 Shared Quick-Flip';
+        } else {
+          badgeRole.innerText = stationObj ? `${stationObj.icon} ${stationObj.name}` : stationId;
+        }
       }
       if (badgeOp) {
         badgeOp.innerText = `• ${staffName}`;
       }
 
-      // Hide all station views
+      renderHeaderNavigation();
+
       document.querySelectorAll('.station-view').forEach(v => v.classList.add('hidden'));
 
-      // Show selected station
-      const targetView = document.getElementById(`station-view-${stationId}`);
-      if (targetView) targetView.classList.remove('hidden');
+      if (stationId === 'shared-braai-handout') {
+        const sharedView = document.getElementById('station-view-shared-braai-handout');
+        if (sharedView) sharedView.classList.remove('hidden');
+        renderSharedBraaiHandout();
+      } else {
+        const targetView = document.getElementById(`station-view-${stationId}`);
+        if (targetView) {
+          targetView.classList.remove('hidden');
+        } else {
+          const customView = document.getElementById('station-view-custom');
+          if (customView && stationObj) {
+            customView.classList.remove('hidden');
+            document.getElementById('custom-station-icon').innerText = stationObj.icon || '⭐';
+            document.getElementById('custom-station-title').innerText = stationObj.name;
+            document.getElementById('custom-station-desc').innerText = stationObj.subtitle || 'Custom Station Active';
+            document.getElementById('custom-station-op').innerText = staffName;
+            document.getElementById('custom-station-id-lbl').innerText = stationId;
+          }
+        }
+      }
 
-      // Refresh corresponding view
       if (stationId === 'pos') updateCartUI();
       if (stationId === 'handout') renderHandoutStation();
       if (stationId === 'braai') renderBraaiStation();
       if (stationId === 'manager') renderManagerDashboard();
     }
 
-    function switchStation(stationId) {
-      if (!currentStaffName) {
-        selectLoginStation(stationId);
-        showLoginScreen();
-        return;
-      }
-
-      if (stationId === 'manager') {
-        const check = prompt('Enter Manager Master PIN:');
-        if (check !== masterPin && check !== '1978') {
-          alert('Incorrect PIN');
-          return;
-        }
-      }
-
-      recordShiftSession(currentStaffName, stationId);
-      applyStationRole(stationId, currentStaffName);
-    }
-
-    function recordShiftSession(staffName, stationId) {
-      const now = new Date().toISOString();
-      // Close any active segment for this staff member
-      shiftLogs.forEach(entry => {
-        if (entry.name.toLowerCase() === staffName.toLowerCase() && !entry.endTime) {
-          entry.endTime = now;
-        }
-      });
-      // Start new segment
-      shiftLogs.push({
-        name: staffName,
-        station: stationId,
-        startTime: now,
-        endTime: null
-      });
-      saveState();
-    }
-
-    /* 6. SCREEN WAKE LOCK */
-    async function toggleWakeLock() {
-      try {
-        if ('wakeLock' in navigator) {
-          if (wakeLock !== null) {
-            await wakeLock.release();
-            wakeLock = null;
-            document.getElementById('btn-wakelock').innerText = '☀️';
-          } else {
-            wakeLock = await navigator.wakeLock.request('screen');
-            document.getElementById('btn-wakelock').innerText = '💡 ON';
-          }
-        } else {
-          alert('WakeLock API not supported on this browser. Keep screen timeout disabled in phone settings.');
-        }
-      } catch (err) {
-        console.warn('WakeLock toggle failed:', err);
-      }
-    }
-
-    /* 7. POS & CART OPERATIONS */
-    function renderMenu() {
-      const container = document.getElementById('pos-menu-grid');
+    function renderSharedStationButtons() {
+      const container = document.getElementById('shared-station-buttons-container');
       if (!container) return;
       container.innerHTML = '';
 
-      MENU_CATALOG.forEach(item => {
+      const presets = [
+        { id: 'shared-braai-handout', label: '🤝 Split (Braai+Handout)' },
+        { id: 'braai', label: '🔥 Braai Full' },
+        { id: 'handout', label: '📦 Handout Full' },
+        { id: 'pos', label: '💳 Till Full' }
+      ];
+
+      presets.forEach(p => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => {
+          document.querySelectorAll('.station-view').forEach(v => v.classList.add('hidden'));
+          if (p.id === 'shared-braai-handout') {
+            document.getElementById('station-view-shared-braai-handout')?.classList.remove('hidden');
+            renderSharedBraaiHandout();
+          } else {
+            document.getElementById(`station-view-${p.id}`)?.classList.remove('hidden');
+            if (p.id === 'pos') updateCartUI();
+            if (p.id === 'handout') renderHandoutStation();
+            if (p.id === 'braai') renderBraaiStation();
+          }
+          renderSharedStationButtons();
+        };
+
+        const isCurrentlyViewed = (p.id === 'shared-braai-handout' && !document.getElementById('station-view-shared-braai-handout')?.classList.contains('hidden'))
+          || (!document.getElementById(`station-view-${p.id}`)?.classList.contains('hidden'));
+
+        btn.className = `touch-btn px-2.5 py-1 rounded-xl text-xs font-black transition ${isCurrentlyViewed ? 'bg-fest-gold text-slate-900 shadow-md ring-2 ring-white' : 'bg-slate-700 text-slate-200 hover:bg-slate-600'}`;
+        btn.innerText = p.label;
+        container.appendChild(btn);
+      });
+    }
+
+    /* RENDER SHARED BRAAI + HANDOUT SPLIT SCREEN */
+    function renderSharedBraaiHandout() {
+      // 1. Update Braai demand side
+      const activeOrders = orders.filter(o => o.status === 'pending');
+      let bratQty = 0, curryQty = 0, bockQty = 0, cheeseQty = 0;
+
+      activeOrders.forEach(ord => {
+        ord.items.forEach(it => {
+          if (it.id === 'bratwurst') bratQty += it.qty;
+          if (it.id === 'currywurst') curryQty += it.qty;
+          if (it.id === 'bockwurst') bockQty += it.qty;
+          if (it.id === 'cheesegriller') cheeseQty += it.qty;
+        });
+      });
+
+      const totalBrats = bratQty + curryQty;
+      const bratEl = document.getElementById('shared-braai-count-bratwurst');
+      const curryEl = document.getElementById('shared-braai-count-curry');
+      const bockEl = document.getElementById('shared-braai-count-bockwurst');
+      const cheeseEl = document.getElementById('shared-braai-count-cheesegriller');
+      const totalBratsEl = document.getElementById('shared-braai-total-brats-calc');
+
+      if (bratEl) bratEl.innerText = bratQty.toString();
+      if (curryEl) curryEl.innerText = curryQty.toString();
+      if (bockEl) bockEl.innerText = bockQty.toString();
+      if (cheeseEl) cheeseEl.innerText = cheeseQty.toString();
+      if (totalBratsEl) totalBratsEl.innerText = `${totalBrats} (${bratQty} Std + ${curryQty} Curry)`;
+
+      // Cooler stock calculation
+      let bratSold = 0, currySold = 0, bockSold = 0, cheeseSold = 0;
+      orders.forEach(o => {
+        if (o.status !== 'cancelled') {
+          o.items.forEach(it => {
+            if (it.id === 'bratwurst') bratSold += it.qty;
+            if (it.id === 'currywurst') currySold += it.qty;
+            if (it.id === 'bockwurst') bockSold += it.qty;
+            if (it.id === 'cheesegriller') cheeseSold += it.qty;
+          });
+        }
+      });
+
+      const bratCoolerRem = inventoryStock.cooler.bratwurst - (bratSold + currySold);
+      const bockCoolerRem = inventoryStock.cooler.bockwurst - bockSold;
+      const cheeseCoolerRem = inventoryStock.cooler.cheesegriller - cheeseSold;
+
+      const sharedCoolerEl = document.getElementById('shared-cooler-summary-text');
+      if (sharedCoolerEl) {
+        sharedCoolerEl.innerHTML = `<b>${bratCoolerRem}</b> Brat &bull; <b>${bockCoolerRem}</b> Bock &bull; <b>${cheeseCoolerRem}</b> Cheese`;
+      }
+
+      // 2. Update Handout side
+      const pendingOrders = orders.filter(o => o.status === 'pending' || o.status === 'braai_ready');
+      const pill = document.getElementById('shared-handout-pending-pill');
+      if (pill) pill.innerText = `${pendingOrders.length} Awaiting Pickup`;
+
+      const cardsGrid = document.getElementById('shared-handout-cards-grid');
+      if (!cardsGrid) return;
+      cardsGrid.innerHTML = '';
+
+      if (pendingOrders.length === 0) {
+        cardsGrid.innerHTML = `
+          <div class="col-span-full bg-white p-6 rounded-2xl border border-slate-200 text-center text-slate-400">
+            <span class="text-3xl block mb-1">🎉</span>
+            <span class="font-bold text-xs">All caught up! No orders pending pickup.</span>
+          </div>
+        `;
+        return;
+      }
+
+      pendingOrders.forEach(ord => {
         const card = document.createElement('div');
-        card.className = `p-3.5 sm:p-4 rounded-3xl border-3 ${item.color} shadow-sm flex flex-col justify-between`;
+        const isBraaiReady = ord.status === 'braai_ready';
+        card.className = `bg-white p-3 rounded-2xl border-2 ${isBraaiReady ? 'border-emerald-500 ring-2 ring-emerald-200' : 'border-amber-400'} shadow-sm flex flex-col justify-between`;
+
+        let itemsHtml = ord.items.map(it => `
+          <div class="flex justify-between items-center text-xs py-0.5">
+            <span class="font-black text-slate-900">${it.qty}x ${it.name}</span>
+            <span class="text-[10px] font-bold ${it.inRoll ? 'text-emerald-700' : 'text-amber-700'}">${it.inRoll ? '🥖 Roll' : '🍽️ No Roll'}</span>
+          </div>
+        `).join('');
+
+        const hasCurry = ord.items.some(i => i.id === 'currywurst');
+
         card.innerHTML = `
           <div>
             <div class="flex justify-between items-start mb-1">
-              <h3 class="font-black text-slate-900 text-sm sm:text-base leading-tight">${item.name}</h3>
-              <span class="font-black text-sm sm:text-base text-fest-bavaria ml-2">R ${item.price.toFixed(2)}</span>
+              <span class="text-2xl font-black text-slate-950">#${ord.number}</span>
+              <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${isBraaiReady ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">
+                ${isBraaiReady ? 'Hot & Ready' : 'On Braai'}
+              </span>
             </div>
-            <p class="text-xs text-slate-600 font-medium mb-3">${item.desc}</p>
+            ${hasCurry ? `<div class="bg-rose-50 border border-rose-200 text-rose-800 px-1.5 py-0.5 rounded text-[9px] font-black mb-1">⚠️ CURRY SAUCE</div>` : ''}
+            ${ord.note ? `<div class="bg-amber-50 text-amber-900 px-1.5 py-0.5 rounded text-[10px] font-bold mb-1">📝 ${ord.note}</div>` : ''}
+            <div class="space-y-0.5 mb-2">${itemsHtml}</div>
           </div>
-          <div class="grid grid-cols-2 gap-2 mt-auto">
-            <button type="button" onclick="addToCart('${item.id}', true)" class="touch-btn py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-black text-xs uppercase shadow transition active:scale-95">
-              + In Roll
-            </button>
-            <button type="button" onclick="addToCart('${item.id}', false)" class="touch-btn py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 font-black text-xs uppercase shadow-sm transition active:scale-95">
-              + No Roll
-            </button>
-          </div>
+          <button type="button" onclick="markOrderDelivered(${ord.number})" class="touch-btn w-full py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase shadow transition active:scale-95">
+            ✓ Hand Out
+          </button>
         `;
-        container.appendChild(card);
+        cardsGrid.appendChild(card);
       });
     }
 
@@ -1169,9 +2083,9 @@
         number: orderNumber,
         items: JSON.parse(JSON.stringify(cart)),
         total: totalAmount,
-        paymentMethod: paymentMethod,
+        paymentMethod: paymentMethod, // 'yoko', 'cash', 'staff_free', 'band_tab'
         note: ticketNote,
-        status: 'pending', // 'pending', 'braai_ready', 'delivered', 'cancelled'
+        status: 'pending',
         timestamp: new Date().toISOString(),
         cashier: currentStaffName || 'Staff'
       };
@@ -1183,13 +2097,89 @@
       broadcastState('NEW_ORDER');
       playBeep('new_order');
 
-      // Show Post-It Modal
       showPostItModal(orderNumber);
 
       updateCartUI();
       renderHandoutStation();
       renderBraaiStation();
+      renderSharedBraaiHandout();
       renderManagerDashboard();
+    }
+
+    /* SPECIAL CHECKOUT: STAFF MEAL & BAND TAB */
+    function initiateSpecialCheckout(type) {
+      if (cart.length === 0) {
+        alert('Cart is empty. Select sausages first.');
+        return;
+      }
+
+      const noteInput = document.getElementById('input-cart-note');
+      let currentNote = noteInput ? noteInput.value.trim() : '';
+
+      if (type === 'staff') {
+        const staffNameRecipient = prompt('Staff / Volunteer Name receiving free meal:', currentStaffName || '');
+        if (staffNameRecipient === null) return; // user cancelled
+
+        const orderNumber = nextOrderNum++;
+        const staffNote = `[STAFF FREE: ${staffNameRecipient || 'Volunteer'}] ${currentNote}`.trim();
+
+        const newOrder = {
+          number: orderNumber,
+          items: JSON.parse(JSON.stringify(cart)),
+          total: 0.00, // Free
+          originalValue: cart.reduce((acc, it) => acc + (it.qty * it.price), 0),
+          paymentMethod: 'staff_free',
+          note: staffNote,
+          status: 'pending',
+          timestamp: new Date().toISOString(),
+          cashier: currentStaffName || 'Staff'
+        };
+
+        orders.unshift(newOrder);
+        cart = [];
+        if (noteInput) noteInput.value = '';
+        broadcastState('NEW_ORDER');
+        playBeep('new_order');
+        showPostItModal(orderNumber);
+        updateCartUI();
+        renderHandoutStation();
+        renderBraaiStation();
+        renderSharedBraaiHandout();
+        renderManagerDashboard();
+
+      } else if (type === 'band') {
+        const bandMember = prompt('Band Member Name / Instrument or "Club Band":', 'Oktoberfest Band');
+        if (bandMember === null) return; // user cancelled
+
+        const orderNumber = nextOrderNum++;
+        let normalTotal = 0;
+        cart.forEach(item => normalTotal += (item.qty * item.price));
+
+        const bandNote = `[BAND TAB (CLUB PAYS): ${bandMember}] ${currentNote}`.trim();
+
+        const newOrder = {
+          number: orderNumber,
+          items: JSON.parse(JSON.stringify(cart)),
+          total: normalTotal, // Valued for invoicing the club
+          paymentMethod: 'band_tab',
+          note: bandNote,
+          status: 'pending',
+          timestamp: new Date().toISOString(),
+          cashier: currentStaffName || 'Staff'
+        };
+
+        orders.unshift(newOrder);
+        cart = [];
+        if (noteInput) noteInput.value = '';
+        broadcastState('NEW_ORDER');
+        playBeep('new_order');
+        showPostItModal(orderNumber);
+        updateCartUI();
+        renderHandoutStation();
+        renderBraaiStation();
+        renderSharedBraaiHandout();
+        renderManagerDashboard();
+      }
     }
 
     function showPostItModal(orderNumber) {
@@ -1206,7 +2196,139 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    /* 8. HANDOUT & ASSEMBLY OPERATIONS */
+    /* 9. ALL PREVIOUS ORDERS & HISTORY MODAL */
+    function openOrderHistoryModal() {
+      const modal = document.getElementById('modal-order-history');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderHistoryModalOrders();
+      }
+    }
+
+    function closeOrderHistoryModal() {
+      const modal = document.getElementById('modal-order-history');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderHistoryModalOrders() {
+      const container = document.getElementById('history-modal-orders-container');
+      const summaryCount = document.getElementById('history-modal-summary-count');
+      const searchVal = (document.getElementById('input-history-search')?.value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('select-history-filter-status')?.value || 'all';
+
+      if (!container) return;
+      container.innerHTML = '';
+
+      // Filter logic
+      const filtered = orders.filter(ord => {
+        // Status filter
+        if (statusFilter !== 'all' && ord.status !== statusFilter) {
+          return false;
+        }
+        // Search filter: ticket number, item name, note, or cashier
+        if (searchVal) {
+          const matchNum = ord.number.toString().includes(searchVal.replace('#', ''));
+          const matchNote = (ord.note || '').toLowerCase().includes(searchVal);
+          const matchCashier = (ord.cashier || '').toLowerCase().includes(searchVal);
+          const matchItems = ord.items.some(it => it.name.toLowerCase().includes(searchVal));
+          if (!matchNum && !matchNote && !matchCashier && !matchItems) return false;
+        }
+        return true;
+      });
+
+      if (summaryCount) {
+        summaryCount.innerText = `Showing ${filtered.length} of ${orders.length} total orders`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-400">
+            <span class="text-3xl block mb-1">🔍</span>
+            <span class="font-bold text-xs">No previous orders found matching your search.</span>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(ord => {
+        const card = document.createElement('div');
+        const isDelivered = ord.status === 'delivered';
+        const isCancelled = ord.status === 'cancelled';
+
+        card.className = "bg-white p-3 sm:p-4 rounded-2xl border-2 border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3";
+
+        let itemsPills = ord.items.map(it => `
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-900 font-bold text-xs border border-slate-200">
+            <span class="font-black text-fest-bavaria">${it.qty}x</span> ${it.name}
+            <span class="text-[10px] font-semibold ${it.inRoll ? 'text-emerald-700' : 'text-amber-700'}">(${it.inRoll ? 'Roll' : 'No Roll'})</span>
+          </span>
+        `).join('');
+
+        let statusBadge = '';
+        if (isCancelled) {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-black text-[10px] uppercase">Cancelled</span>';
+        } else if (isDelivered) {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-black text-[10px] uppercase">Delivered</span>';
+        } else {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-black text-[10px] uppercase">Pending Pickup</span>';
+        }
+
+        let tenderBadge = '';
+        if (ord.paymentMethod === 'yoko') {
+          tenderBadge = '<span class="text-[11px] font-black px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 uppercase border border-emerald-200">YOKO CARD</span>';
+        } else if (ord.paymentMethod === 'cash') {
+          tenderBadge = '<span class="text-[11px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 uppercase border border-amber-200">CASH</span>';
+        } else if (ord.paymentMethod === 'staff_free') {
+          tenderBadge = '<span class="text-[11px] font-black px-1.5 py-0.5 rounded bg-purple-100 text-purple-900 uppercase border border-purple-300 font-black">STAFF MEAL (FREE)</span>';
+        } else if (ord.paymentMethod === 'band_tab') {
+          tenderBadge = '<span class="text-[11px] font-black px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-900 uppercase border border-indigo-300 font-black">BAND TAB (CLUB)</span>';
+        } else {
+          tenderBadge = `<span class="text-[11px] font-black px-1.5 py-0.5 rounded bg-blue-50 text-fest-bavaria uppercase border border-blue-100">${ord.paymentMethod}</span>`;
+        }
+
+        const dateFormatted = new Date(ord.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        card.innerHTML = `
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span class="text-lg font-black text-slate-950">#${ord.number}</span>
+              ${statusBadge}
+              <span class="text-xs text-slate-400 font-bold">${dateFormatted}</span>
+              ${tenderBadge}
+              <span class="text-xs text-slate-500 font-medium">• Cashier: <b>${ord.cashier || 'Staff'}</b></span>
+            </div>
+
+            <!-- List of Sausages Ordered -->
+            <div class="flex flex-wrap gap-1.5 my-1">
+              ${itemsPills}
+            </div>
+
+            ${ord.note ? `<div class="text-[11px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-lg inline-block mt-1">📝 Note: ${ord.note}</div>` : ''}
+          </div>
+
+          <div class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block font-bold">Total Paid</span>
+              <span class="text-base font-black ${ord.paymentMethod === 'staff_free' ? 'text-purple-700' : (ord.paymentMethod === 'band_tab' ? 'text-indigo-800' : 'text-fest-bavaria')}">
+                ${ord.paymentMethod === 'staff_free' ? 'FREE' : `R ${ord.total.toFixed(2)}`}
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="showPostItModal(${ord.number})" title="View Ticket Slip" class="touch-btn px-2.5 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-black text-xs">
+                Post-It
+              </button>
+              <button type="button" onclick="openEditOrderModal(${ord.number})" title="Edit Order" class="touch-btn px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs">
+                ✏️ Edit
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    /* 10. HANDOUT & ASSEMBLY OPERATIONS */
     function renderHandoutStation() {
       const container = document.getElementById('handout-cards-grid');
       const navBadge = document.getElementById('badge-nav-handout-count');
@@ -1252,7 +2374,6 @@
           `;
         });
 
-        // Curry sauce reminder if Bratwurst with Curry Sauce is present
         const hasCurry = ord.items.some(i => i.id === 'currywurst');
 
         card.innerHTML = `
@@ -1302,7 +2423,19 @@
         playBeep('success');
         renderHandoutStation();
         renderBraaiStation();
+        renderSharedBraaiHandout();
         renderManagerDashboard();
+      }
+    }
+
+    function reopenOrder(orderNumber) {
+      const ord = orders.find(o => o.number === orderNumber);
+      if (ord) {
+        ord.status = 'pending';
+        broadcastState('ORDER_REOPENED');
+        renderHandoutStation();
+        renderBraaiStation();
+        renderSharedBraaiHandout();
       }
     }
 
@@ -1316,7 +2449,7 @@
       }
     }
 
-    /* 9. BRAAI STATION OPERATIONS */
+    /* 11. BRAAI STATION OPERATIONS */
     function renderBraaiStation() {
       const activeOrders = orders.filter(o => o.status === 'pending');
       const navBadge = document.getElementById('badge-nav-braai-count');
@@ -1346,7 +2479,31 @@
       const totalBrats = bratQty + curryQty;
       document.getElementById('braai-total-brats-calc').innerText = `${totalBrats} (${bratQty} Std + ${curryQty} Curry)`;
 
-      // Mode B Display
+      // NEW: Update on-site cooler box status banner for braai team
+      let bratSold = 0, currySold = 0, bockSold = 0, cheeseSold = 0;
+      orders.forEach(o => {
+        if (o.status !== 'cancelled') {
+          o.items.forEach(it => {
+            if (it.id === 'bratwurst') bratSold += it.qty;
+            if (it.id === 'currywurst') currySold += it.qty;
+            if (it.id === 'bockwurst') bockSold += it.qty;
+            if (it.id === 'cheesegriller') cheeseSold += it.qty;
+          });
+        }
+      });
+
+      const bratCoolerRem = inventoryStock.cooler.bratwurst - (bratSold + currySold);
+      const bockCoolerRem = inventoryStock.cooler.bockwurst - bockSold;
+      const cheeseCoolerRem = inventoryStock.cooler.cheesegriller - cheeseSold;
+
+      const coolerSummaryEl = document.getElementById('braai-cooler-summary-text');
+      if (coolerSummaryEl) {
+        coolerSummaryEl.innerHTML = `
+          Cooler: <b>${bratCoolerRem}</b> Bratwurst &bull; <b>${bockCoolerRem}</b> Bockwurst &bull; <b>${cheeseCoolerRem}</b> Cheesegriller
+          ${(bratCoolerRem < 20 || bockCoolerRem < 15 || cheeseCoolerRem < 15) ? '<span class="ml-2 px-1.5 py-0.5 rounded bg-rose-600 text-white font-black animate-pulse">⚠️ COOLER LOW! FETCH FROM FRIDGE</span>' : ''}
+        `;
+      }
+
       const ticketsContainer = document.getElementById('braai-tickets-container');
       const ticketsGrid = document.getElementById('braai-tickets-grid');
       if (braaiModeManual) {
@@ -1395,10 +2552,11 @@
         playBeep('success');
         renderBraaiStation();
         renderHandoutStation();
+        renderSharedBraaiHandout();
       }
     }
 
-    /* 10. EDIT & CANCEL ORDER */
+    /* 12. EDIT & CANCEL ORDER */
     let currentEditingOrderNum = null;
 
     function promptOrderLookupForEdit() {
@@ -1425,7 +2583,10 @@
         const row = document.createElement('div');
         row.className = "flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200 text-xs";
         row.innerHTML = `
-          <div class="font-bold text-slate-800">${it.name}</div>
+          <div>
+            <div class="font-bold text-slate-800">${it.name}</div>
+            <div class="text-[10px] text-slate-500">${it.inRoll ? 'In Roll' : 'No Roll'}</div>
+          </div>
           <div class="flex items-center gap-1.5">
             <button type="button" onclick="adjustEditModalItemQty(${idx}, -1)" class="w-6 h-6 rounded bg-slate-200 font-black">-</button>
             <span class="w-5 text-center font-black">${it.qty}</span>
@@ -1457,20 +2618,28 @@
       playBeep('success');
       renderHandoutStation();
       renderBraaiStation();
+      renderSharedBraaiHandout();
       renderManagerDashboard();
+      if (!document.getElementById('modal-order-history').classList.contains('hidden')) {
+        renderHistoryModalOrders();
+      }
     }
 
     function cancelOrderPrompt() {
       if (confirm(`Cancel and refund Order #${currentEditingOrderNum}?`)) {
-        const idx = orders.findIndex(o => o.number === currentEditingOrderNum);
-        if (idx !== -1) {
-          orders.splice(idx, 1);
+        const ord = orders.find(o => o.number === currentEditingOrderNum);
+        if (ord) {
+          ord.status = 'cancelled';
           document.getElementById('modal-edit-order').classList.add('hidden');
           broadcastState('ORDER_CANCELLED');
           playBeep('error');
           renderHandoutStation();
           renderBraaiStation();
+          renderSharedBraaiHandout();
           renderManagerDashboard();
+          if (!document.getElementById('modal-order-history').classList.contains('hidden')) {
+            renderHistoryModalOrders();
+          }
         }
       }
     }
@@ -1479,19 +2648,33 @@
       document.getElementById('modal-edit-order').classList.add('hidden');
     }
 
-    /* 11. MANAGER DASHBOARD, INVENTORY & AUDIT */
+    /* 13. MANAGER DASHBOARD, INVENTORY & AUDIT */
     function renderManagerDashboard() {
-      // 1. Financial totals
       let grossSales = 0.00;
       let yokoSales = 0.00;
       let cashSales = 0.00;
+      let bandSales = 0.00;
+      let bandSausages = 0;
+      let staffMealsCount = 0;
+      let staffMealsValue = 0.00;
       let totalSausages = 0;
 
       orders.forEach(ord => {
         if (ord.status !== 'cancelled') {
-          grossSales += ord.total;
-          if (ord.paymentMethod === 'yoko') yokoSales += ord.total;
-          if (ord.paymentMethod === 'cash') cashSales += ord.total;
+          if (ord.paymentMethod === 'yoko') {
+            grossSales += ord.total;
+            yokoSales += ord.total;
+          } else if (ord.paymentMethod === 'cash') {
+            grossSales += ord.total;
+            cashSales += ord.total;
+          } else if (ord.paymentMethod === 'band_tab') {
+            bandSales += ord.total;
+            ord.items.forEach(it => bandSausages += it.qty);
+          } else if (ord.paymentMethod === 'staff_free') {
+            staffMealsCount += 1;
+            staffMealsValue += (ord.originalValue || ord.items.reduce((acc, it) => acc + (it.qty * it.price), 0));
+          }
+
           ord.items.forEach(it => totalSausages += it.qty);
         }
       });
@@ -1499,22 +2682,25 @@
       const totalCashInDrawer = startingCashFloat + cashSales;
 
       document.getElementById('mgr-stat-gross-sales').innerText = `R ${grossSales.toFixed(2)}`;
-      document.getElementById('mgr-stat-orders-count').innerText = `${orders.length} Paid Orders`;
+      document.getElementById('mgr-stat-orders-count').innerText = `${orders.filter(o => o.status !== 'cancelled' && o.paymentMethod !== 'staff_free').length} Paid Orders`;
       document.getElementById('mgr-stat-yoko-sales').innerText = `R ${yokoSales.toFixed(2)}`;
       document.getElementById('mgr-stat-cash-total').innerText = `R ${totalCashInDrawer.toFixed(2)}`;
       document.getElementById('mgr-stat-cash-breakdown').innerText = `Float: R ${startingCashFloat.toFixed(2)} + R ${cashSales.toFixed(2)}`;
       document.getElementById('mgr-stat-total-sausages').innerText = totalSausages.toString();
 
-      // 2. Physical Stock Table
+      // Band Tab & Staff Meals
+      const bandTotalEl = document.getElementById('mgr-stat-band-total');
+      const bandCountEl = document.getElementById('mgr-stat-band-count');
+      const staffMealsEl = document.getElementById('mgr-stat-staff-meals-count');
+
+      if (bandTotalEl) bandTotalEl.innerText = `R ${bandSales.toFixed(2)}`;
+      if (bandCountEl) bandCountEl.innerText = `${bandSausages} Sausages on Club Tab`;
+      if (staffMealsEl) staffMealsEl.innerText = `${staffMealsCount} Meals (R ${staffMealsValue.toFixed(2)} Comped)`;
+
       renderStockTable();
-
-      // 3. Shifts Table
-      renderShiftsTable();
-
-      // 4. Staff Management Table
+      renderStationsManagementTable();
       renderStaffManagementTable();
-
-      // 5. Orders Audit Table
+      renderShiftsTable();
       renderOrdersAuditTable();
     }
 
@@ -1541,51 +2727,341 @@
       });
 
       const totalBratRawUsed = bratSold + currySold;
-      const bratRemaining = inventoryStock.bratwurst - totalBratRawUsed;
-      const bockRemaining = inventoryStock.bockwurst - bockSold;
-      const cheeseRemaining = inventoryStock.cheesegriller - cheeseSold;
-      const rollsRemaining = (inventoryStock.rolls || 600) - rollsUsed;
+      
+      // Calculate remaining in Cooler Box (active usage is drawn from cooler boxes first)
+      const bratCoolerRem = inventoryStock.cooler.bratwurst - totalBratRawUsed;
+      const bockCoolerRem = inventoryStock.cooler.bockwurst - bockSold;
+      const cheeseCoolerRem = inventoryStock.cooler.cheesegriller - cheeseSold;
+      const rollsCoolerRem = inventoryStock.cooler.rolls - rollsUsed;
+
+      // Total physical inventory across both sites
+      const totalBratAll = (inventoryStock.fridge.bratwurst + inventoryStock.cooler.bratwurst) - totalBratRawUsed;
+      const totalBockAll = (inventoryStock.fridge.bockwurst + inventoryStock.cooler.bockwurst) - bockSold;
+      const totalCheeseAll = (inventoryStock.fridge.cheesegriller + inventoryStock.cooler.cheesegriller) - cheeseSold;
+      const totalRollsAll = (inventoryStock.fridge.rolls + inventoryStock.cooler.rolls) - rollsUsed;
 
       container.innerHTML = `
         <table class="w-full text-xs text-left">
           <thead class="bg-slate-100 font-black text-slate-700 uppercase">
             <tr>
               <th class="p-2">Item</th>
-              <th class="p-2">Beginning Stock</th>
-              <th class="p-2">Units Used / Sold</th>
-              <th class="p-2">Remaining In Stock</th>
+              <th class="p-2">Cold Room (Fridge) ❄️</th>
+              <th class="p-2">Cooler Box (On-Site) 🧊</th>
+              <th class="p-2">Total Used / Sold</th>
+              <th class="p-2">Total Remaining (Both)</th>
+              <th class="p-2 text-right">Action</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 font-semibold">
             <tr class="bg-amber-50/40">
               <td class="p-2 font-black text-amber-900">🥖 Fresh Rolls / Buns</td>
-              <td class="p-2 font-black">${inventoryStock.rolls || 600}</td>
+              <td class="p-2 text-slate-600 font-bold">${inventoryStock.fridge.rolls} in bakery storage</td>
+              <td class="p-2 font-black ${rollsCoolerRem < 30 ? 'text-rose-600' : 'text-emerald-700'}">${rollsCoolerRem} on table <span class="text-[10px] text-slate-400 font-normal">(${inventoryStock.cooler.rolls} start)</span></td>
               <td class="p-2 text-rose-600 font-bold">${rollsUsed} rolls</td>
-              <td class="p-2 font-black ${rollsRemaining < 30 ? 'text-rose-600' : 'text-emerald-700'}">${rollsRemaining}</td>
+              <td class="p-2 font-black ${totalRollsAll < 50 ? 'text-rose-600' : 'text-slate-900'}">${totalRollsAll}</td>
+              <td class="p-2 text-right">
+                <button type="button" onclick="openTransferStockModal('rolls')" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded font-bold text-[11px]">Transfer</button>
+              </td>
             </tr>
             <tr>
               <td class="p-2 font-black">🌭 Bratwurst (Std & Curry)</td>
-              <td class="p-2 font-black">${inventoryStock.bratwurst}</td>
+              <td class="p-2 text-blue-700 font-bold">${inventoryStock.fridge.bratwurst} in fridge</td>
+              <td class="p-2 font-black ${bratCoolerRem < 20 ? 'text-rose-600' : 'text-emerald-700'}">${bratCoolerRem} in cooler <span class="text-[10px] text-slate-400 font-normal">(${inventoryStock.cooler.bratwurst} start)</span></td>
               <td class="p-2 text-rose-600 font-bold">${totalBratRawUsed} (${bratSold} std + ${currySold} curry)</td>
-              <td class="p-2 font-black ${bratRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${bratRemaining}</td>
+              <td class="p-2 font-black ${totalBratAll < 30 ? 'text-rose-600' : 'text-slate-900'}">${totalBratAll}</td>
+              <td class="p-2 text-right">
+                <button type="button" onclick="openTransferStockModal('bratwurst')" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded font-bold text-[11px]">Transfer</button>
+              </td>
             </tr>
             <tr>
               <td class="p-2 font-black">🌭 Bockwurst</td>
-              <td class="p-2 font-black">${inventoryStock.bockwurst}</td>
+              <td class="p-2 text-blue-700 font-bold">${inventoryStock.fridge.bockwurst} in fridge</td>
+              <td class="p-2 font-black ${bockCoolerRem < 15 ? 'text-rose-600' : 'text-emerald-700'}">${bockCoolerRem} in cooler <span class="text-[10px] text-slate-400 font-normal">(${inventoryStock.cooler.bockwurst} start)</span></td>
               <td class="p-2 text-rose-600 font-bold">${bockSold}</td>
-              <td class="p-2 font-black ${bockRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${bockRemaining}</td>
+              <td class="p-2 font-black ${totalBockAll < 20 ? 'text-rose-600' : 'text-slate-900'}">${totalBockAll}</td>
+              <td class="p-2 text-right">
+                <button type="button" onclick="openTransferStockModal('bockwurst')" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded font-bold text-[11px]">Transfer</button>
+              </td>
             </tr>
             <tr>
               <td class="p-2 font-black">🧀 Cheesegriller</td>
-              <td class="p-2 font-black">${inventoryStock.cheesegriller}</td>
+              <td class="p-2 text-blue-700 font-bold">${inventoryStock.fridge.cheesegriller} in fridge</td>
+              <td class="p-2 font-black ${cheeseCoolerRem < 15 ? 'text-rose-600' : 'text-emerald-700'}">${cheeseCoolerRem} in cooler <span class="text-[10px] text-slate-400 font-normal">(${inventoryStock.cooler.cheesegriller} start)</span></td>
               <td class="p-2 text-rose-600 font-bold">${cheeseSold}</td>
-              <td class="p-2 font-black ${cheeseRemaining < 20 ? 'text-rose-600' : 'text-emerald-700'}">${cheeseRemaining}</td>
+              <td class="p-2 font-black ${totalCheeseAll < 20 ? 'text-rose-600' : 'text-slate-900'}">${totalCheeseAll}</td>
+              <td class="p-2 text-right">
+                <button type="button" onclick="openTransferStockModal('cheesegriller')" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded font-bold text-[11px]">Transfer</button>
+              </td>
             </tr>
           </tbody>
         </table>
       `;
     }
 
+    /* 14. STATIONS MANAGEMENT (CREATE / EDIT / DELETE) */
+    let editingStationId = null;
+
+    function renderStationsManagementTable() {
+      const container = document.getElementById('mgr-stations-table-container');
+      if (!container) return;
+
+      container.innerHTML = `
+        <table class="w-full text-xs text-left">
+          <thead class="bg-slate-100 font-black text-slate-700 uppercase">
+            <tr>
+              <th class="p-2">Icon</th>
+              <th class="p-2">Station Name</th>
+              <th class="p-2">Station ID</th>
+              <th class="p-2">Assigned Staff</th>
+              <th class="p-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-semibold">
+            ${stationsList.map((st, idx) => {
+              const assigned = staffRoster.filter(s => s.assignedStations && s.assignedStations.includes(st.id)).map(s => s.name);
+              return `
+                <tr>
+                  <td class="p-2 text-lg">${st.icon || '📍'}</td>
+                  <td class="p-2 font-black text-slate-900">${st.name} <span class="text-[10px] text-slate-400 font-normal block">${st.subtitle || ''}</span></td>
+                  <td class="p-2 font-mono text-slate-500">${st.id}</td>
+                  <td class="p-2 text-slate-600">${assigned.length > 0 ? assigned.join(', ') : '<span class="text-amber-600 font-bold">Open to all</span>'}</td>
+                  <td class="p-2 text-right space-x-1">
+                    <button type="button" onclick="editStation(${idx})" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200">✏️</button>
+                    ${!st.isCore ? `<button type="button" onclick="deleteStation('${st.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded hover:bg-rose-100">🗑️</button>` : '<span class="text-[10px] text-slate-400 px-1">Core</span>'}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function openStationModalForAdd() {
+      editingStationId = null;
+      document.getElementById('modal-station-title').innerText = 'Create New Station';
+      document.getElementById('input-station-id-field').value = '';
+      document.getElementById('input-station-id-field').disabled = false;
+      document.getElementById('input-station-name-field').value = '';
+      document.getElementById('input-station-icon-field').value = '📍';
+      document.getElementById('input-station-subtitle-field').value = '';
+      document.getElementById('modal-station').classList.remove('hidden');
+    }
+
+    function editStation(index) {
+      const st = stationsList[index];
+      if (!st) return;
+      editingStationId = st.id;
+      document.getElementById('modal-station-title').innerText = `Edit Station (${st.name})`;
+      document.getElementById('input-station-id-field').value = st.id;
+      document.getElementById('input-station-id-field').disabled = true;
+      document.getElementById('input-station-name-field').value = st.name;
+      document.getElementById('input-station-icon-field').value = st.icon || '📍';
+      document.getElementById('input-station-subtitle-field').value = st.subtitle || '';
+      document.getElementById('modal-station').classList.remove('hidden');
+    }
+
+    function saveStationFromModal() {
+      const idField = document.getElementById('input-station-id-field');
+      const name = document.getElementById('input-station-name-field').value.trim();
+      const icon = document.getElementById('input-station-icon-field').value.trim() || '📍';
+      const subtitle = document.getElementById('input-station-subtitle-field').value.trim();
+
+      if (!name) {
+        alert('Please enter a station name.');
+        return;
+      }
+
+      if (editingStationId) {
+        const target = stationsList.find(s => s.id === editingStationId);
+        if (target) {
+          target.name = name;
+          target.icon = icon;
+          target.subtitle = subtitle;
+        }
+      } else {
+        const id = idField.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (!id) {
+          alert('Please enter a valid unique Station ID (letters & numbers only).');
+          return;
+        }
+        if (stationsList.some(s => s.id === id)) {
+          alert('Station ID already exists. Please choose another.');
+          return;
+        }
+        stationsList.push({
+          id: id,
+          name: name,
+          icon: icon,
+          subtitle: subtitle,
+          isCore: false
+        });
+      }
+
+      closeStationModal();
+      broadcastState('STATIONS_UPDATED');
+      renderHeaderNavigation();
+      renderStationsManagementTable();
+      renderStaffManagementTable();
+      renderLoginStationsGrid();
+    }
+
+    function deleteStation(stationId) {
+      if (confirm(`Delete station "${stationId}"?`)) {
+        stationsList = stationsList.filter(s => s.id !== stationId);
+        staffRoster.forEach(s => {
+          if (s.assignedStations) {
+            s.assignedStations = s.assignedStations.filter(stId => stId !== stationId);
+          }
+        });
+        broadcastState('STATIONS_UPDATED');
+        renderHeaderNavigation();
+        renderStationsManagementTable();
+        renderStaffManagementTable();
+        renderLoginStationsGrid();
+      }
+    }
+
+    function closeStationModal() {
+      document.getElementById('modal-station').classList.add('hidden');
+    }
+
+    /* 15. STAFF MANAGEMENT & STATION ASSIGNMENT */
+    let editingStaffIndex = null;
+
+    function renderStaffManagementTable() {
+      const container = document.getElementById('mgr-staff-table-container');
+      if (!container) return;
+
+      container.innerHTML = `
+        <table class="w-full text-xs text-left">
+          <thead class="bg-slate-100 font-black text-slate-700 uppercase">
+            <tr>
+              <th class="p-2">Name</th>
+              <th class="p-2">Role</th>
+              <th class="p-2">Assigned Stations</th>
+              <th class="p-2">PIN</th>
+              <th class="p-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-semibold">
+            ${staffRoster.map((s, idx) => {
+              const assignedNames = (s.assignedStations && s.assignedStations.length > 0)
+                ? s.assignedStations.map(stId => {
+                    const found = stationsList.find(st => st.id === stId);
+                    return found ? `${found.icon} ${found.name}` : stId;
+                  }).join(', ')
+                : '<span class="text-emerald-600 font-bold">All Stations</span>';
+
+              return `
+                <tr>
+                  <td class="p-2 font-black text-slate-900">${s.name}</td>
+                  <td class="p-2 text-slate-600">${s.role}</td>
+                  <td class="p-2 text-slate-700">${assignedNames}</td>
+                  <td class="p-2 font-mono font-black text-slate-400">••••</td>
+                  <td class="p-2 text-right space-x-1">
+                    <button type="button" onclick="editStaffMember(${idx})" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200">✏️</button>
+                    <button type="button" onclick="deleteStaffMember(${idx})" class="px-2 py-1 bg-rose-50 text-rose-600 rounded hover:bg-rose-100">🗑️</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function openStaffModalForAdd() {
+      editingStaffIndex = null;
+      document.getElementById('modal-staff-title').innerText = 'Add Team Member';
+      document.getElementById('input-staff-name-field').value = '';
+      document.getElementById('input-staff-role-field').value = 'Festival Helper';
+      document.getElementById('input-staff-pin-field').value = '1234';
+
+      renderStaffStationCheckboxes([]);
+      document.getElementById('modal-staff').classList.remove('hidden');
+    }
+
+    function editStaffMember(index) {
+      editingStaffIndex = index;
+      const s = staffRoster[index];
+      if (!s) return;
+
+      document.getElementById('modal-staff-title').innerText = 'Edit Staff Member';
+      document.getElementById('input-staff-name-field').value = s.name;
+      document.getElementById('input-staff-role-field').value = s.role;
+      document.getElementById('input-staff-pin-field').value = s.pin || '1234';
+
+      renderStaffStationCheckboxes(s.assignedStations || []);
+      document.getElementById('modal-staff').classList.remove('hidden');
+    }
+
+    function renderStaffStationCheckboxes(selectedStationIds = []) {
+      const container = document.getElementById('staff-modal-station-assignments');
+      if (!container) return;
+      container.innerHTML = '';
+
+      stationsList.forEach(st => {
+        const isChecked = selectedStationIds.length === 0 || selectedStationIds.includes(st.id);
+        const label = document.createElement('label');
+        label.className = "flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer text-xs font-bold text-slate-800";
+        label.innerHTML = `
+          <input type="checkbox" value="${st.id}" ${isChecked ? 'checked' : ''} class="checkbox-staff-station rounded border-slate-300 text-fest-bavaria focus:ring-fest-bavaria">
+          <span>${st.icon} ${st.name}</span>
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function saveStaffMemberFromModal() {
+      const name = document.getElementById('input-staff-name-field').value.trim();
+      const role = document.getElementById('input-staff-role-field').value.trim();
+      const pin = document.getElementById('input-staff-pin-field').value.trim() || '1234';
+
+      if (!name) {
+        alert('Please enter a name.');
+        return;
+      }
+
+      const checkedStations = [];
+      document.querySelectorAll('.checkbox-staff-station:checked').forEach(cb => {
+        checkedStations.push(cb.value);
+      });
+
+      if (editingStaffIndex !== null) {
+        staffRoster[editingStaffIndex].name = name;
+        staffRoster[editingStaffIndex].role = role;
+        staffRoster[editingStaffIndex].pin = pin;
+        staffRoster[editingStaffIndex].assignedStations = checkedStations;
+      } else {
+        staffRoster.push({
+          name: name,
+          role: role,
+          pin: pin,
+          assignedStations: checkedStations
+        });
+      }
+
+      closeStaffModal();
+      broadcastState('ROSTER_UPDATED');
+      renderManagerDashboard();
+      populateLoginNames(selectedLoginStationId);
+    }
+
+    function deleteStaffMember(index) {
+      if (confirm(`Remove ${staffRoster[index].name} from team roster?`)) {
+        staffRoster.splice(index, 1);
+        broadcastState('ROSTER_UPDATED');
+        renderManagerDashboard();
+        populateLoginNames(selectedLoginStationId);
+      }
+    }
+
+    function closeStaffModal() {
+      document.getElementById('modal-staff').classList.add('hidden');
+    }
+
+    /* 16. SHIFTS & ORDERS AUDIT LEDGER */
     function renderShiftsTable() {
       const container = document.getElementById('mgr-shifts-table-container');
       if (!container) return;
@@ -1602,45 +3078,15 @@
           <tbody class="divide-y divide-slate-100 font-semibold">
             ${staffRoster.map(s => {
               const activeShift = shiftLogs.filter(sl => sl.name.toLowerCase() === s.name.toLowerCase() && !sl.endTime).pop();
+              const stationObj = activeShift ? stationsList.find(st => st.id === activeShift.station) : null;
               return `
                 <tr>
                   <td class="p-2 font-black">${s.name}</td>
-                  <td class="p-2">${activeShift ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-black text-[10px] uppercase">${activeShift.station}</span>` : '<span class="text-slate-400">Offline</span>'}</td>
+                  <td class="p-2">${activeShift ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-black text-[10px] uppercase">${stationObj ? stationObj.name : activeShift.station}</span>` : '<span class="text-slate-400">Offline</span>'}</td>
                   <td class="p-2 text-slate-500">${activeShift ? new Date(activeShift.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '—'}</td>
                 </tr>
               `;
             }).join('')}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function renderStaffManagementTable() {
-      const container = document.getElementById('mgr-staff-table-container');
-      if (!container) return;
-
-      container.innerHTML = `
-        <table class="w-full text-xs text-left">
-          <thead class="bg-slate-100 font-black text-slate-700 uppercase">
-            <tr>
-              <th class="p-2">Name</th>
-              <th class="p-2">Role</th>
-              <th class="p-2">PIN</th>
-              <th class="p-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 font-semibold">
-            ${staffRoster.map((s, idx) => `
-              <tr>
-                <td class="p-2 font-black text-slate-900">${s.name}</td>
-                <td class="p-2 text-slate-600">${s.role}</td>
-                <td class="p-2 font-mono font-black text-slate-400">••••</td>
-                <td class="p-2 text-right space-x-1">
-                  <button type="button" onclick="editStaffMember(${idx})" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200">✏️</button>
-                  <button type="button" onclick="deleteStaffMember(${idx})" class="px-2 py-1 bg-rose-50 text-rose-600 rounded hover:bg-rose-100">🗑️</button>
-                </td>
-              </tr>
-            `).join('')}
           </tbody>
         </table>
       `;
@@ -1656,19 +3102,30 @@
             <tr>
               <th class="p-2">#</th>
               <th class="p-2">Time</th>
-              <th class="p-2">Items</th>
+              <th class="p-2">Cashier</th>
+              <th class="p-2">Items Ordered</th>
               <th class="p-2">Total</th>
               <th class="p-2">Status</th>
+              <th class="p-2 text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 font-semibold">
             ${orders.map(o => `
               <tr>
-                <td class="p-2 font-black">#${o.number}</td>
+                <td class="p-2 font-black text-slate-900">#${o.number}</td>
                 <td class="p-2 text-slate-500">${new Date(o.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-                <td class="p-2">${o.items.map(i => `${i.qty}x ${i.name}`).join(', ')}</td>
-                <td class="p-2 font-black">R ${o.total.toFixed(2)}</td>
-                <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${o.status === 'delivered' ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-800'}">${o.status}</span></td>
+                <td class="p-2 text-slate-700 font-bold">${o.cashier || 'Staff'}</td>
+                <td class="p-2">
+                  <div class="space-y-0.5">
+                    ${o.items.map(i => `<span class="inline-block bg-slate-100 px-1.5 py-0.2 rounded text-[11px] font-bold text-slate-800 mr-1">${i.qty}x ${i.name} ${i.inRoll ? '(Roll)' : '(No Roll)'}</span>`).join('')}
+                  </div>
+                </td>
+                <td class="p-2 font-black text-fest-bavaria">R ${o.total.toFixed(2)}</td>
+                <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${o.status === 'delivered' ? 'bg-slate-100 text-slate-600' : (o.status === 'cancelled' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-800')}">${o.status}</span></td>
+                <td class="p-2 text-right space-x-1">
+                  <button type="button" onclick="showPostItModal(${o.number})" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded font-black text-[11px]">Slip</button>
+                  <button type="button" onclick="openEditOrderModal(${o.number})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold text-[11px]">✏️</button>
+                </td>
               </tr>
             `).join('')}
           </tbody>
@@ -1676,66 +3133,7 @@
       `;
     }
 
-    /* 12. STAFF & STOCK MODAL CONTROLS */
-    let editingStaffIndex = null;
-
-    function openStaffModalForAdd() {
-      editingStaffIndex = null;
-      document.getElementById('modal-staff-title').innerText = 'Add Team Member';
-      document.getElementById('input-staff-name-field').value = '';
-      document.getElementById('input-staff-role-field').value = 'Festival Helper';
-      document.getElementById('input-staff-pin-field').value = '1234';
-      document.getElementById('modal-staff').classList.remove('hidden');
-    }
-
-    function editStaffMember(index) {
-      editingStaffIndex = index;
-      const s = staffRoster[index];
-      if (!s) return;
-      document.getElementById('modal-staff-title').innerText = 'Edit Staff Member';
-      document.getElementById('input-staff-name-field').value = s.name;
-      document.getElementById('input-staff-role-field').value = s.role;
-      document.getElementById('input-staff-pin-field').value = s.pin || '1234';
-      document.getElementById('modal-staff').classList.remove('hidden');
-    }
-
-    function saveStaffMemberFromModal() {
-      const name = document.getElementById('input-staff-name-field').value.trim();
-      const role = document.getElementById('input-staff-role-field').value.trim();
-      const pin = document.getElementById('input-staff-pin-field').value.trim() || '1234';
-
-      if (!name) {
-        alert('Please enter a name.');
-        return;
-      }
-
-      if (editingStaffIndex !== null) {
-        staffRoster[editingStaffIndex].name = name;
-        staffRoster[editingStaffIndex].role = role;
-        staffRoster[editingStaffIndex].pin = pin;
-      } else {
-        staffRoster.push({ name: name, role: role, pin: pin });
-      }
-
-      closeStaffModal();
-      broadcastState('ROSTER_UPDATED');
-      renderManagerDashboard();
-      populateLoginNames();
-    }
-
-    function deleteStaffMember(index) {
-      if (confirm(`Remove ${staffRoster[index].name} from team roster?`)) {
-        staffRoster.splice(index, 1);
-        broadcastState('ROSTER_UPDATED');
-        renderManagerDashboard();
-        populateLoginNames();
-      }
-    }
-
-    function closeStaffModal() {
-      document.getElementById('modal-staff').classList.add('hidden');
-    }
-
+    /* 17. STOCK & MANAGER UTILITIES */
     function openManualStockModal() {
       document.getElementById('modal-manual-stock').classList.remove('hidden');
     }
@@ -1744,11 +3142,75 @@
       document.getElementById('modal-manual-stock').classList.add('hidden');
     }
 
+    /* STOCK TRANSFER: FRIDGE TO COOLER BOX */
+    function openTransferStockModal(preselectItem = 'bratwurst') {
+      const select = document.getElementById('select-transfer-item');
+      if (select && preselectItem) {
+        select.value = preselectItem;
+      }
+      updateTransferAvailabilityHint();
+      document.getElementById('modal-transfer-stock').classList.remove('hidden');
+    }
+
+    function closeTransferStockModal() {
+      document.getElementById('modal-transfer-stock').classList.add('hidden');
+    }
+
+    function updateTransferAvailabilityHint() {
+      const item = document.getElementById('select-transfer-item').value;
+      const available = inventoryStock.fridge[item] || 0;
+      const lbl = document.getElementById('lbl-transfer-fridge-available');
+      if (lbl) {
+        lbl.innerText = `Available in Cold Room Fridge: ${available} units`;
+      }
+    }
+
+    function setTransferPreset(qty) {
+      const input = document.getElementById('input-transfer-qty');
+      if (input) input.value = qty;
+    }
+
+    function executeStockTransfer() {
+      const item = document.getElementById('select-transfer-item').value;
+      const qty = parseInt(document.getElementById('input-transfer-qty').value, 10);
+
+      if (isNaN(qty) || qty <= 0) {
+        alert('Please enter a valid transfer quantity.');
+        return;
+      }
+
+      const availableInFridge = inventoryStock.fridge[item] || 0;
+      if (qty > availableInFridge) {
+        if (!confirm(`Warning: You requested ${qty} units, but Cold Room only shows ${availableInFridge} units. Transfer anyway?`)) {
+          return;
+        }
+      }
+
+      // Move stock from fridge to cooler
+      inventoryStock.fridge[item] = Math.max(0, availableInFridge - qty);
+      inventoryStock.cooler[item] = (inventoryStock.cooler[item] || 0) + qty;
+
+      closeTransferStockModal();
+      broadcastState('STOCK_UPDATED');
+      playBeep('success');
+      renderBraaiStation();
+      renderSharedBraaiHandout();
+      renderManagerDashboard();
+    }
+
     function openOpeningStockModal() {
-      document.getElementById('input-opening-rolls').value = inventoryStock.rolls !== undefined ? inventoryStock.rolls : 600;
-      document.getElementById('input-opening-bratwurst').value = inventoryStock.bratwurst || 275;
-      document.getElementById('input-opening-bockwurst').value = inventoryStock.bockwurst || 150;
-      document.getElementById('input-opening-cheesegriller').value = inventoryStock.cheesegriller || 175;
+      document.getElementById('input-opening-rolls-fridge').value = inventoryStock.fridge.rolls || 400;
+      document.getElementById('input-opening-rolls-cooler').value = inventoryStock.cooler.rolls || 200;
+
+      document.getElementById('input-opening-bratwurst-fridge').value = inventoryStock.fridge.bratwurst || 175;
+      document.getElementById('input-opening-bratwurst-cooler').value = inventoryStock.cooler.bratwurst || 100;
+
+      document.getElementById('input-opening-bockwurst-fridge').value = inventoryStock.fridge.bockwurst || 100;
+      document.getElementById('input-opening-bockwurst-cooler').value = inventoryStock.cooler.bockwurst || 50;
+
+      document.getElementById('input-opening-cheesegriller-fridge').value = inventoryStock.fridge.cheesegriller || 100;
+      document.getElementById('input-opening-cheesegriller-cooler').value = inventoryStock.cooler.cheesegriller || 75;
+
       document.getElementById('modal-opening-stock').classList.remove('hidden');
     }
 
@@ -1757,35 +3219,53 @@
     }
 
     function saveOpeningStockValues() {
-      const rolls = parseInt(document.getElementById('input-opening-rolls').value, 10);
-      const brat = parseInt(document.getElementById('input-opening-bratwurst').value, 10);
-      const bock = parseInt(document.getElementById('input-opening-bockwurst').value, 10);
-      const cheese = parseInt(document.getElementById('input-opening-cheesegriller').value, 10);
+      const rollsFridge = parseInt(document.getElementById('input-opening-rolls-fridge').value, 10) || 0;
+      const rollsCooler = parseInt(document.getElementById('input-opening-rolls-cooler').value, 10) || 0;
 
-      if (isNaN(rolls) || isNaN(brat) || isNaN(bock) || isNaN(cheese) || rolls < 0 || brat < 0 || bock < 0 || cheese < 0) {
-        alert('Please enter valid positive numbers for all inventory items.');
-        return;
-      }
+      const bratFridge = parseInt(document.getElementById('input-opening-bratwurst-fridge').value, 10) || 0;
+      const bratCooler = parseInt(document.getElementById('input-opening-bratwurst-cooler').value, 10) || 0;
 
-      inventoryStock.rolls = rolls;
-      inventoryStock.bratwurst = brat;
-      inventoryStock.bockwurst = bock;
-      inventoryStock.cheesegriller = cheese;
+      const bockFridge = parseInt(document.getElementById('input-opening-bockwurst-fridge').value, 10) || 0;
+      const bockCooler = parseInt(document.getElementById('input-opening-bockwurst-cooler').value, 10) || 0;
+
+      const cheeseFridge = parseInt(document.getElementById('input-opening-cheesegriller-fridge').value, 10) || 0;
+      const cheeseCooler = parseInt(document.getElementById('input-opening-cheesegriller-cooler').value, 10) || 0;
+
+      inventoryStock = {
+        fridge: {
+          rolls: rollsFridge,
+          bratwurst: bratFridge,
+          bockwurst: bockFridge,
+          cheesegriller: cheeseFridge
+        },
+        cooler: {
+          rolls: rollsCooler,
+          bratwurst: bratCooler,
+          bockwurst: bockCooler,
+          cheesegriller: cheeseCooler
+        }
+      };
 
       closeOpeningStockModal();
       broadcastState('STOCK_UPDATED');
       playBeep('success');
+      renderBraaiStation();
+      renderSharedBraaiHandout();
       renderManagerDashboard();
     }
 
     function applyManualStockAddition() {
       const variety = document.getElementById('select-stock-variety').value;
+      const destination = document.getElementById('select-stock-destination').value || 'fridge';
       const qty = parseInt(document.getElementById('input-stock-add-qty').value, 10);
-      if (qty > 0 && inventoryStock[variety] !== undefined) {
-        inventoryStock[variety] += qty;
+      
+      if (qty > 0 && inventoryStock[destination] && inventoryStock[destination][variety] !== undefined) {
+        inventoryStock[destination][variety] += qty;
         closeManualStockModal();
         broadcastState('STOCK_UPDATED');
         playBeep('success');
+        renderBraaiStation();
+        renderSharedBraaiHandout();
         renderManagerDashboard();
       }
     }
@@ -1832,6 +3312,7 @@
         broadcastState('ORDERS_RESET');
         renderHandoutStation();
         renderBraaiStation();
+        renderSharedBraaiHandout();
         renderManagerDashboard();
         updateCartUI();
         alert('Test orders wiped. Next order is #101.');
@@ -1852,7 +3333,39 @@
       a.download = `oktoberfest-staff-shifts-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
     }
+
+    function exportOrdersCsv() {
+      let csv = 'Order Number,Timestamp,Cashier,Payment Method,Status,Total,Items Ordered,Note\n';
+      orders.forEach(o => {
+        const itemsStr = o.items.map(i => `${i.qty}x ${i.name} [${i.inRoll ? 'In Roll' : 'No Roll'}]`).join('; ');
+        csv += `"#${o.number}","${o.timestamp}","${o.cashier || ''}","${o.paymentMethod}","${o.status}","${o.total.toFixed(2)}","${itemsStr}","${(o.note || '').replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `oktoberfest-orders-ledger-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
+
+    function exportBandInvoiceCsv() {
+      const bandOrders = orders.filter(o => o.paymentMethod === 'band_tab' && o.status !== 'cancelled');
+      let csv = 'Order Number,Timestamp,Cashier,Band Member / Note,Items Ordered,Invoice Amount (ZAR)\n';
+      let totalClaim = 0;
+      bandOrders.forEach(o => {
+        totalClaim += o.total;
+        const itemsStr = o.items.map(i => `${i.qty}x ${i.name} [${i.inRoll ? 'In Roll' : 'No Roll'}]`).join('; ');
+        csv += `"#${o.number}","${o.timestamp}","${o.cashier || ''}","${(o.note || '').replace(/"/g, '""')}","${itemsStr}","${o.total.toFixed(2)}"\n`;
+      });
+      csv += `\n"TOTAL CLAIM FROM GERMAN CLUB","","","","","R ${totalClaim.toFixed(2)}"\n`;
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `oktoberfest-band-club-invoice-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
   </script>
 </body>
 </html>
-```
