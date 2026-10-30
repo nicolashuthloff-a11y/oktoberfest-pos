@@ -149,6 +149,19 @@
           <div id="till-menu-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <!-- Populated via renderMenu() -->
           </div>
+          <!-- STANDALONE ROLLS BAR ON TILL POS -->
+          <div id="till-standalone-rolls-container" class="mt-2 bg-slate-800/90 border-2 border-amber-500/60 rounded-xl p-3 shadow-md flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥖</span>
+              <div>
+                <div class="text-xs font-black text-amber-300 uppercase tracking-wide">Extra / Standalone Rolls (No Sausage)</div>
+                <div class="text-[10px] text-slate-400">Ring up individual fresh rolls for customers wanting an extra roll</div>
+              </div>
+            </div>
+            <div id="till-standalone-rolls-buttons" class="flex items-center gap-2">
+              <!-- Rendered via renderMenu() -->
+            </div>
+          </div>
         </div>
 
         <!-- Current Order Cart & Checkout -->
@@ -1960,6 +1973,7 @@
     /* ==================== TILL & MENU ORDERING ==================== */
     function renderMenu() {
       const container = document.getElementById('till-menu-grid');
+      const rollsContainer = document.getElementById('till-standalone-rolls-buttons');
       if (!container) return;
       container.innerHTML = '';
 
@@ -1998,29 +2012,19 @@
         container.appendChild(card);
       });
 
-      // 2. Extra Standalone Rolls Row for Cashier
-      const extraRollsCard = document.createElement('div');
-      extraRollsCard.className = "col-span-1 sm:col-span-2 bg-slate-850 border border-amber-700/40 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-sm bg-slate-800/80";
-      extraRollsCard.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="text-base">🥖</span>
-          <div>
-            <div class="text-xs font-black text-amber-300 uppercase tracking-wide">Extra / Standalone Rolls</div>
-            <div class="text-[10px] text-slate-400">Tap to ring up individual rolls without sausage</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="addStandaloneRollToCart('standard_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
+      // 2. Extra Standalone Rolls Buttons for Cashier
+      if (rollsContainer) {
+        rollsContainer.innerHTML = `
+          <button type="button" onclick="addStandaloneRollToCart('standard_roll')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm border border-slate-600">
             <span>🥖</span> <span>${rollConfig.standard?.name || 'Standard White Roll'}</span>
-            <span class="text-fest-gold font-mono font-bold">R${(rollConfig.standard?.price || 10).toFixed(2)}</span>
+            <span class="text-fest-gold font-mono font-bold bg-slate-900/80 px-1.5 py-0.5 rounded">R${Number(rollConfig.standard?.price !== undefined ? rollConfig.standard.price : 10).toFixed(2)}</span>
           </button>
-          <button type="button" onclick="addStandaloneRollToCart('crusty_roll')" class="touch-btn bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-700/60 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
+          <button type="button" onclick="addStandaloneRollToCart('crusty_roll')" class="touch-btn bg-amber-900/80 hover:bg-amber-800 text-amber-200 border border-amber-700/80 px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm">
             <span>🥨</span> <span>${rollConfig.crusty?.name || 'German Crusty Roll'}</span>
-            <span class="text-fest-gold font-mono font-bold">R${(rollConfig.crusty?.price || 15).toFixed(2)}</span>
+            <span class="text-fest-gold font-mono font-bold bg-slate-900/80 px-1.5 py-0.5 rounded">R${Number(rollConfig.crusty?.price !== undefined ? rollConfig.crusty.price : 15).toFixed(2)}</span>
           </button>
-        </div>
-      `;
-      container.appendChild(extraRollsCard);
+        `;
+      }
     }
 
     function addStandaloneRollToCart(rollKey) {
@@ -3487,12 +3491,12 @@
 
       // Standard Roll Card
       const stdCard = document.createElement('div');
-      stdCard.className = "bg-slate-900/90 border border-amber-500/60 rounded-xl p-3 flex flex-col justify-between";
+      stdCard.className = "bg-slate-900/90 border-2 border-amber-500/70 rounded-xl p-3 flex flex-col justify-between shadow-sm";
       stdCard.innerHTML = `
         <div>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1.5">
-              <span>🥖</span>
+              <span class="text-lg">🥖</span>
               <span class="font-black text-amber-200 text-xs sm:text-sm">${stdName}</span>
             </div>
             <span class="font-mono font-bold text-fest-gold text-xs">R${Number(stdPrice).toFixed(2)}</span>
@@ -3514,12 +3518,12 @@
 
       // German Crusty Roll Card
       const cruCard = document.createElement('div');
-      cruCard.className = "bg-slate-900/90 border border-amber-600/60 rounded-xl p-3 flex flex-col justify-between";
+      cruCard.className = "bg-slate-900/90 border-2 border-amber-600/70 rounded-xl p-3 flex flex-col justify-between shadow-sm";
       cruCard.innerHTML = `
         <div>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1.5">
-              <span>🥨</span>
+              <span class="text-lg">🥨</span>
               <span class="font-black text-amber-400 text-xs sm:text-sm">${cruName}</span>
             </div>
             <span class="font-mono font-bold text-fest-gold text-xs">R${Number(cruPrice).toFixed(2)}</span>
