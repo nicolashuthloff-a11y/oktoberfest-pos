@@ -67,12 +67,13 @@
     </div>
 
     <!-- Live Operator Status & Multi-Switch -->
-    <div class="flex items-center gap-1.5 text-xs">
-      <div id="header-shared-operators" class="flex items-center gap-1 overflow-x-auto max-w-[260px] no-scrollbar">
+    <div class="flex items-center gap-2">
+      <div id="header-shared-operators" class="flex items-center gap-1 overflow-x-auto max-w-[240px] no-scrollbar">
         <!-- Rendered dynamically -->
       </div>
-      <button type="button" onclick="showLoginScreen(true)" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 px-2 py-1 rounded text-xs font-semibold flex items-center gap-1">
-        <span>🔄</span> <span class="hidden sm:inline">Switch</span>
+      <!-- PROMINENT LOGIN & STATION SELECTION BUTTON -->
+      <button type="button" onclick="showLoginScreen(true)" class="touch-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow-md border border-amber-300">
+        <span>🔑</span> <span>Switch Station / Login</span>
       </button>
     </div>
 
@@ -1335,7 +1336,6 @@
       sliced_std_rolls: 0,
       sliced_cru_rolls: 0
     };
-    let lastPrepAlertTime = 0;
 
     let stationsList = [];
     let staffRoster = [];
@@ -1387,7 +1387,15 @@
       loadStateFromStorage();
       renderHeaderStationTabs();
       renderMenu();
-      switchStation(currentStation);
+      
+      const sessionActive = sessionStorage.getItem('okt_session_active');
+      if (!sessionActive) {
+        // Automatically pop up the Station Selection & PIN login on initial open
+        showLoginScreen(false);
+      } else {
+        switchStation(currentStation);
+      }
+
       initWakeLock();
       handleScreenResizeOrRotate();
 
@@ -1438,7 +1446,7 @@
       grillActivityLog = JSON.parse(localStorage.getItem('okt_grill_log') || '[]');
       prepBuffer = JSON.parse(localStorage.getItem('okt_prep_buffer') || '{"precooked_bratwurst":0,"precooked_bockwurst":0,"precooked_cheesegriller":0,"sliced_std_rolls":0,"sliced_cru_rolls":0}');
 
-      // Default stock structure (Cold Room Fridge vs On-Site Cooler Box)
+      // Default stock structure (Main Storage vs On-Site Cooler Box)
       const savedStock = JSON.parse(localStorage.getItem('okt_stock') || 'null');
       if (savedStock) {
         stockLevels = savedStock;
@@ -1746,7 +1754,7 @@
       const container = document.getElementById('dynamic-name-picker');
       container.innerHTML = '';
 
-      // Display all staff members so anyone can sign in without filter lockout
+      // Display all staff members cleanly
       staffRoster.forEach(person => {
         const isChecked = selectedLoginOperators.includes(person.name);
         const isAssigned = (person.assignedStations || []).includes(selectedLoginStation);
@@ -1806,7 +1814,6 @@
         return;
       }
 
-      // Check against Master PIN or staff individual PIN
       let authorized = (pin === MASTER_PIN);
       if (!authorized) {
         authorized = selectedLoginOperators.some(opName => {
@@ -1823,6 +1830,7 @@
 
       currentActiveOperators = [...selectedLoginOperators];
       currentActiveCashier = currentActiveOperators[0];
+      sessionStorage.setItem('okt_session_active', 'true');
       closeLoginModal();
       applyStationRole(selectedLoginStation);
     }
@@ -1979,7 +1987,7 @@
         combinedNotes = combinedNotes ? `${notePrefix} - ${combinedNotes}` : notePrefix;
       }
 
-      // Generate sequential ticket number starting at #101
+      // Sequential ticket numbering starting at #101
       let nextNumber = 101;
       if (orders.length > 0) {
         const highest = Math.max(...orders.map(o => o.number || 100));
@@ -2090,7 +2098,7 @@
       refreshActiveStationUI();
     }
 
-    /* SAUSAGE WORKFLOW MOVEMENT (Braai Coals -> Precooked / Handout) */
+    /* SAUSAGE WORKFLOW MOVEMENT */
     function moveSausagesFlow(sausageKey, flowType, count = 1) {
       if (!sausagesOnCoals[sausageKey]) sausagesOnCoals[sausageKey] = 0;
       const precookKey = `precooked_${sausageKey}`;
@@ -3035,7 +3043,7 @@
                 ord.status === 'delivered' ? 'bg-emerald-950 text-emerald-400' : ord.status === 'cancelled' ? 'bg-red-950 text-red-400' : 'bg-blue-950 text-blue-400'
               }">${ord.status.toUpperCase()}</span>
               <span class="text-[10px] text-slate-400 font-mono">${new Date(ord.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-              <span class="text-[10px] text-slate-400">Cashier: ${ord.cashier || ' Nicolas'}</span>
+              <span class="text-[10px] text-slate-400">Cashier: ${ord.cashier || 'Nicolas'}</span>
             </div>
             <div class="text-slate-300 font-medium mt-1">${itemSummary}</div>
             <div class="text-[10px] text-fest-gold font-bold">Total: R${ord.total.toFixed(2)} (${ord.tenderType})</div>
