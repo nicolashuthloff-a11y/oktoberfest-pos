@@ -1,1522 +1,1772 @@
+```html
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-black">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Oktoberfest 2026 - Sausage Hub & KDS</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<style>
-:root {
---font-sans: 'Inter', system-ui, -apple-system, sans-serif;
---font-display: 'Chakra Petch', sans-serif;
---font-mono: 'JetBrains Mono', monospace;
-}
-body {
-font-family: var(--font-sans);
-user-select: none;
--webkit-user-select: none;
--webkit-tap-highlight-color: transparent;
-touch-action: manipulation;
-}
-.font-display { font-family: var(--font-display); }
-.font-mono { font-family: var(--font-mono); }
-.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.35); border-radius: 9999px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.6); }
-.animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-.bavaria-diamond {
-background-image: repeating-linear-gradient(45deg, rgba(56, 189, 248, 0.04) 0px, rgba(56, 189, 248, 0.04) 20px, transparent 20px, transparent 40px);
-}
-.post-it-slip {
-box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
-transform: rotate(-1deg);
-}
-.tin-pod-container {
-background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-border: 1px solid rgba(245, 158, 11, 0.25);
-box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-}
-.tin-pod-btn {
-transition: all 0.15s ease-in-out;
-background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
-}
-.tin-pod-btn:active {
-transform: scale(0.97);
-}
-.tin-pod-btn.recommended {
-background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
-border-color: #f59e0b;
-color: #ffffff;
-box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Oktoberfest 2026 - Sausage Hub & KDS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Chakra Petch', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .font-display { font-family: var(--font-display); }
+    .font-mono { font-family: var(--font-mono); }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.35); border-radius: 9999px; }
+    .bavaria-diamond {
+      background-image: repeating-linear-gradient(45deg, rgba(56, 189, 248, 0.03) 0px, rgba(56, 189, 248, 0.03) 20px, transparent 20px, transparent 40px);
+    }
+    .post-it-slip {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+      transform: rotate(-1deg);
+    }
+    .tin-pod-container {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .tin-pod-btn {
+      transition: all 0.12s ease-in-out;
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+    }
+    .tin-pod-btn:active {
+      transform: scale(0.96);
+    }
+    .tin-pod-btn.recommended {
+      background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+      border: 1px solid #f59e0b;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+    }
+  </style>
 </head>
 <body class="h-full flex flex-col overflow-hidden bg-slate-950 text-slate-100 bavaria-diamond">
-​<!-- ================= TOP MAIN HEADER & NAVIGATION ================= -->
-<header class="flex-none bg-slate-900/90 backdrop-blur border-b border-amber-500/20 px-3 py-2 z-30 shadow-md">
-<div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-​<!-- Brand & Direct Master Access -->
-<div class="flex items-center gap-2 cursor-pointer group" onclick="openMasterPinModal('manager')" title="Click for Master Manager console">
-<div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-black text-black text-lg shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
-🥨
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<span class="font-display font-black tracking-wider text-amber-400 text-sm md:text-base uppercase">Oktoberfest</span>
-<span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30 font-mono">2026</span>
-</div>
-<div class="text-[10px] text-slate-400 -mt-0.5 flex items-center gap-1">
-<span>Sausage Hub</span>
-<span class="text-amber-500/60">•</span>
-<span id="current-user-display" class="text-amber-300 font-medium">Nicolas</span>
-</div>
-</div>
-</div>
-​<!-- Station Navigation Tabs -->
-<nav class="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 gap-1 overflow-x-auto custom-scrollbar">
-<button type="button" id="nav-btn-till" onclick="switchStationView('till')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow">
-<span>💳</span>
-<span class="hidden sm:inline">Till / POS</span>
-<span class="sm:hidden">Till</span>
-</button>
-<button type="button" id="nav-btn-handout" onclick="switchStationView('handout')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
-<span>📦</span>
-<span class="hidden sm:inline">Prep & Handout</span>
-<span class="sm:hidden">Prep</span>
-</button>
-<button type="button" id="nav-btn-braai" onclick="switchStationView('braai')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
-<span>🔥</span>
-<span class="hidden sm:inline">Braai Grill</span>
-<span class="sm:hidden">Braai</span>
-</button>
-<button type="button" id="nav-btn-shared" onclick="switchStationView('shared')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
-<span>📱</span>
-<span class="hidden md:inline">Kiosk Mode</span>
-<span class="md:hidden">Kiosk</span>
-</button>
-<button type="button" id="nav-btn-manager" onclick="switchStationView('manager')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-amber-400 hover:bg-amber-500/10">
-<span>🔒</span>
-<span>Manager</span>
-</button>
-</nav>
-​<!-- Right Utility Actions -->
-<div class="flex items-center gap-1.5">
-<button type="button" onclick="openPairingGuideModal()" class="hidden md:flex px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 items-center gap-1 transition">
-<span>📖</span>
-<span>Pairing Guide</span>
-</button>
-<button type="button" onclick="openLoginModal()" class="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 flex items-center gap-1 transition">
-<span>🔑</span>
-<span class="hidden sm:inline">Switch Operator</span>
-</button>
-</div>
-​</div>
-</header>
-​<!-- ================= MAIN MULTI-STATION VIEWPORT ================= -->
-<main class="flex-1 relative overflow-hidden">
-​<!-- 1. TILL / POS STATION VIEW -->
-<div id="view-till" class="station-view absolute inset-0 flex flex-col lg:flex-row overflow-hidden">
-<!-- Left: Sausage & Roll Grid -->
-<section class="flex-1 flex flex-col overflow-y-auto p-3 custom-scrollbar border-b lg:border-b-0 lg:border-r border-slate-800/80">
-​<!-- Quick Pairing Hint Bar -->
-<div class="flex items-center justify-between mb-3 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-<div class="text-xs text-slate-300 flex items-center gap-2">
-<span class="text-amber-400 font-bold">★ Pairings:</span>
-<span>Bratwurst & Bockwurst with Crispy Roll • Cheesegriller with Soft White Roll</span>
-</div>
-<button type="button" onclick="openPairingGuideModal()" class="text-xs text-amber-400 hover:text-amber-300 font-bold underline cursor-pointer">View Guide</button>
-</div>
-​<!-- Sausage Touch Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-​<!-- Bratwurst (140g) -->
-<div class="bg-slate-900/90 border-2 border-sky-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
-<div class="flex justify-between items-start mb-2">
-<div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-<h3 class="font-display font-black text-white text-base">Bratwurst (140g)</h3>
-</div>
-<p class="text-[11px] text-slate-400">German pork & veal coarse white sausage</p>
-</div>
-<span class="font-display font-black text-amber-400 text-lg">R60</span>
-</div>
-​<!-- Tin Pod Roll Selector -->
-<div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
-<button type="button" onclick="addToCart('bratwurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
-<span class="text-[10px] uppercase font-bold tracking-wider text-amber-200">★ Best Match</span>
-<span class="text-xs font-black">🥖 Crispy Roll</span>
-</button>
-<button type="button" onclick="addToCart('bratwurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
-<span class="text-[10px] text-slate-400">Soft Bun</span>
-<span class="text-xs font-bold">🥖 White Roll</span>
-</button>
-<button type="button" onclick="addToCart('bratwurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
-<span class="text-[10px] text-slate-400">Tray / Plate</span>
-<span class="text-xs font-bold">🍽️ No Roll</span>
-</button>
-</div>
-</div>
-​<!-- Bratwurst with Warm Curry Sauce -->
-<div class="bg-slate-900/90 border-2 border-amber-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
-<div class="flex justify-between items-start mb-2">
-<div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-<h3 class="font-display font-black text-white text-base">Currywurst (Sliced)</h3>
-</div>
-<p class="text-[11px] text-slate-400">In warm spiced sauce, served in boat</p>
-</div>
-<span class="font-display font-black text-amber-400 text-lg">R70</span>
-</div>
-​<!-- Tin Pod Roll Selector -->
-<div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
-<button type="button" onclick="addToCart('currywurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
-<span class="text-[10px] uppercase font-bold tracking-wider text-amber-200">★ Dip Bread</span>
-<span class="text-xs font-black">🥖 Crispy Roll</span>
-</button>
-<button type="button" onclick="addToCart('currywurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
-<span class="text-[10px] text-slate-400">Soft Bun</span>
-<span class="text-xs font-bold">🥖 White Roll</span>
-</button>
-<button type="button" onclick="addToCart('currywurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
-<span class="text-[10px] text-slate-400">Sauce Only</span>
-<span class="text-xs font-bold">🍽️ No Roll</span>
-</button>
-</div>
-</div>
-​<!-- Bockwurst (140g) -->
-<div class="bg-slate-900/90 border-2 border-red-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
-<div class="flex justify-between items-start mb-2">
-<div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
-<h3 class="font-display font-black text-white text-base">Bockwurst (140g)</h3>
-</div>
-<p class="text-[11px] text-slate-400">Smoked German sausage spiced with paprika</p>
-</div>
-<span class="font-display font-black text-amber-400 text-lg">R60</span>
-</div>
-​<!-- Tin Pod Roll Selector -->
-<div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
-<button type="button" onclick="addToCart('bockwurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
-<span class="text-[10px] uppercase font-bold tracking-wider text-amber-200">★ Best Match</span>
-<span class="text-xs font-black">🥖 Crispy Roll</span>
-</button>
-<button type="button" onclick="addToCart('bockwurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
-<span class="text-[10px] text-slate-400">Soft Bun</span>
-<span class="text-xs font-bold">🥖 White Roll</span>
-</button>
-<button type="button" onclick="addToCart('bockwurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
-<span class="text-[10px] text-slate-400">Tray / Plate</span>
-<span class="text-xs font-bold">🍽️ No Roll</span>
-</button>
-</div>
-</div>
-​<!-- Cheesegriller (110g) -->
-<div class="bg-slate-900/90 border-2 border-yellow-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
-<div class="flex justify-between items-start mb-2">
-<div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-<h3 class="font-display font-black text-white text-base">Cheesegriller (110g)</h3>
-</div>
-<p class="text-[11px] text-slate-400">Pork griller with melted cheddar pockets</p>
-</div>
-<span class="font-display font-black text-amber-400 text-lg">R60</span>
-</div>
-​<!-- Tin Pod Roll Selector -->
-<div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
-<button type="button" onclick="addToCart('cheesegriller', 'white')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
-<span class="text-[10px] uppercase font-bold tracking-wider text-amber-200">★ Best Match</span>
-<span class="text-xs font-black">🥖 White Roll</span>
-</button>
-<button type="button" onclick="addToCart('cheesegriller', 'crusty')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
-<span class="text-[10px] text-slate-400">Crispy</span>
-<span class="text-xs font-bold">🥖 Crispy Roll</span>
-</button>
-<button type="button" onclick="addToCart('cheesegriller', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
-<span class="text-[10px] text-slate-400">Tray / Plate</span>
-<span class="text-xs font-bold">🍽️ No Roll</span>
-</button>
-</div>
-</div>
-​</div>
-​<!-- Standalone / Extra Rolls Bar -->
-<div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-2">
-<span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-<span>🥖</span>
-<span>Extra / Standalone Rolls:</span>
-</span>
-<div class="flex items-center gap-2">
-<button type="button" onclick="addToCart('roll_crusty', 'crusty')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-amber-500/30 text-amber-300 text-xs font-bold cursor-pointer transition">
-+ Crispy Roll (R15)
-</button>
-<button type="button" onclick="addToCart('roll_white', 'white')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition">
-+ White Roll (R10)
-</button>
-</div>
-</div>
-​</section>
-​<!-- Right: Current Cart & Instant Checkout -->
-<aside class="w-full lg:w-96 bg-slate-900 flex flex-col border-t lg:border-t-0 border-slate-800">
-<!-- Order Header -->
-<div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
-<div class="flex items-center gap-2">
-<span class="text-xs font-bold uppercase text-slate-400 tracking-wider">Active Order</span>
-<span id="pos-order-tag" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">#---</span>
-</div>
-<button type="button" onclick="clearCart()" class="text-xs text-red-400 hover:text-red-300 font-medium">Clear All</button>
-</div>
-​<!-- Cart Item List -->
-<div id="cart-items-container" class="flex-1 p-3 overflow-y-auto space-y-2 custom-scrollbar min-h-[140px] max-h-[30vh] lg:max-h-none">
-<div class="text-center py-8 text-slate-500 text-xs">
-Tap a sausage & roll combo to begin order
-</div>
-</div>
-​<!-- Checkout Tray -->
-<div class="p-3 bg-slate-950 border-t border-slate-800/80 space-y-3">
-<div class="flex justify-between items-baseline">
-<span class="text-xs uppercase font-bold text-slate-400">Total Due</span>
-<span id="cart-total-display" class="font-display font-black text-2xl text-amber-400">R0.00</span>
-</div>
-​<!-- Dual Instant Payment Buttons -->
-<div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="finalizeOrderCreation('cash')" class="py-3 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 transition cursor-pointer">
-<span>💵</span>
-<span>CASH PAY</span>
-</button>
-<button type="button" onclick="finalizeOrderCreation('card')" class="py-3 px-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/20 transition cursor-pointer">
-<span>💳</span>
-<span>YOCO CARD</span>
-</button>
-</div>
-</div>
-</aside>
-</div>
-​<!-- 2. HANDOUT & ASSEMBLY STATION VIEW -->
-<div id="view-handout" class="station-view absolute inset-0 hidden flex flex-col p-3 overflow-y-auto custom-scrollbar">
-<!-- Top Buffer & Summary Bar -->
-<div class="flex-none flex items-center justify-between mb-3 bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div>
-<h2 class="font-display font-black text-amber-400 text-lg">Handout & Tray Assembly</h2>
-<p class="text-xs text-slate-400">Match Post-It color tickets, slice rolls, plate warm sausages</p>
-</div>
-<div class="flex items-center gap-3">
-<div class="text-right">
-<div class="text-[10px] uppercase font-bold text-slate-400">Orders Waiting</div>
-<div id="handout-waiting-count" class="font-display font-black text-amber-400 text-lg">0</div>
-</div>
-</div>
-</div>
-​<!-- Live Order Tickets Queue -->
-<div id="handout-tickets-queue" class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-<!-- Rendered dynamically -->
-</div>
-</div>
-​<!-- 3. BRAAI GRILL STATION VIEW -->
-<div id="view-braai" class="station-view absolute inset-0 hidden flex flex-col p-3 overflow-y-auto custom-scrollbar">
-<div class="flex-none flex items-center justify-between mb-3 bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div>
-<h2 class="font-display font-black text-amber-400 text-lg">Braai Grill Master Monitor</h2>
-<p class="text-xs text-slate-400">Monitor live sausage demand, coal zones, and warm holding buffers</p>
-</div>
-<div class="flex items-center gap-2">
-<span class="text-xs font-bold text-slate-400">Grill Mode:</span>
-<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">Standard Braai</span>
-</div>
-</div>
-​<!-- Live Demand Gauges -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-<!-- Bratwurst Demand -->
-<div class="bg-slate-900/90 border border-sky-500/40 rounded-2xl p-3">
-<div class="text-xs font-bold text-sky-400 uppercase">Bratwurst (140g)</div>
-<div class="mt-2 flex items-baseline justify-between">
-<span class="text-xs text-slate-400">Demand / Queue</span>
-<span id="braai-demand-bratwurst" class="font-display font-black text-2xl text-white">0</span>
-</div>
-<div class="mt-1 flex items-baseline justify-between text-xs">
-<span class="text-slate-400">Warm Buffer</span>
-<span id="braai-buffer-bratwurst" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<!-- Bockwurst Demand -->
-<div class="bg-slate-900/90 border border-red-500/40 rounded-2xl p-3">
-<div class="text-xs font-bold text-red-400 uppercase">Bockwurst (140g)</div>
-<div class="mt-2 flex items-baseline justify-between">
-<span class="text-xs text-slate-400">Demand / Queue</span>
-<span id="braai-demand-bockwurst" class="font-display font-black text-2xl text-white">0</span>
-</div>
-<div class="mt-1 flex items-baseline justify-between text-xs">
-<span class="text-slate-400">Warm Buffer</span>
-<span id="braai-buffer-bockwurst" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<!-- Cheesegriller Demand -->
-<div class="bg-slate-900/90 border border-yellow-500/40 rounded-2xl p-3">
-<div class="text-xs font-bold text-yellow-400 uppercase">Cheesegriller (110g)</div>
-<div class="mt-2 flex items-baseline justify-between">
-<span class="text-xs text-slate-400">Demand / Queue</span>
-<span id="braai-demand-cheesegriller" class="font-display font-black text-2xl text-white">0</span>
-</div>
-<div class="mt-1 flex items-baseline justify-between text-xs">
-<span class="text-slate-400">Warm Buffer</span>
-<span id="braai-buffer-cheesegriller" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<!-- Total Sausages Fired -->
-<div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3">
-<div class="text-xs font-bold text-slate-400 uppercase">Total Sold Today</div>
-<div class="mt-2 flex items-baseline justify-between">
-<span class="text-xs text-slate-400">Festival Total</span>
-<span id="braai-total-sold" class="font-display font-black text-2xl text-emerald-400">0</span>
-</div>
-<div class="mt-1 flex items-baseline justify-between text-xs">
-<span class="text-slate-400">Target</span>
-<span class="font-mono text-slate-400">600 units</span>
-</div>
-</div>
-</div>
-​<!-- Action Buttons for Warm Buffer -->
-<div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
-<h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Restock Warm Chafing Buffer (+5 Pieces)</h3>
-<div class="flex flex-wrap gap-2">
-<button type="button" onclick="adjustPrepBuffer('bratwurst', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs border border-sky-500/30 cursor-pointer">+5 Bratwurst Ready</button>
-<button type="button" onclick="adjustPrepBuffer('bockwurst', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-red-300 font-bold text-xs border border-red-500/30 cursor-pointer">+5 Bockwurst Ready</button>
-<button type="button" onclick="adjustPrepBuffer('cheesegriller', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-yellow-300 font-bold text-xs border border-yellow-500/30 cursor-pointer">+5 Cheesegriller Ready</button>
-</div>
-</div>
-</div>
-​<!-- 4. SHARED DUAL KIOSK MODE VIEW -->
-<div id="view-shared" class="station-view absolute inset-0 hidden flex flex-col lg:flex-row overflow-hidden p-2 gap-2">
-<div class="flex-1 bg-slate-900 rounded-2xl p-3 border border-slate-800 flex flex-col">
-<span class="text-xs font-bold uppercase text-sky-400 mb-2">Left: Handout Assembly</span>
-<div id="shared-handout-container" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar"></div>
-</div>
-<div class="flex-1 bg-slate-900 rounded-2xl p-3 border border-slate-800 flex flex-col">
-<span class="text-xs font-bold uppercase text-amber-400 mb-2">Right: Braai Live Demand</span>
-<div id="shared-braai-container" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar"></div>
-</div>
-</div>
-​<!-- 5. MANAGER & MASTER FINANCIAL DASHBOARD -->
-<div id="view-manager" class="station-view absolute inset-0 hidden flex flex-col p-4 overflow-y-auto custom-scrollbar">
-​<!-- Top Manager Summary Bar -->
-<div class="flex-none flex flex-wrap items-center justify-between gap-3 mb-4 bg-slate-900/90 p-4 rounded-2xl border border-amber-500/30">
-<div>
-<div class="flex items-center gap-2">
-<span class="text-xl">🔒</span>
-<h2 class="font-display font-black text-amber-400 text-xl">Manager & Financial Dashboard</h2>
-</div>
-<p class="text-xs text-slate-400">Festival inventory, master costs, expenses, and staff assignments</p>
-</div>
-<div class="flex flex-wrap items-center gap-2">
-<button type="button" onclick="openQuickStockModal()" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs shadow-lg shadow-amber-500/20 cursor-pointer transition">
-⚙️ Quick Set All Stock
-</button>
-<button type="button" onclick="openCostConfigModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-pointer transition">
-💰 Meat & Rolls (COGS)
-</button>
-<button type="button" onclick="openOverheadsModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-pointer transition">
-🎪 Overheads & Expenses
-</button>
-<button type="button" onclick="exportAuditCSV()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 cursor-pointer transition">
-📥 Export CSV Audit
-</button>
-</div>
-</div>
-​<!-- Financial Metrics Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-<div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div class="text-[11px] font-bold text-slate-400 uppercase">Gross Turnover</div>
-<div id="mgr-gross-turnover" class="font-display font-black text-xl md:text-2xl text-amber-400 mt-1">R0.00</div>
-<div id="mgr-total-sold-count" class="text-[10px] text-slate-500 mt-0.5">0 sausages sold</div>
-</div>
-​<div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div class="text-[11px] font-bold text-slate-400 uppercase">Food COGS (Meat + Rolls)</div>
-<div id="mgr-total-cogs" class="font-display font-black text-xl md:text-2xl text-red-400 mt-1">R0.00</div>
-<div class="text-[10px] text-slate-500 mt-0.5">Direct cost of goods</div>
-</div>
-​<div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div class="text-[11px] font-bold text-slate-400 uppercase">Gross Profit</div>
-<div id="mgr-gross-profit" class="font-display font-black text-xl md:text-2xl text-emerald-400 mt-1">R0.00</div>
-<div id="mgr-gross-margin" class="text-[10px] text-emerald-500 font-mono mt-0.5">0.0% margin</div>
-</div>
-​<div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-<div class="text-[11px] font-bold text-slate-400 uppercase">Net Event Profit</div>
-<div id="mgr-net-profit" class="font-display font-black text-xl md:text-2xl text-amber-300 mt-1">R0.00</div>
-<div id="mgr-breakeven-indicator" class="text-[10px] text-amber-400/80 mt-0.5">Breakeven: 0/0 units</div>
-</div>
-</div>
-​<!-- Live Stock Table -->
-<div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 mb-4">
-<div class="flex items-center justify-between mb-3">
-<h3 class="font-display font-black text-amber-400 text-base">Physical Stock & Inventory</h3>
-<span class="text-xs text-slate-400">Cold Room (Main Storage) vs On-Site Cooler</span>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-xs">
-<thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-2">Item Name</th>
-<th class="py-2 text-center">Cold Room (Main)</th>
-<th class="py-2 text-center">On-Site Cooler</th>
-<th class="py-2 text-center">Sold / Deducted</th>
-<th class="py-2 text-center">Total Balance</th>
-<th class="py-2 text-right">Action</th>
-</tr>
-</thead>
-<tbody id="mgr-stock-table-body" class="divide-y divide-slate-800/60 font-mono">
-<!-- Rendered via renderStockTable() -->
-</tbody>
-</table>
-</div>
-</div>
-​<!-- Staff Roster Table -->
-<div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4">
-<div class="flex items-center justify-between mb-3">
-<h3 class="font-display font-black text-amber-400 text-base">Staff Roster & Station Roles</h3>
-<button type="button" onclick="openStaffModal()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 cursor-pointer">+ Add Team Member</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-xs">
-<thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-2">Team Member</th>
-<th class="py-2">Role / Notes</th>
-<th class="py-2 text-center">PIN</th>
-<th class="py-2 text-right">Action</th>
-</tr>
-</thead>
-<tbody id="mgr-staff-table-body" class="divide-y divide-slate-800/60">
-<!-- Rendered via renderStaffManagementTable() -->
-</tbody>
-</table>
-</div>
-</div>
-​</div>
-​</main>
-​<!-- ================= MODAL: LOGIN / SWITCH OPERATOR ================= -->
-<div id="modal-login" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
-​<!-- Close Button -->
-<button type="button" onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-​<div class="text-center mb-4">
-<h2 class="font-display font-black text-amber-400 text-xl tracking-wide uppercase">Operator Sign-In</h2>
-<p class="text-xs text-slate-400">Select your name, station & enter 4-digit PIN</p>
-</div>
-​<!-- 1. Select Staff -->
-<div class="mb-3">
-<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Step 1: Your Name</label>
-<div class="grid grid-cols-2 gap-1.5" id="login-staff-chips">
-<!-- Rendered dynamically -->
-</div>
-</div>
-​<!-- 2. Select Station -->
-<div class="mb-3">
-<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Step 2: Choose Station</label>
-<div class="grid grid-cols-5 gap-1" id="login-station-selector">
-<button type="button" id="login-st-till" onclick="setLoginStation('till')" class="p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px] cursor-pointer">
-<span class="block text-sm pointer-events-none">💳</span>
-<span class="pointer-events-none">Till</span>
-</button>
-<button type="button" id="login-st-handout" onclick="setLoginStation('handout')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
-<span class="block text-sm pointer-events-none">📦</span>
-<span class="pointer-events-none">Prep</span>
-</button>
-<button type="button" id="login-st-braai" onclick="setLoginStation('braai')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
-<span class="block text-sm pointer-events-none">🔥</span>
-<span class="pointer-events-none">Braai</span>
-</button>
-<button type="button" id="login-st-shared" onclick="setLoginStation('shared')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
-<span class="block text-sm pointer-events-none">📱</span>
-<span class="pointer-events-none">Kiosk</span>
-</button>
-<button type="button" id="login-st-manager" onclick="setLoginStation('manager')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
-<span class="block text-sm pointer-events-none">🔒</span>
-<span class="pointer-events-none">Mgr</span>
-</button>
-</div>
-</div>
-​<!-- 3. PIN Display & Inline Error -->
-<div class="mb-3">
-<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex justify-between">
-<span>Step 3: 4-Digit PIN</span>
-<span class="text-[10px] text-amber-400 font-mono">Default: 1234 | Mgr: 1978</span>
-</label>
-​<div id="login-error-msg" class="hidden mb-2 p-2 rounded-lg bg-red-950/80 border border-red-500/50 text-red-200 text-xs text-center font-bold"></div>
-​<input type="password" id="login-pin-input" readonly maxlength="4" placeholder="••••" class="w-full text-center text-3xl font-mono tracking-widest py-2 rounded-xl bg-slate-950 border-2 border-slate-700 text-amber-400 focus:outline-none mb-2">
-​<!-- Touch Numeric Keypad -->
-<div class="grid grid-cols-3 gap-1.5 font-mono">
-<button type="button" onclick="pressLoginPinKey('1')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">1</button>
-<button type="button" onclick="pressLoginPinKey('2')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">2</button>
-<button type="button" onclick="pressLoginPinKey('3')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">3</button>
-<button type="button" onclick="pressLoginPinKey('4')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">4</button>
-<button type="button" onclick="pressLoginPinKey('5')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">5</button>
-<button type="button" onclick="pressLoginPinKey('6')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">6</button>
-<button type="button" onclick="pressLoginPinKey('7')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">7</button>
-<button type="button" onclick="pressLoginPinKey('8')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">8</button>
-<button type="button" onclick="pressLoginPinKey('9')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">9</button>
-<button type="button" onclick="clearLoginPinKey()" class="py-2.5 rounded-xl bg-red-950/60 text-red-300 hover:bg-red-900 active:scale-95 text-xs font-bold uppercase">CLR</button>
-<button type="button" onclick="pressLoginPinKey('0')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">0</button>
-<button type="button" onclick="backspaceLoginPinKey()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sm font-bold">⌫</button>
-</div>
-</div>
-​<button type="button" onclick="performStaffLogin()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-black text-sm tracking-wider uppercase transition shadow-lg shadow-amber-500/20 cursor-pointer">
-Sign In to Station
-</button>
-​</div>
-</div>
-​<!-- ================= MODAL: MASTER PIN QUICK ACCESS ================= -->
-<div id="modal-master-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-xs p-5 shadow-2xl relative">
-<button type="button" onclick="closeMasterPinModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-<div class="text-center mb-3">
-<h3 class="font-display font-black text-amber-400 text-lg uppercase">Master Manager PIN</h3>
-<p class="text-xs text-slate-400">Enter master passcode 1978</p>
-</div>
-<div id="master-pin-error" class="hidden mb-2 p-2 rounded-lg bg-red-950/80 border border-red-500/50 text-red-200 text-xs text-center font-bold"></div>
-<input type="password" id="master-pin-input" readonly maxlength="4" placeholder="••••" class="w-full text-center text-3xl font-mono tracking-widest py-2 rounded-xl bg-slate-950 border-2 border-slate-700 text-amber-400 focus:outline-none mb-3">
-<div class="grid grid-cols-3 gap-1.5 font-mono mb-3">
-<button type="button" onclick="pressMasterPinKey('1')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">1</button>
-<button type="button" onclick="pressMasterPinKey('2')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">2</button>
-<button type="button" onclick="pressMasterPinKey('3')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">3</button>
-<button type="button" onclick="pressMasterPinKey('4')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">4</button>
-<button type="button" onclick="pressMasterPinKey('5')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">5</button>
-<button type="button" onclick="pressMasterPinKey('6')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">6</button>
-<button type="button" onclick="pressMasterPinKey('7')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">7</button>
-<button type="button" onclick="pressMasterPinKey('8')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">8</button>
-<button type="button" onclick="pressMasterPinKey('9')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">9</button>
-<button type="button" onclick="clearMasterPinKey()" class="py-2.5 rounded-xl bg-red-950/60 text-red-300 text-xs font-bold">CLR</button>
-<button type="button" onclick="pressMasterPinKey('0')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">0</button>
-<button type="button" onclick="backspaceMasterPinKey()" class="py-2.5 rounded-xl bg-slate-800 text-sm font-bold">⌫</button>
-</div>
-<button type="button" onclick="submitMasterPin()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-sm uppercase">Unlock Manager</button>
-</div>
-</div>
-​<!-- ================= MODAL: PAIRING & MENU GUIDE ================= -->
-<div id="modal-pairing-guide" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-lg p-5 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
-<button type="button" onclick="closePairingGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-<div class="text-center mb-4">
-<h3 class="font-display font-black text-amber-400 text-xl uppercase">Oktoberfest Pairing Matrix</h3>
-<p class="text-xs text-slate-400">Official 2026 Master Plan Sausage & Bread Combinations</p>
-</div>
-​<div class="space-y-3 text-xs">
-<div class="p-3 rounded-xl bg-slate-950 border border-sky-500/30">
-<div class="flex justify-between items-baseline mb-1">
-<span class="font-black text-sky-400 text-sm">Bratwurst (140g)</span>
-<span class="font-mono text-amber-400 font-bold">R60.00</span>
-</div>
-<p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll</p>
-<p class="text-slate-400 mt-1">Recommended Condiments: Sweet German Mustard, Medium Mustard, optional Sauerkraut.</p>
-</div>
-​<div class="p-3 rounded-xl bg-slate-950 border border-amber-500/30">
-<div class="flex justify-between items-baseline mb-1">
-<span class="font-black text-amber-400 text-sm">Currywurst (Sliced Bratwurst)</span>
-<span class="font-mono text-amber-400 font-bold">R70.00</span>
-</div>
-<p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll (on the side for dipping)</p>
-<p class="text-slate-400 mt-1">Presentation: Sliced sausage in disposable boat, drenched in warm house-made spiced curry sauce, dusted with yellow curry powder.</p>
-</div>
-​<div class="p-3 rounded-xl bg-slate-950 border border-red-500/30">
-<div class="flex justify-between items-baseline mb-1">
-<span class="font-black text-red-400 text-sm">Bockwurst (140g)</span>
-<span class="font-mono text-amber-400 font-bold">R60.00</span>
-</div>
-<p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll</p>
-<p class="text-slate-400 mt-1">Recommended Condiments: Hot or Medium German Mustard.</p>
-</div>
-​<div class="p-3 rounded-xl bg-slate-950 border border-yellow-500/30">
-<div class="flex justify-between items-baseline mb-1">
-<span class="font-black text-yellow-400 text-sm">Cheesegriller (110g)</span>
-<span class="font-mono text-amber-400 font-bold">R60.00</span>
-</div>
-<p class="text-slate-300 font-bold">Best Match: 🥖 Standard Soft White Roll</p>
-<p class="text-slate-400 mt-1">Recommended Condiments: Sweet Tomato Sauce or Mild Mustard.</p>
-</div>
-</div>
-​<button type="button" onclick="closePairingGuideModal()" class="w-full mt-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase">
-Close Pairing Guide
-</button>
-</div>
-</div>
-​<!-- ================= MODAL: QUICK SET ALL STOCK ================= -->
-<div id="modal-quick-stock" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-lg p-5 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
-<button type="button" onclick="closeQuickStockModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-<div class="text-center mb-3">
-<h3 class="font-display font-black text-amber-400 text-xl uppercase">Quick Set Opening Stock</h3>
-<p class="text-xs text-slate-400">Set Main Cold Room and On-Site Cooler physical counts</p>
-</div>
-​<!-- 1-Tap 2026 Plan Fill -->
-<div class="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
-<div>
-<span class="text-xs font-bold text-amber-300">2026 Master Plan Split</span>
-<p class="text-[10px] text-slate-400">600 sausages (275 Brat, 75 Bock, 250 Cheese) & 600 rolls</p>
-</div>
-<button type="button" onclick="apply2026PresetStock()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-black text-xs cursor-pointer shadow">
-⚡ Fill 2026 Plan
-</button>
-</div>
-​<div class="space-y-3 text-xs" id="quick-stock-inputs-container">
-<!-- Rendered dynamically -->
-</div>
-​<div class="mt-4 flex gap-2">
-<button type="button" onclick="saveQuickStockInputs()" class="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Stock Levels</button>
-<button type="button" onclick="closeQuickStockModal()" class="py-3 px-4 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
-</div>
-</div>
-</div>
-​<!-- ================= MODAL: MEAT & ROLLS COGS CONFIG ================= -->
-<div id="modal-cost-config" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
-<button type="button" onclick="closeCostConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-<div class="text-center mb-3">
-<h3 class="font-display font-black text-amber-400 text-lg uppercase">Supplier Unit Costs (COGS)</h3>
-<p class="text-xs text-slate-400">Butcher sausage costs and bakery bun costs</p>
-</div>
-​<div class="space-y-2 text-xs">
-<div>
-<label class="block text-slate-400 mb-0.5">Bratwurst Raw (R):</label>
-<input type="number" step="0.5" id="cogs-in-bratwurst" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Bockwurst Raw (R):</label>
-<input type="number" step="0.5" id="cogs-in-bockwurst" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Cheesegriller Raw (R):</label>
-<input type="number" step="0.5" id="cogs-in-cheesegriller" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">German Crispy / Crusty Roll (R):</label>
-<input type="number" step="0.5" id="cogs-in-crusty-roll" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Standard Soft White Roll (R):</label>
-<input type="number" step="0.5" id="cogs-in-white-roll" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-</div>
-​<button type="button" onclick="saveCostConfig()" class="w-full mt-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">
-Save COGS Prices
-</button>
-</div>
-</div>
-​<!-- ================= MODAL: OVERHEADS & FIXED EXPENSES ================= -->
-<div id="modal-overheads" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
-<button type="button" onclick="closeOverheadsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-<div class="text-center mb-3">
-<h3 class="font-display font-black text-amber-400 text-lg uppercase">Overheads & Operating Expenses</h3>
-<p class="text-xs text-slate-400">Fixed event costs, labour, and consumables</p>
-</div>
-​<div class="space-y-2 text-xs">
-<div>
-<label class="block text-slate-400 mb-0.5">German Club Vendor Fee (R):</label>
-<input type="number" step="50" id="ovh-club-fee" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Labour Stipends (5 helpers) (R):</label>
-<input type="number" step="50" id="ovh-labour" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Gas Bottles / Braai Fuel (R):</label>
-<input type="number" step="50" id="ovh-gas-fuel" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Consumables per Sausage (Serviettes/Sauces) (R):</label>
-<input type="number" step="0.2" id="ovh-consumable-rate" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-<div>
-<label class="block text-slate-400 mb-0.5">Yoco Card Processing Fee (%):</label>
-<input type="number" step="0.1" id="ovh-card-fee" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
-</div>
-</div>
-​<button type="button" onclick="saveOverheadsConfig()" class="w-full mt-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">
-Save Overheads
-</button>
-</div>
-</div>
-​<!-- ================= JAVASCRIPT CORE SYSTEM ================= -->
-<script>
-/* ================= STATE & DATA MODEL ================= */
-let currentStation = 'till';
-let currentOperator = 'Nicolas';
-let selectedLoginStaff = 'Nicolas';
-let selectedLoginStation = 'till';
-let loginPinBuffer = '';
-let masterPinBuffer = '';
-​const STAFF_ROSTER_KEY = 'oktoberfest_2026_staff';
-const STOCK_LEVELS_KEY = 'oktoberfest_2026_stock';
-const ORDERS_KEY = 'oktoberfest_2026_orders';
-const COGS_KEY = 'oktoberfest_2026_cogs';
-const OVERHEADS_KEY = 'oktoberfest_2026_overheads';
-​let staffRoster = [
-{ name: 'Nicolas', pin: '1234', role: 'Lead & POS Till' },
-{ name: 'Nick', pin: '1234', role: 'Till Rush & Dispatch' },
-{ name: 'Nicole', pin: '1234', role: 'Roll Slicing & Assembly' },
-{ name: 'Margret', pin: '1234', role: 'Sauce Prep & Trays' },
-{ name: 'Joost', pin: '1234', role: 'Grill Braaimaster' }
-];
-​let stockLevels = {
-bratwurst: { coldRoom: 0, cooler: 0, sold: 0 },
-bockwurst: { coldRoom: 0, cooler: 0, sold: 0 },
-cheesegriller: { coldRoom: 0, cooler: 0, sold: 0 },
-roll_crusty: { coldRoom: 0, cooler: 0, sold: 0 },
-roll_white: { coldRoom: 0, cooler: 0, sold: 0 }
-};
-​let prepBuffer = {
-bratwurst: 0,
-bockwurst: 0,
-cheesegriller: 0
-};
-​let unitCosts = {
-bratwurst: 22.0,
-bockwurst: 22.0,
-cheesegriller: 24.0,
-roll_crusty: 5.5,
-roll_white: 3.5,
-curry_sauce_portion: 4.0
-};
-​let overheadExpenses = {
-clubFee: 2000.0,
-labour: 2500.0,
-gasFuel: 400.0,
-consumablePerServing: 3.3,
-cardFeePct: 2.6
-};
-​let productCatalog = [
-{ id: 'bratwurst', name: 'Bratwurst (140g)', price: 60.0 },
-{ id: 'currywurst', name: 'Bratwurst with Curry Sauce', price: 70.0 },
-{ id: 'bockwurst', name: 'Bockwurst (140g)', price: 60.0 },
-{ id: 'cheesegriller', name: 'Cheesegriller (110g)', price: 60.0 },
-{ id: 'roll_crusty', name: 'German Crispy Roll', price: 15.0 },
-{ id: 'roll_white', name: 'Standard White Roll', price: 10.0 }
-];
-​let cart = [];
-let completedOrders = [];
-let orderSequenceNumber = 101;
-​/* ================= INITIALIZATION ================= */
-window.addEventListener('DOMContentLoaded', () => {
-loadStateFromStorage();
-setupKeyboardListeners();
-renderAllViews();
-switchStationView('till');
-});
-​function loadStateFromStorage() {
-try {
-const storedStaff = localStorage.getItem(STAFF_ROSTER_KEY);
-if (storedStaff) staffRoster = JSON.parse(storedStaff);
-​const storedStock = localStorage.getItem(STOCK_LEVELS_KEY);
-if (storedStock) stockLevels = JSON.parse(storedStock);
-​const storedOrders = localStorage.getItem(ORDERS_KEY);
-if (storedOrders) {
-completedOrders = JSON.parse(storedOrders);
-if (completedOrders.length > 0) {
-orderSequenceNumber = Math.max(...completedOrders.map(o => o.orderNumber || 100)) + 1;
-}
-}
-​const storedCogs = localStorage.getItem(COGS_KEY);
-if (storedCogs) unitCosts = JSON.parse(storedCogs);
-​const storedOverheads = localStorage.getItem(OVERHEADS_KEY);
-if (storedOverheads) overheadExpenses = JSON.parse(storedOverheads);
-} catch (e) {
-console.warn('Storage read warning, using defaults:', e);
-}
-}
-​function saveStateToStorage() {
-try {
-localStorage.setItem(STAFF_ROSTER_KEY, JSON.stringify(staffRoster));
-localStorage.setItem(STOCK_LEVELS_KEY, JSON.stringify(stockLevels));
-localStorage.setItem(ORDERS_KEY, JSON.stringify(completedOrders));
-localStorage.setItem(COGS_KEY, JSON.stringify(unitCosts));
-localStorage.setItem(OVERHEADS_KEY, JSON.stringify(overheadExpenses));
-} catch (e) {
-console.error('Storage write error:', e);
-}
-}
-​/* ================= STATION VIEW SWITCHING ================= */
-function switchStationView(targetStation) {
-currentStation = targetStation;
-​// 1. Hide ALL station view elements reliably
-const stationViews = ['view-till', 'view-handout', 'view-braai', 'view-shared', 'view-manager'];
-stationViews.forEach(id => {
-const el = document.getElementById(id);
-if (el) el.classList.add('hidden');
-});
-​// 2. Show the targeted station view
-const targetEl = document.getElementById(view-${targetStation});
-if (targetEl) targetEl.classList.remove('hidden');
-​// 3. Highlight top nav buttons cleanly
-const navButtons = ['till', 'handout', 'braai', 'shared', 'manager'];
-navButtons.forEach(st => {
-const btn = document.getElementById(nav-btn-${st});
-if (!btn) return;
-if (st === targetStation) {
-btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow';
-} else {
-btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900';
-}
-});
-​renderAllViews();
-}
-​function renderAllViews() {
-renderTillStation();
-renderHandoutStation();
-renderBraaiStation();
-renderSharedStation();
-renderManagerDashboard();
-}
-​/* ================= TILL & POS ENGINE ================= */
-function addToCart(productId, rollType = 'crusty') {
-const product = productCatalog.find(p => p.id === productId);
-if (!product) return;
-​const existingIndex = cart.findIndex(i => i.id === productId && i.rollType === rollType);
-if (existingIndex > -1) {
-cart[existingIndex].qty += 1;
-} else {
-cart.push({
-id: productId,
-name: product.name,
-price: product.price,
-rollType: rollType,
-qty: 1
-});
-}
-renderCartUI();
-}
-​function changeCartItemQty(index, delta) {
-if (!cart[index]) return;
-cart[index].qty += delta;
-if (cart[index].qty <= 0) {
-cart.splice(index, 1);
-}
-renderCartUI();
-}
-​function clearCart() {
-cart = [];
-renderCartUI();
-}
-​function renderCartUI() {
-const container = document.getElementById('cart-items-container');
-const totalDisplay = document.getElementById('cart-total-display');
-const orderTag = document.getElementById('pos-order-tag');
-​if (orderTag) orderTag.textContent = #${orderSequenceNumber};
-​if (!container || !totalDisplay) return;
-​if (cart.length === 0) {
-container.innerHTML = <div class="text-center py-8 text-slate-500 text-xs"> Tap a sausage & roll combo to begin order </div>;
-totalDisplay.textContent = 'R0.00';
-return;
-}
-​let total = 0;
-let html = '';
-​cart.forEach((item, idx) => {
-const itemTotal = item.price * item.qty;
-total += itemTotal;
-​let rollBadge = '';
-if (item.rollType === 'crusty') rollBadge = '<span class="text-[10px] text-amber-300 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">🥖 Crispy Roll</span>';
-else if (item.rollType === 'white') rollBadge = '<span class="text-[10px] text-slate-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">🥖 White Roll</span>';
-else if (item.rollType === 'none') rollBadge = '<span class="text-[10px] text-slate-400 font-bold bg-slate-900 px-1.5 py-0.5 rounded">🍽️ No Roll</span>';
-​html += `
-<div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
-<div class="flex-1">
-<div class="text-xs font-bold text-white">${item.name}</div>
-<div class="mt-0.5 flex items-center gap-1.5">
-{rollBadge}
-<span class="text-[10px] font-mono text-slate-400">@ R{item.price.toFixed(0)}</span>
-</div>
-</div>
-​<!-- Stepper -->
-<div class="flex items-center gap-1.5 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800">
-<button type="button" onclick="changeCartItemQty(${idx}, -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center">-</button>
-<span class="font-mono text-xs font-bold px-1">${item.qty}</span>
-<button type="button" onclick="changeCartItemQty(${idx}, 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center">+</button>
-</div>
-​<div class="font-mono font-bold text-amber-400 text-xs w-14 text-right">
-R${itemTotal.toFixed(0)}
-</div>
-</div>
-`;
-});
-​container.innerHTML = html;
-totalDisplay.textContent = R${total.toFixed(2)};
-}
-​function finalizeOrderCreation(paymentMethod = 'cash') {
-if (cart.length === 0) return;
-​let total = 0;
-cart.forEach(i => total += (i.price * i.qty));
-​const newOrder = {
-id: 'ord_' + Date.now(),
-orderNumber: orderSequenceNumber++,
-timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-items: JSON.parse(JSON.stringify(cart)),
-total: total,
-paymentMethod: paymentMethod,
-operator: currentOperator,
-status: 'pending' // pending -> completed
-};
-​// Deduct inventory
-newOrder.items.forEach(item => {
-// Sausage deduct
-if (stockLevels[item.id]) {
-stockLevels[item.id].sold += item.qty;
-stockLevels[item.id].cooler = Math.max(0, stockLevels[item.id].cooler - item.qty);
-} else if (item.id === 'currywurst' && stockLevels.bratwurst) {
-stockLevels.bratwurst.sold += item.qty;
-stockLevels.bratwurst.cooler = Math.max(0, stockLevels.bratwurst.cooler - item.qty);
-}
-​// Roll deduct
-if (item.rollType === 'crusty' && stockLevels.roll_crusty) {
-stockLevels.roll_crusty.sold += item.qty;
-stockLevels.roll_crusty.cooler = Math.max(0, stockLevels.roll_crusty.cooler - item.qty);
-} else if (item.rollType === 'white' && stockLevels.roll_white) {
-stockLevels.roll_white.sold += item.qty;
-stockLevels.roll_white.cooler = Math.max(0, stockLevels.roll_white.cooler - item.qty);
-}
-});
-​completedOrders.unshift(newOrder);
-saveStateToStorage();
-clearCart();
-renderAllViews();
-}
-​function renderTillStation() {
-renderCartUI();
-}
-​/* ================= HANDOUT & PREP ENGINE ================= */
-function completeHandoutOrder(orderId) {
-const order = completedOrders.find(o => o.id === orderId);
-if (order) {
-order.status = 'completed';
-saveStateToStorage();
-renderAllViews();
-}
-}
-​function renderHandoutStation() {
-const queue = document.getElementById('handout-tickets-queue');
-const countEl = document.getElementById('handout-waiting-count');
-if (!queue) return;
-​const activeOrders = completedOrders.filter(o => o.status === 'pending');
-if (countEl) countEl.textContent = activeOrders.length;
-​if (activeOrders.length === 0) {
-queue.innerHTML = <div class="col-span-full py-16 text-center text-slate-500"> <span class="text-3xl block mb-2">🎉</span> <span class="text-sm font-bold">All Orders Cleared & Plated!</span> <p class="text-xs text-slate-600 mt-1">New incoming tickets will automatically appear here</p> </div>;
-return;
-}
-​let html = '';
-activeOrders.forEach(order => {
-let itemsHtml = '';
-order.items.forEach(it => {
-let rollDesc = '';
-if (it.rollType === 'crusty') rollDesc = '<span class="text-amber-300 font-bold">🥖 Crispy Roll</span>';
-else if (it.rollType === 'white') rollDesc = '<span class="text-slate-300 font-bold">🥖 White Roll</span>';
-else if (it.rollType === 'none') rollDesc = '<span class="text-rose-400 font-bold">🍽️ NO ROLL (Plate)</span>';
-​itemsHtml += <div class="flex items-center justify-between text-xs py-1 border-b border-black/10"> <span class="font-bold text-slate-900">${it.qty}x ${it.name}</span> <span>${rollDesc}</span> </div>;
-});
-​html += `
-<div class="bg-amber-100 text-slate-900 rounded-2xl p-4 shadow-xl border-t-8 border-amber-500 post-it-slip flex flex-col justify-between">
-<div>
-<div class="flex items-center justify-between border-b-2 border-black/15 pb-2 mb-2">
-<div>
-<span class="font-display font-black text-xl text-black">#{order.orderNumber}</span>
-<span class="text-[10px] text-slate-600 font-mono ml-2">{order.timestamp}</span>
-</div>
-<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-black/10 font-mono">${order.paymentMethod}</span>
-</div>
-<div class="space-y-1 mb-3">
-${itemsHtml}
-</div>
-</div>
-​<button type="button" onclick="completeHandoutOrder('${order.id}')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-amber-300 font-black text-xs uppercase tracking-wider active:scale-95 transition cursor-pointer">
-✓ Mark Handed Out
-</button>
-</div>
-`;
-});
-​queue.innerHTML = html;
-}
-​/* ================= BRAAI MONITOR ENGINE ================= */
-function adjustPrepBuffer(type, amount) {
-if (prepBuffer[type] !== undefined) {
-prepBuffer[type] = Math.max(0, prepBuffer[type] + amount);
-renderBraaiStation();
-}
-}
-​function renderBraaiStation() {
-// Calculate live demand
-let pendingBrat = 0;
-let pendingBock = 0;
-let pendingCheese = 0;
-​completedOrders.filter(o => o.status === 'pending').forEach(ord => {
-ord.items.forEach(it => {
-if (it.id === 'bratwurst' || it.id === 'currywurst') pendingBrat += it.qty;
-if (it.id === 'bockwurst') pendingBock += it.qty;
-if (it.id === 'cheesegriller') pendingCheese += it.qty;
-});
-});
-​const demBrat = document.getElementById('braai-demand-bratwurst');
-const demBock = document.getElementById('braai-demand-bockwurst');
-const demCheese = document.getElementById('braai-demand-cheesegriller');
-​if (demBrat) demBrat.textContent = pendingBrat;
-if (demBock) demBock.textContent = pendingBock;
-if (demCheese) demCheese.textContent = pendingCheese;
-​const bufBrat = document.getElementById('braai-buffer-bratwurst');
-const bufBock = document.getElementById('braai-buffer-bockwurst');
-const bufCheese = document.getElementById('braai-buffer-cheesegriller');
-​if (bufBrat) bufBrat.textContent = ${prepBuffer.bratwurst} ready;
-if (bufBock) bufBock.textContent = ${prepBuffer.bockwurst} ready;
-if (bufCheese) bufCheese.textContent = ${prepBuffer.cheesegriller} ready;
-​const totalSoldEl = document.getElementById('braai-total-sold');
-let totalSausagesSold = 0;
-completedOrders.forEach(o => {
-o.items.forEach(it => {
-if (['bratwurst', 'currywurst', 'bockwurst', 'cheesegriller'].includes(it.id)) {
-totalSausagesSold += it.qty;
-}
-});
-});
-if (totalSoldEl) totalSoldEl.textContent = totalSausagesSold;
-}
-​function renderSharedStation() {
-const handoutCont = document.getElementById('shared-handout-container');
-const braaiCont = document.getElementById('shared-braai-container');
-if (!handoutCont || !braaiCont) return;
-​// Quick summary lists
-const activeOrders = completedOrders.filter(o => o.status === 'pending');
-handoutCont.innerHTML = activeOrders.map(o => <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs"> <span class="font-bold text-amber-400">#${o.orderNumber}</span> <span class="text-slate-300">${o.items.map(i =>${i.qty}x ${i.name}).join(', ')}</span> <button type="button" onclick="completeHandoutOrder('${o.id}')" class="px-2 py-1 rounded bg-slate-800 text-emerald-400 text-[10px] font-bold">Done</button> </div> ).join('') || '<div class="text-xs text-slate-500 py-4 text-center">No pending orders</div>';
-​braaiCont.innerHTML = <div class="space-y-2 text-xs"> <div class="p-2 rounded-xl bg-slate-950 flex justify-between"> <span class="text-slate-400">Bratwurst Buffer:</span> <span class="font-mono font-bold text-sky-400">${prepBuffer.bratwurst} ready</span> </div> <div class="p-2 rounded-xl bg-slate-950 flex justify-between"> <span class="text-slate-400">Bockwurst Buffer:</span> <span class="font-mono font-bold text-red-400">${prepBuffer.bockwurst} ready</span> </div> <div class="p-2 rounded-xl bg-slate-950 flex justify-between"> <span class="text-slate-400">Cheesegriller Buffer:</span> <span class="font-mono font-bold text-yellow-400">${prepBuffer.cheesegriller} ready</span> </div> </div>;
-}
-​/* ================= MANAGER FINANCIAL & STOCK DASHBOARD ================= */
-function renderManagerDashboard() {
-// 1. Financials
-let grossTurnover = 0;
-let totalSausagesSold = 0;
-let totalFoodCogs = 0;
-let cardSalesVolume = 0;
-​completedOrders.forEach(o => {
-grossTurnover += o.total;
-if (o.paymentMethod === 'card') cardSalesVolume += o.total;
-​o.items.forEach(it => {
-if (['bratwurst', 'currywurst', 'bockwurst', 'cheesegriller'].includes(it.id)) {
-totalSausagesSold += it.qty;
-}
-​// Meat Cost
-if (it.id === 'bratwurst' || it.id === 'currywurst') totalFoodCogs += (unitCosts.bratwurst * it.qty);
-if (it.id === 'currywurst') totalFoodCogs += (unitCosts.curry_sauce_portion * it.qty);
-if (it.id === 'bockwurst') totalFoodCogs += (unitCosts.bockwurst * it.qty);
-if (it.id === 'cheesegriller') totalFoodCogs += (unitCosts.cheesegriller * it.qty);
-​// Bun Cost
-if (it.rollType === 'crusty') totalFoodCogs += (unitCosts.roll_crusty * it.qty);
-if (it.rollType === 'white') totalFoodCogs += (unitCosts.roll_white * it.qty);
-});
-});
-​const grossProfit = grossTurnover - totalFoodCogs;
-const grossMargin = grossTurnover > 0 ? ((grossProfit / grossTurnover) * 100) : 0;
-​// Overheads
-const fixedOverheads = overheadExpenses.clubFee + overheadExpenses.labour + overheadExpenses.gasFuel;
-const variableConsumables = totalSausagesSold * overheadExpenses.consumablePerServing;
-const cardProcessingCost = cardSalesVolume * (overheadExpenses.cardFeePct / 100);
-const totalExpenses = fixedOverheads + variableConsumables + cardProcessingCost;
-​const netProfit = grossProfit - totalExpenses;
-​// Breakeven math
-const avgSellingPrice = totalSausagesSold > 0 ? (grossTurnover / totalSausagesSold) : 60.0;
-const avgUnitCogs = totalSausagesSold > 0 ? (totalFoodCogs / totalSausagesSold) : 27.5;
-const unitContribution = Math.max(1, (avgSellingPrice - avgUnitCogs - overheadExpenses.consumablePerServing));
-const breakevenUnits = Math.ceil(fixedOverheads / unitContribution);
-​// DOM Updates
-const tEl = document.getElementById('mgr-gross-turnover');
-const cEl = document.getElementById('mgr-total-cogs');
-const gpEl = document.getElementById('mgr-gross-profit');
-const gmEl = document.getElementById('mgr-gross-margin');
-const npEl = document.getElementById('mgr-net-profit');
-const scEl = document.getElementById('mgr-total-sold-count');
-const beEl = document.getElementById('mgr-breakeven-indicator');
-​if (tEl) tEl.textContent = R${grossTurnover.toFixed(2)};
-if (cEl) cEl.textContent = R${totalFoodCogs.toFixed(2)};
-if (gpEl) gpEl.textContent = R${grossProfit.toFixed(2)};
-if (gmEl) gmEl.textContent = ${grossMargin.toFixed(1)}% gross margin;
-if (npEl) npEl.textContent = R${netProfit.toFixed(2)};
-if (scEl) scEl.textContent = ${totalSausagesSold} sausages sold;
-if (beEl) beEl.textContent = Breakeven: ${totalSausagesSold}/${breakevenUnits} units;
-​renderStockTable();
-renderStaffManagementTable();
-}
-​function renderStockTable() {
-const tbody = document.getElementById('mgr-stock-table-body');
-if (!tbody) return;
-​const items = [
-{ key: 'bratwurst', label: 'Bratwurst (140g)' },
-{ key: 'bockwurst', label: 'Bockwurst (140g)' },
-{ key: 'cheesegriller', label: 'Cheesegriller (110g)' },
-{ key: 'roll_crusty', label: 'German Crispy Rolls' },
-{ key: 'roll_white', label: 'Standard White Rolls' }
-];
-​let html = '';
-items.forEach(it => {
-const data = stockLevels[it.key] || { coldRoom: 0, cooler: 0, sold: 0 };
-const total = (data.coldRoom + data.cooler);
-​html += <tr class="hover:bg-slate-800/40"> <td class="py-2.5 font-bold font-sans text-slate-200">${it.label}</td> <td class="py-2.5 text-center text-slate-400">${data.coldRoom}</td> <td class="py-2.5 text-center text-amber-300 font-bold">${data.cooler}</td> <td class="py-2.5 text-center text-slate-500">${data.sold}</td> <td class="py-2.5 text-center text-emerald-400 font-black">${total}</td> <td class="py-2.5 text-right"> <button type="button" onclick="openMoveStockPrompt('${it.key}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-300 font-bold border border-amber-500/30 cursor-pointer"> Move to Cooler </button> </td> </tr>;
-});
-​tbody.innerHTML = html;
-}
-​function renderStaffManagementTable() {
-const tbody = document.getElementById('mgr-staff-table-body');
-if (!tbody) return;
-​let html = '';
-staffRoster.forEach((st, idx) => {
-html += <tr class="hover:bg-slate-800/40"> <td class="py-2 font-bold text-slate-200">${st.name}</td> <td class="py-2 text-slate-400">${st.role || 'Volunteer'}</td> <td class="py-2 text-center font-mono text-amber-400">${st.pin}</td> <td class="py-2 text-right"> <button type="button" onclick="deleteStaffMember(${idx})" class="text-xs text-red-400 hover:text-red-300">🗑️</button> </td> </tr>;
-});
-tbody.innerHTML = html;
-}
-​function deleteStaffMember(idx) {
-if (staffRoster.length <= 1) return;
-staffRoster.splice(idx, 1);
-saveStateToStorage();
-renderStaffManagementTable();
-populateLoginStaffChips();
-}
-​function openMoveStockPrompt(itemKey) {
-const item = stockLevels[itemKey];
-if (!item) return;
-​const qtyStr = prompt(Move how many from Cold Room to Cooler? (Available in Cold Room: ${item.coldRoom}), "25");
-if (!qtyStr) return;
-const qty = parseInt(qtyStr, 10);
-if (!isNaN(qty) && qty > 0) {
-const moveQty = Math.min(qty, item.coldRoom);
-item.coldRoom -= moveQty;
-item.cooler += moveQty;
-saveStateToStorage();
-renderAllViews();
-}
-}
-​/* ================= LOGIN & OPERATOR SHIFT MODAL ================= */
-function openLoginModal() {
-loginPinBuffer = '';
-const pinInput = document.getElementById('login-pin-input');
-if (pinInput) pinInput.value = '';
-const errBox = document.getElementById('login-error-msg');
-if (errBox) {
-errBox.textContent = '';
-errBox.classList.add('hidden');
-}
-​if (!selectedLoginStaff && staffRoster.length > 0) {
-selectedLoginStaff = staffRoster[0].name;
-}
-populateLoginStaffChips();
-setLoginStation(selectedLoginStation || 'till');
-document.getElementById('modal-login').classList.remove('hidden');
-}
-​function closeLoginModal() {
-document.getElementById('modal-login').classList.add('hidden');
-loginPinBuffer = '';
-const errBox = document.getElementById('login-error-msg');
-if (errBox) errBox.classList.add('hidden');
-}
-​function setLoginStation(st) {
-selectedLoginStation = st;
-const stations = ['till', 'handout', 'braai', 'shared', 'manager'];
-stations.forEach(s => {
-const btn = document.getElementById(login-st-${s});
-if (!btn) return;
-if (s === st) {
-btn.className = 'p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px] cursor-pointer';
-} else {
-btn.className = 'p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer';
-}
-});
-}
-​function populateLoginStaffChips() {
-const container = document.getElementById('login-staff-chips');
-if (!container) return;
-​let html = '';
-staffRoster.forEach(staff => {
-const isSelected = (selectedLoginStaff === staff.name);
-html += <button type="button" onclick="selectLoginStaff('${staff.name}')" class="p-2 rounded-xl text-center border text-xs font-bold transition active:scale-95 cursor-pointer ${isSelected ? 'border-amber-500 bg-amber-500/30 text-amber-200 font-black' : 'border-slate-800 bg-slate-950 text-slate-300'}"> ${staff.name} </button>;
-});
-container.innerHTML = html;
-}
-​function selectLoginStaff(name) {
-selectedLoginStaff = name;
-populateLoginStaffChips();
-const errBox = document.getElementById('login-error-msg');
-if (errBox) errBox.classList.add('hidden');
-}
-​function pressLoginPinKey(num) {
-const errBox = document.getElementById('login-error-msg');
-if (errBox) errBox.classList.add('hidden');
-​if (loginPinBuffer.length < 4) {
-loginPinBuffer += num;
-const pinInput = document.getElementById('login-pin-input');
-if (pinInput) pinInput.value = loginPinBuffer;
-if (loginPinBuffer.length === 4) {
-setTimeout(performStaffLogin, 80);
-}
-}
-}
-​function clearLoginPinKey() {
-loginPinBuffer = '';
-const pinInput = document.getElementById('login-pin-input');
-if (pinInput) pinInput.value = '';
-}
-​function backspaceLoginPinKey() {
-loginPinBuffer = loginPinBuffer.slice(0, -1);
-const pinInput = document.getElementById('login-pin-input');
-if (pinInput) pinInput.value = loginPinBuffer;
-}
-​function performStaffLogin() {
-const pinInput = document.getElementById('login-pin-input');
-const pin = loginPinBuffer.trim() || (pinInput ? pinInput.value.trim() : '');
-​// 1. Universal Master Passcode
-if (pin === '1978') {
-currentOperator = selectedLoginStaff ? ${selectedLoginStaff} (Manager) : 'Nicolas (Manager)';
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-closeLoginModal();
-switchStationView('manager');
-return;
-}
-​// 2. Manager Station Selected Without Master PIN
-if (selectedLoginStation === 'manager') {
-const errBox = document.getElementById('login-error-msg');
-if (errBox) {
-errBox.textContent = 'Manager Station requires Master PIN 1978';
-errBox.classList.remove('hidden');
-}
-clearLoginPinKey();
-return;
-}
-​// 3. Regular Staff Authentication
-const staff = staffRoster.find(s => s.name.trim().toLowerCase() === (selectedLoginStaff || '').trim().toLowerCase());
-const validPin = staff ? String(staff.pin) : '1234';
-​if (pin === validPin || pin === '1234') {
-currentOperator = staff ? staff.name : (selectedLoginStaff || 'Nicolas');
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-const targetStation = selectedLoginStation || 'till';
-closeLoginModal();
-switchStationView(targetStation);
-} else {
-const errBox = document.getElementById('login-error-msg');
-if (errBox) {
-errBox.textContent = 'Incorrect PIN. Default: 1234, Master: 1978';
-errBox.classList.remove('hidden');
-}
-clearLoginPinKey();
-}
-}
-​/* ================= MASTER PIN DIRECT MODAL ================= */
-function openMasterPinModal(target = 'manager') {
-masterPinBuffer = '';
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = '';
-const err = document.getElementById('master-pin-error');
-if (err) err.classList.add('hidden');
-document.getElementById('modal-master-pin').classList.remove('hidden');
-}
-​function closeMasterPinModal() {
-document.getElementById('modal-master-pin').classList.add('hidden');
-masterPinBuffer = '';
-}
-​function pressMasterPinKey(num) {
-if (masterPinBuffer.length < 4) {
-masterPinBuffer += num;
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = masterPinBuffer;
-if (masterPinBuffer.length === 4) {
-setTimeout(submitMasterPin, 80);
-}
-}
-}
-​function clearMasterPinKey() {
-masterPinBuffer = '';
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = '';
-}
-​function backspaceMasterPinKey() {
-masterPinBuffer = masterPinBuffer.slice(0, -1);
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = masterPinBuffer;
-}
-​function submitMasterPin() {
-const pinIn = document.getElementById('master-pin-input');
-const pin = masterPinBuffer.trim() || (pinIn ? pinIn.value.trim() : '');
-​if (pin === '1978') {
-closeMasterPinModal();
-currentOperator = 'Nicolas (Manager)';
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-switchStationView('manager');
-} else {
-const err = document.getElementById('master-pin-error');
-if (err) {
-err.textContent = 'Incorrect Master PIN (Use 1978)';
-err.classList.remove('hidden');
-}
-clearMasterPinKey();
-}
-}
-​/* ================= QUICK STOCK SETTING ================= */
-function openQuickStockModal() {
-const container = document.getElementById('quick-stock-inputs-container');
-if (!container) return;
-​const items = [
-{ key: 'bratwurst', label: 'Bratwurst (140g)' },
-{ key: 'bockwurst', label: 'Bockwurst (140g)' },
-{ key: 'cheesegriller', label: 'Cheesegriller (110g)' },
-{ key: 'roll_crusty', label: 'German Crispy Rolls' },
-{ key: 'roll_white', label: 'Standard White Rolls' }
-];
-​let html = '';
-items.forEach(it => {
-const data = stockLevels[it.key] || { coldRoom: 0, cooler: 0 };
-html += <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2"> <span class="font-bold text-slate-200 w-1/3">${it.label}</span> <div class="flex items-center gap-2"> <div> <span class="block text-[10px] text-slate-400">Cold Room:</span> <input type="number" id="qs-cr-${it.key}" value="${data.coldRoom}" class="w-20 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-white"> </div> <div> <span class="block text-[10px] text-amber-400">On-Site Cooler:</span> <input type="number" id="qs-co-${it.key}" value="${data.cooler}" class="w-20 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-amber-300 font-bold"> </div> </div> </div>;
-});
-​container.innerHTML = html;
-document.getElementById('modal-quick-stock').classList.remove('hidden');
-}
-​function closeQuickStockModal() {
-document.getElementById('modal-quick-stock').classList.add('hidden');
-}
-​function apply2026PresetStock() {
-const presets = {
-bratwurst: { coldRoom: 200, cooler: 75 },
-bockwurst: { coldRoom: 50, cooler: 25 },
-cheesegriller: { coldRoom: 175, cooler: 75 },
-roll_crusty: { coldRoom: 250, cooler: 100 },
-roll_white: { coldRoom: 175, cooler: 75 }
-};
-​Object.keys(presets).forEach(k => {
-const cr = document.getElementById(qs-cr-${k});
-const co = document.getElementById(qs-co-${k});
-if (cr) cr.value = presets[k].coldRoom;
-if (co) co.value = presets[k].cooler;
-});
-}
-​function saveQuickStockInputs() {
-const keys = ['bratwurst', 'bockwurst', 'cheesegriller', 'roll_crusty', 'roll_white'];
-keys.forEach(k => {
-const cr = parseInt(document.getElementById(qs-cr-${k})?.value || '0', 10);
-const co = parseInt(document.getElementById(qs-co-${k})?.value || '0', 10);
-if (!stockLevels[k]) stockLevels[k] = { sold: 0 };
-stockLevels[k].coldRoom = isNaN(cr) ? 0 : cr;
-stockLevels[k].cooler = isNaN(co) ? 0 : co;
-});
-​saveStateToStorage();
-closeQuickStockModal();
-renderAllViews();
-}
-​/* ================= COGS MODAL ================= */
-function openCostConfigModal() {
-document.getElementById('cogs-in-bratwurst').value = unitCosts.bratwurst;
-document.getElementById('cogs-in-bockwurst').value = unitCosts.bockwurst;
-document.getElementById('cogs-in-cheesegriller').value = unitCosts.cheesegriller;
-document.getElementById('cogs-in-crusty-roll').value = unitCosts.roll_crusty;
-document.getElementById('cogs-in-white-roll').value = unitCosts.roll_white;
-document.getElementById('modal-cost-config').classList.remove('hidden');
-}
-​function closeCostConfigModal() {
-document.getElementById('modal-cost-config').classList.add('hidden');
-}
-​function saveCostConfig() {
-unitCosts.bratwurst = parseFloat(document.getElementById('cogs-in-bratwurst').value) || 22.0;
-unitCosts.bockwurst = parseFloat(document.getElementById('cogs-in-bockwurst').value) || 22.0;
-unitCosts.cheesegriller = parseFloat(document.getElementById('cogs-in-cheesegriller').value) || 24.0;
-unitCosts.roll_crusty = parseFloat(document.getElementById('cogs-in-crusty-roll').value) || 5.5;
-unitCosts.roll_white = parseFloat(document.getElementById('cogs-in-white-roll').value) || 3.5;
-​saveStateToStorage();
-closeCostConfigModal();
-renderAllViews();
-}
-​/* ================= OVERHEADS MODAL ================= */
-function openOverheadsModal() {
-document.getElementById('ovh-club-fee').value = overheadExpenses.clubFee;
-document.getElementById('ovh-labour').value = overheadExpenses.labour;
-document.getElementById('ovh-gas-fuel').value = overheadExpenses.gasFuel;
-document.getElementById('ovh-consumable-rate').value = overheadExpenses.consumablePerServing;
-document.getElementById('ovh-card-fee').value = overheadExpenses.cardFeePct;
-document.getElementById('modal-overheads').classList.remove('hidden');
-}
-​function closeOverheadsModal() {
-document.getElementById('modal-overheads').classList.add('hidden');
-}
-​function saveOverheadsConfig() {
-overheadExpenses.clubFee = parseFloat(document.getElementById('ovh-club-fee').value) || 2000;
-overheadExpenses.labour = parseFloat(document.getElementById('ovh-labour').value) || 2500;
-overheadExpenses.gasFuel = parseFloat(document.getElementById('ovh-gas-fuel').value) || 400;
-overheadExpenses.consumablePerServing = parseFloat(document.getElementById('ovh-consumable-rate').value) || 3.3;
-overheadExpenses.cardFeePct = parseFloat(document.getElementById('ovh-card-fee').value) || 2.6;
-​saveStateToStorage();
-closeOverheadsModal();
-renderAllViews();
-}
-​/* ================= PAIRING GUIDE MODAL ================= */
-function openPairingGuideModal() {
-document.getElementById('modal-pairing-guide').classList.remove('hidden');
-}
-​function closePairingGuideModal() {
-document.getElementById('modal-pairing-guide').classList.add('hidden');
-}
-​/* ================= STAFF ADD MODAL ================= */
-function openStaffModal() {
-const name = prompt("Enter team member's full name:", "");
-if (!name) return;
-const role = prompt("Enter station role (e.g. Braai, Handout, Till):", "Volunteer");
-const pin = prompt("Set 4-digit PIN for this user:", "1234") || "1234";
-​staffRoster.push({ name: name.trim(), role: role.trim(), pin: pin.trim() });
-saveStateToStorage();
-renderStaffManagementTable();
-populateLoginStaffChips();
-}
-​/* ================= CSV AUDIT EXPORT ================= */
-function exportAuditCSV() {
-let csv = "OrderNumber,Time,Operator,PaymentMethod,Item,Roll,Quantity,Price\n";
-completedOrders.forEach(o => {
-o.items.forEach(it => {
-csv += ${o.orderNumber},"${o.timestamp}","${o.operator}","${o.paymentMethod}","${it.name}","${it.rollType}",${it.qty},${it.price}\n;
-});
-});
-​const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-const url = URL.createObjectURL(blob);
-const link = document.createElement("a");
-link.setAttribute("href", url);
-link.setAttribute("download", oktoberfest_2026_audit_${Date.now()}.csv);
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-}
-​/* ================= HARDWARE KEYBOARD LISTENERS ================= */
-function setupKeyboardListeners() {
-window.addEventListener('keydown', (e) => {
-// If login modal is active
-const loginModal = document.getElementById('modal-login');
-if (loginModal && !loginModal.classList.contains('hidden')) {
-if (e.key >= '0' && e.key <= '9') {
-pressLoginPinKey(e.key);
-} else if (e.key === 'Backspace') {
-backspaceLoginPinKey();
-} else if (e.key === 'Enter') {
-performStaffLogin();
-} else if (e.key === 'Escape') {
-closeLoginModal();
-}
-return;
-}
-​// If master pin modal is active
-const masterModal = document.getElementById('modal-master-pin');
-if (masterModal && !masterModal.classList.contains('hidden')) {
-if (e.key >= '0' && e.key <= '9') {
-pressMasterPinKey(e.key);
-} else if (e.key === 'Backspace') {
-backspaceMasterPinKey();
-} else if (e.key === 'Enter') {
-submitMasterPin();
-} else if (e.key === 'Escape') {
-closeMasterPinModal();
-}
-}
-});
-}
-</script>
+
+  <!-- ================= TOP MAIN HEADER & NAVIGATION ================= -->
+  <header class="flex-none bg-slate-900/95 backdrop-blur border-b border-amber-500/20 px-3 py-2 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      
+      <!-- Brand Logo / Master Quick Access -->
+      <div class="flex items-center gap-2 cursor-pointer group" onclick="openMasterPinModal()" title="Unlock Master Console">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-black text-black text-lg shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
+          🥨
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-display font-black tracking-wider text-amber-400 text-sm md:text-base uppercase">Oktoberfest</span>
+            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30 font-mono">2026</span>
+          </div>
+          <div class="text-[10px] text-slate-400 -mt-0.5 flex items-center gap-1">
+            <span>Sausage Hub</span>
+            <span class="text-amber-500/60">•</span>
+            <span id="current-user-display" class="text-amber-300 font-medium">Nicolas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Station Navigation Tabs -->
+      <nav class="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 gap-1 overflow-x-auto custom-scrollbar">
+        <button type="button" id="nav-btn-till" onclick="switchStationView('till')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow">
+          <span>💳</span>
+          <span class="hidden sm:inline">Till / POS</span>
+          <span class="sm:hidden">Till</span>
+        </button>
+        <button type="button" id="nav-btn-handout" onclick="switchStationView('handout')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
+          <span>📦</span>
+          <span class="hidden sm:inline">Prep & Handout</span>
+          <span class="sm:hidden">Prep</span>
+        </button>
+        <button type="button" id="nav-btn-braai" onclick="switchStationView('braai')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
+          <span>🔥</span>
+          <span class="hidden sm:inline">Braai Grill</span>
+          <span class="sm:hidden">Braai</span>
+        </button>
+        <button type="button" id="nav-btn-shared" onclick="switchStationView('shared')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900">
+          <span>📱</span>
+          <span class="hidden md:inline">Kiosk Mode</span>
+          <span class="md:hidden">Kiosk</span>
+        </button>
+        <button type="button" id="nav-btn-manager" onclick="switchStationView('manager')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-amber-400 hover:bg-amber-500/10">
+          <span>🔒</span>
+          <span>Manager</span>
+        </button>
+      </nav>
+
+      <!-- Right Utility Actions -->
+      <div class="flex items-center gap-1.5">
+        <button type="button" onclick="openPairingGuideModal()" class="hidden md:flex px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 items-center gap-1 transition">
+          <span>📖</span>
+          <span>Pairing Guide</span>
+        </button>
+        <button type="button" onclick="openLoginModal()" class="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 flex items-center gap-1 transition">
+          <span>🔑</span>
+          <span class="hidden sm:inline">Switch Operator</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN MULTI-STATION VIEWPORT ================= -->
+  <main class="flex-1 relative overflow-hidden">
+
+    <!-- 1. TILL / POS STATION VIEW -->
+    <div id="view-till" class="station-view absolute inset-0 flex flex-col lg:flex-row overflow-hidden">
+      
+      <!-- Left: Sausage & Roll Grid -->
+      <section class="flex-1 flex flex-col overflow-y-auto p-3 custom-scrollbar border-b lg:border-b-0 lg:border-r border-slate-800/80">
+        
+        <!-- Quick Pairing Hint Bar -->
+        <div class="flex items-center justify-between mb-3 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+          <div class="text-xs text-slate-300 flex items-center gap-2">
+            <span class="text-amber-400 font-bold">★ Pairings:</span>
+            <span>Bratwurst & Bockwurst $\rightarrow$ Crispy Roll • Cheesegriller $\rightarrow$ White Roll</span>
+          </div>
+          <button type="button" onclick="openPairingGuideModal()" class="text-xs text-amber-400 hover:text-amber-300 font-bold underline cursor-pointer">View Guide</button>
+        </div>
+
+        <!-- Sausage Touch Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          
+          <!-- Bratwurst (140g) -->
+          <div class="bg-slate-900/90 border-2 border-sky-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                  <h3 class="font-display font-black text-white text-base">Bratwurst (140g)</h3>
+                </div>
+                <p class="text-[11px] text-slate-400">German pork & veal coarse white sausage</p>
+              </div>
+              <span class="font-display font-black text-amber-400 text-lg">R60</span>
+            </div>
+
+            <!-- Tin Pod Roll Selector -->
+            <div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
+              <button type="button" onclick="addToCart('bratwurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-200 pointer-events-none">★ Best Match</span>
+                <span class="text-xs font-black pointer-events-none">🥖 Crispy Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('bratwurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Soft Bun</span>
+                <span class="text-xs font-bold pointer-events-none">🥖 White Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('bratwurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Tray / Plate</span>
+                <span class="text-xs font-bold pointer-events-none">🍽️ No Roll</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bratwurst with Warm Curry Sauce -->
+          <div class="bg-slate-900/90 border-2 border-amber-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <h3 class="font-display font-black text-white text-base">Currywurst (Sliced)</h3>
+                </div>
+                <p class="text-[11px] text-slate-400">In warm spiced sauce, served in boat</p>
+              </div>
+              <span class="font-display font-black text-amber-400 text-lg">R70</span>
+            </div>
+
+            <!-- Tin Pod Roll Selector -->
+            <div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
+              <button type="button" onclick="addToCart('currywurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-200 pointer-events-none">★ Dip Bread</span>
+                <span class="text-xs font-black pointer-events-none">🥖 Crispy Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('currywurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Soft Bun</span>
+                <span class="text-xs font-bold pointer-events-none">🥖 White Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('currywurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Sauce Only</span>
+                <span class="text-xs font-bold pointer-events-none">🍽️ No Roll</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bockwurst (140g) -->
+          <div class="bg-slate-900/90 border-2 border-red-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                  <h3 class="font-display font-black text-white text-base">Bockwurst (140g)</h3>
+                </div>
+                <p class="text-[11px] text-slate-400">Smoked German sausage spiced with paprika</p>
+              </div>
+              <span class="font-display font-black text-amber-400 text-lg">R60</span>
+            </div>
+
+            <!-- Tin Pod Roll Selector -->
+            <div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
+              <button type="button" onclick="addToCart('bockwurst', 'crusty')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-200 pointer-events-none">★ Best Match</span>
+                <span class="text-xs font-black pointer-events-none">🥖 Crispy Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('bockwurst', 'white')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Soft Bun</span>
+                <span class="text-xs font-bold pointer-events-none">🥖 White Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('bockwurst', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Tray / Plate</span>
+                <span class="text-xs font-bold pointer-events-none">🍽️ No Roll</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cheesegriller (110g) -->
+          <div class="bg-slate-900/90 border-2 border-yellow-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                  <h3 class="font-display font-black text-white text-base">Cheesegriller (110g)</h3>
+                </div>
+                <p class="text-[11px] text-slate-400">Pork griller with melted cheddar pockets</p>
+              </div>
+              <span class="font-display font-black text-amber-400 text-lg">R60</span>
+            </div>
+
+            <!-- Tin Pod Roll Selector -->
+            <div class="tin-pod-container p-1 rounded-xl grid grid-cols-3 gap-1">
+              <button type="button" onclick="addToCart('cheesegriller', 'white')" class="tin-pod-btn recommended py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-200 pointer-events-none">★ Best Match</span>
+                <span class="text-xs font-black pointer-events-none">🥖 White Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('cheesegriller', 'crusty')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-200 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Crispy</span>
+                <span class="text-xs font-bold pointer-events-none">🥖 Crispy Roll</span>
+              </button>
+              <button type="button" onclick="addToCart('cheesegriller', 'none')" class="tin-pod-btn py-2.5 px-1 rounded-lg text-center flex flex-col items-center justify-center text-slate-300 cursor-pointer">
+                <span class="text-[10px] text-slate-400 pointer-events-none">Tray / Plate</span>
+                <span class="text-xs font-bold pointer-events-none">🍽️ No Roll</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Standalone / Extra Rolls Bar -->
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <span>🥖</span>
+            <span>Extra / Standalone Rolls:</span>
+          </span>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="addToCart('roll_crusty', 'crusty')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-amber-500/30 text-amber-300 text-xs font-bold cursor-pointer transition">
+              + Crispy Roll (R15)
+            </button>
+            <button type="button" onclick="addToCart('roll_white', 'white')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition">
+              + White Roll (R10)
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right: Current Cart & Instant Checkout -->
+      <aside class="w-full lg:w-96 bg-slate-900 flex flex-col border-t lg:border-t-0 border-slate-800">
+        <!-- Order Header -->
+        <div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase text-slate-400 tracking-wider">Active Order</span>
+            <span id="pos-order-tag" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">#101</span>
+          </div>
+          <button type="button" onclick="clearCart()" class="text-xs text-red-400 hover:text-red-300 font-medium">Clear All</button>
+        </div>
+
+        <!-- Cart Item List -->
+        <div id="cart-items-container" class="flex-1 p-3 overflow-y-auto space-y-2 custom-scrollbar min-h-[140px] max-h-[30vh] lg:max-h-none">
+          <div class="text-center py-8 text-slate-500 text-xs">
+            Tap a sausage & roll combo to begin order
+          </div>
+        </div>
+
+        <!-- Checkout Tray -->
+        <div class="p-3 bg-slate-950 border-t border-slate-800/80 space-y-3">
+          <div class="flex justify-between items-baseline">
+            <span class="text-xs uppercase font-bold text-slate-400">Total Due</span>
+            <span id="cart-total-display" class="font-display font-black text-2xl text-amber-400">R0.00</span>
+          </div>
+
+          <!-- Dual Instant Payment Buttons -->
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="finalizeOrderCreation('cash')" class="py-3 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 transition cursor-pointer">
+              <span>💵</span>
+              <span>CASH PAY</span>
+            </button>
+            <button type="button" onclick="finalizeOrderCreation('card')" class="py-3 px-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/20 transition cursor-pointer">
+              <span>💳</span>
+              <span>YOCO CARD</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 2. HANDOUT & ASSEMBLY STATION VIEW -->
+    <div id="view-handout" class="station-view absolute inset-0 hidden flex flex-col p-3 overflow-y-auto custom-scrollbar">
+      <!-- Top Buffer & Summary Bar -->
+      <div class="flex-none flex items-center justify-between mb-3 bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="font-display font-black text-amber-400 text-lg">Handout & Tray Assembly</h2>
+          <p class="text-xs text-slate-400">Match Post-It color tickets, slice rolls, plate warm sausages</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <div class="text-[10px] uppercase font-bold text-slate-400">Orders Waiting</div>
+            <div id="handout-waiting-count" class="font-display font-black text-amber-400 text-lg">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Order Tickets Queue -->
+      <div id="handout-tickets-queue" class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- 3. BRAAI GRILL STATION VIEW -->
+    <div id="view-braai" class="station-view absolute inset-0 hidden flex flex-col p-3 overflow-y-auto custom-scrollbar">
+      <div class="flex-none flex items-center justify-between mb-3 bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="font-display font-black text-amber-400 text-lg">Braai Grill Master Monitor</h2>
+          <p class="text-xs text-slate-400">Monitor live sausage demand, coal zones, and warm holding buffers</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-400">Grill Mode:</span>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">Standard Braai</span>
+        </div>
+      </div>
+
+      <!-- Live Demand Gauges -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div class="bg-slate-900/90 border border-sky-500/40 rounded-2xl p-3">
+          <div class="text-xs font-bold text-sky-400 uppercase">Bratwurst (140g)</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xs text-slate-400">Demand / Queue</span>
+            <span id="braai-demand-bratwurst" class="font-display font-black text-2xl text-white">0</span>
+          </div>
+          <div class="mt-1 flex items-baseline justify-between text-xs">
+            <span class="text-slate-400">Warm Buffer</span>
+            <span id="braai-buffer-bratwurst" class="font-mono font-bold text-amber-400">0 ready</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-red-500/40 rounded-2xl p-3">
+          <div class="text-xs font-bold text-red-400 uppercase">Bockwurst (140g)</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xs text-slate-400">Demand / Queue</span>
+            <span id="braai-demand-bockwurst" class="font-display font-black text-2xl text-white">0</span>
+          </div>
+          <div class="mt-1 flex items-baseline justify-between text-xs">
+            <span class="text-slate-400">Warm Buffer</span>
+            <span id="braai-buffer-bockwurst" class="font-mono font-bold text-amber-400">0 ready</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-yellow-500/40 rounded-2xl p-3">
+          <div class="text-xs font-bold text-yellow-400 uppercase">Cheesegriller (110g)</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xs text-slate-400">Demand / Queue</span>
+            <span id="braai-demand-cheesegriller" class="font-display font-black text-2xl text-white">0</span>
+          </div>
+          <div class="mt-1 flex items-baseline justify-between text-xs">
+            <span class="text-slate-400">Warm Buffer</span>
+            <span id="braai-buffer-cheesegriller" class="font-mono font-bold text-amber-400">0 ready</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3">
+          <div class="text-xs font-bold text-slate-400 uppercase">Total Sold Today</div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xs text-slate-400">Festival Total</span>
+            <span id="braai-total-sold" class="font-display font-black text-2xl text-emerald-400">0</span>
+          </div>
+          <div class="mt-1 flex items-baseline justify-between text-xs">
+            <span class="text-slate-400">Target</span>
+            <span class="font-mono text-slate-400">600 units</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons for Warm Buffer -->
+      <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Restock Warm Chafing Buffer (+5 Pieces)</h3>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="adjustPrepBuffer('bratwurst', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs border border-sky-500/30 cursor-pointer">+5 Bratwurst Ready</button>
+          <button type="button" onclick="adjustPrepBuffer('bockwurst', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-red-300 font-bold text-xs border border-red-500/30 cursor-pointer">+5 Bockwurst Ready</button>
+          <button type="button" onclick="adjustPrepBuffer('cheesegriller', 5)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-yellow-300 font-bold text-xs border border-yellow-500/30 cursor-pointer">+5 Cheesegriller Ready</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SHARED DUAL KIOSK MODE VIEW -->
+    <div id="view-shared" class="station-view absolute inset-0 hidden flex flex-col lg:flex-row overflow-hidden p-2 gap-2">
+      <div class="flex-1 bg-slate-900 rounded-2xl p-3 border border-slate-800 flex flex-col">
+        <span class="text-xs font-bold uppercase text-sky-400 mb-2">Left: Handout Assembly</span>
+        <div id="shared-handout-container" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar"></div>
+      </div>
+      <div class="flex-1 bg-slate-900 rounded-2xl p-3 border border-slate-800 flex flex-col">
+        <span class="text-xs font-bold uppercase text-amber-400 mb-2">Right: Braai Live Demand</span>
+        <div id="shared-braai-container" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar"></div>
+      </div>
+    </div>
+
+    <!-- 5. MANAGER & MASTER FINANCIAL DASHBOARD -->
+    <div id="view-manager" class="station-view absolute inset-0 hidden flex flex-col p-4 overflow-y-auto custom-scrollbar">
+      
+      <!-- Top Manager Summary Bar -->
+      <div class="flex-none flex flex-wrap items-center justify-between gap-3 mb-4 bg-slate-900/90 p-4 rounded-2xl border border-amber-500/30">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🔒</span>
+            <h2 class="font-display font-black text-amber-400 text-xl">Manager & Financial Dashboard</h2>
+          </div>
+          <p class="text-xs text-slate-400">Festival inventory, master costs, expenses, and staff assignments</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="openQuickStockModal()" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs shadow-lg shadow-amber-500/20 cursor-pointer transition">
+            ⚙️ Quick Set All Stock
+          </button>
+          <button type="button" onclick="openCostConfigModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-pointer transition">
+            💰 Meat & Rolls (COGS)
+          </button>
+          <button type="button" onclick="openOverheadsModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-pointer transition">
+            🎪 Overheads & Expenses
+          </button>
+          <button type="button" onclick="exportAuditCSV()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 cursor-pointer transition">
+            📥 Export CSV Audit
+          </button>
+        </div>
+      </div>
+
+      <!-- Financial Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+          <div class="text-[11px] font-bold text-slate-400 uppercase">Gross Turnover</div>
+          <div id="mgr-gross-turnover" class="font-display font-black text-xl md:text-2xl text-amber-400 mt-1">R0.00</div>
+          <div id="mgr-total-sold-count" class="text-[10px] text-slate-500 mt-0.5">0 sausages sold</div>
+        </div>
+
+        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+          <div class="text-[11px] font-bold text-slate-400 uppercase">Food COGS (Meat + Rolls)</div>
+          <div id="mgr-total-cogs" class="font-display font-black text-xl md:text-2xl text-red-400 mt-1">R0.00</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Direct cost of goods</div>
+        </div>
+
+        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+          <div class="text-[11px] font-bold text-slate-400 uppercase">Gross Profit</div>
+          <div id="mgr-gross-profit" class="font-display font-black text-xl md:text-2xl text-emerald-400 mt-1">R0.00</div>
+          <div id="mgr-gross-margin" class="text-[10px] text-emerald-500 font-mono mt-0.5">0.0% margin</div>
+        </div>
+
+        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
+          <div class="text-[11px] font-bold text-slate-400 uppercase">Net Event Profit</div>
+          <div id="mgr-net-profit" class="font-display font-black text-xl md:text-2xl text-amber-300 mt-1">R0.00</div>
+          <div id="mgr-breakeven-indicator" class="text-[10px] text-amber-400/80 mt-0.5">Breakeven: 0/0 units</div>
+        </div>
+      </div>
+
+      <!-- Live Stock Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 mb-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-display font-black text-amber-400 text-base">Physical Stock & Inventory</h3>
+          <span class="text-xs text-slate-400">Cold Room (Main Storage) vs On-Site Cooler</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
+              <tr>
+                <th class="py-2">Item Name</th>
+                <th class="py-2 text-center">Cold Room (Main)</th>
+                <th class="py-2 text-center">On-Site Cooler</th>
+                <th class="py-2 text-center">Sold / Deducted</th>
+                <th class="py-2 text-center">Total Balance</th>
+                <th class="py-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="mgr-stock-table-body" class="divide-y divide-slate-800/60 font-mono">
+              <!-- Rendered via renderStockTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Staff Roster Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-display font-black text-amber-400 text-base">Staff Roster & Station Roles</h3>
+          <button type="button" onclick="openStaffModal()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded-lg border border-amber-500/30 cursor-pointer">+ Add Team Member</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
+              <tr>
+                <th class="py-2">Team Member</th>
+                <th class="py-2">Role / Notes</th>
+                <th class="py-2 text-center">PIN</th>
+                <th class="py-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="mgr-staff-table-body" class="divide-y divide-slate-800/60">
+              <!-- Rendered via renderStaffManagementTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= MODAL: LOGIN / SWITCH OPERATOR ================= -->
+  <div id="modal-login" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
+      
+      <button type="button" onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+
+      <div class="text-center mb-4">
+        <h2 class="font-display font-black text-amber-400 text-xl tracking-wide uppercase">Operator Sign-In</h2>
+        <p class="text-xs text-slate-400">Select your name, station & enter 4-digit PIN</p>
+      </div>
+
+      <!-- Step 1: Staff -->
+      <div class="mb-3">
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Step 1: Your Name</label>
+        <div class="grid grid-cols-2 gap-1.5" id="login-staff-chips"></div>
+      </div>
+
+      <!-- Step 2: Station -->
+      <div class="mb-3">
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Step 2: Choose Station</label>
+        <div class="grid grid-cols-5 gap-1" id="login-station-selector">
+          <button type="button" id="login-st-till" onclick="setLoginStation('till')" class="p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px] cursor-pointer">
+            <span class="block text-sm pointer-events-none">💳</span>
+            <span class="pointer-events-none">Till</span>
+          </button>
+          <button type="button" id="login-st-handout" onclick="setLoginStation('handout')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
+            <span class="block text-sm pointer-events-none">📦</span>
+            <span class="pointer-events-none">Prep</span>
+          </button>
+          <button type="button" id="login-st-braai" onclick="setLoginStation('braai')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
+            <span class="block text-sm pointer-events-none">🔥</span>
+            <span class="pointer-events-none">Braai</span>
+          </button>
+          <button type="button" id="login-st-shared" onclick="setLoginStation('shared')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
+            <span class="block text-sm pointer-events-none">📱</span>
+            <span class="pointer-events-none">Kiosk</span>
+          </button>
+          <button type="button" id="login-st-manager" onclick="setLoginStation('manager')" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer">
+            <span class="block text-sm pointer-events-none">🔒</span>
+            <span class="pointer-events-none">Mgr</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: PIN -->
+      <div class="mb-3">
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex justify-between">
+          <span>Step 3: 4-Digit PIN</span>
+          <span class="text-[10px] text-amber-400 font-mono">Default: 1234 | Mgr: 1978</span>
+        </label>
+        
+        <div id="login-error-msg" class="hidden mb-2 p-2 rounded-lg bg-red-950/80 border border-red-500/50 text-red-200 text-xs text-center font-bold"></div>
+
+        <input type="password" id="login-pin-input" readonly maxlength="4" placeholder="••••" class="w-full text-center text-3xl font-mono tracking-widest py-2 rounded-xl bg-slate-950 border-2 border-slate-700 text-amber-400 focus:outline-none mb-2">
+
+        <div class="grid grid-cols-3 gap-1.5 font-mono">
+          <button type="button" onclick="pressLoginPinKey('1')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">1</button>
+          <button type="button" onclick="pressLoginPinKey('2')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">2</button>
+          <button type="button" onclick="pressLoginPinKey('3')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">3</button>
+          <button type="button" onclick="pressLoginPinKey('4')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">4</button>
+          <button type="button" onclick="pressLoginPinKey('5')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">5</button>
+          <button type="button" onclick="pressLoginPinKey('6')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">6</button>
+          <button type="button" onclick="pressLoginPinKey('7')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">7</button>
+          <button type="button" onclick="pressLoginPinKey('8')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">8</button>
+          <button type="button" onclick="pressLoginPinKey('9')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">9</button>
+          <button type="button" onclick="clearLoginPinKey()" class="py-2.5 rounded-xl bg-red-950/60 text-red-300 hover:bg-red-900 active:scale-95 text-xs font-bold uppercase">CLR</button>
+          <button type="button" onclick="pressLoginPinKey('0')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-lg font-bold">0</button>
+          <button type="button" onclick="backspaceLoginPinKey()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sm font-bold">⌫</button>
+        </div>
+      </div>
+
+      <button type="button" onclick="performStaffLogin()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-black text-sm tracking-wider uppercase transition shadow-lg shadow-amber-500/20 cursor-pointer">
+        Sign In to Station
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: MASTER PIN QUICK ACCESS ================= -->
+  <div id="modal-master-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-xs p-5 shadow-2xl relative">
+      <button type="button" onclick="closeMasterPinModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="text-center mb-3">
+        <h3 class="font-display font-black text-amber-400 text-lg uppercase">Master Manager PIN</h3>
+        <p class="text-xs text-slate-400">Enter master passcode 1978</p>
+      </div>
+      <div id="master-pin-error" class="hidden mb-2 p-2 rounded-lg bg-red-950/80 border border-red-500/50 text-red-200 text-xs text-center font-bold"></div>
+      <input type="password" id="master-pin-input" readonly maxlength="4" placeholder="••••" class="w-full text-center text-3xl font-mono tracking-widest py-2 rounded-xl bg-slate-950 border-2 border-slate-700 text-amber-400 focus:outline-none mb-3">
+      <div class="grid grid-cols-3 gap-1.5 font-mono mb-3">
+        <button type="button" onclick="pressMasterPinKey('1')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">1</button>
+        <button type="button" onclick="pressMasterPinKey('2')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">2</button>
+        <button type="button" onclick="pressMasterPinKey('3')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">3</button>
+        <button type="button" onclick="pressMasterPinKey('4')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">4</button>
+        <button type="button" onclick="pressMasterPinKey('5')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">5</button>
+        <button type="button" onclick="pressMasterPinKey('6')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">6</button>
+        <button type="button" onclick="pressMasterPinKey('7')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">7</button>
+        <button type="button" onclick="pressMasterPinKey('8')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">8</button>
+        <button type="button" onclick="pressMasterPinKey('9')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">9</button>
+        <button type="button" onclick="clearMasterPinKey()" class="py-2.5 rounded-xl bg-red-950/60 text-red-300 text-xs font-bold">CLR</button>
+        <button type="button" onclick="pressMasterPinKey('0')" class="py-2.5 rounded-xl bg-slate-800 text-lg font-bold">0</button>
+        <button type="button" onclick="backspaceMasterPinKey()" class="py-2.5 rounded-xl bg-slate-800 text-sm font-bold">⌫</button>
+      </div>
+      <button type="button" onclick="submitMasterPin()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-sm uppercase">Unlock Manager</button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PAIRING & MENU GUIDE ================= -->
+  <div id="modal-pairing-guide" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-lg p-5 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
+      <button type="button" onclick="closePairingGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="text-center mb-4">
+        <h3 class="font-display font-black text-amber-400 text-xl uppercase">Oktoberfest Pairing Matrix</h3>
+        <p class="text-xs text-slate-400">Official 2026 Master Plan Sausage & Bread Combinations</p>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-slate-950 border border-sky-500/30">
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="font-black text-sky-400 text-sm">Bratwurst (140g)</span>
+            <span class="font-mono text-amber-400 font-bold">R60.00</span>
+          </div>
+          <p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll</p>
+          <p class="text-slate-400 mt-1">Recommended Condiments: Sweet German Mustard, Medium Mustard, optional Sauerkraut.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950 border border-amber-500/30">
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="font-black text-amber-400 text-sm">Currywurst (Sliced Bratwurst)</span>
+            <span class="font-mono text-amber-400 font-bold">R70.00</span>
+          </div>
+          <p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll (on side for dipping)</p>
+          <p class="text-slate-400 mt-1">Presentation: Sliced sausage in boat, warm spiced curry sauce, dusted with curry powder.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950 border border-red-500/30">
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="font-black text-red-400 text-sm">Bockwurst (140g)</span>
+            <span class="font-mono text-amber-400 font-bold">R60.00</span>
+          </div>
+          <p class="text-slate-300 font-bold">Best Match: 🥖 German Crispy / Crusty Roll</p>
+          <p class="text-slate-400 mt-1">Recommended Condiments: Hot or Medium German Mustard.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950 border border-yellow-500/30">
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="font-black text-yellow-400 text-sm">Cheesegriller (110g)</span>
+            <span class="font-mono text-amber-400 font-bold">R60.00</span>
+          </div>
+          <p class="text-slate-300 font-bold">Best Match: 🥖 Standard Soft White Roll</p>
+          <p class="text-slate-400 mt-1">Recommended Condiments: Sweet Tomato Sauce or Mild Mustard.</p>
+        </div>
+      </div>
+
+      <button type="button" onclick="closePairingGuideModal()" class="w-full mt-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase">
+        Close Pairing Guide
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: QUICK SET ALL STOCK ================= -->
+  <div id="modal-quick-stock" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-lg p-5 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
+      <button type="button" onclick="closeQuickStockModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="text-center mb-3">
+        <h3 class="font-display font-black text-amber-400 text-xl uppercase">Quick Set Opening Stock</h3>
+        <p class="text-xs text-slate-400">Set Main Cold Room and On-Site Cooler physical counts</p>
+      </div>
+
+      <!-- 1-Tap 2026 Plan Fill -->
+      <div class="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-amber-300">2026 Master Plan Split</span>
+          <p class="text-[10px] text-slate-400">600 sausages (275 Brat, 75 Bock, 250 Cheese) & 600 rolls</p>
+        </div>
+        <button type="button" onclick="apply2026PresetStock()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-black text-xs cursor-pointer shadow">
+          ⚡ Fill 2026 Plan
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs" id="quick-stock-inputs-container"></div>
+
+      <div class="mt-4 flex gap-2">
+        <button type="button" onclick="saveQuickStockInputs()" class="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Stock Levels</button>
+        <button type="button" onclick="closeQuickStockModal()" class="py-3 px-4 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: MEAT & ROLLS COGS CONFIG ================= -->
+  <div id="modal-cost-config" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
+      <button type="button" onclick="closeCostConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="text-center mb-3">
+        <h3 class="font-display font-black text-amber-400 text-lg uppercase">Supplier Unit Costs (COGS)</h3>
+        <p class="text-xs text-slate-400">Butcher sausage costs and bakery bun costs</p>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-0.5">Bratwurst Raw (R):</label>
+          <input type="number" step="0.5" id="cogs-in-bratwurst" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Bockwurst Raw (R):</label>
+          <input type="number" step="0.5" id="cogs-in-bockwurst" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Cheesegriller Raw (R):</label>
+          <input type="number" step="0.5" id="cogs-in-cheesegriller" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">German Crispy / Crusty Roll (R):</label>
+          <input type="number" step="0.5" id="cogs-in-crusty-roll" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Standard Soft White Roll (R):</label>
+          <input type="number" step="0.5" id="cogs-in-white-roll" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+      </div>
+
+      <button type="button" onclick="saveCostConfig()" class="w-full mt-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">
+        Save COGS Prices
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: OVERHEADS & FIXED EXPENSES ================= -->
+  <div id="modal-overheads" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-slate-900 border-2 border-amber-500/50 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative">
+      <button type="button" onclick="closeOverheadsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="text-center mb-3">
+        <h3 class="font-display font-black text-amber-400 text-lg uppercase">Overheads & Operating Expenses</h3>
+        <p class="text-xs text-slate-400">Fixed event costs, labour, and consumables</p>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-0.5">German Club Vendor Fee (R):</label>
+          <input type="number" step="50" id="ovh-club-fee" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Labour Stipends (5 helpers) (R):</label>
+          <input type="number" step="50" id="ovh-labour" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Gas Bottles / Braai Fuel (R):</label>
+          <input type="number" step="50" id="ovh-gas-fuel" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Consumables per Sausage (Serviettes/Sauces) (R):</label>
+          <input type="number" step="0.2" id="ovh-consumable-rate" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-0.5">Yoco Card Processing Fee (%):</label>
+          <input type="number" step="0.1" id="ovh-card-fee" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
+        </div>
+      </div>
+
+      <button type="button" onclick="saveOverheadsConfig()" class="w-full mt-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">
+        Save Overheads
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT CORE SYSTEM ================= -->
+  <script>
+    /* ================= STATE & DATA MODEL ================= */
+    let currentStation = 'till';
+    let currentOperator = 'Nicolas';
+    let selectedLoginStaff = 'Nicolas';
+    let selectedLoginStation = 'till';
+    let loginPinBuffer = '';
+    let masterPinBuffer = '';
+
+    const STAFF_ROSTER_KEY = 'okt_staff_roster_v2';
+    const STOCK_LEVELS_KEY = 'okt_stock_levels_v2';
+    const ORDERS_KEY = 'okt_orders_v2';
+    const COGS_KEY = 'okt_cogs_v2';
+    const OVERHEADS_KEY = 'okt_overheads_v2';
+
+    let staffRoster = [
+      { name: 'Nicolas', pin: '1234', role: 'Lead & POS Till' },
+      { name: 'Nick', pin: '1234', role: 'Till Rush & Dispatch' },
+      { name: 'Nicole', pin: '1234', role: 'Roll Slicing & Assembly' },
+      { name: 'Margret', pin: '1234', role: 'Sauce Prep & Trays' },
+      { name: 'Joost', pin: '1234', role: 'Grill Braaimaster' }
+    ];
+
+    let stockLevels = {
+      bratwurst: { coldRoom: 0, cooler: 0, sold: 0 },
+      bockwurst: { coldRoom: 0, cooler: 0, sold: 0 },
+      cheesegriller: { coldRoom: 0, cooler: 0, sold: 0 },
+      roll_crusty: { coldRoom: 0, cooler: 0, sold: 0 },
+      roll_white: { coldRoom: 0, cooler: 0, sold: 0 }
+    };
+
+    let prepBuffer = {
+      bratwurst: 0,
+      bockwurst: 0,
+      cheesegriller: 0
+    };
+
+    let unitCosts = {
+      bratwurst: 22.0,
+      bockwurst: 22.0,
+      cheesegriller: 24.0,
+      roll_crusty: 5.5,
+      roll_white: 3.5,
+      curry_sauce_portion: 4.0
+    };
+
+    let overheadExpenses = {
+      clubFee: 2000.0,
+      labour: 2500.0,
+      gasFuel: 400.0,
+      consumablePerServing: 3.3,
+      cardFeePct: 2.6
+    };
+
+    const productCatalog = [
+      { id: 'bratwurst', name: 'Bratwurst (140g)', price: 60.0 },
+      { id: 'currywurst', name: 'Currywurst (Sliced)', price: 70.0 },
+      { id: 'bockwurst', name: 'Bockwurst (140g)', price: 60.0 },
+      { id: 'cheesegriller', name: 'Cheesegriller (110g)', price: 60.0 },
+      { id: 'roll_crusty', name: 'German Crispy Roll', price: 15.0 },
+      { id: 'roll_white', name: 'Standard White Roll', price: 10.0 }
+    ];
+
+    let cart = [];
+    let completedOrders = [];
+    let orderSequenceNumber = 101;
+
+    /* ================= INITIALIZATION ================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      setupKeyboardListeners();
+      switchStationView('till');
+    });
+
+    function loadStateFromStorage() {
+      try {
+        const storedStaff = localStorage.getItem(STAFF_ROSTER_KEY);
+        if (storedStaff) staffRoster = JSON.parse(storedStaff);
+
+        const storedStock = localStorage.getItem(STOCK_LEVELS_KEY);
+        if (storedStock) stockLevels = JSON.parse(storedStock);
+
+        const storedOrders = localStorage.getItem(ORDERS_KEY);
+        if (storedOrders) {
+          completedOrders = JSON.parse(storedOrders);
+          if (completedOrders.length > 0) {
+            orderSequenceNumber = Math.max(...completedOrders.map(o => o.orderNumber || 100)) + 1;
+          }
+        }
+
+        const storedCogs = localStorage.getItem(COGS_KEY);
+        if (storedCogs) unitCosts = JSON.parse(storedCogs);
+
+        const storedOverheads = localStorage.getItem(OVERHEADS_KEY);
+        if (storedOverheads) overheadExpenses = JSON.parse(storedOverheads);
+      } catch (e) {
+        console.warn('Storage read warning, using defaults:', e);
+      }
+    }
+
+    function saveStateToStorage() {
+      try {
+        localStorage.setItem(STAFF_ROSTER_KEY, JSON.stringify(staffRoster));
+        localStorage.setItem(STOCK_LEVELS_KEY, JSON.stringify(stockLevels));
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(completedOrders));
+        localStorage.setItem(COGS_KEY, JSON.stringify(unitCosts));
+        localStorage.setItem(OVERHEADS_KEY, JSON.stringify(overheadExpenses));
+      } catch (e) {
+        console.error('Storage write error:', e);
+      }
+    }
+
+    /* ================= STATION VIEW SWITCHING ================= */
+    function switchStationView(targetStation) {
+      currentStation = targetStation;
+
+      const stationViews = ['view-till', 'view-handout', 'view-braai', 'view-shared', 'view-manager'];
+      stationViews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      const targetEl = document.getElementById(`view-${targetStation}`);
+      if (targetEl) targetEl.classList.remove('hidden');
+
+      const navButtons = ['till', 'handout', 'braai', 'shared', 'manager'];
+      navButtons.forEach(st => {
+        const btn = document.getElementById(`nav-btn-${st}`);
+        if (!btn) return;
+        if (st === targetStation) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900';
+        }
+      });
+
+      renderAllViews();
+    }
+
+    function renderAllViews() {
+      renderTillStation();
+      renderHandoutStation();
+      renderBraaiStation();
+      renderSharedStation();
+      renderManagerDashboard();
+    }
+
+    /* ================= TILL & POS ENGINE ================= */
+    function addToCart(productId, rollType = 'crusty') {
+      const product = productCatalog.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingIndex = cart.findIndex(i => i.id === productId && i.rollType === rollType);
+      if (existingIndex > -1) {
+        cart[existingIndex].qty += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: product.name,
+          price: product.price,
+          rollType: rollType,
+          qty: 1
+        });
+      }
+      renderCartUI();
+    }
+
+    function changeCartItemQty(index, delta) {
+      if (!cart[index]) return;
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      renderCartUI();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCartUI();
+    }
+
+    function renderCartUI() {
+      const container = document.getElementById('cart-items-container');
+      const totalDisplay = document.getElementById('cart-total-display');
+      const orderTag = document.getElementById('pos-order-tag');
+
+      if (orderTag) orderTag.textContent = `#${orderSequenceNumber}`;
+      if (!container || !totalDisplay) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs">
+            Tap a sausage & roll combo to begin order
+          </div>
+        `;
+        totalDisplay.textContent = 'R0.00';
+        return;
+      }
+
+      let total = 0;
+      let html = '';
+
+      cart.forEach((item, idx) => {
+        const itemTotal = item.price * item.qty;
+        total += itemTotal;
+
+        let rollBadge = '';
+        if (item.rollType === 'crusty') rollBadge = '<span class="text-[10px] text-amber-300 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">🥖 Crispy Roll</span>';
+        else if (item.rollType === 'white') rollBadge = '<span class="text-[10px] text-slate-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">🥖 White Roll</span>';
+        else if (item.rollType === 'none') rollBadge = '<span class="text-[10px] text-slate-400 font-bold bg-slate-900 px-1.5 py-0.5 rounded">🍽️ No Roll</span>';
+
+        html += `
+          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+            <div class="flex-1">
+              <div class="text-xs font-bold text-white">${item.name}</div>
+              <div class="mt-0.5 flex items-center gap-1.5">
+                ${rollBadge}
+                <span class="text-[10px] font-mono text-slate-400">@ R${item.price.toFixed(0)}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800">
+              <button type="button" onclick="changeCartItemQty(${idx}, -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center cursor-pointer">-</button>
+              <span class="font-mono text-xs font-bold px-1">${item.qty}</span>
+              <button type="button" onclick="changeCartItemQty(${idx}, 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center cursor-pointer">+</button>
+            </div>
+
+            <div class="font-mono font-bold text-amber-400 text-xs w-14 text-right">
+              R${itemTotal.toFixed(0)}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      totalDisplay.textContent = `R${total.toFixed(2)}`;
+    }
+
+    function finalizeOrderCreation(paymentMethod = 'cash') {
+      if (cart.length === 0) return;
+
+      let total = 0;
+      cart.forEach(i => total += (i.price * i.qty));
+
+      const newOrder = {
+        id: 'ord_' + Date.now(),
+        orderNumber: orderSequenceNumber++,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        items: JSON.parse(JSON.stringify(cart)),
+        total: total,
+        paymentMethod: paymentMethod,
+        operator: currentOperator,
+        status: 'pending'
+      };
+
+      newOrder.items.forEach(item => {
+        if (stockLevels[item.id]) {
+          stockLevels[item.id].sold += item.qty;
+          stockLevels[item.id].cooler = Math.max(0, stockLevels[item.id].cooler - item.qty);
+        } else if (item.id === 'currywurst' && stockLevels.bratwurst) {
+          stockLevels.bratwurst.sold += item.qty;
+          stockLevels.bratwurst.cooler = Math.max(0, stockLevels.bratwurst.cooler - item.qty);
+        }
+
+        if (item.rollType === 'crusty' && stockLevels.roll_crusty) {
+          stockLevels.roll_crusty.sold += item.qty;
+          stockLevels.roll_crusty.cooler = Math.max(0, stockLevels.roll_crusty.cooler - item.qty);
+        } else if (item.rollType === 'white' && stockLevels.roll_white) {
+          stockLevels.roll_white.sold += item.qty;
+          stockLevels.roll_white.cooler = Math.max(0, stockLevels.roll_white.cooler - item.qty);
+        }
+      });
+
+      completedOrders.unshift(newOrder);
+      saveStateToStorage();
+      clearCart();
+      renderAllViews();
+    }
+
+    function renderTillStation() {
+      renderCartUI();
+    }
+
+    /* ================= HANDOUT & PREP ENGINE ================= */
+    function completeHandoutOrder(orderId) {
+      const order = completedOrders.find(o => o.id === orderId);
+      if (order) {
+        order.status = 'completed';
+        saveStateToStorage();
+        renderAllViews();
+      }
+    }
+
+    function renderHandoutStation() {
+      const queue = document.getElementById('handout-tickets-queue');
+      const countEl = document.getElementById('handout-waiting-count');
+      if (!queue) return;
+
+      const activeOrders = completedOrders.filter(o => o.status === 'pending');
+      if (countEl) countEl.textContent = activeOrders.length;
+
+      if (activeOrders.length === 0) {
+        queue.innerHTML = `
+          <div class="col-span-full py-16 text-center text-slate-500">
+            <span class="text-3xl block mb-2">🎉</span>
+            <span class="text-sm font-bold">All Orders Cleared & Plated!</span>
+            <p class="text-xs text-slate-600 mt-1">New incoming tickets will automatically appear here</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      activeOrders.forEach(order => {
+        let itemsHtml = '';
+        order.items.forEach(it => {
+          let rollDesc = '';
+          if (it.rollType === 'crusty') rollDesc = '<span class="text-amber-800 font-bold">🥖 Crispy Roll</span>';
+          else if (it.rollType === 'white') rollDesc = '<span class="text-slate-700 font-bold">🥖 White Roll</span>';
+          else if (it.rollType === 'none') rollDesc = '<span class="text-rose-700 font-bold">🍽️ NO ROLL (Plate)</span>';
+
+          itemsHtml += `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-black/10">
+              <span class="font-bold text-slate-900">${it.qty}x ${it.name}</span>
+              <span>${rollDesc}</span>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="bg-amber-100 text-slate-900 rounded-2xl p-4 shadow-xl border-t-8 border-amber-500 post-it-slip flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b-2 border-black/15 pb-2 mb-2">
+                <div>
+                  <span class="font-display font-black text-xl text-black">#${order.orderNumber}</span>
+                  <span class="text-[10px] text-slate-600 font-mono ml-2">${order.timestamp}</span>
+                </div>
+                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-black/10 font-mono">${order.paymentMethod}</span>
+              </div>
+              <div class="space-y-1 mb-3">
+                ${itemsHtml}
+              </div>
+            </div>
+
+            <button type="button" onclick="completeHandoutOrder('${order.id}')" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-amber-300 font-black text-xs uppercase tracking-wider active:scale-95 transition cursor-pointer">
+              ✓ Mark Handed Out
+            </button>
+          </div>
+        `;
+      });
+
+      queue.innerHTML = html;
+    }
+
+    /* ================= BRAAI MONITOR ENGINE ================= */
+    function adjustPrepBuffer(type, amount) {
+      if (prepBuffer[type] !== undefined) {
+        prepBuffer[type] = Math.max(0, prepBuffer[type] + amount);
+        renderBraaiStation();
+      }
+    }
+
+    function renderBraaiStation() {
+      let pendingBrat = 0;
+      let pendingBock = 0;
+      let pendingCheese = 0;
+
+      completedOrders.filter(o => o.status === 'pending').forEach(ord => {
+        ord.items.forEach(it => {
+          if (it.id === 'bratwurst' || it.id === 'currywurst') pendingBrat += it.qty;
+          if (it.id === 'bockwurst') pendingBock += it.qty;
+          if (it.id === 'cheesegriller') pendingCheese += it.qty;
+        });
+      });
+
+      const demBrat = document.getElementById('braai-demand-bratwurst');
+      const demBock = document.getElementById('braai-demand-bockwurst');
+      const demCheese = document.getElementById('braai-demand-cheesegriller');
+
+      if (demBrat) demBrat.textContent = pendingBrat;
+      if (demBock) demBock.textContent = pendingBock;
+      if (demCheese) demCheese.textContent = pendingCheese;
+
+      const bufBrat = document.getElementById('braai-buffer-bratwurst');
+      const bufBock = document.getElementById('braai-buffer-bockwurst');
+      const bufCheese = document.getElementById('braai-buffer-cheesegriller');
+
+      if (bufBrat) bufBrat.textContent = `${prepBuffer.bratwurst} ready`;
+      if (bufBock) bufBock.textContent = `${prepBuffer.bockwurst} ready`;
+      if (bufCheese) bufCheese.textContent = `${prepBuffer.cheesegriller} ready`;
+
+      const totalSoldEl = document.getElementById('braai-total-sold');
+      let totalSausagesSold = 0;
+      completedOrders.forEach(o => {
+        o.items.forEach(it => {
+          if (['bratwurst', 'currywurst', 'bockwurst', 'cheesegriller'].includes(it.id)) {
+            totalSausagesSold += it.qty;
+          }
+        });
+      });
+      if (totalSoldEl) totalSoldEl.textContent = totalSausagesSold;
+    }
+
+    function renderSharedStation() {
+      const handoutCont = document.getElementById('shared-handout-container');
+      const braaiCont = document.getElementById('shared-braai-container');
+      if (!handoutCont || !braaiCont) return;
+
+      const activeOrders = completedOrders.filter(o => o.status === 'pending');
+      handoutCont.innerHTML = activeOrders.map(o => `
+        <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs">
+          <span class="font-bold text-amber-400">#${o.orderNumber}</span>
+          <span class="text-slate-300">${o.items.map(i => `${i.qty}x ${i.name}`).join(', ')}</span>
+          <button type="button" onclick="completeHandoutOrder('${o.id}')" class="px-2 py-1 rounded bg-slate-800 text-emerald-400 text-[10px] font-bold">Done</button>
+        </div>
+      `).join('') || '<div class="text-xs text-slate-500 py-4 text-center">No pending orders</div>';
+
+      braaiCont.innerHTML = `
+        <div class="space-y-2 text-xs">
+          <div class="p-2 rounded-xl bg-slate-950 flex justify-between">
+            <span class="text-slate-400">Bratwurst Buffer:</span>
+            <span class="font-mono font-bold text-sky-400">${prepBuffer.bratwurst} ready</span>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-950 flex justify-between">
+            <span class="text-slate-400">Bockwurst Buffer:</span>
+            <span class="font-mono font-bold text-red-400">${prepBuffer.bockwurst} ready</span>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-950 flex justify-between">
+            <span class="text-slate-400">Cheesegriller Buffer:</span>
+            <span class="font-mono font-bold text-yellow-400">${prepBuffer.cheesegriller} ready</span>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ================= MANAGER FINANCIAL & STOCK DASHBOARD ================= */
+    function renderManagerDashboard() {
+      let grossTurnover = 0;
+      let totalSausagesSold = 0;
+      let totalFoodCogs = 0;
+      let cardSalesVolume = 0;
+
+      completedOrders.forEach(o => {
+        grossTurnover += o.total;
+        if (o.paymentMethod === 'card') cardSalesVolume += o.total;
+
+        o.items.forEach(it => {
+          if (['bratwurst', 'currywurst', 'bockwurst', 'cheesegriller'].includes(it.id)) {
+            totalSausagesSold += it.qty;
+          }
+
+          if (it.id === 'bratwurst' || it.id === 'currywurst') totalFoodCogs += (unitCosts.bratwurst * it.qty);
+          if (it.id === 'currywurst') totalFoodCogs += (unitCosts.curry_sauce_portion * it.qty);
+          if (it.id === 'bockwurst') totalFoodCogs += (unitCosts.bockwurst * it.qty);
+          if (it.id === 'cheesegriller') totalFoodCogs += (unitCosts.cheesegriller * it.qty);
+
+          if (it.rollType === 'crusty') totalFoodCogs += (unitCosts.roll_crusty * it.qty);
+          if (it.rollType === 'white') totalFoodCogs += (unitCosts.roll_white * it.qty);
+        });
+      });
+
+      const grossProfit = grossTurnover - totalFoodCogs;
+      const grossMargin = grossTurnover > 0 ? ((grossProfit / grossTurnover) * 100) : 0;
+
+      const fixedOverheads = overheadExpenses.clubFee + overheadExpenses.labour + overheadExpenses.gasFuel;
+      const variableConsumables = totalSausagesSold * overheadExpenses.consumablePerServing;
+      const cardProcessingCost = cardSalesVolume * (overheadExpenses.cardFeePct / 100);
+      const totalExpenses = fixedOverheads + variableConsumables + cardProcessingCost;
+
+      const netProfit = grossProfit - totalExpenses;
+
+      const avgSellingPrice = totalSausagesSold > 0 ? (grossTurnover / totalSausagesSold) : 60.0;
+      const avgUnitCogs = totalSausagesSold > 0 ? (totalFoodCogs / totalSausagesSold) : 27.5;
+      const unitContribution = Math.max(1, (avgSellingPrice - avgUnitCogs - overheadExpenses.consumablePerServing));
+      const breakevenUnits = Math.ceil(fixedOverheads / unitContribution);
+
+      const tEl = document.getElementById('mgr-gross-turnover');
+      const cEl = document.getElementById('mgr-total-cogs');
+      const gpEl = document.getElementById('mgr-gross-profit');
+      const gmEl = document.getElementById('mgr-gross-margin');
+      const npEl = document.getElementById('mgr-net-profit');
+      const scEl = document.getElementById('mgr-total-sold-count');
+      const beEl = document.getElementById('mgr-breakeven-indicator');
+
+      if (tEl) tEl.textContent = `R${grossTurnover.toFixed(2)}`;
+      if (cEl) cEl.textContent = `R${totalFoodCogs.toFixed(2)}`;
+      if (gpEl) gpEl.textContent = `R${grossProfit.toFixed(2)}`;
+      if (gmEl) gmEl.textContent = `${grossMargin.toFixed(1)}% gross margin`;
+      if (npEl) npEl.textContent = `R${netProfit.toFixed(2)}`;
+      if (scEl) scEl.textContent = `${totalSausagesSold} sausages sold`;
+      if (beEl) beEl.textContent = `Breakeven: ${totalSausagesSold}/${breakevenUnits} units`;
+
+      renderStockTable();
+      renderStaffManagementTable();
+    }
+
+    function renderStockTable() {
+      const tbody = document.getElementById('mgr-stock-table-body');
+      if (!tbody) return;
+
+      const items = [
+        { key: 'bratwurst', label: 'Bratwurst (140g)' },
+        { key: 'bockwurst', label: 'Bockwurst (140g)' },
+        { key: 'cheesegriller', label: 'Cheesegriller (110g)' },
+        { key: 'roll_crusty', label: 'German Crispy Rolls' },
+        { key: 'roll_white', label: 'Standard White Rolls' }
+      ];
+
+      let html = '';
+      items.forEach(it => {
+        const data = stockLevels[it.key] || { coldRoom: 0, cooler: 0, sold: 0 };
+        const total = (data.coldRoom + data.cooler);
+
+        html += `
+          <tr class="hover:bg-slate-800/40">
+            <td class="py-2.5 font-bold font-sans text-slate-200">${it.label}</td>
+            <td class="py-2.5 text-center text-slate-400">${data.coldRoom}</td>
+            <td class="py-2.5 text-center text-amber-300 font-bold">${data.cooler}</td>
+            <td class="py-2.5 text-center text-slate-500">${data.sold}</td>
+            <td class="py-2.5 text-center text-emerald-400 font-black">${total}</td>
+            <td class="py-2.5 text-right">
+              <button type="button" onclick="openMoveStockPrompt('${it.key}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-300 font-bold border border-amber-500/30 cursor-pointer">
+                Move to Cooler
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function renderStaffManagementTable() {
+      const tbody = document.getElementById('mgr-staff-table-body');
+      if (!tbody) return;
+
+      let html = '';
+      staffRoster.forEach((st, idx) => {
+        html += `
+          <tr class="hover:bg-slate-800/40">
+            <td class="py-2 font-bold text-slate-200">${st.name}</td>
+            <td class="py-2 text-slate-400">${st.role || 'Volunteer'}</td>
+            <td class="py-2 text-center font-mono text-amber-400">${st.pin}</td>
+            <td class="py-2 text-right">
+              <button type="button" onclick="deleteStaffMember(${idx})" class="text-xs text-red-400 hover:text-red-300">🗑️</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function deleteStaffMember(idx) {
+      if (staffRoster.length <= 1) return;
+      staffRoster.splice(idx, 1);
+      saveStateToStorage();
+      renderStaffManagementTable();
+      populateLoginStaffChips();
+    }
+
+    function openMoveStockPrompt(itemKey) {
+      const item = stockLevels[itemKey];
+      if (!item) return;
+
+      const qtyStr = prompt(`Move how many from Cold Room to Cooler? (Available in Cold Room: ${item.coldRoom})`, "25");
+      if (!qtyStr) return;
+      const qty = parseInt(qtyStr, 10);
+      if (!isNaN(qty) && qty > 0) {
+        const moveQty = Math.min(qty, item.coldRoom);
+        item.coldRoom -= moveQty;
+        item.cooler += moveQty;
+        saveStateToStorage();
+        renderAllViews();
+      }
+    }
+
+    /* ================= LOGIN & OPERATOR SHIFT MODAL ================= */
+    function openLoginModal() {
+      loginPinBuffer = '';
+      const pinInput = document.getElementById('login-pin-input');
+      if (pinInput) pinInput.value = '';
+      const errBox = document.getElementById('login-error-msg');
+      if (errBox) {
+        errBox.textContent = '';
+        errBox.classList.add('hidden');
+      }
+
+      if (!selectedLoginStaff && staffRoster.length > 0) {
+        selectedLoginStaff = staffRoster[0].name;
+      }
+      populateLoginStaffChips();
+      setLoginStation(selectedLoginStation || 'till');
+      document.getElementById('modal-login').classList.remove('hidden');
+    }
+
+    function closeLoginModal() {
+      document.getElementById('modal-login').classList.add('hidden');
+      loginPinBuffer = '';
+      const errBox = document.getElementById('login-error-msg');
+      if (errBox) errBox.classList.add('hidden');
+    }
+
+    function setLoginStation(st) {
+      selectedLoginStation = st;
+      const stations = ['till', 'handout', 'braai', 'shared', 'manager'];
+      stations.forEach(s => {
+        const btn = document.getElementById(`login-st-${s}`);
+        if (!btn) return;
+        if (s === st) {
+          btn.className = 'p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px] cursor-pointer';
+        } else {
+          btn.className = 'p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px] cursor-pointer';
+        }
+      });
+    }
+
+    function populateLoginStaffChips() {
+      const container = document.getElementById('login-staff-chips');
+      if (!container) return;
+
+      let html = '';
+      staffRoster.forEach(staff => {
+        const isSelected = (selectedLoginStaff === staff.name);
+        html += `
+          <button type="button" onclick="selectLoginStaff('${staff.name}')" class="p-2 rounded-xl text-center border text-xs font-bold transition active:scale-95 cursor-pointer ${isSelected ? 'border-amber-500 bg-amber-500/30 text-amber-200 font-black' : 'border-slate-800 bg-slate-950 text-slate-300'}">
+            ${staff.name}
+          </button>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function selectLoginStaff(name) {
+      selectedLoginStaff = name;
+      populateLoginStaffChips();
+      const errBox = document.getElementById('login-error-msg');
+      if (errBox) errBox.classList.add('hidden');
+    }
+
+    function pressLoginPinKey(num) {
+      const errBox = document.getElementById('login-error-msg');
+      if (errBox) errBox.classList.add('hidden');
+
+      if (loginPinBuffer.length < 4) {
+        loginPinBuffer += num;
+        const pinInput = document.getElementById('login-pin-input');
+        if (pinInput) pinInput.value = loginPinBuffer;
+        if (loginPinBuffer.length === 4) {
+          setTimeout(performStaffLogin, 80);
+        }
+      }
+    }
+
+    function clearLoginPinKey() {
+      loginPinBuffer = '';
+      const pinInput = document.getElementById('login-pin-input');
+      if (pinInput) pinInput.value = '';
+    }
+
+    function backspaceLoginPinKey() {
+      loginPinBuffer = loginPinBuffer.slice(0, -1);
+      const pinInput = document.getElementById('login-pin-input');
+      if (pinInput) pinInput.value = loginPinBuffer;
+    }
+
+    function performStaffLogin() {
+      const pinInput = document.getElementById('login-pin-input');
+      const pin = loginPinBuffer.trim() || (pinInput ? pinInput.value.trim() : '');
+
+      if (pin === '1978') {
+        currentOperator = selectedLoginStaff ? `${selectedLoginStaff} (Manager)` : 'Nicolas (Manager)';
+        const userDisp = document.getElementById('current-user-display');
+        if (userDisp) userDisp.textContent = currentOperator;
+        closeLoginModal();
+        switchStationView('manager');
+        return;
+      }
+
+      if (selectedLoginStation === 'manager') {
+        const errBox = document.getElementById('login-error-msg');
+        if (errBox) {
+          errBox.textContent = 'Manager Station requires Master PIN 1978';
+          errBox.classList.remove('hidden');
+        }
+        clearLoginPinKey();
+        return;
+      }
+
+      const staff = staffRoster.find(s => s.name.trim().toLowerCase() === (selectedLoginStaff || '').trim().toLowerCase());
+      const validPin = staff ? String(staff.pin) : '1234';
+
+      if (pin === validPin || pin === '1234') {
+        currentOperator = staff ? staff.name : (selectedLoginStaff || 'Nicolas');
+        const userDisp = document.getElementById('current-user-display');
+        if (userDisp) userDisp.textContent = currentOperator;
+        const targetStation = selectedLoginStation || 'till';
+        closeLoginModal();
+        switchStationView(targetStation);
+      } else {
+        const errBox = document.getElementById('login-error-msg');
+        if (errBox) {
+          errBox.textContent = 'Incorrect PIN. Default: 1234, Master: 1978';
+          errBox.classList.remove('hidden');
+        }
+        clearLoginPinKey();
+      }
+    }
+
+    /* ================= MASTER PIN DIRECT MODAL ================= */
+    function openMasterPinModal() {
+      masterPinBuffer = '';
+      const pinIn = document.getElementById('master-pin-input');
+      if (pinIn) pinIn.value = '';
+      const err = document.getElementById('master-pin-error');
+      if (err) err.classList.add('hidden');
+      document.getElementById('modal-master-pin').classList.remove('hidden');
+    }
+
+    function closeMasterPinModal() {
+      document.getElementById('modal-master-pin').classList.add('hidden');
+      masterPinBuffer = '';
+    }
+
+    function pressMasterPinKey(num) {
+      if (masterPinBuffer.length < 4) {
+        masterPinBuffer += num;
+        const pinIn = document.getElementById('master-pin-input');
+        if (pinIn) pinIn.value = masterPinBuffer;
+        if (masterPinBuffer.length === 4) {
+          setTimeout(submitMasterPin, 80);
+        }
+      }
+    }
+
+    function clearMasterPinKey() {
+      masterPinBuffer = '';
+      const pinIn = document.getElementById('master-pin-input');
+      if (pinIn) pinIn.value = '';
+    }
+
+    function backspaceMasterPinKey() {
+      masterPinBuffer = masterPinBuffer.slice(0, -1);
+      const pinIn = document.getElementById('master-pin-input');
+      if (pinIn) pinIn.value = masterPinBuffer;
+    }
+
+    function submitMasterPin() {
+      const pinIn = document.getElementById('master-pin-input');
+      const pin = masterPinBuffer.trim() || (pinIn ? pinIn.value.trim() : '');
+
+      if (pin === '1978') {
+        closeMasterPinModal();
+        currentOperator = 'Nicolas (Manager)';
+        const userDisp = document.getElementById('current-user-display');
+        if (userDisp) userDisp.textContent = currentOperator;
+        switchStationView('manager');
+      } else {
+        const err = document.getElementById('master-pin-error');
+        if (err) {
+          err.textContent = 'Incorrect Master PIN (Use 1978)';
+          err.classList.remove('hidden');
+        }
+        clearMasterPinKey();
+      }
+    }
+
+    /* ================= QUICK STOCK SETTING ================= */
+    function openQuickStockModal() {
+      const container = document.getElementById('quick-stock-inputs-container');
+      if (!container) return;
+
+      const items = [
+        { key: 'bratwurst', label: 'Bratwurst (140g)' },
+        { key: 'bockwurst', label: 'Bockwurst (140g)' },
+        { key: 'cheesegriller', label: 'Cheesegriller (110g)' },
+        { key: 'roll_crusty', label: 'German Crispy Rolls' },
+        { key: 'roll_white', label: 'Standard White Rolls' }
+      ];
+
+      let html = '';
+      items.forEach(it => {
+        const data = stockLevels[it.key] || { coldRoom: 0, cooler: 0 };
+        html += `
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+            <span class="font-bold text-slate-200 w-1/3">${it.label}</span>
+            <div class="flex items-center gap-2">
+              <div>
+                <span class="block text-[10px] text-slate-400">Cold Room:</span>
+                <input type="number" id="qs-cr-${it.key}" value="${data.coldRoom}" class="w-20 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-white">
+              </div>
+              <div>
+                <span class="block text-[10px] text-amber-400">On-Site Cooler:</span>
+                <input type="number" id="qs-co-${it.key}" value="${data.cooler}" class="w-20 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-amber-300 font-bold">
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('modal-quick-stock').classList.remove('hidden');
+    }
+
+    function closeQuickStockModal() {
+      document.getElementById('modal-quick-stock').classList.add('hidden');
+    }
+
+    function apply2026PresetStock() {
+      const presets = {
+        bratwurst: { coldRoom: 200, cooler: 75 },
+        bockwurst: { coldRoom: 50, cooler: 25 },
+        cheesegriller: { coldRoom: 175, cooler: 75 },
+        roll_crusty: { coldRoom: 250, cooler: 100 },
+        roll_white: { coldRoom: 175, cooler: 75 }
+      };
+
+      Object.keys(presets).forEach(k => {
+        const cr = document.getElementById(`qs-cr-${k}`);
+        const co = document.getElementById(`qs-co-${k}`);
+        if (cr) cr.value = presets[k].coldRoom;
+        if (co) co.value = presets[k].cooler;
+      });
+    }
+
+    function saveQuickStockInputs() {
+      const keys = ['bratwurst', 'bockwurst', 'cheesegriller', 'roll_crusty', 'roll_white'];
+      keys.forEach(k => {
+        const cr = parseInt(document.getElementById(`qs-cr-${k}`)?.value || '0', 10);
+        const co = parseInt(document.getElementById(`qs-co-${k}`)?.value || '0', 10);
+        if (!stockLevels[k]) stockLevels[k] = { sold: 0 };
+        stockLevels[k].coldRoom = isNaN(cr) ? 0 : cr;
+        stockLevels[k].cooler = isNaN(co) ? 0 : co;
+      });
+
+      saveStateToStorage();
+      closeQuickStockModal();
+      renderAllViews();
+    }
+
+    /* ================= COGS MODAL ================= */
+    function openCostConfigModal() {
+      document.getElementById('cogs-in-bratwurst').value = unitCosts.bratwurst;
+      document.getElementById('cogs-in-bockwurst').value = unitCosts.bockwurst;
+      document.getElementById('cogs-in-cheesegriller').value = unitCosts.cheesegriller;
+      document.getElementById('cogs-in-crusty-roll').value = unitCosts.roll_crusty;
+      document.getElementById('cogs-in-white-roll').value = unitCosts.roll_white;
+      document.getElementById('modal-cost-config').classList.remove('hidden');
+    }
+
+    function closeCostConfigModal() {
+      document.getElementById('modal-cost-config').classList.add('hidden');
+    }
+
+    function saveCostConfig() {
+      unitCosts.bratwurst = parseFloat(document.getElementById('cogs-in-bratwurst').value) || 22.0;
+      unitCosts.bockwurst = parseFloat(document.getElementById('cogs-in-bockwurst').value) || 22.0;
+      unitCosts.cheesegriller = parseFloat(document.getElementById('cogs-in-cheesegriller').value) || 24.0;
+      unitCosts.roll_crusty = parseFloat(document.getElementById('cogs-in-crusty-roll').value) || 5.5;
+      unitCosts.roll_white = parseFloat(document.getElementById('cogs-in-white-roll').value) || 3.5;
+
+      saveStateToStorage();
+      closeCostConfigModal();
+      renderAllViews();
+    }
+
+    /* ================= OVERHEADS MODAL ================= */
+    function openOverheadsModal() {
+      document.getElementById('ovh-club-fee').value = overheadExpenses.clubFee;
+      document.getElementById('ovh-labour').value = overheadExpenses.labour;
+      document.getElementById('ovh-gas-fuel').value = overheadExpenses.gasFuel;
+      document.getElementById('ovh-consumable-rate').value = overheadExpenses.consumablePerServing;
+      document.getElementById('ovh-card-fee').value = overheadExpenses.cardFeePct;
+      document.getElementById('modal-overheads').classList.remove('hidden');
+    }
+
+    function closeOverheadsModal() {
+      document.getElementById('modal-overheads').classList.add('hidden');
+    }
+
+    function saveOverheadsConfig() {
+      overheadExpenses.clubFee = parseFloat(document.getElementById('ovh-club-fee').value) || 2000;
+      overheadExpenses.labour = parseFloat(document.getElementById('ovh-labour').value) || 2500;
+      overheadExpenses.gasFuel = parseFloat(document.getElementById('ovh-gas-fuel').value) || 400;
+      overheadExpenses.consumablePerServing = parseFloat(document.getElementById('ovh-consumable-rate').value) || 3.3;
+      overheadExpenses.cardFeePct = parseFloat(document.getElementById('ovh-card-fee').value) || 2.6;
+
+      saveStateToStorage();
+      closeOverheadsModal();
+      renderAllViews();
+    }
+
+    /* ================= PAIRING GUIDE MODAL ================= */
+    function openPairingGuideModal() {
+      document.getElementById('modal-pairing-guide').classList.remove('hidden');
+    }
+
+    function closePairingGuideModal() {
+      document.getElementById('modal-pairing-guide').classList.add('hidden');
+    }
+
+    /* ================= STAFF ADD MODAL ================= */
+    function openStaffModal() {
+      const name = prompt("Enter team member's full name:", "");
+      if (!name) return;
+      const role = prompt("Enter station role (e.g. Braai, Handout, Till):", "Volunteer");
+      const pin = prompt("Set 4-digit PIN for this user:", "1234") || "1234";
+
+      staffRoster.push({ name: name.trim(), role: role.trim(), pin: pin.trim() });
+      saveStateToStorage();
+      renderStaffManagementTable();
+      populateLoginStaffChips();
+    }
+
+    /* ================= CSV AUDIT EXPORT ================= */
+    function exportAuditCSV() {
+      let csv = "OrderNumber,Time,Operator,PaymentMethod,Item,Roll,Quantity,Price\n";
+      completedOrders.forEach(o => {
+        o.items.forEach(it => {
+          csv += `${o.orderNumber},"${o.timestamp}","${o.operator}","${o.paymentMethod}","${it.name}","${it.rollType}",${it.qty},${it.price}\n`;
+        });
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `oktoberfest_2026_audit_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    /* ================= HARDWARE KEYBOARD LISTENERS ================= */
+    function setupKeyboardListeners() {
+      window.addEventListener('keydown', (e) => {
+        const loginModal = document.getElementById('modal-login');
+        if (loginModal && !loginModal.classList.contains('hidden')) {
+          if (e.key >= '0' && e.key <= '9') {
+            pressLoginPinKey(e.key);
+          } else if (e.key === 'Backspace') {
+            backspaceLoginPinKey();
+          } else if (e.key === 'Enter') {
+            performStaffLogin();
+          } else if (e.key === 'Escape') {
+            closeLoginModal();
+          }
+          return;
+        }
+
+        const masterModal = document.getElementById('modal-master-pin');
+        if (masterModal && !masterModal.classList.contains('hidden')) {
+          if (e.key >= '0' && e.key <= '9') {
+            pressMasterPinKey(e.key);
+          } else if (e.key === 'Backspace') {
+            backspaceMasterPinKey();
+          } else if (e.key === 'Enter') {
+            submitMasterPin();
+          } else if (e.key === 'Escape') {
+            closeMasterPinModal();
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
+```
