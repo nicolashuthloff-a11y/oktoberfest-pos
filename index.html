@@ -693,7 +693,7 @@
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="openOpeningStockModal()" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold px-2.5 py-1 rounded-lg">
-              ⚙️ Set Opening Stock
+              ⚙️ Quick Set All Stock
             </button>
             <button type="button" onclick="openTransferStockModal()" class="touch-btn bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">
               🚚 Move from Main Storage
@@ -706,12 +706,12 @@
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-900/60 text-slate-400 font-bold uppercase text-[10px]">
               <tr>
-                <th class="p-2">Item</th>
+                <th class="p-2">Item / Product</th>
                 <th class="p-2">Main Storage</th>
                 <th class="p-2">On-Site</th>
                 <th class="p-2">Sold / Used</th>
-                <th class="p-2">Remaining Total</th>
-                <th class="p-2">Action</th>
+                <th class="p-2">Total Left</th>
+                <th class="p-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody id="mgr-stock-table-body" class="divide-y divide-slate-700/60 font-semibold">
@@ -726,11 +726,14 @@
         <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-700">
           <div class="flex items-center gap-2">
             <span class="text-lg">🌭</span>
-            <span class="font-black text-sm text-white">Menu Catalog, Sausages & Roll Options</span>
+            <div>
+              <span class="font-black text-sm text-white">Menu & Product Catalog</span>
+              <span class="text-[11px] text-slate-400 block">Synchronized with stock & pricing</span>
+            </div>
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="openProductEditModal(null)" class="touch-btn bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">
-              + Add New Product
+              + Add New Item
             </button>
             <button type="button" onclick="openCostConfigModal()" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold px-2.5 py-1 rounded-lg">
               💰 Unit Cost Prices (COGS)
@@ -1145,8 +1148,8 @@
 
       <div class="flex flex-col gap-2 text-xs">
         <div>
-          <label class="block text-slate-300 mb-0.5">Display Name:</label>
-          <input type="text" id="input-prod-name" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
+          <label class="block text-slate-300 mb-0.5">Item / Product Name:</label>
+          <input type="text" id="input-prod-name" placeholder="e.g. Käsekrainer" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -1158,15 +1161,49 @@
             <input type="number" id="input-prod-cost" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white font-mono">
           </div>
         </div>
+        <div class="grid grid-cols-2 gap-2 bg-slate-950/60 p-2 rounded-lg border border-slate-800">
+          <div>
+            <label class="block text-slate-400 text-[10px] uppercase font-bold mb-0.5">Main Storage Stock:</label>
+            <input type="number" id="input-prod-stock-cold" min="0" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[10px] uppercase font-bold mb-0.5">On-Site Stock:</label>
+            <input type="number" id="input-prod-stock-cooler" min="0" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white font-mono">
+          </div>
+        </div>
         <div>
           <label class="block text-slate-300 mb-0.5">Description / Subtitle:</label>
-          <input type="text" id="input-prod-desc" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
+          <input type="text" id="input-prod-desc" placeholder="Sausage description..." class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-white">
         </div>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-700">
         <button type="button" onclick="closeProductEditModal()" class="touch-btn bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg">Cancel</button>
-        <button type="button" onclick="saveProductEdit()" class="touch-btn bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">Save Product</button>
+        <button type="button" onclick="saveProductEdit()" class="touch-btn bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">Save Item & Stock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECT ITEM STOCK ADJUST MODAL -->
+  <div id="modal-item-stock-adjust" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-xs p-4 shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-700">
+        <h3 id="stock-adjust-title" class="font-black text-sm text-white">Adjust Stock</h3>
+        <button type="button" onclick="closeItemStockAdjustModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+      <div class="flex flex-col gap-2.5 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1 font-bold">Main Storage Quantity:</label>
+          <input type="number" id="stock-adjust-cold" min="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono text-center font-bold text-base">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1 font-bold">On-Site Quantity:</label>
+          <input type="number" id="stock-adjust-cooler" min="0" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono text-center font-bold text-base">
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-700">
+        <button type="button" onclick="closeItemStockAdjustModal()" class="touch-btn bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg">Cancel</button>
+        <button type="button" onclick="saveDirectItemStockAdjust()" class="touch-btn bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">Save Stock</button>
       </div>
     </div>
   </div>
@@ -1349,6 +1386,7 @@
     let editingProductId = null;
     let editingStationId = null;
     let editingStaffName = null;
+    let adjustingStockItemKey = null;
     let masterPinCallback = null;
 
     /* AUDIO TONES FOR ALERTS */
@@ -1446,7 +1484,7 @@
       grillActivityLog = JSON.parse(localStorage.getItem('okt_grill_log') || '[]');
       prepBuffer = JSON.parse(localStorage.getItem('okt_prep_buffer') || '{"precooked_bratwurst":0,"precooked_bockwurst":0,"precooked_cheesegriller":0,"sliced_std_rolls":0,"sliced_cru_rolls":0}');
 
-      // Default stock structure (Main Storage vs On-Site Cooler Box)
+      // Synchronize stock levels with product catalog
       const savedStock = JSON.parse(localStorage.getItem('okt_stock') || 'null');
       if (savedStock) {
         stockLevels = savedStock;
@@ -1459,6 +1497,16 @@
           crusty_roll: { coldRoom: 100, cooler: 50 }
         };
       }
+
+      // Ensure every product in catalog has an entry in stockLevels
+      productCatalog.forEach(p => {
+        if (!stockLevels[p.id]) {
+          stockLevels[p.id] = { coldRoom: 50, cooler: 25 };
+        }
+      });
+      // Ensure rolls are present
+      if (!stockLevels.standard_roll) stockLevels.standard_roll = { coldRoom: 300, cooler: 100 };
+      if (!stockLevels.crusty_roll) stockLevels.crusty_roll = { coldRoom: 100, cooler: 50 };
 
       updateTrainingModeBanner();
       updateBraaiModeUI();
@@ -2679,37 +2727,38 @@
       if (!tbody) return;
       tbody.innerHTML = '';
 
-      const usedCounts = {
-        bratwurst: 0,
-        bockwurst: 0,
-        cheesegriller: 0,
-        standard_roll: 0,
-        crusty_roll: 0
-      };
+      // Tally usage dynamically for all items in the orders
+      const usedCounts = {};
 
       orders.forEach(ord => {
         if (ord.status === 'cancelled') return;
         ord.items.forEach(it => {
-          if (it.productId === 'bratwurst' || it.productId === 'currywurst') {
-            usedCounts.bratwurst += it.qty;
-          } else if (it.productId === 'bockwurst') {
-            usedCounts.bockwurst += it.qty;
-          } else if (it.productId === 'cheesegriller') {
-            usedCounts.cheesegriller += it.qty;
-          }
+          const key = it.productId;
+          usedCounts[key] = (usedCounts[key] || 0) + it.qty;
 
-          if (it.rollType === 'standard_roll') usedCounts.standard_roll += it.qty;
-          else if (it.rollType === 'crusty_roll') usedCounts.crusty_roll += it.qty;
+          if (it.rollType === 'standard_roll') {
+            usedCounts.standard_roll = (usedCounts.standard_roll || 0) + it.qty;
+          } else if (it.rollType === 'crusty_roll') {
+            usedCounts.crusty_roll = (usedCounts.crusty_roll || 0) + it.qty;
+          }
         });
       });
 
-      const displayList = [
-        { key: 'bratwurst', label: 'Bratwurst (120g Raw)' },
-        { key: 'bockwurst', label: 'Bockwurst (120g Raw)' },
-        { key: 'cheesegriller', label: 'Cheesegriller (110g Raw)' },
-        { key: 'standard_roll', label: 'Standard White Rolls' },
-        { key: 'crusty_roll', label: 'German Crusty / Rye Rolls' }
-      ];
+      // Build unified inventory list from products + rolls
+      const displayList = [];
+
+      // Add catalog products
+      productCatalog.forEach(p => {
+        displayList.push({
+          key: p.id,
+          label: p.name,
+          isProduct: true
+        });
+      });
+
+      // Add Roll Items
+      displayList.push({ key: 'standard_roll', label: '🥖 Standard White Rolls', isProduct: false });
+      displayList.push({ key: 'crusty_roll', label: '🥨 German Crusty / Rye Rolls', isProduct: false });
 
       displayList.forEach(item => {
         const cold = stockLevels[item.key]?.coldRoom || 0;
@@ -2725,8 +2774,11 @@
           <td class="p-2 font-mono ${cooler < 20 ? 'text-red-400 font-black' : 'text-emerald-400'}">${cooler}</td>
           <td class="p-2 font-mono text-amber-400">${used}</td>
           <td class="p-2 font-mono font-bold text-white">${totalRemaining}</td>
-          <td class="p-2">
-            <button type="button" onclick="openTransferStockModal('${item.key}')" class="text-[11px] text-blue-400 hover:underline font-bold">
+          <td class="p-2 text-right">
+            <button type="button" onclick="openItemStockAdjustModal('${item.key}', '${item.label.replace(/'/g, "\\'")}')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded mr-1">
+              ✏️ Edit Stock
+            </button>
+            <button type="button" onclick="openTransferStockModal('${item.key}')" class="touch-btn bg-blue-900/60 hover:bg-blue-800 text-blue-200 border border-blue-700/60 text-[10px] font-bold px-2 py-1 rounded">
               + Move
             </button>
           </td>
@@ -2735,242 +2787,63 @@
       });
     }
 
-    function renderManagerProductsList() {
-      const container = document.getElementById('mgr-products-list');
-      if (!container) return;
-      container.innerHTML = '';
-
-      productCatalog.forEach(prod => {
-        const card = document.createElement('div');
-        card.className = "bg-slate-900/80 border border-slate-700/80 p-2.5 rounded-xl flex items-center justify-between text-xs";
-        card.innerHTML = `
-          <div>
-            <div class="font-black text-white">${prod.name}</div>
-            <div class="text-[10px] text-slate-400">Price: R${Number(prod.price).toFixed(2)} | Cost: R${Number(prod.cost || 0).toFixed(2)}</div>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="openProductEditModal('${prod.id}')" class="touch-btn bg-slate-800 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 font-bold">
-              ✏️ Edit
-            </button>
-            <button type="button" onclick="deleteProduct('${prod.id}')" class="touch-btn bg-slate-800 text-red-400 px-2 py-1 rounded hover:bg-red-950 font-bold">
-              🗑️
-            </button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
+    function openItemStockAdjustModal(itemKey, itemLabel) {
+      adjustingStockItemKey = itemKey;
+      document.getElementById('stock-adjust-title').innerText = `Stock: ${itemLabel}`;
+      document.getElementById('stock-adjust-cold').value = stockLevels[itemKey]?.coldRoom || 0;
+      document.getElementById('stock-adjust-cooler').value = stockLevels[itemKey]?.cooler || 0;
+      document.getElementById('modal-item-stock-adjust').classList.remove('hidden');
     }
 
-    /* ==================== ASSIGN STAFF TO STATION MODAL (NAMES ONLY) ==================== */
-    function openStationAssignStaffModal(stationId) {
-      assigningStationId = stationId;
-      const st = stationsList.find(s => s.id === stationId);
-      if (!st) return;
-
-      document.getElementById('modal-station-assign-title').innerText = `Assign Staff to ${st.icon || ''} ${st.name}`;
-      
-      const container = document.getElementById('station-assign-staff-list');
-      container.innerHTML = '';
-
-      staffRoster.forEach(person => {
-        const isAssigned = person.assignedStations && person.assignedStations.includes(stationId);
-        const label = document.createElement('label');
-        label.className = "flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-750 cursor-pointer text-sm font-black text-white transition";
-        label.innerHTML = `
-          <input type="checkbox" value="${person.name}" ${isAssigned ? 'checked' : ''} class="checkbox-station-assign-staff w-4 h-4 rounded border-slate-600 text-fest-bavaria focus:ring-fest-bavaria">
-          <span>${person.name}</span>
-        `;
-        container.appendChild(label);
-      });
-
-      document.getElementById('modal-station-assign-staff').classList.remove('hidden');
+    function closeItemStockAdjustModal() {
+      document.getElementById('modal-item-stock-adjust').classList.add('hidden');
+      adjustingStockItemKey = null;
     }
 
-    function closeStationAssignStaffModal() {
-      document.getElementById('modal-station-assign-staff').classList.add('hidden');
-    }
+    function saveDirectItemStockAdjust() {
+      if (!adjustingStockItemKey) return;
+      const cold = parseInt(document.getElementById('stock-adjust-cold').value) || 0;
+      const cooler = parseInt(document.getElementById('stock-adjust-cooler').value) || 0;
 
-    function saveStationStaffAssignments() {
-      if (!assigningStationId) return;
-
-      const checkedBoxes = document.querySelectorAll('.checkbox-station-assign-staff:checked');
-      const selectedNames = Array.from(checkedBoxes).map(cb => cb.value);
-
-      staffRoster.forEach(person => {
-        if (!person.assignedStations) person.assignedStations = [];
-        if (selectedNames.includes(person.name)) {
-          if (!person.assignedStations.includes(assigningStationId)) {
-            person.assignedStations.push(assigningStationId);
-          }
-        } else {
-          person.assignedStations = person.assignedStations.filter(id => id !== assigningStationId);
-        }
-      });
+      if (!stockLevels[adjustingStockItemKey]) {
+        stockLevels[adjustingStockItemKey] = { coldRoom: 0, cooler: 0 };
+      }
+      stockLevels[adjustingStockItemKey].coldRoom = Math.max(0, cold);
+      stockLevels[adjustingStockItemKey].cooler = Math.max(0, cooler);
 
       saveStateToStorage();
-      closeStationAssignStaffModal();
-      renderStaffManagementTable();
-      renderStationsManagementTable();
+      closeItemStockAdjustModal();
+      refreshActiveStationUI();
     }
-
-    /* ==================== STATIONS & STAFF TABLES ==================== */
-    function renderStationsManagementTable() {
-      const tbody = document.getElementById('mgr-stations-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      stationsList.forEach(st => {
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-750/50";
-        tr.innerHTML = `
-          <td class="p-2">
-            <span class="font-bold text-white flex items-center gap-1.5">
-              <span>${st.icon || '📍'}</span>
-              <span>${st.name}</span>
-            </span>
-            <span class="text-[10px] text-slate-400 block">${st.subtitle || ''}</span>
-          </td>
-          <td class="p-2 text-right">
-            <button type="button" onclick="openStationAssignStaffModal('${st.id}')" class="touch-btn bg-blue-900/60 text-blue-200 border border-blue-700/60 text-[10px] font-bold px-2 py-1 rounded hover:bg-blue-800 mr-1">
-              👥 Assign Staff
-            </button>
-            <button type="button" onclick="openStationEditModal('${st.id}')" class="touch-btn bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-1 rounded hover:bg-slate-700">
-              ✏️
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderStaffManagementTable() {
-      const tbody = document.getElementById('mgr-staff-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      staffRoster.forEach(person => {
-        const badges = (person.assignedStations || []).map(stId => {
-          const stObj = stationsList.find(s => s.id === stId);
-          return `<span class="bg-slate-700 text-slate-300 px-1 py-0.5 rounded text-[9px] font-semibold">${stObj ? stObj.name : stId}</span>`;
-        }).join(' ');
-
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-750/50";
-        tr.innerHTML = `
-          <td class="p-2">
-            <div class="font-bold text-white">${person.name}</div>
-            <div class="text-[10px] text-slate-400">PIN: ****</div>
-          </td>
-          <td class="p-2">
-            <div class="flex flex-wrap gap-1">${badges || '<span class="text-slate-500 text-[10px]">None</span>'}</div>
-          </td>
-          <td class="p-2 text-right">
-            <button type="button" onclick="openStaffModal('${person.name}')" class="touch-btn bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-1 rounded hover:bg-slate-700">
-              ✏️ Edit
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
     /* ==================== STOCK TRANSFER & OPENING MODALS ==================== */
     function openTransferStockModal(preselectKey = null) {
-      if (preselectKey) {
-        document.getElementById('transfer-stock-item-id').value = preselectKey;
+      const select = document.getElementById('transfer-stock-item-id');
+      if (select) {
+        select.innerHTML = '';
+        // Dynamically populate all active products & rolls
+        productCatalog.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = `${p.name} (Stock: ${stockLevels[p.id]?.coldRoom || 0})`;
+          select.appendChild(opt);
+        });
+        const optStd = document.createElement('option');
+        optStd.value = 'standard_roll';
+        optStd.textContent = `Standard White Rolls (Stock: ${stockLevels.standard_roll?.coldRoom || 0})`;
+        select.appendChild(optStd);
+
+        const optCru = document.createElement('option');
+        optCru.value = 'crusty_roll';
+        optCru.textContent = `German Crusty / Rye Rolls (Stock: ${stockLevels.crusty_roll?.coldRoom || 0})`;
+        select.appendChild(optCru);
+
+        if (preselectKey) {
+          select.value = preselectKey;
+        }
       }
+
       document.getElementById('transfer-stock-qty').value = "50";
       document.getElementById('modal-transfer-stock').classList.remove('hidden');
-    }
-
-    function closeTransferStockModal() {
-      document.getElementById('modal-transfer-stock').classList.add('hidden');
-    }
-
-    function setTransferQty(qty) {
-      document.getElementById('transfer-stock-qty').value = qty;
-    }
-
-    function executeStockTransfer() {
-      const itemKey = document.getElementById('transfer-stock-item-id').value;
-      const qty = parseInt(document.getElementById('transfer-stock-qty').value) || 0;
-
-      if (qty <= 0) {
-        alert("Please enter a valid quantity.");
-        return;
-      }
-
-      if (!stockLevels[itemKey]) {
-        stockLevels[itemKey] = { coldRoom: 0, cooler: 0 };
-      }
-
-      stockLevels[itemKey].coldRoom = Math.max(0, stockLevels[itemKey].coldRoom - qty);
-      stockLevels[itemKey].cooler += qty;
-
-      saveStateToStorage();
-      closeTransferStockModal();
-      refreshActiveStationUI();
-      playBeepTone('alert');
-    }
-
-    function openOpeningStockModal() {
-      document.getElementById('open-stock-brat-cold').value = stockLevels.bratwurst?.coldRoom || 200;
-      document.getElementById('open-stock-brat-cooler').value = stockLevels.bratwurst?.cooler || 75;
-      document.getElementById('open-stock-bock-cold').value = stockLevels.bockwurst?.coldRoom || 150;
-      document.getElementById('open-stock-bock-cooler').value = stockLevels.bockwurst?.cooler || 50;
-      document.getElementById('open-stock-cheese-cold').value = stockLevels.cheesegriller?.coldRoom || 150;
-      document.getElementById('open-stock-cheese-cooler').value = stockLevels.cheesegriller?.cooler || 50;
-      document.getElementById('open-stock-roll-std-cold').value = stockLevels.standard_roll?.coldRoom || 300;
-      document.getElementById('open-stock-roll-std-cooler').value = stockLevels.standard_roll?.cooler || 100;
-      document.getElementById('open-stock-roll-cru-cold').value = stockLevels.crusty_roll?.coldRoom || 100;
-      document.getElementById('open-stock-roll-cru-cooler').value = stockLevels.crusty_roll?.cooler || 50;
-
-      document.getElementById('modal-opening-stock').classList.remove('hidden');
-    }
-
-    function closeOpeningStockModal() {
-      document.getElementById('modal-opening-stock').classList.add('hidden');
-    }
-
-    function saveOpeningStockValues() {
-      stockLevels = {
-        bratwurst: {
-          coldRoom: parseInt(document.getElementById('open-stock-brat-cold').value) || 0,
-          cooler: parseInt(document.getElementById('open-stock-brat-cooler').value) || 0
-        },
-        bockwurst: {
-          coldRoom: parseInt(document.getElementById('open-stock-bock-cold').value) || 0,
-          cooler: parseInt(document.getElementById('open-stock-bock-cooler').value) || 0
-        },
-        cheesegriller: {
-          coldRoom: parseInt(document.getElementById('open-stock-cheese-cold').value) || 0,
-          cooler: parseInt(document.getElementById('open-stock-cheese-cooler').value) || 0
-        },
-        standard_roll: {
-          coldRoom: parseInt(document.getElementById('open-stock-roll-std-cold').value) || 0,
-          cooler: parseInt(document.getElementById('open-stock-roll-std-cooler').value) || 0
-        },
-        crusty_roll: {
-          coldRoom: parseInt(document.getElementById('open-stock-roll-cru-cold').value) || 0,
-          cooler: parseInt(document.getElementById('open-stock-roll-cru-cooler').value) || 0
-        }
-      };
-
-      saveStateToStorage();
-      closeOpeningStockModal();
-      refreshActiveStationUI();
-    }
-
-    /* ==================== UNIT COSTS (COGS) MODAL ==================== */
-    function openCostConfigModal() {
-      document.getElementById('cost-input-bratwurst').value = unitCosts.bratwurst || 22.00;
-      document.getElementById('cost-input-bockwurst').value = unitCosts.bockwurst || 22.00;
-      document.getElementById('cost-input-cheesegriller').value = unitCosts.cheesegriller || 24.00;
-      document.getElementById('cost-input-currysauce').value = unitCosts.currysauce || 4.00;
-      document.getElementById('cost-input-std-roll').value = unitCosts.standard_roll || 3.50;
-      document.getElementById('cost-input-cru-roll').value = unitCosts.crusty_roll || 5.50;
-
-      document.getElementById('modal-cost-config').classList.remove('hidden');
     }
 
     function closeCostConfigModal() {
@@ -3160,17 +3033,21 @@
       if (productId) {
         const prod = productCatalog.find(p => p.id === productId);
         if (!prod) return;
-        document.getElementById('modal-product-title').innerText = "Edit Product";
+        document.getElementById('modal-product-title').innerText = "Edit Item & Stock";
         document.getElementById('input-prod-name').value = prod.name;
         document.getElementById('input-prod-price').value = prod.price;
         document.getElementById('input-prod-cost').value = prod.cost || 0;
         document.getElementById('input-prod-desc').value = prod.desc || '';
+        document.getElementById('input-prod-stock-cold').value = stockLevels[productId]?.coldRoom || 0;
+        document.getElementById('input-prod-stock-cooler').value = stockLevels[productId]?.cooler || 0;
       } else {
-        document.getElementById('modal-product-title').innerText = "Add New Product";
+        document.getElementById('modal-product-title').innerText = "Add New Item & Stock";
         document.getElementById('input-prod-name').value = '';
         document.getElementById('input-prod-price').value = '60';
         document.getElementById('input-prod-cost').value = '22';
         document.getElementById('input-prod-desc').value = '';
+        document.getElementById('input-prod-stock-cold').value = '50';
+        document.getElementById('input-prod-stock-cooler').value = '25';
       }
       document.getElementById('modal-edit-product').classList.remove('hidden');
     }
@@ -3185,11 +3062,15 @@
       const price = parseFloat(document.getElementById('input-prod-price').value) || 0;
       const cost = parseFloat(document.getElementById('input-prod-cost').value) || 0;
       const desc = document.getElementById('input-prod-desc').value.trim();
+      const stockCold = parseInt(document.getElementById('input-prod-stock-cold').value) || 0;
+      const stockCooler = parseInt(document.getElementById('input-prod-stock-cooler').value) || 0;
 
       if (!name) {
         alert("Please enter a product name.");
         return;
       }
+
+      let targetId = editingProductId;
 
       if (editingProductId) {
         const prod = productCatalog.find(p => p.id === editingProductId);
@@ -3200,9 +3081,9 @@
           prod.desc = desc;
         }
       } else {
-        const newId = 'prod_' + Date.now();
+        targetId = 'prod_' + Date.now();
         productCatalog.push({
-          id: newId,
+          id: targetId,
           name: name,
           price: price,
           cost: cost,
@@ -3211,18 +3092,195 @@
         });
       }
 
+      // Synchronize stock for this item
+      stockLevels[targetId] = {
+        coldRoom: Math.max(0, stockCold),
+        cooler: Math.max(0, stockCooler)
+      };
+
+      // Also ensure unit costs has the entry for profit calculations
+      unitCosts[targetId] = cost;
+
       saveStateToStorage();
       closeProductEditModal();
       renderMenu();
       renderManagerProductsList();
+      renderStockTable();
     }
 
     function deleteProduct(productId) {
-      if (!confirm("Are you sure you want to remove this item from the till menu?")) return;
+      if (!confirm("Are you sure you want to remove this item? It will be removed from both the till menu and the stock ledger.")) return;
       productCatalog = productCatalog.filter(p => p.id !== productId);
+      delete stockLevels[productId];
+      delete unitCosts[productId];
+
       saveStateToStorage();
       renderMenu();
       renderManagerProductsList();
+      renderStockTable();
+    }
+
+    function renderManagerProductsList() {
+      const container = document.getElementById('mgr-products-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      productCatalog.forEach(p => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-black text-white text-xs sm:text-sm">${p.name}</span>
+              <span class="font-mono font-bold text-fest-gold text-xs">R${Number(p.price).toFixed(2)}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${p.desc || ''}</p>
+            <div class="mt-2 text-[10px] text-slate-400 flex items-center justify-between">
+              <span>Unit Cost: R${(p.cost || 0).toFixed(2)}</span>
+              <span>On-Site: <strong class="text-white">${stockLevels[p.id]?.cooler || 0}</strong></span>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-1.5 mt-3 pt-2 border-t border-slate-800">
+            <button type="button" onclick="openProductEditModal('${p.id}')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded">
+              ✏️ Edit
+            </button>
+            <button type="button" onclick="deleteProduct('${p.id}')" class="touch-btn bg-red-950 hover:bg-red-900 text-red-300 border border-red-800 text-[10px] font-bold px-2 py-1 rounded">
+              🗑️
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderStationsManagementTable() {
+      const tbody = document.getElementById('mgr-stations-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      stationsList.forEach(st => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-750/50";
+        tr.innerHTML = `
+          <td class="p-2">
+            <div class="flex items-center gap-2">
+              <span class="text-base">${st.icon || '📍'}</span>
+              <div>
+                <div class="font-bold text-white">${st.name}</div>
+                <div class="text-[10px] text-slate-400">${st.subtitle || ''}</div>
+              </div>
+            </div>
+          </td>
+          <td class="p-2 text-right">
+            <button type="button" onclick="openStationStaffAssignModal('${st.id}')" class="touch-btn bg-blue-900/60 hover:bg-blue-800 text-blue-200 border border-blue-700/60 text-[10px] font-bold px-2 py-1 rounded mr-1">
+              👥 Assign Staff
+            </button>
+            <button type="button" onclick="openStationEditModal('${st.id}')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded mr-1">
+              ✏️
+            </button>
+            ${['braai', 'handout', 'till', 'shared', 'manager'].includes(st.id) ? '' : `
+              <button type="button" onclick="deleteStation('${st.id}')" class="touch-btn bg-red-950 text-red-300 border border-red-800 text-[10px] font-bold px-2 py-1 rounded">
+                🗑️
+              </button>
+            `}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderStaffManagementTable() {
+      const tbody = document.getElementById('mgr-staff-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      staffRoster.forEach(person => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-750/50";
+        const assignedLabels = (person.assignedStations || []).map(sid => {
+          const st = stationsList.find(s => s.id === sid);
+          return st ? st.name : sid;
+        }).join(', ') || 'None';
+
+        tr.innerHTML = `
+          <td class="p-2">
+            <div class="font-bold text-white">${person.name}</div>
+            <div class="text-[10px] text-slate-400">PIN: ****</div>
+          </td>
+          <td class="p-2 text-[11px] text-slate-300">${assignedLabels}</td>
+          <td class="p-2 text-right">
+            <button type="button" onclick="openStaffModal('${person.name.replace(/'/g, "\\'")}')" class="touch-btn bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-bold px-2 py-1 rounded mr-1">
+              ✏️
+            </button>
+            <button type="button" onclick="deleteStaffMember('${person.name.replace(/'/g, "\\'")}')" class="touch-btn bg-red-950 text-red-300 border border-red-800 text-[10px] font-bold px-2 py-1 rounded">
+              🗑️
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteStaffMember(name) {
+      if (!confirm(`Are you sure you want to remove ${name} from the staff roster?`)) return;
+      staffRoster = staffRoster.filter(s => s.name !== name);
+      saveStateToStorage();
+      renderStaffManagementTable();
+    }
+
+    function deleteStation(stationId) {
+      if (!confirm("Are you sure you want to remove this station?")) return;
+      stationsList = stationsList.filter(s => s.id !== stationId);
+      saveStateToStorage();
+      renderHeaderStationTabs();
+      renderStationsManagementTable();
+    }
+
+    function openStationStaffAssignModal(stationId) {
+      assigningStationId = stationId;
+      const st = stationsList.find(s => s.id === stationId);
+      document.getElementById('modal-station-assign-title').innerText = `Assign Staff to ${st ? st.name : stationId}`;
+
+      const listContainer = document.getElementById('station-assign-staff-list');
+      listContainer.innerHTML = '';
+
+      staffRoster.forEach(person => {
+        const isPermitted = (person.assignedStations || []).includes(stationId);
+        const label = document.createElement('label');
+        label.className = "flex items-center gap-2 p-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white cursor-pointer hover:bg-slate-750";
+        label.innerHTML = `
+          <input type="checkbox" value="${person.name}" ${isPermitted ? 'checked' : ''} class="checkbox-station-assigned-member w-4 h-4 rounded text-blue-600">
+          <span class="font-bold">${person.name}</span>
+        `;
+        listContainer.appendChild(label);
+      });
+
+      document.getElementById('modal-station-assign-staff').classList.remove('hidden');
+    }
+
+    function closeStationAssignStaffModal() {
+      document.getElementById('modal-station-assign-staff').classList.add('hidden');
+      assigningStationId = null;
+    }
+
+    function saveStationStaffAssignments() {
+      if (!assigningStationId) return;
+      const checkedNames = Array.from(document.querySelectorAll('.checkbox-station-assigned-member:checked')).map(cb => cb.value);
+
+      staffRoster.forEach(person => {
+        if (!person.assignedStations) person.assignedStations = [];
+        if (checkedNames.includes(person.name)) {
+          if (!person.assignedStations.includes(assigningStationId)) {
+            person.assignedStations.push(assigningStationId);
+          }
+        } else {
+          person.assignedStations = person.assignedStations.filter(sid => sid !== assigningStationId);
+        }
+      });
+
+      saveStateToStorage();
+      closeStationAssignStaffModal();
+      renderStaffManagementTable();
     }
 
     function openStationEditModal(stationId) {
