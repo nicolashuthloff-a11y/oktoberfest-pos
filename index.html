@@ -19,35 +19,52 @@ user-select: none;
 -webkit-tap-highlight-color: transparent;
 }
 .touch-btn:active {
-transform: scale(0.97);
+transform: scale(0.96);
+}
+​/* Tin Pod Capsule Controller Styling */
+.tin-pod-container {
+background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(100, 116, 139, 0.4);
+}
+.tin-pod-btn {
+transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.tin-pod-btn:hover {
+filter: brightness(1.15);
+}
+.tin-pod-btn:active {
+transform: scale(0.94);
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
 }
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
 ​<!-- ================= TOP NAVIGATION / GLOBAL HEADER ================= -->
-<header class="bg-slate-900/90 border-b border-amber-500/30 sticky top-0 z-40 backdrop-blur-md px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 shadow-xl">
-<div class="flex items-center gap-3">
-<button onclick="openMasterPinModal('manager')" class="flex items-center gap-2 hover:opacity-90 active:scale-95 transition" title="Tap to unlock Master Manager">
+<header class="bg-slate-900/90 border-b border-amber-500/30 sticky top-0 z-40 backdrop-blur-md px-3 sm:px-6 py-2 flex items-center justify-between gap-2 shadow-xl">
+<div class="flex items-center gap-2 sm:gap-3">
+<button onclick="openMasterPinModal()" class="flex items-center gap-2 hover:opacity-90 active:scale-95 transition" title="Tap to unlock Master Manager">
 <span class="text-2xl sm:text-3xl">🥨</span>
 <div>
-<h1 class="text-sm sm:text-base font-black tracking-wider text-amber-400 uppercase">Oktoberfest KDS</h1>
-<p class="text-[10px] text-slate-400 font-mono hidden sm:block">German Club Live Kitchen Hub</p>
+<h1 class="text-sm sm:text-base font-black tracking-wider text-amber-400 uppercase leading-none">Oktoberfest KDS</h1>
+<p class="text-[9px] text-slate-400 font-mono hidden sm:block mt-0.5">German Club Live Hub</p>
 </div>
 </button>
 ​<!-- Active Station Tabs -->
-<nav class="hidden md:flex items-center gap-1.5 ml-4 text-xs font-bold">
+<nav class="hidden md:flex items-center gap-1.5 ml-3 text-xs font-bold">
 <button onclick="switchStationView('till')" id="nav-btn-till" class="px-3 py-1.5 rounded-xl border border-transparent hover:border-amber-500/40 hover:bg-slate-800 transition">💳 Till</button>
 <button onclick="switchStationView('handout')" id="nav-btn-handout" class="px-3 py-1.5 rounded-xl border border-transparent hover:border-amber-500/40 hover:bg-slate-800 transition">📦 Prep / Handout</button>
 <button onclick="switchStationView('braai')" id="nav-btn-braai" class="px-3 py-1.5 rounded-xl border border-transparent hover:border-amber-500/40 hover:bg-slate-800 transition">🔥 Braai Coals</button>
-<button onclick="switchStationView('shared')" id="nav-btn-shared" class="px-3 py-1.5 rounded-xl border border-transparent hover:border-amber-500/40 hover:bg-slate-800 transition">📱 Shared View</button>
-<button onclick="openMasterPinModal('manager')" id="nav-btn-manager" class="px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition">🔒 Manager</button>
+<button onclick="switchStationView('shared')" id="nav-btn-shared" class="px-3 py-1.5 rounded-xl border border-transparent hover:border-amber-500/40 hover:bg-slate-800 transition">📱 Shared</button>
+<button onclick="openMasterPinModal()" id="nav-btn-manager" class="px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition">🔒 Manager</button>
 </nav>
 </div>
 ​<!-- Right Controls: Stock Snapshot, Operator & Switch Station -->
-<div class="flex items-center gap-2 sm:gap-3 text-xs">
+<div class="flex items-center gap-2 text-xs">
 <button onclick="openMenuPairingModal()" class="touch-btn bg-amber-950/60 border border-amber-500/50 hover:bg-amber-900/80 text-amber-300 font-black px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow">
 <span>📖</span>
-<span class="hidden sm:inline">Menu & Pairings</span>
+<span class="hidden sm:inline">Pairing Guide</span>
 </button>
 ​<div class="hidden lg:flex items-center gap-2 bg-slate-900/80 border border-slate-800 rounded-xl px-2.5 py-1 text-[11px] font-mono">
 <span class="text-slate-400">On-Site Sausages:</span>
@@ -74,116 +91,131 @@ transform: scale(0.97);
 <div class="flex-1 flex flex-col space-y-3">
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-2">
-<h2 class="text-lg font-black text-amber-400 flex items-center gap-2">💳 Till / POS Ordering</h2>
-<span class="text-xs text-slate-400">Tap Sausage + Preferred Roll to add to ticket</span>
+<h2 class="text-lg font-black text-amber-400 flex items-center gap-1.5">
+<span>💳</span> Till / POS Quick Ordering
+</h2>
 </div>
-<button onclick="openMenuPairingModal()" class="text-xs text-amber-400 hover:underline flex items-center gap-1">
-<span>🥨 Pairings Guide</span>
-</button>
+<span class="text-xs text-slate-400">Select Roll Option inside each Sausage Pod</span>
 </div>
-​<!-- Sausage Touch Cards -->
+​<!-- Sausage Touch Cards with TIN POD Capsule Roll Selectors -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="till-sausage-grid">
-<!-- Bratwurst (140g) -->
+​<!-- 1. BRATWURST (140g) -->
 <div class="bg-slate-900 border-2 border-blue-500/50 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg">
 <div class="flex justify-between items-start mb-2">
 <div>
-<span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Pork & Veal Classic</span>
+<span class="text-[10px] font-bold text-blue-400 tracking-wider uppercase">Traditional Pork & Veal</span>
 <h3 class="text-lg font-black text-slate-100 leading-tight">Bratwurst (140g)</h3>
-<p class="text-xs text-slate-400">Grilled over open coals</p>
+<p class="text-xs text-slate-400">Coals grilled German classic</p>
 </div>
 <span class="text-xl font-black font-mono text-amber-400">R60.00</span>
 </div>
-<div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800">
-<button onclick="addToCart('bratwurst', 'crusty')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border-2 border-amber-400 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-black flex flex-col items-center justify-center text-center">
-<span>🥖 Crispy</span>
-<span class="text-[9px] text-amber-300 font-bold uppercase tracking-tighter">★ Best Match</span>
+​<!-- TIN POD CAPSULE CONTROLLER -->
+<div class="tin-pod-container p-1.5 rounded-2xl flex items-center gap-1.5">
+<!-- Crispy Roll (Best Match) -->
+<button onclick="addToCart('bratwurst', 'crusty')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-gradient-to-b from-amber-600 to-amber-700 border-2 border-amber-300 text-slate-950 font-black text-xs flex flex-col items-center justify-center text-center">
+<span class="text-slate-950 font-black">🥖 Crispy Roll</span>
+<span class="text-[8px] bg-slate-950 text-amber-300 px-1 rounded uppercase font-bold tracking-tight mt-0.5">★ BEST MATCH</span>
 </button>
-<button onclick="addToCart('bratwurst', 'white')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold flex flex-col items-center justify-center text-center">
-<span>🥖 White</span>
-<span class="text-[9px] text-slate-400">Standard</span>
+<!-- White Roll -->
+<button onclick="addToCart('bratwurst', 'white')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center">
+<span>🥖 White Roll</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Standard Bun</span>
 </button>
-<button onclick="addToCart('bratwurst', 'none')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold flex flex-col items-center justify-center text-center">
+<!-- No Roll -->
+<button onclick="addToCart('bratwurst', 'none')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-300 font-bold text-xs flex flex-col items-center justify-center text-center">
 <span>🍽️ No Roll</span>
-<span class="text-[9px] text-slate-400">Plate Only</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Plate Only</span>
 </button>
 </div>
 </div>
-​<!-- Bratwurst with Curry Sauce -->
+​<!-- 2. CURRYWURST -->
 <div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg">
 <div class="flex justify-between items-start mb-2">
 <div>
-<span class="text-xs font-bold text-amber-400 tracking-wider uppercase">House Specialty</span>
+<span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase">House Specialty in Tray</span>
 <h3 class="text-lg font-black text-slate-100 leading-tight">Currywurst</h3>
-<p class="text-xs text-slate-400">Sliced bratwurst in warm spiced sauce</p>
+<p class="text-xs text-slate-400">Sliced Bratwurst + 100ml warm curry sauce</p>
 </div>
 <span class="text-xl font-black font-mono text-amber-400">R70.00</span>
 </div>
-<div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800">
-<button onclick="addToCart('currywurst', 'crusty')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border-2 border-amber-400 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-black flex flex-col items-center justify-center text-center">
-<span>🥖 Crispy</span>
-<span class="text-[9px] text-amber-300 font-bold uppercase tracking-tighter">★ Best Match</span>
+​<!-- TIN POD CAPSULE CONTROLLER -->
+<div class="tin-pod-container p-1.5 rounded-2xl flex items-center gap-1.5">
+<!-- Crispy Roll (Best Match) -->
+<button onclick="addToCart('currywurst', 'crusty')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-gradient-to-b from-amber-600 to-amber-700 border-2 border-amber-300 text-slate-950 font-black text-xs flex flex-col items-center justify-center text-center">
+<span class="text-slate-950 font-black">🥖 Crispy Roll</span>
+<span class="text-[8px] bg-slate-950 text-amber-300 px-1 rounded uppercase font-bold tracking-tight mt-0.5">★ BEST MATCH</span>
 </button>
-<button onclick="addToCart('currywurst', 'white')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold flex flex-col items-center justify-center text-center">
-<span>🥖 White</span>
-<span class="text-[9px] text-slate-400">Standard</span>
+<!-- White Roll -->
+<button onclick="addToCart('currywurst', 'white')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center">
+<span>🥖 White Roll</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Standard Bun</span>
 </button>
-<button onclick="addToCart('currywurst', 'none')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold flex flex-col items-center justify-center text-center">
+<!-- No Roll -->
+<button onclick="addToCart('currywurst', 'none')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-300 font-bold text-xs flex flex-col items-center justify-center text-center">
 <span>🍽️ Boat Only</span>
-<span class="text-[9px] text-slate-400">No Bun</span>
+<span class="text-[8px] text-slate-400 mt-0.5">No Bun</span>
 </button>
 </div>
 </div>
-​<!-- Bockwurst (140g) -->
+​<!-- 3. BOCKWURST (140g) -->
 <div class="bg-slate-900 border-2 border-red-500/50 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg">
 <div class="flex justify-between items-start mb-2">
 <div>
-<span class="text-xs font-bold text-red-400 tracking-wider uppercase">Traditional Smoked</span>
+<span class="text-[10px] font-bold text-red-400 tracking-wider uppercase">Smoked German Paprika</span>
 <h3 class="text-lg font-black text-slate-100 leading-tight">Bockwurst (140g)</h3>
-<p class="text-xs text-slate-400">Smoked German sausage with paprika</p>
+<p class="text-xs text-slate-400">Juicy smoked German sausage</p>
 </div>
 <span class="text-xl font-black font-mono text-amber-400">R60.00</span>
 </div>
-<div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800">
-<button onclick="addToCart('bockwurst', 'crusty')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border-2 border-amber-400 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-black flex flex-col items-center justify-center text-center">
-<span>🥖 Crispy</span>
-<span class="text-[9px] text-amber-300 font-bold uppercase tracking-tighter">★ Best Match</span>
+​<!-- TIN POD CAPSULE CONTROLLER -->
+<div class="tin-pod-container p-1.5 rounded-2xl flex items-center gap-1.5">
+<!-- Crispy Roll (Best Match) -->
+<button onclick="addToCart('bockwurst', 'crusty')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-gradient-to-b from-amber-600 to-amber-700 border-2 border-amber-300 text-slate-950 font-black text-xs flex flex-col items-center justify-center text-center">
+<span class="text-slate-950 font-black">🥖 Crispy Roll</span>
+<span class="text-[8px] bg-slate-950 text-amber-300 px-1 rounded uppercase font-bold tracking-tight mt-0.5">★ BEST MATCH</span>
 </button>
-<button onclick="addToCart('bockwurst', 'white')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold flex flex-col items-center justify-center text-center">
-<span>🥖 White</span>
-<span class="text-[9px] text-slate-400">Standard</span>
+<!-- White Roll -->
+<button onclick="addToCart('bockwurst', 'white')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center">
+<span>🥖 White Roll</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Standard Bun</span>
 </button>
-<button onclick="addToCart('bockwurst', 'none')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold flex flex-col items-center justify-center text-center">
+<!-- No Roll -->
+<button onclick="addToCart('bockwurst', 'none')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-300 font-bold text-xs flex flex-col items-center justify-center text-center">
 <span>🍽️ No Roll</span>
-<span class="text-[9px] text-slate-400">Plate Only</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Plate Only</span>
 </button>
 </div>
 </div>
-​<!-- Cheesegriller (110g) -->
+​<!-- 4. CHEESEGRILLER (110g) -->
 <div class="bg-slate-900 border-2 border-yellow-500/50 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg">
 <div class="flex justify-between items-start mb-2">
 <div>
-<span class="text-xs font-bold text-yellow-400 tracking-wider uppercase">Cheddar Stuffed</span>
+<span class="text-[10px] font-bold text-yellow-400 tracking-wider uppercase">Cheddar Stuffed Grill</span>
 <h3 class="text-lg font-black text-slate-100 leading-tight">Cheesegriller (110g)</h3>
-<p class="text-xs text-slate-400">Melted cheese filling inside</p>
+<p class="text-xs text-slate-400">Filled with melted cheese</p>
 </div>
 <span class="text-xl font-black font-mono text-amber-400">R60.00</span>
 </div>
-<div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800">
-<button onclick="addToCart('cheesegriller', 'white')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border-2 border-amber-400 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-black flex flex-col items-center justify-center text-center">
-<span>🥖 White</span>
-<span class="text-[9px] text-amber-300 font-bold uppercase tracking-tighter">★ Best Match</span>
+​<!-- TIN POD CAPSULE CONTROLLER -->
+<div class="tin-pod-container p-1.5 rounded-2xl flex items-center gap-1.5">
+<!-- White Roll (Best Match) -->
+<button onclick="addToCart('cheesegriller', 'white')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-gradient-to-b from-amber-500 to-amber-600 border-2 border-amber-300 text-slate-950 font-black text-xs flex flex-col items-center justify-center text-center">
+<span class="text-slate-950 font-black">🥖 White Roll</span>
+<span class="text-[8px] bg-slate-950 text-amber-300 px-1 rounded uppercase font-bold tracking-tight mt-0.5">★ BEST MATCH</span>
 </button>
-<button onclick="addToCart('cheesegriller', 'crusty')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold flex flex-col items-center justify-center text-center">
-<span>🥖 Crispy</span>
-<span class="text-[9px] text-slate-400">Crusty Bun</span>
+<!-- Crispy Roll -->
+<button onclick="addToCart('cheesegriller', 'crusty')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-200 font-bold text-xs flex flex-col items-center justify-center text-center">
+<span>🥖 Crispy Roll</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Crusty Bun</span>
 </button>
-<button onclick="addToCart('cheesegriller', 'none')" class="touch-btn min-h-[58px] p-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold flex flex-col items-center justify-center text-center">
+<!-- No Roll -->
+<button onclick="addToCart('cheesegriller', 'none')" class="tin-pod-btn flex-1 py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-600 text-slate-300 font-bold text-xs flex flex-col items-center justify-center text-center">
 <span>🍽️ No Roll</span>
-<span class="text-[9px] text-slate-400">Plate Only</span>
+<span class="text-[8px] text-slate-400 mt-0.5">Plate Only</span>
 </button>
 </div>
 </div>
-</div>
+​</div>
 ​<!-- Standalone Rolls Bar -->
 <div class="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-2 shadow">
 <div class="flex items-center gap-2">
@@ -232,11 +264,11 @@ transform: scale(0.97);
 <div class="grid grid-cols-2 gap-2">
 <button onclick="submitOrder('yoco')" class="touch-btn p-3 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl text-xs sm:text-sm flex flex-col items-center justify-center shadow-lg active:scale-95">
 <span>💳 Yoco / Card</span>
-<span class="text-[10px] font-normal text-blue-200">Tap / Swipe Machine</span>
+<span class="text-[10px] font-normal text-blue-200">Tap / Swipe POS</span>
 </button>
 <button onclick="submitOrder('cash')" class="touch-btn p-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-2xl text-xs sm:text-sm flex flex-col items-center justify-center shadow-lg active:scale-95">
 <span>💵 Cash Pay</span>
-<span class="text-[10px] font-normal text-emerald-200">Deposit In Cash Float</span>
+<span class="text-[10px] font-normal text-emerald-200">Into Cash Box</span>
 </button>
 </div>
 <div class="grid grid-cols-2 gap-2 text-xs">
@@ -318,7 +350,7 @@ transform: scale(0.97);
 <h3 class="text-base font-black text-amber-400">Active Order Slips (Post-It Queue)</h3>
 <span id="handout-ticket-count" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs px-2 py-0.5 rounded-full font-bold">0 Pending</span>
 </div>
-<span class="text-xs text-slate-400">Tap "Complete & Hand Out" once food is given to customer</span>
+<span class="text-xs text-slate-400">Tap "Complete & Hand Out" once food is handed over</span>
 </div>
 ​<div id="handout-tickets-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 <!-- Dynamically populated tickets -->
@@ -335,7 +367,7 @@ transform: scale(0.97);
 <span class="text-xs text-slate-400 hidden sm:inline">Monitor live orders, manage coals, and feed chafing trays</span>
 </div>
 <div class="flex items-center gap-2 text-xs">
-<span class="font-mono text-slate-400">Operational Focus: Local Cooler Only</span>
+<span class="font-mono text-slate-400">Focus: Local Cooler Boxes Only</span>
 </div>
 </div>
 ​<!-- 3 Sausage Live Monitors & Tactile Movement Buttons -->
@@ -350,7 +382,7 @@ transform: scale(0.97);
 </div>
 <span class="text-2xl">🇩🇪</span>
 </div>
-​<!-- 4 Equal Stat Cards -->
+​<!-- 4 Stat Cards -->
 <div class="grid grid-cols-4 gap-1.5 text-center font-mono my-2">
 <div class="bg-slate-950 border border-blue-500/50 rounded-xl p-1.5">
 <span class="text-[9px] text-blue-400 font-bold block uppercase">Ordered</span>
@@ -405,7 +437,7 @@ transform: scale(0.97);
 </div>
 <span class="text-2xl">🌶️</span>
 </div>
-​<!-- 4 Equal Stat Cards -->
+​<!-- 4 Stat Cards -->
 <div class="grid grid-cols-4 gap-1.5 text-center font-mono my-2">
 <div class="bg-slate-950 border border-red-500/50 rounded-xl p-1.5">
 <span class="text-[9px] text-red-400 font-bold block uppercase">Ordered</span>
@@ -460,7 +492,7 @@ transform: scale(0.97);
 </div>
 <span class="text-2xl">🧀</span>
 </div>
-​<!-- 4 Equal Stat Cards -->
+​<!-- 4 Stat Cards -->
 <div class="grid grid-cols-4 gap-1.5 text-center font-mono my-2">
 <div class="bg-slate-950 border border-yellow-500/50 rounded-xl p-1.5">
 <span class="text-[9px] text-yellow-400 font-bold block uppercase">Ordered</span>
@@ -653,11 +685,12 @@ transform: scale(0.97);
 </div>
 ​<div class="space-y-2 text-xs">
 <label class="text-[10px] uppercase font-bold text-slate-400 block">1. Select Station for this Device:</label>
-<div class="grid grid-cols-4 gap-1.5">
-<button type="button" onclick="setLoginStation('till')" id="login-st-till" class="p-2 rounded-xl border border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[11px]">💳 Till</button>
-<button type="button" onclick="setLoginStation('handout')" id="login-st-handout" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[11px]">📦 Prep</button>
-<button type="button" onclick="setLoginStation('braai')" id="login-st-braai" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[11px]">🔥 Braai</button>
-<button type="button" onclick="setLoginStation('shared')" id="login-st-shared" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[11px]">📱 Kiosk</button>
+<div class="grid grid-cols-5 gap-1.5">
+<button type="button" onclick="setLoginStation('till')" id="login-st-till" class="p-2 rounded-xl border border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px]">💳 Till</button>
+<button type="button" onclick="setLoginStation('handout')" id="login-st-handout" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px]">📦 Prep</button>
+<button type="button" onclick="setLoginStation('braai')" id="login-st-braai" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px]">🔥 Braai</button>
+<button type="button" onclick="setLoginStation('shared')" id="login-st-shared" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px]">📱 Kiosk</button>
+<button type="button" onclick="setLoginStation('manager')" id="login-st-manager" class="p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px]">🔒 Mgr</button>
 </div>
 ​<label class="text-[10px] uppercase font-bold text-slate-400 block pt-1">2. Select Your Name:</label>
 <div id="login-staff-chips" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-[110px] overflow-y-auto pr-1">
@@ -1026,12 +1059,12 @@ transform: scale(0.97);
 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 space-y-2">
 <label class="text-[10px] uppercase font-bold text-amber-400 block">Crusty / Crispy Roll Type:</label>
 <input id="edit-roll-crusty-name" type="text" value="German Crispy / Crusty Roll" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-bold">
-<input id="edit-roll-crusty-btn" type="text" value="🥖 Crispy" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100">
+<input id="edit-roll-crusty-btn" type="text" value="🥖 Crispy Roll" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100">
 </div>
 ​<div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 space-y-2">
 <label class="text-[10px] uppercase font-bold text-amber-200 block">Standard Soft Roll Type:</label>
 <input id="edit-roll-white-name" type="text" value="Standard White / Hot Dog Roll" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100 font-bold">
-<input id="edit-roll-white-btn" type="text" value="🥖 White" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100">
+<input id="edit-roll-white-btn" type="text" value="🥖 White Roll" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-slate-100">
 </div>
 </div>
 ​<div class="pt-3 border-t border-slate-800 flex justify-between gap-2">
@@ -1129,8 +1162,8 @@ let productCatalog = [
 ];
 ​// Roll Type Descriptions & Till Button Labels
 let rollConfig = {
-crusty: { name: 'German Crispy / Crusty Roll', btnLabel: '🥖 Crispy', desc: 'Pre-ordered 350 for Bratwurst & Bockwurst' },
-white: { name: 'Standard White / Hot Dog Roll', btnLabel: '🥖 White', desc: 'Pre-ordered 250 for Cheesegrillers' }
+crusty: { name: 'German Crispy / Crusty Roll', btnLabel: '🥖 Crispy Roll', desc: 'Pre-ordered 350 for Bratwurst & Bockwurst' },
+white: { name: 'Standard White / Hot Dog Roll', btnLabel: '🥖 White Roll', desc: 'Pre-ordered 250 for Cheesegrillers' }
 };
 ​// Supplier Raw Costs (COGS)
 let unitCosts = {
@@ -1219,13 +1252,20 @@ renderHandoutTickets();
 updateTicketTimers();
 }, 5000);
 });
+​function renderTillStation() {
+renderCart();
+}
 ​function renderAllViews() {
+try {
 updateHeaderStockSnapshot();
 renderTillStation();
 renderHandoutStation();
 renderBraaiStation();
 renderSharedStation();
 renderManagerDashboard();
+} catch (err) {
+console.error('Error in renderAllViews:', err);
+}
 }
 ​/* ================= STATION VIEW SWITCHING ================= */
 function switchStationView(targetStation) {
@@ -1234,7 +1274,7 @@ currentStation = targetStation;
 const activeEl = document.getElementById(view-${targetStation});
 if (activeEl) activeEl.classList.remove('hidden');
 ​// Update Nav buttons
-['till', 'handout', 'braai', 'shared'].forEach(st => {
+['till', 'handout', 'braai', 'shared', 'manager'].forEach(st => {
 const btn = document.getElementById(nav-btn-${st});
 if (!btn) return;
 if (st === targetStation) {
@@ -1259,7 +1299,8 @@ masterPinBuffer = '';
 ​function pressMasterPinKey(num) {
 if (masterPinBuffer.length < 4) {
 masterPinBuffer += num;
-document.getElementById('master-pin-display').value = masterPinBuffer;
+const display = document.getElementById('master-pin-display');
+if (display) display.value = masterPinBuffer;
 if (masterPinBuffer.length === 4) {
 setTimeout(verifyMasterPin, 150);
 }
@@ -1267,17 +1308,21 @@ setTimeout(verifyMasterPin, 150);
 }
 ​function clearMasterPinKey() {
 masterPinBuffer = '';
-document.getElementById('master-pin-display').value = '';
+const display = document.getElementById('master-pin-display');
+if (display) display.value = '';
 }
 ​function backspaceMasterPinKey() {
 masterPinBuffer = masterPinBuffer.slice(0, -1);
-document.getElementById('master-pin-display').value = masterPinBuffer;
+const display = document.getElementById('master-pin-display');
+if (display) display.value = masterPinBuffer;
 }
 ​function verifyMasterPin() {
-if (masterPinBuffer === '1978' || document.getElementById('master-pin-display').value === '1978') {
+const entered = masterPinBuffer || (document.getElementById('master-pin-display') ? document.getElementById('master-pin-display').value : '');
+if (entered === '1978') {
 closeMasterPinModal();
 currentOperator = 'Nicolas (Manager)';
-document.getElementById('current-user-display').textContent = 'Nicolas (Manager)';
+const userDisp = document.getElementById('current-user-display');
+if (userDisp) userDisp.textContent = 'Nicolas (Manager)';
 switchStationView('manager');
 } else {
 alert('Invalid Master PIN. (Correct code: 1978)');
@@ -1302,13 +1347,13 @@ loginPinBuffer = '';
 }
 ​function setLoginStation(st) {
 selectedLoginStation = st;
-['till', 'handout', 'braai', 'shared'].forEach(s => {
+['till', 'handout', 'braai', 'shared', 'manager'].forEach(s => {
 const btn = document.getElementById(login-st-${s});
 if (!btn) return;
 if (s === st) {
-btn.className = 'p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[11px] shadow';
+btn.className = 'p-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 font-black text-center text-[10px] shadow';
 } else {
-btn.className = 'p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[11px]';
+btn.className = 'p-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 font-bold text-center text-[10px]';
 }
 });
 }
@@ -1329,7 +1374,8 @@ populateLoginStaffChips();
 ​function pressLoginPinKey(num) {
 if (loginPinBuffer.length < 4) {
 loginPinBuffer += num;
-document.getElementById('login-pin-input').value = loginPinBuffer;
+const pinInput = document.getElementById('login-pin-input');
+if (pinInput) pinInput.value = loginPinBuffer;
 if (loginPinBuffer.length === 4) {
 setTimeout(performStaffLogin, 150);
 }
@@ -1337,26 +1383,37 @@ setTimeout(performStaffLogin, 150);
 }
 ​function clearLoginPinKey() {
 loginPinBuffer = '';
-document.getElementById('login-pin-input').value = '';
+const pinInput = document.getElementById('login-pin-input');
+if (pinInput) pinInput.value = '';
 }
 ​function backspaceLoginPinKey() {
 loginPinBuffer = loginPinBuffer.slice(0, -1);
-document.getElementById('login-pin-input').value = loginPinBuffer;
+const pinInput = document.getElementById('login-pin-input');
+if (pinInput) pinInput.value = loginPinBuffer;
 }
 ​function performStaffLogin() {
-const pin = loginPinBuffer.trim() || document.getElementById('login-pin-input').value.trim();
+const pinInput = document.getElementById('login-pin-input');
+const pin = loginPinBuffer.trim() || (pinInput ? pinInput.value.trim() : '');
 ​// Master PIN Universal Bypass
 if (pin === '1978') {
-currentOperator = selectedLoginStaff || 'Nicolas (Manager)';
-document.getElementById('current-user-display').textContent = currentOperator;
+currentOperator = selectedLoginStaff ? ${selectedLoginStaff} (Manager) : 'Nicolas (Manager)';
+const userDisp = document.getElementById('current-user-display');
+if (userDisp) userDisp.textContent = currentOperator;
 closeLoginModal();
 switchStationView('manager');
+return;
+}
+​// If user selected manager station, ensure Master PIN
+if (selectedLoginStation === 'manager') {
+alert('Please enter Master PIN 1978 to access Manager console.');
+clearLoginPinKey();
 return;
 }
 ​const staff = staffRoster.find(s => s.name.toLowerCase() === (selectedLoginStaff || '').toLowerCase());
 if ((staff && staff.pin === pin) || pin === '1234') {
 currentOperator = staff ? staff.name : (selectedLoginStaff || 'Nicolas');
-document.getElementById('current-user-display').textContent = currentOperator;
+const userDisp = document.getElementById('current-user-display');
+if (userDisp) userDisp.textContent = currentOperator;
 closeLoginModal();
 switchStationView(selectedLoginStation || 'till');
 } else {
@@ -1451,7 +1508,8 @@ if (tillCart.length === 0) {
 alert('Cart is empty. Tap sausage items first.');
 return;
 }
-​const note = document.getElementById('till-order-notes').value.trim();
+​const noteEl = document.getElementById('till-order-notes');
+const note = noteEl ? noteEl.value.trim() : '';
 const orderNum = #${String(orderCounter).padStart(3, '0')};
 let totalAmount = tillCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 if (paymentMethod === 'free') totalAmount = 0;
@@ -1477,7 +1535,7 @@ saveStateToStorage();
 showPostItSlip(newOrder);
 ​// Reset Cart
 clearCart();
-document.getElementById('till-order-notes').value = '';
+if (noteEl) noteEl.value = '';
 ​renderAllViews();
 }
 ​function deductStockForOrder(order) {
@@ -1506,9 +1564,13 @@ if (prepSlicedRolls.white >= item.qty) prepSlicedRolls.white -= item.qty;
 });
 }
 ​function showPostItSlip(order) {
-document.getElementById('slip-order-num').textContent = order.orderNum;
-document.getElementById('slip-payment-method').textContent = Paid: ${order.paymentMethod.toUpperCase()};
-document.getElementById('slip-total-amount').textContent = R${order.total.toFixed(2)};
+const numEl = document.getElementById('slip-order-num');
+const payEl = document.getElementById('slip-payment-method');
+const totEl = document.getElementById('slip-total-amount');
+const listEl = document.getElementById('slip-items-list');
+​if (numEl) numEl.textContent = order.orderNum;
+if (payEl) payEl.textContent = Paid: ${order.paymentMethod.toUpperCase()};
+if (totEl) totEl.textContent = R${order.total.toFixed(2)};
 ​let itemsHtml = '';
 order.items.forEach(it => {
 itemsHtml += <div class="flex justify-between py-1"> <span>${it.qty}x ${it.name} (${it.rollLabel})</span> <span>R${(it.price * it.qty).toFixed(2)}</span> </div>;
@@ -1516,7 +1578,7 @@ itemsHtml += <div class="flex justify-between py-1"> <span>${it.qty}x ${it.name}
 if (order.notes) {
 itemsHtml += <div class="text-[10px] italic text-amber-900 pt-1">Note: "${order.notes}"</div>;
 }
-​document.getElementById('slip-items-list').innerHTML = itemsHtml;
+​if (listEl) listEl.innerHTML = itemsHtml;
 document.getElementById('modal-postit-slip').classList.remove('hidden');
 }
 ​function closePostItModal() {
@@ -1533,12 +1595,18 @@ if (it.rollType === 'crusty' || it.id === 'roll_crusty') pendingCrusty += it.qty
 if (it.rollType === 'white' || it.id === 'roll_white') pendingWhite += it.qty;
 });
 });
-​document.getElementById('handout-rolls-crusty-ordered').textContent = pendingCrusty;
-document.getElementById('handout-rolls-crusty-ready').textContent = prepSlicedRolls.crusty;
-document.getElementById('handout-rolls-crusty-stock').textContent = stockLevels.roll_crusty.cooler;
-​document.getElementById('handout-rolls-white-ordered').textContent = pendingWhite;
-document.getElementById('handout-rolls-white-ready').textContent = prepSlicedRolls.white;
-document.getElementById('handout-rolls-white-stock').textContent = stockLevels.roll_white.cooler;
+​const elCO = document.getElementById('handout-rolls-crusty-ordered');
+const elCR = document.getElementById('handout-rolls-crusty-ready');
+const elCS = document.getElementById('handout-rolls-crusty-stock');
+if (elCO) elCO.textContent = pendingCrusty;
+if (elCR) elCR.textContent = prepSlicedRolls.crusty;
+if (elCS) elCS.textContent = stockLevels.roll_crusty.cooler;
+​const elWO = document.getElementById('handout-rolls-white-ordered');
+const elWR = document.getElementById('handout-rolls-white-ready');
+const elWS = document.getElementById('handout-rolls-white-stock');
+if (elWO) elWO.textContent = pendingWhite;
+if (elWR) elWR.textContent = prepSlicedRolls.white;
+if (elWS) elWS.textContent = stockLevels.roll_white.cooler;
 ​renderHandoutTickets();
 }
 ​function sliceRolls(type, qty) {
@@ -1590,7 +1658,7 @@ renderAllViews();
 }
 }
 ​function updateTicketTimers() {
-// Re-renders timers for freshness
+// Periodic timer
 }
 ​/* ================= BRAAI STATION CONTROLS & MOVEMENTS ================= */
 function renderBraaiStation() {
@@ -1606,20 +1674,32 @@ if (it.id === 'cheesegriller') demandCheese += it.qty;
 });
 });
 ​// Bratwurst
-document.getElementById('braai-count-bratwurst').textContent = demandBrat;
-document.getElementById('braai-coals-bratwurst').textContent = braaiActivity.bratwurst.onBraai;
-document.getElementById('braai-precooked-bratwurst').textContent = braaiActivity.bratwurst.precooked;
-document.getElementById('braai-cooler-bratwurst').textContent = stockLevels.bratwurst.cooler;
+const elBratCount = document.getElementById('braai-count-bratwurst');
+const elBratCoals = document.getElementById('braai-coals-bratwurst');
+const elBratPre = document.getElementById('braai-precooked-bratwurst');
+const elBratCooler = document.getElementById('braai-cooler-bratwurst');
+if (elBratCount) elBratCount.textContent = demandBrat;
+if (elBratCoals) elBratCoals.textContent = braaiActivity.bratwurst.onBraai;
+if (elBratPre) elBratPre.textContent = braaiActivity.bratwurst.precooked;
+if (elBratCooler) elBratCooler.textContent = stockLevels.bratwurst.cooler;
 ​// Bockwurst
-document.getElementById('braai-count-bockwurst').textContent = demandBock;
-document.getElementById('braai-coals-bockwurst').textContent = braaiActivity.bockwurst.onBraai;
-document.getElementById('braai-precooked-bockwurst').textContent = braaiActivity.bockwurst.precooked;
-document.getElementById('braai-cooler-bockwurst').textContent = stockLevels.bockwurst.cooler;
+const elBockCount = document.getElementById('braai-count-bockwurst');
+const elBockCoals = document.getElementById('braai-coals-bockwurst');
+const elBockPre = document.getElementById('braai-precooked-bockwurst');
+const elBockCooler = document.getElementById('braai-cooler-bockwurst');
+if (elBockCount) elBockCount.textContent = demandBock;
+if (elBockCoals) elBockCoals.textContent = braaiActivity.bockwurst.onBraai;
+if (elBockPre) elBockPre.textContent = braaiActivity.bockwurst.precooked;
+if (elBockCooler) elBockCooler.textContent = stockLevels.bockwurst.cooler;
 ​// Cheesegriller
-document.getElementById('braai-count-cheesegriller').textContent = demandCheese;
-document.getElementById('braai-coals-cheesegriller').textContent = braaiActivity.cheesegriller.onBraai;
-document.getElementById('braai-precooked-cheesegriller').textContent = braaiActivity.cheesegriller.precooked;
-document.getElementById('braai-cooler-cheesegriller').textContent = stockLevels.cheesegriller.cooler;
+const elCheeseCount = document.getElementById('braai-count-cheesegriller');
+const elCheeseCoals = document.getElementById('braai-coals-cheesegriller');
+const elCheesePre = document.getElementById('braai-precooked-cheesegriller');
+const elCheeseCooler = document.getElementById('braai-cooler-cheesegriller');
+if (elCheeseCount) elCheeseCount.textContent = demandCheese;
+if (elCheeseCoals) elCheeseCoals.textContent = braaiActivity.cheesegriller.onBraai;
+if (elCheesePre) elCheesePre.textContent = braaiActivity.cheesegriller.precooked;
+if (elCheeseCooler) elCheeseCooler.textContent = stockLevels.cheesegriller.cooler;
 }
 ​function addSausageToBraai(type, qty) {
 if (stockLevels[type].cooler < qty) {
@@ -1716,18 +1796,27 @@ const netMargin = grossTurnover > 0 ? ((netProfit / grossTurnover) * 100).toFixe
 const avgContribution = 35.0;
 const breakevenUnits = Math.ceil(fixedExpenses / avgContribution);
 ​// Update KPI Elements
-document.getElementById('mgr-kpi-turnover').textContent = R${grossTurnover.toFixed(2)};
-document.getElementById('mgr-kpi-order-count').textContent = ${ordersList.length} orders total;
+const elTurnover = document.getElementById('mgr-kpi-turnover');
+const elOrderCount = document.getElementById('mgr-kpi-order-count');
+if (elTurnover) elTurnover.textContent = R${grossTurnover.toFixed(2)};
+if (elOrderCount) elOrderCount.textContent = ${ordersList.length} orders total;
 ​const netEl = document.getElementById('mgr-kpi-netprofit');
+if (netEl) {
 netEl.textContent = R${netProfit.toFixed(2)};
 netEl.className = netProfit >= 0 ? 'text-2xl font-black font-mono text-emerald-400' : 'text-2xl font-black font-mono text-red-400';
-​document.getElementById('mgr-kpi-margin').textContent = ${netMargin}% net event margin;
-document.getElementById('mgr-kpi-sausages-sold').textContent = totalSausagesSold;
-document.getElementById('mgr-kpi-breakeven').textContent = Breakeven: ${totalSausagesSold}/${breakevenUnits} sausages;
+}
+​const elMargin = document.getElementById('mgr-kpi-margin');
+const elSausSold = document.getElementById('mgr-kpi-sausages-sold');
+const elBreakeven = document.getElementById('mgr-kpi-breakeven');
+if (elMargin) elMargin.textContent = ${netMargin}% net event margin;
+if (elSausSold) elSausSold.textContent = totalSausagesSold;
+if (elBreakeven) elBreakeven.textContent = Breakeven: ${totalSausagesSold}/${breakevenUnits} sausages;
 ​const remainingCrusty = (stockLevels.roll_crusty.coldRoom || 0) + (stockLevels.roll_crusty.cooler || 0);
 const remainingWhite = (stockLevels.roll_white.coldRoom || 0) + (stockLevels.roll_white.cooler || 0);
-document.getElementById('mgr-kpi-rolls-remaining').textContent = remainingCrusty + remainingWhite;
-document.getElementById('mgr-kpi-rolls-split').textContent = ${remainingCrusty} Crispy / ${remainingWhite} White;
+const elRollsRem = document.getElementById('mgr-kpi-rolls-remaining');
+const elRollsSplit = document.getElementById('mgr-kpi-rolls-split');
+if (elRollsRem) elRollsRem.textContent = remainingCrusty + remainingWhite;
+if (elRollsSplit) elRollsSplit.textContent = ${remainingCrusty} Crispy / ${remainingWhite} White;
 ​renderStockTable();
 renderManagerProductsList();
 renderStationsManagementTable();
@@ -1761,7 +1850,6 @@ let comboInfo = '';
 if (prod.isSausage) {
 const cost = unitCosts[prod.id] || 0;
 const comboCrustyCost = cost + (unitCosts.roll_crusty || 0) + (overheads.packagingPerServing + overheads.saucePerServing);
-const comboWhiteCost = cost + (unitCosts.roll_white || 0) + (overheads.packagingPerServing + overheads.saucePerServing);
 const marginCrusty = (((prod.price - comboCrustyCost) / prod.price) * 100).toFixed(0);
 ​comboInfo = <div class="mt-2 pt-2 border-t border-slate-800 text-[11px] space-y-0.5"> <div class="text-slate-400">Raw Butcher Cost: <strong class="text-slate-200 font-mono">R${cost.toFixed(2)}</strong></div> <div class="text-slate-400">Combo w/ Crispy Roll: <strong class="text-amber-300 font-mono">R${comboCrustyCost.toFixed(2)}</strong> (${marginCrusty}% margin)</div> </div>;
 }
