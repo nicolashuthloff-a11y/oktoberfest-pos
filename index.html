@@ -1126,8 +1126,25 @@
     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-xs text-center shadow-2xl space-y-3">
       <span class="text-3xl">🔒</span>
       <h3 class="text-sm font-black uppercase text-fest-gold">Manager Access Required</h3>
-      <p class="text-xs text-slate-400">Enter the Master PIN to open Manager Console:</p>
-      <input type="password" id="input-master-modal-pin" maxlength="6" placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-xl font-mono text-white tracking-widest focus:outline-none focus:border-fest-gold">
+      <p class="text-xs text-slate-400">Enter the Master PIN (1978):</p>
+      <input type="password" id="input-master-modal-pin" maxlength="6" placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-2xl font-mono text-white tracking-widest focus:outline-none focus:border-fest-gold">
+      
+      <!-- Touch Numeric Keypad for Master PIN -->
+      <div class="grid grid-cols-3 gap-1.5 pt-1">
+        <button type="button" onclick="appendMasterPin('1')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">1</button>
+        <button type="button" onclick="appendMasterPin('2')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">2</button>
+        <button type="button" onclick="appendMasterPin('3')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">3</button>
+        <button type="button" onclick="appendMasterPin('4')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">4</button>
+        <button type="button" onclick="appendMasterPin('5')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">5</button>
+        <button type="button" onclick="appendMasterPin('6')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">6</button>
+        <button type="button" onclick="appendMasterPin('7')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">7</button>
+        <button type="button" onclick="appendMasterPin('8')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">8</button>
+        <button type="button" onclick="appendMasterPin('9')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">9</button>
+        <button type="button" onclick="clearMasterPin()" class="touch-btn bg-slate-800 hover:bg-slate-700 text-red-400 font-bold py-2 rounded-xl text-xs">CLR</button>
+        <button type="button" onclick="appendMasterPin('0')" class="touch-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-base">0</button>
+        <button type="button" onclick="backspaceMasterPin()" class="touch-btn bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2 rounded-xl text-xs">⌫</button>
+      </div>
+
       <div class="flex items-center justify-center gap-2 pt-2">
         <button type="button" onclick="closeMasterPinModal()" class="touch-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold">Cancel</button>
         <button type="button" onclick="verifyMasterPinAction()" class="touch-btn bg-fest-gold text-slate-950 font-black px-5 py-2 rounded-xl text-xs shadow">Unlock</button>
@@ -1585,14 +1602,16 @@
     function performStaffLogin() {
       const pin = document.getElementById('input-quick-pin').value.trim();
 
-      // Master PIN bypass
+      // Master PIN bypass: if PIN is 1978 or station is manager, immediately enter manager/station
       if (pin === MASTER_PIN) {
-        if (selectedLoginStaffIds.length === 0) {
-          activeOperators = [{ id: 'master', name: 'Master Manager', role: 'Festival Director' }];
-        } else {
-          activeOperators = staffRoster.filter(s => selectedLoginStaffIds.includes(s.id));
-        }
+        activeOperators = [{ id: 'master', name: 'Master Manager', role: 'Festival Director' }];
         completeLoginSuccess();
+        return;
+      }
+
+      if (selectedLoginStation === 'manager') {
+        alert("Manager station requires the Master PIN (1978).");
+        clearLoginPin();
         return;
       }
 
@@ -2686,18 +2705,33 @@
       document.getElementById('modal-master-pin').classList.add('hidden');
       pendingMasterAction = null;
     }
+    function appendMasterPin(digit) {
+      const inp = document.getElementById('input-master-modal-pin');
+      if (inp && inp.value.length < 6) inp.value += digit;
+    }
+    function clearMasterPin() {
+      const inp = document.getElementById('input-master-modal-pin');
+      if (inp) inp.value = '';
+    }
+    function backspaceMasterPin() {
+      const inp = document.getElementById('input-master-modal-pin');
+      if (inp && inp.value.length > 0) inp.value = inp.value.slice(0, -1);
+    }
     function verifyMasterPinAction() {
       const pin = document.getElementById('input-master-modal-pin').value.trim();
       if (pin === MASTER_PIN) {
         closeMasterPinModal();
         if (pendingMasterAction === 'manager') {
+          activeOperators = [{ id: 'master', name: 'Nicolas (Master)', role: 'Festival Director' }];
+          saveStateToStorage();
+          updateActiveOperatorBadge();
           switchStationView('manager', false);
         } else if (pendingMasterAction === 'switch_live') {
           executeSwitchLiveMode();
         }
       } else {
-        alert("Incorrect Master PIN.");
-        document.getElementById('input-master-modal-pin').value = '';
+        alert("Incorrect Master PIN. Default is 1978.");
+        clearMasterPin();
       }
     }
 
