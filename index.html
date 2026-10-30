@@ -1252,6 +1252,90 @@
   </div>
 
   <!-- ======================================================== -->
+  <!-- RESTORED: STAFF STATION SIGN-IN & LOGIN MODAL -->
+  <!-- ======================================================== -->
+  <div id="screen-login" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-2xl border border-slate-200 max-h-[96vh] overflow-y-auto custom-scroll flex flex-col">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🍺🌭</span>
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900 leading-none">Staff Station Sign-In</h2>
+            <p class="text-[11px] text-slate-500 font-bold mt-0.5">Select station, choose name(s), and enter PIN</p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-login-modal" onclick="dismissLoginScreenIfLoggedIn()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 font-black flex items-center justify-center text-sm hidden">
+          ✕
+        </button>
+      </div>
+
+      <!-- Step 1: Select Station -->
+      <div class="mb-3">
+        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+          1. Select Station for this Device:
+        </label>
+        <div id="login-stations-grid" class="grid grid-cols-2 gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Step 2: Choose Person / Multi-Person Mode -->
+      <div class="mb-3 p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-xs font-black uppercase tracking-wider text-slate-700">
+            2. Who is operating this device?
+          </label>
+          <button type="button" id="btn-toggle-multi-mode" onclick="toggleMultiStaffMode()" class="text-[10px] font-black text-fest-bavaria bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-lg border border-blue-200 transition">
+            👤 Single Person Mode
+          </button>
+        </div>
+        <p id="lbl-multi-mode-hint" class="text-[10px] text-slate-500 font-semibold mb-2">
+          Tap one person to operate, or toggle to Sharing Device if multiple volunteers share this tablet.
+        </p>
+        <div id="dynamic-name-picker" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-40 overflow-y-auto custom-scroll p-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Step 3: Enter PIN & Keypad -->
+      <div class="mb-2">
+        <label id="lbl-pin-entry-heading" class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1 text-center">
+          3. Enter 4-Digit PIN:
+        </label>
+        
+        <!-- PIN Input Display -->
+        <div class="flex items-center justify-center mb-2">
+          <input type="password" id="input-quick-pin" maxlength="6" inputmode="numeric" placeholder="••••" class="w-48 py-2 text-center text-2xl font-mono font-black tracking-widest rounded-2xl border-2 border-slate-300 bg-slate-50 focus:outline-none focus:border-fest-bavaria shadow-inner">
+        </div>
+
+        <!-- On-Screen Keypad -->
+        <div class="grid grid-cols-3 gap-1.5 max-w-xs mx-auto mb-3">
+          <button type="button" onclick="appendLoginPin('1')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">1</button>
+          <button type="button" onclick="appendLoginPin('2')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">2</button>
+          <button type="button" onclick="appendLoginPin('3')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">3</button>
+          <button type="button" onclick="appendLoginPin('4')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">4</button>
+          <button type="button" onclick="appendLoginPin('5')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">5</button>
+          <button type="button" onclick="appendLoginPin('6')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">6</button>
+          <button type="button" onclick="appendLoginPin('7')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">7</button>
+          <button type="button" onclick="appendLoginPin('8')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">8</button>
+          <button type="button" onclick="appendLoginPin('9')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">9</button>
+          <button type="button" onclick="clearLoginPin()" class="touch-btn py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-black text-xs uppercase shadow-sm">Clear</button>
+          <button type="button" onclick="appendLoginPin('0')" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-black text-base shadow-sm">0</button>
+          <button type="button" onclick="backspaceLoginPin()" class="touch-btn py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-sm shadow-sm">⌫</button>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" onclick="performStaffLogin()" class="touch-btn w-full py-3 rounded-2xl bg-fest-bavaria hover:bg-blue-600 text-white font-black text-sm uppercase tracking-wider shadow-lg active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>🚀</span> Activate Station
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
   <!-- JAVASCRIPT APPLICATION CORE -->
   <!-- ======================================================== -->
   <script>
