@@ -97,6 +97,12 @@
 
     <!-- Active Station Badge, Staff Names & Station Switch Button -->
     <div class="flex items-center gap-2">
+      <!-- Quick Manager Direct Unlock Button -->
+      <button type="button" onclick="openMasterPinModal('manager')" title="Direct Manager Console Access" class="touch-btn bg-slate-800 hover:bg-slate-700 text-fest-gold border border-amber-500/50 text-xs font-black px-2 py-1 rounded-lg flex items-center gap-1 shadow">
+        <span>🔒</span>
+        <span class="hidden md:inline">Manager</span>
+      </button>
+
       <!-- General On-site Stock Quick Summary Ribbon (Braai + Rolls) -->
       <div id="header-stock-ribbon" class="hidden md:flex items-center gap-2 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-[10px] font-mono">
         <span class="text-slate-400 uppercase font-bold">General On-Site Stock:</span>
@@ -1122,12 +1128,12 @@
   </div>
 
   <!-- 9. MASTER PIN ACCESS MODAL -->
-  <div id="modal-master-pin" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 w-full max-w-xs text-center shadow-2xl space-y-3">
+  <div id="modal-master-pin" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex items-center justify-center p-3 hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center shadow-2xl space-y-3">
       <span class="text-3xl">🔒</span>
-      <h3 class="text-sm font-black uppercase text-fest-gold">Manager Access Required</h3>
-      <p class="text-xs text-slate-400">Enter the Master PIN (1978):</p>
-      <input type="password" id="input-master-modal-pin" maxlength="6" placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-2xl font-mono text-white tracking-widest focus:outline-none focus:border-fest-gold">
+      <h3 class="text-sm font-black uppercase text-fest-gold">Manager Access</h3>
+      <p class="text-xs text-slate-300">Enter Master PIN (1978):</p>
+      <input type="password" id="input-master-modal-pin" maxlength="6" placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-2xl font-mono text-white tracking-widest focus:outline-none focus:border-fest-gold" onkeyup="if(event.key==='Enter') verifyMasterPinAction();">
       
       <!-- Touch Numeric Keypad for Master PIN -->
       <div class="grid grid-cols-3 gap-1.5 pt-1">
@@ -1402,8 +1408,11 @@
     /* ==================== STATION ROUTING & NAVIGATION ==================== */
     function switchStationView(stationId, checkAuth = true) {
       if (checkAuth && stationId === 'manager') {
-        openMasterPinModal('manager');
-        return;
+        const isAlreadyManager = activeOperators.some(op => op.id === 'master' || op.role === 'Festival Director');
+        if (!isAlreadyManager) {
+          openMasterPinModal('manager');
+          return;
+        }
       }
 
       currentStation = stationId;
@@ -1604,7 +1613,8 @@
 
       // Master PIN bypass: if PIN is 1978 or station is manager, immediately enter manager/station
       if (pin === MASTER_PIN) {
-        activeOperators = [{ id: 'master', name: 'Master Manager', role: 'Festival Director' }];
+        activeOperators = [{ id: 'master', name: 'Nicolas (Master)', role: 'Festival Director' }];
+        selectedLoginStation = 'manager';
         completeLoginSuccess();
         return;
       }
@@ -2698,30 +2708,52 @@
     // Master PIN verification
     function openMasterPinModal(action) {
       pendingMasterAction = action;
-      document.getElementById('input-master-modal-pin').value = '';
-      document.getElementById('modal-master-pin').classList.remove('hidden');
+      const modal = document.getElementById('modal-master-pin');
+      const input = document.getElementById('input-master-modal-pin');
+      if (input) input.value = '';
+      if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => input && input.focus(), 50);
+      } else {
+        // Safe fallback if DOM element was not ready
+        const entered = prompt("Enter Master PIN (1978) for Manager Access:");
+        if (entered === MASTER_PIN) {
+          activeOperators = [{ id: 'master', name: 'Nicolas (Master)', role: 'Festival Director' }];
+          saveStateToStorage();
+          updateActiveOperatorBadge();
+          switchStationView('manager', false);
+        } else if (entered !== null) {
+          alert("Incorrect Master PIN.");
+        }
+      }
     }
+
     function closeMasterPinModal() {
-      document.getElementById('modal-master-pin').classList.add('hidden');
+      const modal = document.getElementById('modal-master-pin');
+      if (modal) modal.classList.add('hidden');
       pendingMasterAction = null;
     }
+
     function appendMasterPin(digit) {
       const inp = document.getElementById('input-master-modal-pin');
       if (inp && inp.value.length < 6) inp.value += digit;
     }
+
     function clearMasterPin() {
       const inp = document.getElementById('input-master-modal-pin');
       if (inp) inp.value = '';
     }
+
     function backspaceMasterPin() {
       const inp = document.getElementById('input-master-modal-pin');
       if (inp && inp.value.length > 0) inp.value = inp.value.slice(0, -1);
     }
+
     function verifyMasterPinAction() {
       const pin = document.getElementById('input-master-modal-pin').value.trim();
       if (pin === MASTER_PIN) {
         closeMasterPinModal();
-        if (pendingMasterAction === 'manager') {
+        if (pendingMasterAction === 'manager' || !pendingMasterAction) {
           activeOperators = [{ id: 'master', name: 'Nicolas (Master)', role: 'Festival Director' }];
           saveStateToStorage();
           updateActiveOperatorBadge();
