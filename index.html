@@ -110,6 +110,13 @@
         <button type="button" onclick="showLoginScreen()" title="Switch Staff or Station" class="touch-btn px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-fest-navy font-black text-xs shadow">
           🔄 Switch
         </button>
+        <!-- NEW: PHONE / TABLET VIEW MODE TOGGLE -->
+        <button type="button" onclick="toggleDeviceDisplayMode()" id="btn-device-mode-toggle" title="Toggle Phone vs Tablet Mode" class="touch-btn px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-black text-xs border border-amber-400/40 flex items-center gap-1">
+          <span id="btn-device-mode-icon">📱</span> <span id="btn-device-mode-text" class="hidden sm:inline">Auto</span>
+        </button>
+        <button type="button" onclick="toggleFullscreenKiosk()" id="btn-fullscreen-toggle" title="Full Screen Kiosk" class="touch-btn px-2 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs">
+          ⛶
+        </button>
         <button type="button" onclick="toggleTestModePrompt()" id="btn-header-test-mode" title="Toggle Test / Training Mode" class="touch-btn px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs border border-amber-400/40">
           🧪 Test Mode
         </button>
@@ -1361,6 +1368,8 @@
     let braaiModeManual = false;
     let wakeLock = null;
     let isTestMode = true; // Default to training/test mode until manager sets system live
+    let deviceDisplayMode = 'auto'; // 'auto', 'phone', 'tablet'
+    let currentOrientation = 'landscape';
 
     let currentStationRole = 'pos'; // 'pos', 'handout', 'braai', 'manager', or custom
     let currentStaffName = '';
@@ -1440,6 +1449,7 @@
     /* 2. INITIALIZATION */
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      initDeviceModeAndOrientation();
       updateTestModeUI();
       renderHeaderNavigation();
       renderMenu();
@@ -1453,16 +1463,24 @@
         updateOrderElapsedBadges();
       }, 10000);
 
+      // Listen for phone / tablet screen orientation rotation
+      window.addEventListener('resize', handleScreenResizeOrRotate);
+      if (window.screen && window.screen.orientation) {
+        window.screen.orientation.addEventListener('change', handleScreenResizeOrRotate);
+      }
+
+      // Listen for cross-device broadcast messages
       if (syncChannel) {
         syncChannel.onmessage = (event) => {
-          if (event && event.data) {
-            loadState();
-            updateTestModeUI();
-            renderHeaderNavigation();
-            renderHandoutStation();
-            renderBraaiStation();
-            renderManagerDashboard();
-          }
+          loadState();
+          updateTestModeUI();
+          renderHeaderNavigation();
+          renderMenu();
+          updateCartUI();
+          renderHandoutStation();
+          renderBraaiStation();
+          renderSharedBraaiHandout();
+          renderManagerDashboard();
         };
       }
 
@@ -1529,6 +1547,7 @@
         localStorage.setItem(STORAGE_KEY_NEXT_NUM, nextOrderNum.toString());
         localStorage.setItem(STORAGE_KEY_MASTER_PIN, masterPin);
         localStorage.setItem(STORAGE_KEY_TEST_MODE, isTestMode ? 'true' : 'false');
+        localStorage.setItem('oktoberfest_device_mode', deviceDisplayMode);
       } catch (err) {
         console.error('State save error:', err);
       }
@@ -1538,6 +1557,9 @@
       try {
         const savedOrders = localStorage.getItem(STORAGE_KEY_ORDERS);
         if (savedOrders) orders = JSON.parse(savedOrders);
+
+        const savedDevMode = localStorage.getItem('oktoberfest_device_mode');
+        if (savedDevMode) deviceDisplayMode = savedDevMode;
 
         const savedTestMode = localStorage.getItem(STORAGE_KEY_TEST_MODE);
         if (savedTestMode !== null) {
@@ -1767,6 +1789,121 @@
       });
 
       saveState();
+    }
+
+    /* DEVICE MODE (PHONE / TABLET) & SCREEN ROTATION LOGIC */
+    function initDeviceModeAndOrientation() {
+      handleScreenResizeOrRotate();
+      updateDeviceModeUI();
+    }
+
+    function handleScreenResizeOrRotate() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      currentOrientation = width > height ? 'landscape' : 'portrait';
+
+      const isMobileWidth = width < 768;
+      const effectiveMode = deviceDisplayMode === 'auto' 
+        ? (isMobileWidth ? 'phone' : 'tablet') 
+        : deviceDisplayMode;
+
+      applyDeviceLayoutClasses(effectiveMode, currentOrientation);
+    }
+
+    function toggleDeviceDisplayMode() {
+      if (deviceDisplayMode === 'auto') {
+        deviceDisplayMode = 'phone';
+      } else if (deviceDisplayMode === 'phone') {
+        deviceDisplayMode = 'tablet';
+      } else {
+        deviceDisplayMode = 'auto';
+      }
+
+      saveState();
+      updateDeviceModeUI();
+      handleScreenResizeOrRotate();
+      playBeep('success');
+    }
+
+    function updateDeviceModeUI() {
+      const iconEl = document.getElementById('btn-device-mode-icon');
+      const textEl = document.getElementById('btn-device-mode-text');
+      if (!iconEl || !textEl) return;
+
+      if (deviceDisplayMode === 'phone') {
+        iconEl.innerText = '📱';
+        textEl.innerText = 'Phone';
+      } else if (deviceDisplayMode === 'tablet') {
+        iconEl.innerText = '📟';
+        textEl.innerText = 'Tablet';
+      } else {
+        iconEl.innerText = '🔄';
+        textEl.innerText = 'Auto';
+      }
+    }
+
+    function applyDeviceLayoutClasses(mode, orientation) {
+      const posView = document.getElementById('station-view-pos');
+      const menuGrid = document.getElementById('pos-menu-grid');
+      const cartContainer = document.getElementById('cart-items-container');
+      const braaiGrid = document.querySelector('#station-view-braai .grid-cols-2');
+
+      // Adjust Till POS view for Phone vs Tablet and Landscape vs Portrait
+      if (posView) {
+        if (mode === 'phone') {
+          if (orientation === 'landscape') {
+            // Phone rotated horizontally (Landscape): Split into 2 compact columns
+            posView.className = 'station-view grid grid-cols-2 gap-2.5';
+            if (menuGrid) menuGrid.className = 'grid grid-cols-1 gap-2';
+            if (cartContainer) cartContainer.style.maxHeight = '42vh';
+          } else {
+            // Phone held vertically (Portrait): Stacked single column with giant tap targets
+            posView.className = 'station-view grid grid-cols-1 gap-3';
+            if (menuGrid) menuGrid.className = 'grid grid-cols-1 gap-2.5';
+            if (cartContainer) cartContainer.style.maxHeight = '32vh';
+          }
+        } else {
+          // Tablet Mode: Wide multi-column layout
+          if (orientation === 'portrait') {
+            // Tablet vertical stand: Balanced 2-column or stacked grid
+            posView.className = 'station-view grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4';
+            if (menuGrid) menuGrid.className = 'grid grid-cols-2 gap-2.5';
+            if (cartContainer) cartContainer.style.maxHeight = '45vh';
+          } else {
+            // Tablet horizontal countertop: Full wide KDS POS layout
+            posView.className = 'station-view grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4';
+            if (menuGrid) menuGrid.className = 'grid grid-cols-2 gap-3';
+            if (cartContainer) cartContainer.style.maxHeight = '52vh';
+          }
+        }
+      }
+
+      // Adjust Braai Station large number counters
+      if (braaiGrid) {
+        if (mode === 'phone' && orientation === 'portrait') {
+          braaiGrid.className = 'grid grid-cols-2 gap-2';
+        } else {
+          braaiGrid.className = 'grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4';
+        }
+      }
+    }
+
+    async function toggleFullscreenKiosk() {
+      try {
+        if (!document.fullscreenElement) {
+          if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            await document.documentElement.webkitRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          }
+        }
+      } catch (err) {
+        console.warn('Fullscreen request failed:', err);
+      }
     }
 
     async function toggleWakeLock() {
