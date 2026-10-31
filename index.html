@@ -233,8 +233,12 @@
             <strong style="color: #fbbf24;">4 Fast Touch Tiles:</strong> Tap sausage to add to cart, choose roll below
           </div>
           <div class="flex gap-2 font-mono" style="font-size: 11px;">
-            <span class="badge badge-amber">Waiting: <strong id="till-counter-processing">0</strong></span>
-            <span class="badge badge-emerald">Done: <strong id="till-counter-delivered">0</strong></span>
+            <button onclick="openTillTicketsModal('processing')" class="badge badge-amber" style="cursor: pointer; border: 1px solid rgba(245, 158, 11, 0.4);">
+              ⏳ Open Tickets: <strong id="till-counter-processing">0</strong>
+            </button>
+            <button onclick="openTillTicketsModal('delivered')" class="badge badge-emerald" style="cursor: pointer; border: 1px solid rgba(16, 185, 129, 0.4);">
+              ✓ Closed Tickets: <strong id="till-counter-delivered">0</strong>
+            </button>
           </div>
         </div>
 
@@ -475,9 +479,30 @@
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <label style="font-size: 12px; color: #94a3b8;">Select Crew Member</label>
         <select id="login-staff-select" class="input-field"></select>
-        <label style="font-size: 12px; color: #94a3b8; margin-top: 6px;">Enter PIN</label>
-        <input type="password" id="login-staff-pin" maxlength="4" class="input-field font-mono" placeholder="••••">
         <button onclick="confirmCrewLogin()" class="btn btn-gold" style="margin-top: 8px;">Confirm Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TILL TICKETS INSPECTION (OPEN & CLOSED) -->
+  <div id="modal-till-tickets" class="modal-backdrop hidden">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="flex items-center gap-2">
+          <span class="title-gold" id="till-tickets-modal-title">📋 Till Tickets</span>
+          <span id="till-tickets-count-badge" class="badge badge-amber font-mono">0</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="flex gap-1 font-mono" style="font-size: 11px;">
+            <button id="tab-tickets-processing" onclick="switchTillTicketsTab('processing')" class="btn btn-dark btn-sm">Open / Waiting</button>
+            <button id="tab-tickets-delivered" onclick="switchTillTicketsTab('delivered')" class="btn btn-dark btn-sm">Closed / Handed Out</button>
+          </div>
+          <button onclick="closeTillTicketsModal()" class="btn btn-dark btn-sm">✕</button>
+        </div>
+      </div>
+      <div id="till-tickets-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 500px; overflow-y: auto; padding: 4px 0;"></div>
+      <div style="text-align: right; border-top: 1px solid #1e293b; padding-top: 8px;">
+        <button onclick="closeTillTicketsModal()" class="btn btn-dark btn-sm">Close</button>
       </div>
     </div>
   </div>
@@ -792,7 +817,10 @@
         const prod = productCatalog[item.productId];
         if (prod) {
           prod.sold = (prod.sold || 0) + 1;
-          if (prod.cooler > 0) prod.cooler -= 1;
+          // Currywurst depletes Bratwurst inventory in storage
+          const inventoryTargetId = item.productId === 'currywurst' ? 'bratwurst' : item.productId;
+          const invProd = productCatalog[inventoryTargetId];
+          if (invProd && invProd.cooler > 0) invProd.cooler -= 1;
         }
       });
 
@@ -810,6 +838,115 @@
       renderAllViews();
     }
 
+    let activeTillTicketsTab = 'processing';
+
+    function openTillTicketsModal(tab = 'processing') {
+      activeTillTicketsTab = tab;
+      const modal = document.getElementById('modal-till-tickets');
+      if (modal) modal.classList.remove('hidden');
+      renderTillTicketsModal();
+    }
+
+    function closeTillTicketsModal() {
+      const modal = document.getElementById('modal-till-tickets');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchTillTicketsTab(tab) {
+      activeTillTicketsTab = tab;
+      renderTillTicketsModal();
+    }
+
+    function renderTillTicketsModal() {
+      const list = document.getElementById('till-tickets-list');
+      const title = document.getElementById('till-tickets-modal-title');
+      const countBadge = document.getElementById('till-tickets-count-badge');
+      const tabProc = document.getElementById('tab-tickets-processing');
+      const tabDel = document.getElementById('tab-tickets-delivered');
+      if (!list) return;
+
+      const filtered = orders.filter(o => o.status === activeTillTicketsTab);
+      if (countBadge) countBadge.textContent = filtered.length;
+
+      if (tabProc && tabDel) {
+        if (activeTillTicketsTab === 'processing') {
+          tabProc.className = 'btn btn-gold btn-sm';
+          tabDel.className = 'btn btn-dark btn-sm';
+          if (title) title.textContent = '⏳ Open Tickets (In Prep / Waiting)';
+          if (countBadge) countBadge.className = 'badge badge-amber font-mono';
+        } else {
+          tabProc.className = 'btn btn-dark btn-sm';
+          tabDel.className = 'btn btn-emerald btn-sm';
+          if (title) title.textContent = '✓ Closed Tickets (Handed Out)';
+          if (countBadge) countBadge.className = 'badge badge-emerald font-mono';
+        }
+      }
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="card" style="text-align: center; color: #64748b; padding: 24px;">No ${activeTillTicketsTab === 'processing' ? 'open' : 'closed'} tickets found.</div>`;
+        return;
+      }
+
+      list.innerHTML = [...filtered].reverse().map(order => `
+        <div class="card flex flex-col gap-2" style="background: #020617; padding: 10px 12px; border: 1px solid #1e293b;">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-mono title-gold" style="font-size: 15px;">#${order.num}</span>
+              <span class="font-mono" style="font-size: 11px; color: #94a3b8;">${order.timestamp}</span>
+              <span class="badge ${order.paymentMethod === 'CASH' ? 'badge-emerald' : 'badge-sky'}">${order.paymentMethod}</span>
+              <span class="badge ${order.status === 'processing' ? 'badge-amber' : 'badge-emerald'}">
+                ${order.status === 'processing' ? 'Waiting' : 'Delivered'}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono" style="font-weight: 700; font-size: 13px; color: #fbbf24;">R ${order.total.toFixed(2)}</span>
+              ${order.status === 'delivered' ? `
+                <button onclick="recallTillOrder('${order.id}')" class="btn btn-rose btn-sm" title="Recall order back to active cart for edits">↩ Recall</button>
+              ` : `
+                <button onclick="completeHandoutOrder('${order.id}'); renderTillTicketsModal();" class="btn btn-emerald btn-sm">✓ Done</button>
+              `}
+            </div>
+          </div>
+          <div class="flex flex-col gap-1" style="font-size: 11px;">
+            ${order.items.map(i => `
+              <div class="flex items-center justify-between" style="background: #0f172a; padding: 4px 8px; border-radius: 4px;">
+                <span>${i.icon} ${i.name}</span>
+                <span class="badge badge-amber">${formatRollDisplay(i.selectedRoll)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function recallTillOrder(orderId) {
+      const idx = orders.findIndex(o => o.id === orderId);
+      if (idx === -1) return;
+      const order = orders[idx];
+
+      // Restore inventory
+      order.items.forEach(item => {
+        const targetId = item.productId === 'currywurst' ? 'bratwurst' : item.productId;
+        const prod = productCatalog[targetId];
+        if (prod) {
+          prod.cooler += 1;
+          if (prod.sold > 0) prod.sold -= 1;
+        }
+      });
+
+      // Load items back to cart for modifications
+      currentCart = order.items.map(i => ({
+        ...i,
+        cartId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)
+      }));
+
+      // Remove from closed orders
+      orders.splice(idx, 1);
+      closeTillTicketsModal();
+      switchStationView('till');
+      renderAllViews();
+    }
+
     function renderBraaiStation() {
       const deck = document.getElementById('braai-sausage-deck');
       const statWaiting = document.getElementById('braai-stat-orders-waiting');
@@ -821,9 +958,23 @@
       const demand = {};
       pending.forEach(o => o.items.forEach(i => demand[i.productId] = (demand[i.productId] || 0) + 1));
 
-      const sausages = Object.values(productCatalog).filter(p => p.category === 'sausage');
-      deck.innerHTML = sausages.map(s => {
-        const waiting = demand[s.id] || 0;
+      // Braai Standard: Currywurst is physically a Bratwurst!
+      // We only show physical sausages to grill on the deck (Bratwurst, Bockwurst, Cheesegriller)
+      const physicalSausages = Object.values(productCatalog).filter(p => p.category === 'sausage' && p.id !== 'currywurst');
+
+      deck.innerHTML = physicalSausages.map(s => {
+        let waiting = demand[s.id] || 0;
+        let extraNote = '';
+
+        // Fold Currywurst count into Bratwurst
+        if (s.id === 'bratwurst') {
+          const curryDemand = demand['currywurst'] || 0;
+          waiting += curryDemand;
+          if (curryDemand > 0) {
+            extraNote = `<div style="font-size: 10px; color: #fde047; margin-top: 2px;">(incl. ${curryDemand} Currywurst)</div>`;
+          }
+        }
+
         const onGrill = grillingNow[s.id] || 0;
         const buffer = prepBuffer[s.id] || 0;
         const netNeed = Math.max(0, waiting - (onGrill + buffer));
@@ -833,6 +984,7 @@
             <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
               <div>
                 <div style="font-weight: 700; font-size: 13px;">${s.icon} ${s.name}</div>
+                ${extraNote}
                 <div class="flex items-center gap-2" style="font-size: 11px; margin-top: 2px;">
                   <span style="color: #94a3b8;">Storage: <strong style="color: #34d399;">${s.cooler}</strong></span>
                   <button onclick="transferMainToLocal('${s.id}', 10)" class="btn btn-dark btn-sm" style="font-size: 10px;">+10 Restock</button>
