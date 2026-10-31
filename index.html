@@ -1,1791 +1,377 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-black">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Oktoberfest 2026 - Sausage Hub & KDS</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<style>
-:root {
---font-sans: 'Inter', system-ui, -apple-system, sans-serif;
---font-display: 'Chakra Petch', sans-serif;
---font-mono: 'JetBrains Mono', monospace;
-}
-body {
-font-family: var(--font-sans);
-user-select: none;
--webkit-user-select: none;
--webkit-tap-highlight-color: transparent;
-touch-action: manipulation;
-}
-.font-display { font-family: var(--font-display); }
-.font-mono { font-family: var(--font-mono); }
-.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.35); border-radius: 9999px; }
-.bavaria-diamond {
-background-image: repeating-linear-gradient(45deg, rgba(56, 189, 248, 0.02) 0px, rgba(56, 189, 248, 0.02) 16px, transparent 16px, transparent 32px);
-}
-.post-it-slip {
-box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
-transform: rotate(-0.5deg);
-}
-.tin-pod-container {
-background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-border: 1px solid rgba(245, 158, 11, 0.3);
-box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-}
-.tin-pod-btn {
-transition: all 0.12s ease-in-out;
-background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
-}
-.tin-pod-btn:active {
-transform: scale(0.96);
-}
-.tin-pod-btn.recommended {
-background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
-border: 1px solid #f59e0b;
-color: #ffffff;
-box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
-}
-</style>
-</head>
-<body class="h-full flex flex-col overflow-hidden bg-slate-950 text-slate-100 bavaria-diamond">
-​<!-- ================= TOP MAIN HEADER & NAVIGATION ================= -->
-<header class="flex-none bg-slate-900/95 backdrop-blur border-b border-amber-500/20 px-2 py-1.5 z-30 shadow-md">
-<div class="max-w-7xl mx-auto flex items-center justify-between gap-1.5">
-​<!-- Brand Logo / Master Direct Access -->
-<div class="flex items-center gap-1.5 cursor-pointer group" onclick="requestStationAccess('manager')" title="Unlock Master Console (PIN 1978)">
-<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-black text-black text-base shadow shadow-amber-500/20 group-hover:scale-105 transition">
-🥨
-</div>
-<div>
-<div class="flex items-center gap-1">
-<span class="font-display font-black tracking-wider text-amber-400 text-xs sm:text-sm uppercase leading-tight">Oktoberfest</span>
-<span class="bg-amber-500/20 text-amber-300 text-[9px] font-bold px-1 py-0.2 rounded border border-amber-500/30 font-mono">2026</span>
-</div>
-<div class="text-[9px] text-slate-400 -mt-0.5 flex items-center gap-1 leading-tight">
-<span id="current-user-display" class="text-amber-300 font-semibold truncate max-w-[80px] sm:max-w-none">Nicolas</span>
-<span class="text-slate-600">|</span>
-<span id="current-station-badge" class="text-[9px] text-sky-400 font-bold uppercase font-mono">TILL</span>
-</div>
-</div>
-</div>
-​<!-- Station Navigation Tabs (Dynamically rendered from Station Registry) -->
-<nav id="header-station-nav" class="flex items-center bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 gap-0.5 overflow-x-auto custom-scrollbar">
-<!-- Rendered dynamically via renderDynamicStationNav() -->
-</nav>
-​<!-- Right Utility Actions -->
-<div class="flex items-center gap-1">
-<button type="button" onclick="openPairingGuideModal()" class="hidden md:flex px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 text-[11px] font-bold rounded-md border border-amber-500/30 items-center gap-1 transition cursor-pointer">
-<span>📖</span>
-<span>Pairing</span>
-</button>
-<button type="button" onclick="lockCurrentStation()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-md border border-amber-400 flex items-center gap-1 transition shadow-sm active:scale-95 cursor-pointer" title="Sign out or switch operator">
-<span>🔒</span>
-<span>Sign Out</span>
-</button>
-</div>
-​</div>
-</header>
-​<!-- ================= MAIN MULTI-STATION VIEWPORT (ZERO SCROLL FIT) ================= -->
-<main class="flex-1 relative overflow-hidden">
-​<!-- 1. TILL / POS STATION VIEW -->
-<div id="view-till" class="station-view absolute inset-0 flex flex-col md:flex-row overflow-hidden">
-​<!-- Left: Sausage & Roll Grid -->
-<section class="flex-1 flex flex-col justify-between p-2 sm:p-2.5 overflow-hidden border-b md:border-b-0 md:border-r border-slate-800/80">
-​<!-- Sausage Cards Grid (Dynamically Populated from Unified Menu/Stock) -->
-<div id="pos-sausage-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 overflow-y-auto custom-scrollbar mb-1.5">
-<!-- Populated dynamically via renderTillStation() -->
-</div>
-​<!-- Standalone / Extra Rolls Bar -->
-<div id="pos-standalone-rolls-bar" class="flex-none bg-slate-900/70 px-2 py-1.5 rounded-xl border border-slate-800 flex items-center justify-between gap-1.5 overflow-x-auto custom-scrollbar">
-<!-- Populated dynamically via renderTillStation() -->
-</div>
-​</section>
-​<!-- Right: Current Cart & Instant Checkout (Side Panel) -->
-<aside class="w-full md:w-80 lg:w-96 bg-slate-900 flex flex-col border-t md:border-t-0 border-slate-800 overflow-hidden">
-<!-- Order Header -->
-<div class="flex-none px-3 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
-<div class="flex items-center gap-1.5">
-<span class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Active Order</span>
-<span id="pos-order-tag" class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">#101</span>
-</div>
-<button type="button" onclick="clearCart()" class="px-2 py-0.5 rounded bg-red-950/70 hover:bg-red-900 text-red-300 border border-red-500/40 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition active:scale-95" title="Clear current cart">
-<span>🗑️</span>
-<span>Clear All</span>
-</button>
-</div>
-​<!-- Cart Item List -->
-<div id="cart-items-container" class="flex-1 p-2 overflow-y-auto space-y-1.5 custom-scrollbar">
-<div class="text-center py-6 text-slate-500 text-xs">
-Tap a sausage to begin order
-</div>
-</div>
-​<!-- Checkout Tray (Locked to bottom) -->
-<div class="flex-none p-2.5 bg-slate-950 border-t border-slate-800/80 space-y-2">
-<div class="flex justify-between items-baseline">
-<span class="text-xs uppercase font-bold text-slate-400">Total Due</span>
-<span id="cart-total-display" class="font-display font-black text-2xl text-amber-400">R0.00</span>
-</div>
-​<!-- Dual Instant Payment Buttons -->
-<div class="grid grid-cols-2 gap-2">
-<button type="button" onclick="finalizeOrderCreation('cash')" class="py-2.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-md transition cursor-pointer">
-<span>💵</span>
-<span>CASH PAY</span>
-</button>
-<button type="button" onclick="finalizeOrderCreation('card')" class="py-2.5 px-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-md transition cursor-pointer">
-<span>💳</span>
-<span>YOCO CARD</span>
-</button>
-</div>
-</div>
-</aside>
-</div>
-​<!-- 2. HANDOUT & ASSEMBLY STATION VIEW -->
-<div id="view-handout" class="station-view absolute inset-0 hidden flex flex-col p-2.5 overflow-hidden">
-<!-- Top Buffer & Summary Bar -->
-<div class="flex-none flex items-center justify-between mb-2 bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div>
-<h2 class="font-display font-black text-amber-400 text-base">Handout & Tray Assembly</h2>
-<p class="text-[11px] text-slate-400">Match Post-It color tickets, slice rolls, plate warm sausages</p>
-</div>
-<div class="text-right">
-<div class="text-[10px] uppercase font-bold text-slate-400">Waiting</div>
-<div id="handout-waiting-count" class="font-display font-black text-amber-400 text-lg">0</div>
-</div>
-</div>
-​<!-- Live Order Tickets Queue -->
-<div id="handout-tickets-queue" class="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 p-1">
-<!-- Rendered dynamically -->
-</div>
-</div>
-​<!-- 3. BRAAI GRILL STATION VIEW -->
-<div id="view-braai" class="station-view absolute inset-0 hidden flex flex-col p-2.5 overflow-hidden">
-<div class="flex-none flex items-center justify-between mb-2 bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div>
-<h2 class="font-display font-black text-amber-400 text-base">Braai Grill Master Monitor</h2>
-<p class="text-[11px] text-slate-400">Monitor live sausage demand, coal zones, and warm holding buffers</p>
-</div>
-<div class="flex items-center gap-2">
-<span class="text-xs font-bold text-slate-400">Mode:</span>
-<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-mono font-bold">Standard Braai</span>
-</div>
-</div>
-​<!-- Live Demand Gauges -->
-<div class="flex-none grid grid-cols-2 lg:grid-cols-4 gap-2 mb-3">
-<div class="bg-slate-900/90 border border-sky-500/40 rounded-xl p-2.5">
-<div class="text-[11px] font-bold text-sky-400 uppercase">Bratwurst (140g)</div>
-<div class="mt-1 flex items-baseline justify-between">
-<span class="text-[11px] text-slate-400">Demand</span>
-<span id="braai-demand-bratwurst" class="font-display font-black text-xl text-white">0</span>
-</div>
-<div class="flex items-baseline justify-between text-[11px]">
-<span class="text-slate-400">Buffer</span>
-<span id="braai-buffer-bratwurst" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<div class="bg-slate-900/90 border border-red-500/40 rounded-xl p-2.5">
-<div class="text-[11px] font-bold text-red-400 uppercase">Bockwurst (140g)</div>
-<div class="mt-1 flex items-baseline justify-between">
-<span class="text-[11px] text-slate-400">Demand</span>
-<span id="braai-demand-bockwurst" class="font-display font-black text-xl text-white">0</span>
-</div>
-<div class="flex items-baseline justify-between text-[11px]">
-<span class="text-slate-400">Buffer</span>
-<span id="braai-buffer-bockwurst" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<div class="bg-slate-900/90 border border-yellow-500/40 rounded-xl p-2.5">
-<div class="text-[11px] font-bold text-yellow-400 uppercase">Cheesegriller (110g)</div>
-<div class="mt-1 flex items-baseline justify-between">
-<span class="text-[11px] text-slate-400">Demand</span>
-<span id="braai-demand-cheesegriller" class="font-display font-black text-xl text-white">0</span>
-</div>
-<div class="flex items-baseline justify-between text-[11px]">
-<span class="text-slate-400">Buffer</span>
-<span id="braai-buffer-cheesegriller" class="font-mono font-bold text-amber-400">0 ready</span>
-</div>
-</div>
-​<div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-<div class="text-[11px] font-bold text-slate-400 uppercase">Sold Total</div>
-<div class="mt-1 flex items-baseline justify-between">
-<span class="text-[11px] text-slate-400">Festival</span>
-<span id="braai-total-sold" class="font-display font-black text-xl text-emerald-400">0</span>
-</div>
-<div class="flex items-baseline justify-between text-[11px]">
-<span class="text-slate-400">Target</span>
-<span class="font-mono text-slate-400">600 units</span>
-</div>
-</div>
-</div>
-​<!-- Action Buttons for Warm Buffer -->
-<div class="flex-none bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-<h3 class="text-[11px] font-bold uppercase text-slate-400 mb-1.5">Restock Warm Chafing Buffer (+5 Pieces)</h3>
-<div class="grid grid-cols-3 gap-2">
-<button type="button" onclick="adjustPrepBuffer('bratwurst', 5)" class="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs border border-sky-500/30 cursor-pointer">+5 Bratwurst</button>
-<button type="button" onclick="adjustPrepBuffer('bockwurst', 5)" class="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-red-300 font-bold text-xs border border-red-500/30 cursor-pointer">+5 Bockwurst</button>
-<button type="button" onclick="adjustPrepBuffer('cheesegriller', 5)" class="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-yellow-300 font-bold text-xs border border-yellow-500/30 cursor-pointer">+5 Cheesegriller</button>
-</div>
-</div>
-</div>
-​<!-- 4. SHARED DUAL KIOSK MODE VIEW -->
-<div id="view-shared" class="station-view absolute inset-0 hidden flex flex-col md:flex-row overflow-hidden p-2 gap-2">
-<div class="flex-1 bg-slate-900 rounded-xl p-2.5 border border-slate-800 flex flex-col overflow-hidden">
-<span class="text-xs font-bold uppercase text-sky-400 mb-1.5">Left: Handout Assembly</span>
-<div id="shared-handout-container" class="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar"></div>
-</div>
-<div class="flex-1 bg-slate-900 rounded-xl p-2.5 border border-slate-800 flex flex-col overflow-hidden">
-<span class="text-xs font-bold uppercase text-amber-400 mb-1.5">Right: Braai Live Demand</span>
-<div id="shared-braai-container" class="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar"></div>
-</div>
-</div>
-​<!-- 5. MANAGER & MASTER FINANCIAL DASHBOARD -->
-<div id="view-manager" class="station-view absolute inset-0 hidden flex flex-col p-3 overflow-y-auto custom-scrollbar">
-​<!-- Top Manager Summary Bar -->
-<div class="flex-none flex flex-wrap items-center justify-between gap-2 mb-3 bg-slate-900/90 p-3 rounded-xl border border-amber-500/30">
-<div>
-<div class="flex items-center gap-1.5">
-<span class="text-lg">🔒</span>
-<h2 class="font-display font-black text-amber-400 text-base sm:text-lg">Manager & Financial Dashboard</h2>
-</div>
-<p class="text-[11px] text-slate-400">Main Storage & On-Site Storage inventory, COGS, overheads, and team roster</p>
-</div>
-<div class="flex flex-wrap items-center gap-1.5">
-<button type="button" onclick="openQuickStockModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-black text-[11px] shadow cursor-pointer transition">
-⚙️ Quick Set Stock
-</button>
-<button type="button" onclick="openMenuItemModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] border border-amber-500/30 cursor-pointer transition">
-🥨 + Add Menu Item
-</button>
-<button type="button" onclick="openStationModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] border border-amber-500/30 cursor-pointer transition">
-🚉 + Add Station
-</button>
-<button type="button" onclick="openOverheadsModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] border border-amber-500/30 cursor-pointer transition">
-🎪 Overheads
-</button>
-<button type="button" onclick="exportAuditCSV()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] border border-slate-700 cursor-pointer transition">
-📥 Export CSV
-</button>
-</div>
-</div>
-​<!-- Financial Metrics Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-<div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div class="text-[10px] font-bold text-slate-400 uppercase">Gross Turnover</div>
-<div id="mgr-gross-turnover" class="font-display font-black text-lg text-amber-400 mt-0.5">R0.00</div>
-<div id="mgr-total-sold-count" class="text-[10px] text-slate-500">0 sausages sold</div>
-</div>
-​<div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div class="text-[10px] font-bold text-slate-400 uppercase">Food COGS (Meat+Rolls)</div>
-<div id="mgr-total-cogs" class="font-display font-black text-lg text-red-400 mt-0.5">R0.00</div>
-<div class="text-[10px] text-slate-500">Direct cost of goods</div>
-</div>
-​<div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div class="text-[10px] font-bold text-slate-400 uppercase">Gross Profit</div>
-<div id="mgr-gross-profit" class="font-display font-black text-lg text-emerald-400 mt-0.5">R0.00</div>
-<div id="mgr-gross-margin" class="text-[10px] text-emerald-500 font-mono">0.0% margin</div>
-</div>
-​<div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-<div class="text-[10px] font-bold text-slate-400 uppercase">Net Event Profit</div>
-<div id="mgr-net-profit" class="font-display font-black text-lg text-amber-300 mt-0.5">R0.00</div>
-<div id="mgr-breakeven-indicator" class="text-[10px] text-amber-400/80">Breakeven: 0/0 units</div>
-</div>
-</div>
-​<!-- UNIFIED MENU & STOCK MANAGEMENT TABLE (CRUD) -->
-<div class="bg-slate-900/90 rounded-xl border border-slate-800 p-3 mb-3">
-<div class="flex items-center justify-between mb-2">
-<div>
-<h3 class="font-display font-black text-amber-400 text-sm">Unified Menu & Inventory Catalog</h3>
-<p class="text-[10px] text-slate-400">Stock tied to Main Storage & Storage balances, pricing, and COGS</p>
-</div>
-<button type="button" onclick="openMenuItemModal()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black text-xs font-black rounded shadow cursor-pointer">+ New Item</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-xs min-w-[660px]">
-<thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-1.5">Item Name</th>
-<th class="py-1.5 text-center">Price</th>
-<th class="py-1.5 text-center">COGS</th>
-<th class="py-1.5 text-center">Sale Rule</th>
-<th class="py-1.5 text-center">Main Storage</th>
-<th class="py-1.5 text-center">Storage</th>
-<th class="py-1.5 text-center">Sold</th>
-<th class="py-1.5 text-center">Balance</th>
-<th class="py-1.5 text-right">Actions</th>
-</tr>
-</thead>
-<tbody id="mgr-stock-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
-<!-- Rendered via renderStockTable() -->
-</tbody>
-</table>
-</div>
-</div>
-​<!-- STATIONS MANAGEMENT TABLE (CRUD) -->
-<div class="bg-slate-900/90 rounded-xl border border-slate-800 p-3 mb-3">
-<div class="flex items-center justify-between mb-2">
-<div>
-<h3 class="font-display font-black text-amber-400 text-sm">Station Registry & Workflows</h3>
-<p class="text-[10px] text-slate-400">Configure operational touch terminals and roles</p>
-</div>
-<button type="button" onclick="openStationModal()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded border border-amber-500/30 cursor-pointer">+ New Station</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-xs">
-<thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-1.5">Station</th>
-<th class="py-1.5">Description</th>
-<th class="py-1.5 text-right">Actions</th>
-</tr>
-</thead>
-<tbody id="mgr-stations-table-body" class="divide-y divide-slate-800/60 text-[11px]">
-<!-- Rendered via renderStationManagementTable() -->
-</tbody>
-</table>
-</div>
-</div>
-​<!-- Staff Roster Table -->
-<div class="bg-slate-900/90 rounded-xl border border-slate-800 p-3">
-<div class="flex items-center justify-between mb-2">
-<h3 class="font-display font-black text-amber-400 text-sm">Staff Roster & Station Roles</h3>
-<button type="button" onclick="openStaffModal()" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px] font-bold rounded border border-amber-500/30 cursor-pointer">+ Add Member</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-xs">
-<thead class="text-[10px] text-slate-400 uppercase border-b border-slate-800">
-<tr>
-<th class="py-1.5">Team Member</th>
-<th class="py-1.5">Role</th>
-<th class="py-1.5 text-center">PIN</th>
-<th class="py-1.5 text-right">Action</th>
-</tr>
-</thead>
-<tbody id="mgr-staff-table-body" class="divide-y divide-slate-800/60 text-[11px]">
-<!-- Rendered via renderStaffManagementTable() -->
-</tbody>
-</table>
-</div>
-</div>
-​</div>
-​</main>
-​<!-- ================= SIGN IN & STATION SELECTION WIZARD (COMPACT) ================= -->
-<div id="modal-login" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2.5 overflow-hidden">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-sm p-4 shadow-2xl relative max-h-[92vh] flex flex-col justify-between">
-​<button type="button" onclick="closeLoginModal()" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold cursor-pointer">✕</button>
-​<!-- Wizard Header -->
-<div class="text-center mb-2.5">
-<h2 class="font-display font-black text-amber-400 text-base tracking-wide uppercase">Station Sign-In</h2>
-<p class="text-[10px] text-slate-400">Select operator, station destination, and verify PIN</p>
-</div>
-​<!-- Inline Notice / Error Area -->
-<div id="login-error-msg" class="hidden mb-2 p-1.5 rounded-lg bg-red-950/80 border border-red-500/50 text-red-200 text-[11px] text-center font-bold flex items-center justify-center gap-1.5">
-<span>⚠️</span>
-<span id="login-error-text">Authentication Error</span>
-</div>
-​<!-- STEP 1: OPERATOR SELECTION -->
-<div class="mb-2">
-<label class="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1 mb-1">
-<span class="w-3.5 h-3.5 rounded-full bg-amber-500 text-black font-black text-[9px] flex items-center justify-center">1</span>
-<span>Operator Profile:</span>
-</label>
-<div class="grid grid-cols-3 gap-1" id="login-staff-chips">
-<!-- Dynamically populated via populateLoginStaffChips() -->
-</div>
-</div>
-​<!-- STEP 2: STATION ASSIGNMENT -->
-<div class="mb-2">
-<label class="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1 mb-1">
-<span class="w-3.5 h-3.5 rounded-full bg-amber-500 text-black font-black text-[9px] flex items-center justify-center">2</span>
-<span>Station Screen:</span>
-</label>
-<div class="grid grid-cols-4 gap-1" id="login-station-selector">
-<!-- Dynamically populated from stationRegistry via populateLoginStationSelector() -->
-</div>
-</div>
-​<!-- STEP 3: TOUCH NUMERIC KEYPAD -->
-<div class="mb-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
-<div class="flex items-center justify-between mb-1.5">
-<label class="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
-<span class="w-3.5 h-3.5 rounded-full bg-amber-500 text-black font-black text-[9px] flex items-center justify-center">3</span>
-<span>PIN Entry</span>
-</label>
-</div>
-​<!-- Masked PIN Dot Display -->
-<div class="flex items-center justify-center gap-2 py-1 bg-slate-900 rounded-lg border border-slate-800 mb-1.5">
-<div id="pin-dot-1" class="w-3 h-3 rounded-full border border-slate-600 transition"></div>
-<div id="pin-dot-2" class="w-3 h-3 rounded-full border border-slate-600 transition"></div>
-<div id="pin-dot-3" class="w-3 h-3 rounded-full border border-slate-600 transition"></div>
-<div id="pin-dot-4" class="w-3 h-3 rounded-full border border-slate-600 transition"></div>
-</div>
-<input type="hidden" id="login-pin-input" value="">
-​<!-- Keypad Grid (Compact) -->
-<div class="grid grid-cols-3 gap-1 font-mono">
-<button type="button" onclick="pressLoginPinKey('1')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">1</button>
-<button type="button" onclick="pressLoginPinKey('2')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">2</button>
-<button type="button" onclick="pressLoginPinKey('3')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">3</button>
-<button type="button" onclick="pressLoginPinKey('4')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">4</button>
-<button type="button" onclick="pressLoginPinKey('5')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">5</button>
-<button type="button" onclick="pressLoginPinKey('6')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">6</button>
-<button type="button" onclick="pressLoginPinKey('7')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">7</button>
-<button type="button" onclick="pressLoginPinKey('8')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">8</button>
-<button type="button" onclick="pressLoginPinKey('9')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">9</button>
-<button type="button" onclick="clearLoginPinKey()" class="py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-300 font-bold text-[10px] uppercase active:scale-95 transition cursor-pointer">CLR</button>
-<button type="button" onclick="pressLoginPinKey('0')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-base active:scale-95 transition cursor-pointer">0</button>
-<button type="button" onclick="backspaceLoginPinKey()" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-black text-sm active:scale-95 transition cursor-pointer">⌫</button>
-</div>
-</div>
-​<!-- Action Button -->
-<button type="button" onclick="performStaffLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow cursor-pointer">
-Enter Station
-</button>
-​</div>
-</div>
-​<!-- ================= MASTER PIN DIRECT MODAL ================= -->
-<div id="modal-master-pin" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-xs p-4 shadow-2xl relative">
-<button type="button" onclick="closeMasterPinModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2">
-<div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-lg mx-auto mb-1">🔒</div>
-<h3 class="font-display font-black text-amber-400 text-base uppercase">Master PIN</h3>
-<p class="text-[10px] text-slate-400">Enter authorization passcode</p>
-</div>
-<div id="master-pin-error" class="hidden mb-1.5 p-1 rounded bg-red-950/80 border border-red-500/50 text-red-200 text-[10px] text-center font-bold"></div>
-<input type="password" id="master-pin-input" readonly maxlength="4" placeholder="••••" class="w-full text-center text-2xl font-mono tracking-widest py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-amber-400 focus:outline-none mb-2">
-<div class="grid grid-cols-3 gap-1 font-mono mb-2">
-<button type="button" onclick="pressMasterPinKey('1')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">1</button>
-<button type="button" onclick="pressMasterPinKey('2')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">2</button>
-<button type="button" onclick="pressMasterPinKey('3')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">3</button>
-<button type="button" onclick="pressMasterPinKey('4')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">4</button>
-<button type="button" onclick="pressMasterPinKey('5')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">5</button>
-<button type="button" onclick="pressMasterPinKey('6')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">6</button>
-<button type="button" onclick="pressMasterPinKey('7')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">7</button>
-<button type="button" onclick="pressMasterPinKey('8')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">8</button>
-<button type="button" onclick="pressMasterPinKey('9')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">9</button>
-<button type="button" onclick="clearMasterPinKey()" class="py-2 rounded-lg bg-red-950/60 text-red-300 text-[10px] font-bold cursor-pointer">CLR</button>
-<button type="button" onclick="pressMasterPinKey('0')" class="py-2 rounded-lg bg-slate-800 text-base font-bold cursor-pointer">0</button>
-<button type="button" onclick="backspaceMasterPinKey()" class="py-2 rounded-lg bg-slate-800 text-sm font-bold cursor-pointer">⌫</button>
-</div>
-<button type="button" onclick="submitMasterPin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Unlock Manager</button>
-</div>
-</div>
-​<!-- ================= PAIRING & MENU GUIDE MODAL (DYNAMIC) ================= -->
-<div id="modal-pairing-guide" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-md p-4 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
-<button type="button" onclick="closePairingGuideModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-3">
-<h3 class="font-display font-black text-amber-400 text-lg uppercase">Oktoberfest Pairing Matrix</h3>
-<p class="text-[11px] text-slate-400">Official Sausage & Bread Combinations</p>
-</div>
-<div id="pairing-guide-dynamic-list" class="space-y-2 text-xs"></div>
-<button type="button" onclick="closePairingGuideModal()" class="w-full mt-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase cursor-pointer">
-Close Guide
-</button>
-</div>
-</div>
-​<!-- ================= QUICK SET ALL STOCK MODAL ================= -->
-<div id="modal-quick-stock" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-md p-4 shadow-2xl relative max-h-[85vh] overflow-y-auto custom-scrollbar">
-<button type="button" onclick="closeQuickStockModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2.5">
-<h3 class="font-display font-black text-amber-400 text-lg uppercase">Quick Set Opening Stock</h3>
-<p class="text-[11px] text-slate-400">Set Main Storage (bulk) and Storage (on-site) physical counts</p>
-</div>
-​<!-- 1-Tap 2026 Plan Fill -->
-<div class="mb-3 p-2 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
-<div>
-<span class="text-xs font-bold text-amber-300">2026 Master Plan Split</span>
-<p class="text-[10px] text-slate-400">600 sausages & 600 rolls</p>
-</div>
-<button type="button" onclick="apply2026PresetStock()" class="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-black font-black text-xs cursor-pointer shadow">
-⚡ Fill 2026 Plan
-</button>
-</div>
-​<div class="space-y-2 text-xs" id="quick-stock-inputs-container"></div>
-​<div class="mt-3 flex gap-2">
-<button type="button" onclick="saveQuickStockInputs()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Stock</button>
-<button type="button" onclick="closeQuickStockModal()" class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
-</div>
-</div>
-</div>
-​<!-- ================= MENU & STOCK ITEM CRUD MODAL (ADD / EDIT) ================= -->
-<div id="modal-menu-item" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-sm p-4 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
-<button type="button" onclick="closeMenuItemModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2">
-<h3 id="menu-modal-title" class="font-display font-black text-amber-400 text-base uppercase">Add / Edit Menu Item</h3>
-<p class="text-[10px] text-slate-400">Directly syncs to live POS, inventory stock & sales rules</p>
-</div>
-​<input type="hidden" id="menu-item-edit-id" value="">
-​<div class="space-y-2 text-xs">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Item Name:</label>
-<input type="text" id="menu-in-name" placeholder="e.g. Nürnberger (3pc)" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-bold text-xs">
-</div>
-<div class="grid grid-cols-3 gap-2">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Category:</label>
-<select id="menu-in-category" onchange="toggleCategoryFields()" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white text-xs">
-<option value="sausage">Sausage (Braai)</option>
-<option value="roll_side">Roll / Bread Side</option>
-<option value="condiment_extra">Sauce / Extra</option>
-</select>
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Sale Rule:</label>
-<select id="menu-in-sale-rule" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-amber-300 font-bold text-xs">
-<option value="both">Solo & Combo</option>
-<option value="standalone_only">Solo Only</option>
-<option value="combo_only">Combo Only</option>
-</select>
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Best Match Roll:</label>
-<select id="menu-in-default-roll" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white text-xs">
-<option value="crusty">Crispy Roll</option>
-<option value="white">White Roll</option>
-<option value="none">No Roll</option>
-</select>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-2">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Selling Price (R):</label>
-<input type="number" step="1" id="menu-in-price" placeholder="60" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-amber-400 font-mono font-bold text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">COGS Cost (R):</label>
-<input type="number" step="0.5" id="menu-in-cogs" placeholder="22.00" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-red-300 font-mono font-bold text-xs">
-</div>
-</div>
-<div class="grid grid-cols-2 gap-2 p-2 bg-slate-950 rounded border border-slate-800">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Main Storage Stock:</label>
-<input type="number" id="menu-in-coldroom" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-white font-mono text-xs">
-</div>
-<div>
-<label class="block text-amber-400 text-[10px] mb-0.5">Storage (On-Site) Stock:</label>
-<input type="number" id="menu-in-cooler" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded p-1 text-amber-300 font-mono font-bold text-xs">
-</div>
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Short Description / Subtitle:</label>
-<input type="text" id="menu-in-desc" placeholder="Traditional spice, coarse ground" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-slate-200 text-xs">
-</div>
-</div>
-​<div class="mt-3 flex gap-2">
-<button type="button" onclick="saveMenuItemForm()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Item</button>
-<button type="button" onclick="closeMenuItemModal()" class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
-</div>
-</div>
-</div>
-​<!-- ================= STATION CRUD MODAL (ADD / EDIT) ================= -->
-<div id="modal-station" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-xs p-4 shadow-2xl relative">
-<button type="button" onclick="closeStationModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2">
-<h3 id="station-modal-title" class="font-display font-black text-amber-400 text-base uppercase">Add / Edit Station</h3>
-<p class="text-[10px] text-slate-400">Configure operational touch screen terminal</p>
-</div>
-​<input type="hidden" id="station-edit-id" value="">
-​<div class="space-y-2 text-xs">
-<div class="grid grid-cols-3 gap-2">
-<div class="col-span-1">
-<label class="block text-slate-400 text-[10px] mb-0.5">Icon:</label>
-<input type="text" id="station-in-icon" placeholder="🍺" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-center text-sm">
-</div>
-<div class="col-span-2">
-<label class="block text-slate-400 text-[10px] mb-0.5">Station Name:</label>
-<input type="text" id="station-in-name" placeholder="e.g. Bar / Drinks" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-bold text-xs">
-</div>
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Description:</label>
-<input type="text" id="station-in-desc" placeholder="Beverages and cash till" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-slate-200 text-xs">
-</div>
-</div>
-​<div class="mt-3 flex gap-2">
-<button type="button" onclick="saveStationForm()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Station</button>
-<button type="button" onclick="closeStationModal()" class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
-</div>
-</div>
-</div>
-​<!-- ================= STAFF CRUD MODAL (ADD / EDIT) ================= -->
-<div id="modal-staff-edit" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-xs p-4 shadow-2xl relative">
-<button type="button" onclick="closeStaffModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2">
-<h3 id="staff-modal-title" class="font-display font-black text-amber-400 text-base uppercase">Add / Edit Staff</h3>
-<p class="text-[10px] text-slate-400">Team member profile & PIN</p>
-</div>
-​<input type="hidden" id="staff-edit-idx" value="-1">
-​<div class="space-y-2 text-xs">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Staff Full Name:</label>
-<input type="text" id="staff-in-name" placeholder="e.g. Margret" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-bold text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Role / Station Description:</label>
-<input type="text" id="staff-in-role" placeholder="e.g. Roll Slicing & Assembly" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-slate-200 text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">4-Digit PIN:</label>
-<input type="text" maxlength="4" id="staff-in-pin" placeholder="1234" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-amber-400 font-mono font-bold text-center text-sm">
-</div>
-</div>
-​<div class="mt-3 flex gap-2">
-<button type="button" onclick="saveStaffForm()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">Save Staff</button>
-<button type="button" onclick="closeStaffModal()" class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs uppercase cursor-pointer">Cancel</button>
-</div>
-</div>
-</div>
-​<!-- ================= OVERHEADS MODAL ================= -->
-<div id="modal-overheads" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
-<div class="bg-slate-900 border-2 border-amber-500/50 rounded-2xl w-full max-w-xs p-4 shadow-2xl relative">
-<button type="button" onclick="closeOverheadsModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
-<div class="text-center mb-2">
-<h3 class="font-display font-black text-amber-400 text-base uppercase">Overheads & Operating Expenses</h3>
-<p class="text-[10px] text-slate-400">Fixed expenses & consumables</p>
-</div>
-​<div class="space-y-1.5 text-xs">
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Club Vendor Fee (R):</label>
-<input type="number" step="50" id="ovh-club-fee" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-mono text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Labour Stipends (5 helpers) (R):</label>
-<input type="number" step="50" id="ovh-labour" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-mono text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Gas Bottles / Braai Fuel (R):</label>
-<input type="number" step="50" id="ovh-gas-fuel" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-mono text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Consumables / Sausage (R):</label>
-<input type="number" step="0.2" id="ovh-consumable-rate" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-mono text-xs">
-</div>
-<div>
-<label class="block text-slate-400 text-[10px] mb-0.5">Yoco Card Processing (%):</label>
-<input type="number" step="0.1" id="ovh-card-fee" class="w-full bg-slate-950 border border-slate-700 rounded p-1.5 text-white font-mono text-xs">
-</div>
-</div>
-​<button type="button" onclick="saveOverheadsConfig()" class="w-full mt-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase cursor-pointer">
-Save Overheads
-</button>
-</div>
-</div>
-​<!-- ================= JAVASCRIPT SYSTEM ================= -->
-<script>
-let currentStation = 'till';
-let currentOperator = 'Nicolas';
-let selectedLoginStaff = 'Nicolas';
-let selectedLoginStation = 'till';
-let isManagerAuthenticated = false; // Strictly enforces Master PIN protection
-let isAuthenticated = false; // Requires login before accessing ANY station
-let loginPinBuffer = '';
-let masterPinBuffer = '';
-​const STAFF_ROSTER_KEY = 'okt_staff_roster_v2';
-const ORDERS_KEY = 'okt_orders_v2';
-const OVERHEADS_KEY = 'okt_overheads_v2';
-const MENU_CATALOG_KEY = 'okt_unified_menu_catalog_v1';
-const STATIONS_REGISTRY_KEY = 'okt_stations_registry_v1';
-​// DYNAMIC STATIONS REGISTRY
-let stationRegistry = [
-{ id: 'till', name: 'Till', icon: '💳', desc: 'Cashier & POS Order Creation' },
-{ id: 'handout', name: 'Prep', icon: '📦', desc: 'Roll Slicing & Plating' },
-{ id: 'braai', name: 'Braai', icon: '🔥', desc: 'Grill Master Demand Monitor' },
-{ id: 'shared', name: 'Kiosk', icon: '📱', desc: 'Dual Prep & Grill Screen' }
-];
-​// UNIFIED MENU & INVENTORY CATALOG (Menu and Stock are strictly unified)
-let productCatalog = [
-{ id: 'bratwurst', name: 'Bratwurst (140g)', category: 'sausage', saleRule: 'both', price: 60.0, cogs: 22.0, defaultRoll: 'crusty', desc: 'German pork & veal coarse white sausage', coldRoom: 0, cooler: 0, sold: 0 },
-{ id: 'currywurst', name: 'Currywurst (Sliced)', category: 'sausage', saleRule: 'both', price: 70.0, cogs: 26.0, defaultRoll: 'crusty', desc: 'Sliced sausage with 100ml warm curry sauce', coldRoom: 0, cooler: 0, sold: 0 },
-{ id: 'bockwurst', name: 'Bockwurst (140g)', category: 'sausage', saleRule: 'both', price: 60.0, cogs: 22.0, defaultRoll: 'crusty', desc: 'Juicy smoked German paprika sausage', coldRoom: 0, cooler: 0, sold: 0 },
-{ id: 'cheesegriller', name: 'Cheesegriller (110g)', category: 'sausage', saleRule: 'both', price: 60.0, cogs: 24.0, defaultRoll: 'white', desc: 'Pork sausage filled with melted cheddar', coldRoom: 0, cooler: 0, sold: 0 },
-{ id: 'roll_crusty', name: 'German Crispy Roll', category: 'roll_side', saleRule: 'both', price: 15.0, cogs: 5.5, defaultRoll: 'none', desc: 'Fresh crispy bakery crust roll', coldRoom: 0, cooler: 0, sold: 0 },
-{ id: 'roll_white', name: 'Standard White Roll', category: 'roll_side', saleRule: 'both', price: 10.0, cogs: 3.5, defaultRoll: 'none', desc: 'Soft hot dog bakery bun', coldRoom: 0, cooler: 0, sold: 0 }
-];
-​let staffRoster = [
-{ name: 'Nicolas', pin: '1234', role: 'Lead & POS Till' },
-{ name: 'Nick', pin: '1234', role: 'Till Rush & Dispatch' },
-{ name: 'Nicole', pin: '1234', role: 'Roll Slicing & Assembly' },
-{ name: 'Margret', pin: '1234', role: 'Sauce Prep & Trays' },
-{ name: 'Joost', pin: '1234', role: 'Grill Braaimaster' }
-];
-​let prepBuffer = {
-bratwurst: 0,
-bockwurst: 0,
-cheesegriller: 0
-};
-​let overheadExpenses = {
-clubFee: 2000.0,
-labour: 2500.0,
-gasFuel: 400.0,
-consumablePerServing: 3.3,
-cardFeePct: 2.6
-};
-​let cart = [];
-let completedOrders = [];
-let orderSequenceNumber = 101;
-​window.addEventListener('DOMContentLoaded', () => {
-loadStateFromStorage();
-renderDynamicStationNav();
-setupKeyboardListeners();
-// On startup, enforce sign-in dialog immediately
-openLoginModal('till');
-});
-​function loadStateFromStorage() {
-try {
-const storedStaff = localStorage.getItem(STAFF_ROSTER_KEY);
-if (storedStaff) staffRoster = JSON.parse(storedStaff);
-​const storedMenu = localStorage.getItem(MENU_CATALOG_KEY);
-if (storedMenu) {
-productCatalog = JSON.parse(storedMenu);
-}
-​const storedStations = localStorage.getItem(STATIONS_REGISTRY_KEY);
-if (storedStations) stationRegistry = JSON.parse(storedStations);
-​const storedOrders = localStorage.getItem(ORDERS_KEY);
-if (storedOrders) {
-completedOrders = JSON.parse(storedOrders);
-if (completedOrders.length > 0) {
-orderSequenceNumber = Math.max(...completedOrders.map(o => o.orderNumber || 100)) + 1;
-}
-}
-​const storedOverheads = localStorage.getItem(OVERHEADS_KEY);
-if (storedOverheads) overheadExpenses = JSON.parse(storedOverheads);
-} catch (e) {
-console.warn('Storage read warning:', e);
-}
-}
-​function saveStateToStorage() {
-try {
-localStorage.setItem(STAFF_ROSTER_KEY, JSON.stringify(staffRoster));
-localStorage.setItem(MENU_CATALOG_KEY, JSON.stringify(productCatalog));
-localStorage.setItem(STATIONS_REGISTRY_KEY, JSON.stringify(stationRegistry));
-localStorage.setItem(ORDERS_KEY, JSON.stringify(completedOrders));
-localStorage.setItem(OVERHEADS_KEY, JSON.stringify(overheadExpenses));
-} catch (e) {
-console.error('Storage write error:', e);
-}
-}
-​// RENDER TOP STATION NAVIGATION DYNAMICALLY
-function renderDynamicStationNav() {
-const nav = document.getElementById('header-station-nav');
-if (!nav) return;
-​let html = '';
-stationRegistry.forEach(st => {
-const isActive = (st.id === currentStation);
-const cls = isActive
-? 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow cursor-pointer whitespace-nowrap'
-: 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900 cursor-pointer whitespace-nowrap';
-​html += <button type="button" id="nav-btn-${st.id}" onclick="requestStationAccess('${st.id}')" class="${cls}"> <span>${st.icon}</span> <span>${st.name}</span> </button>;
-});
-​// Manager Button
-const isMgr = (currentStation === 'manager');
-const mgrCls = isMgr
-? 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-amber-500 bg-amber-500/30 text-amber-300 shadow cursor-pointer whitespace-nowrap'
-: 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-transparent text-amber-400 hover:bg-amber-500/10 cursor-pointer whitespace-nowrap';
-​html += <button type="button" id="nav-btn-manager" onclick="requestStationAccess('manager')" class="${mgrCls}"> <span>🔒</span> <span>Mgr</span> </button>;
-​nav.innerHTML = html;
-}
-​// Every station navigation strictly calls requestStationAccess()
-function requestStationAccess(targetStation) {
-if (targetStation === currentStation && isAuthenticated) {
-return; // Already on this station and authenticated
-}
-openLoginModal(targetStation);
-}
-​function lockCurrentStation() {
-isAuthenticated = false;
-isManagerAuthenticated = false;
-openLoginModal(currentStation || 'till');
-}
-​function switchStationView(targetStation) {
-// MANAGER SECURITY GUARD: Challenge for PIN 1978 if not already authenticated as Manager
-if (targetStation === 'manager' && !isManagerAuthenticated) {
-openLoginModal('manager');
-return;
-}
-​currentStation = targetStation;
-​const stationViews = ['view-till', 'view-handout', 'view-braai', 'view-shared', 'view-manager'];
-stationViews.forEach(id => {
-const el = document.getElementById(id);
-if (el) el.classList.add('hidden');
-});
-​const targetEl = document.getElementById(view-${targetStation});
-if (targetEl) targetEl.classList.remove('hidden');
-​stationRegistry.forEach(st => {
-const btn = document.getElementById(nav-btn-${st.id});
-if (!btn) return;
-if (st.id === targetStation) {
-btn.className = 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-amber-500/40 bg-amber-500/20 text-amber-300 shadow cursor-pointer whitespace-nowrap';
-} else {
-btn.className = 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-transparent text-slate-300 hover:text-white hover:bg-slate-900 cursor-pointer whitespace-nowrap';
-}
-});
-​const mgrBtn = document.getElementById('nav-btn-manager');
-if (mgrBtn) {
-if (targetStation === 'manager') {
-mgrBtn.className = 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-amber-500 bg-amber-500/30 text-amber-300 shadow cursor-pointer whitespace-nowrap';
-} else {
-mgrBtn.className = 'px-2.5 py-1 rounded-md text-xs font-bold transition flex items-center gap-1 border border-transparent text-amber-400 hover:bg-amber-500/10 cursor-pointer whitespace-nowrap';
-}
-}
-​const stBadge = document.getElementById('current-station-badge');
-if (stBadge) {
-stBadge.textContent = targetStation.toUpperCase();
-}
-​renderAllViews();
-}
-​function renderAllViews() {
-renderTillStation();
-renderHandoutStation();
-renderBraaiStation();
-renderSharedStation();
-renderManagerDashboard();
-}
-​/* ================= TILL ENGINE ================= */
-function addToCart(productId, rollType = 'crusty') {
-const product = productCatalog.find(p => p.id === productId);
-if (!product) return;
-​// Purchasing Rule Check: standalone prevention
-if (product.category === 'roll_side' && product.saleRule === 'combo_only') {
-alert("${product.name}" is marked as COMBO ONLY and cannot be purchased by itself.);
-return;
-}
-​const existingIndex = cart.findIndex(i => i.id === productId && i.rollType === rollType);
-if (existingIndex > -1) {
-cart[existingIndex].qty += 1;
-} else {
-cart.push({
-id: productId,
-name: product.name,
-price: product.price,
-rollType: rollType,
-qty: 1
-});
-}
-renderCartUI();
-}
-​function changeCartItemQty(index, delta) {
-if (!cart[index]) return;
-cart[index].qty += delta;
-if (cart[index].qty <= 0) {
-cart.splice(index, 1);
-}
-renderCartUI();
-}
-​function clearCart() {
-cart = [];
-renderCartUI();
-}
-​function renderCartUI() {
-const container = document.getElementById('cart-items-container');
-const totalDisplay = document.getElementById('cart-total-display');
-const orderTag = document.getElementById('pos-order-tag');
-​if (orderTag) orderTag.textContent = #${orderSequenceNumber};
-if (!container || !totalDisplay) return;
-​if (cart.length === 0) {
-container.innerHTML = <div class="text-center py-6 text-slate-500 text-xs"> Tap a sausage to begin order </div>;
-totalDisplay.textContent = 'R0.00';
-return;
-}
-​let total = 0;
-let html = '';
-​cart.forEach((item, idx) => {
-const itemTotal = item.price * item.qty;
-total += itemTotal;
-​let rollBadge = '';
-if (item.rollType === 'crusty') rollBadge = '<span class="text-[9px] text-amber-300 font-bold bg-amber-500/10 px-1 py-0.5 rounded border border-amber-500/20">🥖 Crispy</span>';
-else if (item.rollType === 'white') rollBadge = '<span class="text-[9px] text-slate-300 font-bold bg-slate-800 px-1 py-0.5 rounded border border-slate-700">🥖 White</span>';
-else if (item.rollType === 'none') rollBadge = '<span class="text-[9px] text-slate-400 font-bold bg-slate-900 px-1 py-0.5 rounded">🍽️ No Roll</span>';
-​html += `
-<div class="p-1.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between gap-1.5">
-<div class="flex-1 truncate">
-<div class="text-[11px] font-bold text-white truncate">${item.name}</div>
-<div class="flex items-center gap-1 mt-0.5">
-{rollBadge}
-<span class="text-[10px] font-mono text-slate-400">@ R{item.price.toFixed(0)}</span>
-</div>
-</div>
-​<div class="flex items-center gap-1 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 shrink-0">
-<button type="button" onclick="changeCartItemQty(${idx}, -1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center cursor-pointer">-</button>
-<span class="font-mono text-xs font-bold px-1">${item.qty}</span>
-<button type="button" onclick="changeCartItemQty(${idx}, 1)" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center cursor-pointer">+</button>
-</div>
-​<div class="font-mono font-bold text-amber-400 text-xs w-12 text-right shrink-0">
-R${itemTotal.toFixed(0)}
-</div>
-</div>
-`;
-});
-​container.innerHTML = html;
-totalDisplay.textContent = R${total.toFixed(2)};
-}
-​function finalizeOrderCreation(paymentMethod = 'cash') {
-if (cart.length === 0) return;
-​let total = 0;
-cart.forEach(i => total += (i.price * i.qty));
-​const newOrder = {
-id: 'ord_' + Date.now(),
-orderNumber: orderSequenceNumber++,
-timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-items: JSON.parse(JSON.stringify(cart)),
-total: total,
-paymentMethod: paymentMethod,
-operator: currentOperator,
-status: 'pending'
-};
-​newOrder.items.forEach(item => {
-// Deduct from unified stock
-const prod = productCatalog.find(p => p.id === item.id);
-if (prod) {
-prod.sold = (prod.sold || 0) + item.qty;
-prod.cooler = Math.max(0, (prod.cooler || 0) - item.qty);
-}
-​// Deduct rolls from unified stock if chosen
-const rollKey = (item.rollType === 'crusty') ? 'roll_crusty' : (item.rollType === 'white' ? 'roll_white' : null);
-if (rollKey) {
-const rollProd = productCatalog.find(p => p.id === rollKey);
-if (rollProd) {
-rollProd.sold = (rollProd.sold || 0) + item.qty;
-rollProd.cooler = Math.max(0, (rollProd.cooler || 0) - item.qty);
-}
-}
-});
-​completedOrders.unshift(newOrder);
-saveStateToStorage();
-clearCart();
-renderAllViews();
-}
-​// RENDER POS SAUSAGES & ROLLS DYNAMICALLY
-function renderTillStation() {
-renderCartUI();
-​// Populate Sausages Grid
-const sausageGrid = document.getElementById('pos-sausage-grid');
-if (sausageGrid) {
-const sausages = productCatalog.filter(p => p.category === 'sausage');
-let html = '';
-​sausages.forEach(s => {
-const rollName = (s.defaultRoll === 'crusty') ? 'Crispy Roll' : (s.defaultRoll === 'white' ? 'White Roll' : 'Roll');
-const hasPairedRoll = s.defaultRoll && s.defaultRoll !== 'none';
-​let buttonsSection = '';
-if (hasPairedRoll) {
-buttonsSection = <div class="tin-pod-container p-0.5 rounded-lg grid grid-cols-2 gap-1 mt-1"> <button type="button" onclick="addToCart('${s.id}', '${s.defaultRoll}')" class="tin-pod-btn recommended py-2.5 px-2 rounded-md text-center flex flex-col items-center justify-center cursor-pointer"> <span class="text-[9px] uppercase font-bold tracking-wider text-amber-200 pointer-events-none">★ With ${rollName}</span> <span class="text-xs font-black pointer-events-none">🥖 With Roll</span> </button> <button type="button" onclick="addToCart('${s.id}', 'none')" class="tin-pod-btn py-2.5 px-2 rounded-md text-center flex flex-col items-center justify-center text-slate-300 hover:text-white cursor-pointer"> <span class="text-[9px] text-slate-400 pointer-events-none">Plate / Boat Only</span> <span class="text-xs font-bold pointer-events-none">🍽️ No Roll</span> </button> </div>;
-} else {
-buttonsSection = <div class="tin-pod-container p-0.5 rounded-lg grid grid-cols-1 mt-1"> <button type="button" onclick="addToCart('${s.id}', 'none')" class="tin-pod-btn py-2.5 px-2 rounded-md text-center flex items-center justify-center gap-1.5 text-amber-300 hover:text-amber-200 cursor-pointer"> <span class="text-xs font-black pointer-events-none">+ Add To Order</span> </button> </div>;
-}
-​html += `
-<div class="bg-slate-900/90 border border-slate-700/60 rounded-xl p-2.5 shadow flex flex-col justify-between overflow-hidden">
-<div class="flex justify-between items-baseline">
-<div class="truncate mr-1">
-<div class="flex items-center gap-1.5">
-<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-<h3 class="font-display font-black text-white text-sm sm:text-base truncate">{s.name}</h3>
-</div>
-<p class="text-[10px] text-slate-400 truncate">{s.desc || 'Oktoberfest item'}</p>
-</div>
-<span class="font-display font-black text-amber-400 text-base sm:text-lg shrink-0">R${s.price.toFixed(0)}</span>
-</div>
-​${buttonsSection}
-</div>
-`;
-});
-​sausageGrid.innerHTML = html;
-}
-​// Populate Standalone Rolls Bar
-const rollsBar = document.getElementById('pos-standalone-rolls-bar');
-if (rollsBar) {
-const rollSides = productCatalog.filter(p => p.category === 'roll_side' && p.saleRule !== 'combo_only');
-let buttonsHtml = '';
-​rollSides.forEach(r => {
-buttonsHtml += <button type="button" onclick="addToCart('${r.id}', 'none')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-amber-500/30 text-amber-300 text-[11px] font-bold cursor-pointer transition"> + ${r.name} (R${r.price.toFixed(0)}) </button>;
-});
-​rollsBar.innerHTML = <span class="text-[11px] font-bold text-slate-300 flex items-center gap-1 truncate"> <span>🥖</span> <span class="truncate">Extra Standalone Buns:</span> </span> <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto"> ${buttonsHtml} </div>;
-}
-}
-​/* ================= HANDOUT ENGINE ================= */
-function completeHandoutOrder(orderId) {
-const order = completedOrders.find(o => o.id === orderId);
-if (order) {
-order.status = 'completed';
-saveStateToStorage();
-renderAllViews();
-}
-}
-​function renderHandoutStation() {
-const queue = document.getElementById('handout-tickets-queue');
-const countEl = document.getElementById('handout-waiting-count');
-if (!queue) return;
-​const activeOrders = completedOrders.filter(o => o.status === 'pending');
-if (countEl) countEl.textContent = activeOrders.length;
-​if (activeOrders.length === 0) {
-queue.innerHTML = <div class="col-span-full py-12 text-center text-slate-500"> <span class="text-3xl block mb-1">🎉</span> <span class="text-xs font-bold">All Orders Cleared & Plated!</span> </div>;
-return;
-}
-​let html = '';
-activeOrders.forEach(order => {
-let itemsHtml = '';
-order.items.forEach(it => {
-let rollDesc = '';
-if (it.rollType === 'crusty') rollDesc = '<span class="text-amber-800 font-bold">🥖 Crispy</span>';
-else if (it.rollType === 'white') rollDesc = '<span class="text-slate-700 font-bold">🥖 White</span>';
-else if (it.rollType === 'none') rollDesc = '<span class="text-rose-700 font-bold">🍽️ NO ROLL</span>';
-​itemsHtml += <div class="flex items-center justify-between text-[11px] py-0.5 border-b border-black/10"> <span class="font-bold text-slate-900 truncate">${it.qty}x ${it.name}</span> <span class="shrink-0 ml-1">${rollDesc}</span> </div>;
-});
-​html += `
-<div class="bg-amber-100 text-slate-900 rounded-xl p-3 shadow border-t-4 border-amber-500 post-it-slip flex flex-col justify-between">
-<div>
-<div class="flex items-center justify-between border-b border-black/15 pb-1 mb-1.5">
-<div>
-<span class="font-display font-black text-lg text-black">#{order.orderNumber}</span>
-<span class="text-[9px] text-slate-600 font-mono ml-1.5">{order.timestamp}</span>
-</div>
-<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-black/10 font-mono">${order.paymentMethod}</span>
-</div>
-<div class="space-y-0.5 mb-2">
-${itemsHtml}
-</div>
-</div>
-​<button type="button" onclick="completeHandoutOrder('${order.id}')" class="w-full py-2 rounded-lg bg-slate-900 hover:bg-black text-amber-300 font-black text-[11px] uppercase tracking-wider active:scale-95 transition cursor-pointer">
-✓ Handed Out
-</button>
-</div>
-`;
-});
-​queue.innerHTML = html;
-}
-​/* ================= BRAAI MONITOR ENGINE ================= */
-function adjustPrepBuffer(type, amount) {
-if (prepBuffer[type] !== undefined) {
-prepBuffer[type] = Math.max(0, prepBuffer[type] + amount);
-renderBraaiStation();
-}
-}
-​function renderBraaiStation() {
-let pendingBrat = 0;
-let pendingBock = 0;
-let pendingCheese = 0;
-​completedOrders.filter(o => o.status === 'pending').forEach(ord => {
-ord.items.forEach(it => {
-if (it.id === 'bratwurst' || it.id === 'currywurst') pendingBrat += it.qty;
-if (it.id === 'bockwurst') pendingBock += it.qty;
-if (it.id === 'cheesegriller') pendingCheese += it.qty;
-});
-});
-​const demBrat = document.getElementById('braai-demand-bratwurst');
-const demBock = document.getElementById('braai-demand-bockwurst');
-const demCheese = document.getElementById('braai-demand-cheesegriller');
-​if (demBrat) demBrat.textContent = pendingBrat;
-if (demBock) demBock.textContent = pendingBock;
-if (demCheese) demCheese.textContent = pendingCheese;
-​const bufBrat = document.getElementById('braai-buffer-bratwurst');
-const bufBock = document.getElementById('braai-buffer-bockwurst');
-const bufCheese = document.getElementById('braai-buffer-cheesegriller');
-​if (bufBrat) bufBrat.textContent = ${prepBuffer.bratwurst} ready;
-if (bufBock) bufBock.textContent = ${prepBuffer.bockwurst} ready;
-if (bufCheese) bufCheese.textContent = ${prepBuffer.cheesegriller} ready;
-​const totalSoldEl = document.getElementById('braai-total-sold');
-let totalSausagesSold = 0;
-completedOrders.forEach(o => {
-o.items.forEach(it => {
-if (['bratwurst', 'currywurst', 'bockwurst', 'cheesegriller'].includes(it.id)) {
-totalSausagesSold += it.qty;
-}
-});
-});
-if (totalSoldEl) totalSoldEl.textContent = totalSausagesSold;
-}
-​function renderSharedStation() {
-const handoutCont = document.getElementById('shared-handout-container');
-const braaiCont = document.getElementById('shared-braai-container');
-if (!handoutCont || !braaiCont) return;
-​const activeOrders = completedOrders.filter(o => o.status === 'pending');
-handoutCont.innerHTML = activeOrders.map(o => <div class="p-1.5 rounded-lg bg-slate-950 border border-slate-800 flex justify-between items-center text-[11px]"> <span class="font-bold text-amber-400">#${o.orderNumber}</span> <span class="text-slate-300 truncate mx-1.5">${o.items.map(i =>${i.qty}x ${i.name}).join(', ')}</span> <button type="button" onclick="completeHandoutOrder('${o.id}')" class="px-1.5 py-0.5 rounded bg-slate-800 text-emerald-400 text-[10px] font-bold cursor-pointer">Done</button> </div> ).join('') || '<div class="text-[11px] text-slate-500 py-3 text-center">No pending orders</div>';
-​braaiCont.innerHTML = <div class="space-y-1.5 text-[11px]"> <div class="p-1.5 rounded-lg bg-slate-950 flex justify-between"> <span class="text-slate-400">Bratwurst Buffer:</span> <span class="font-mono font-bold text-sky-400">${prepBuffer.bratwurst} ready</span> </div> <div class="p-1.5 rounded-lg bg-slate-950 flex justify-between"> <span class="text-slate-400">Bockwurst Buffer:</span> <span class="font-mono font-bold text-red-400">${prepBuffer.bockwurst} ready</span> </div> <div class="p-1.5 rounded-lg bg-slate-950 flex justify-between"> <span class="text-slate-400">Cheesegriller Buffer:</span> <span class="font-mono font-bold text-yellow-400">${prepBuffer.cheesegriller} ready</span> </div> </div>;
-}
-​/* ================= MANAGER FINANCIAL & STOCK DASHBOARD ================= */
-function renderManagerDashboard() {
-let grossTurnover = 0;
-let totalSausagesSold = 0;
-let totalFoodCogs = 0;
-let cardSalesVolume = 0;
-​completedOrders.forEach(o => {
-grossTurnover += o.total;
-if (o.paymentMethod === 'card') cardSalesVolume += o.total;
-​o.items.forEach(it => {
-const prod = productCatalog.find(p => p.id === it.id);
-if (prod && prod.category === 'sausage') {
-totalSausagesSold += it.qty;
-}
-​// Item raw COGS
-const itemCogs = prod ? (prod.cogs || 0) : 0;
-totalFoodCogs += (itemCogs * it.qty);
-​// Roll COGS
-if (it.rollType === 'crusty') {
-const crProd = productCatalog.find(p => p.id === 'roll_crusty');
-totalFoodCogs += ((crProd ? crProd.cogs : 5.5) * it.qty);
-} else if (it.rollType === 'white') {
-const whProd = productCatalog.find(p => p.id === 'roll_white');
-totalFoodCogs += ((whProd ? whProd.cogs : 3.5) * it.qty);
-}
-});
-});
-​const grossProfit = grossTurnover - totalFoodCogs;
-const grossMargin = grossTurnover > 0 ? ((grossProfit / grossTurnover) * 100) : 0;
-​const fixedOverheads = overheadExpenses.clubFee + overheadExpenses.labour + overheadExpenses.gasFuel;
-const variableConsumables = totalSausagesSold * overheadExpenses.consumablePerServing;
-const cardProcessingCost = cardSalesVolume * (overheadExpenses.cardFeePct / 100);
-const totalExpenses = fixedOverheads + variableConsumables + cardProcessingCost;
-​const netProfit = grossProfit - totalExpenses;
-​const avgSellingPrice = totalSausagesSold > 0 ? (grossTurnover / totalSausagesSold) : 60.0;
-const avgUnitCogs = totalSausagesSold > 0 ? (totalFoodCogs / totalSausagesSold) : 27.5;
-const unitContribution = Math.max(1, (avgSellingPrice - avgUnitCogs - overheadExpenses.consumablePerServing));
-const breakevenUnits = Math.ceil(fixedOverheads / unitContribution);
-​const tEl = document.getElementById('mgr-gross-turnover');
-const cEl = document.getElementById('mgr-total-cogs');
-const gpEl = document.getElementById('mgr-gross-profit');
-const gmEl = document.getElementById('mgr-gross-margin');
-const npEl = document.getElementById('mgr-net-profit');
-const scEl = document.getElementById('mgr-total-sold-count');
-const beEl = document.getElementById('mgr-breakeven-indicator');
-​if (tEl) tEl.textContent = R${grossTurnover.toFixed(2)};
-if (cEl) cEl.textContent = R${totalFoodCogs.toFixed(2)};
-if (gpEl) gpEl.textContent = R${grossProfit.toFixed(2)};
-if (gmEl) gmEl.textContent = ${grossMargin.toFixed(1)}% gross margin;
-if (npEl) npEl.textContent = R${netProfit.toFixed(2)};
-if (scEl) scEl.textContent = ${totalSausagesSold} sausages sold;
-if (beEl) beEl.textContent = Breakeven: ${totalSausagesSold}/${breakevenUnits} units;
-​renderStockTable();
-renderStaffManagementTable();
-renderStationManagementTable();
-}
-​function renderStockTable() {
-const tbody = document.getElementById('mgr-stock-table-body');
-if (!tbody) return;
-​let html = '';
-productCatalog.forEach(it => {
-const cr = it.coldRoom || 0;
-const co = it.cooler || 0;
-const so = it.sold || 0;
-const totalBalance = (cr + co);
-​let saleRuleBadge = '<span class="text-emerald-400 bg-emerald-500/10 px-1 py-0.5 rounded border border-emerald-500/20 text-[9px]">Solo & Combo</span>';
-if (it.saleRule === 'combo_only') {
-saleRuleBadge = '<span class="text-purple-300 bg-purple-500/10 px-1 py-0.5 rounded border border-purple-500/20 text-[9px]">Combo Only</span>';
-} else if (it.saleRule === 'standalone_only') {
-saleRuleBadge = '<span class="text-sky-300 bg-sky-500/10 px-1 py-0.5 rounded border border-sky-500/20 text-[9px]">Solo Only</span>';
-}
-​html += <tr class="hover:bg-slate-800/40"> <td class="py-1.5 font-bold font-sans text-slate-200"> <div>${it.name}</div> <div class="text-[9px] text-slate-500 font-sans">${it.category === 'sausage' ? '🥩 Sausage' : '🥖 Roll/Side'} • ${it.desc || ''}</div> </td> <td class="py-1.5 text-center text-amber-400 font-bold">R${it.price.toFixed(0)}</td> <td class="py-1.5 text-center text-red-300 font-mono">R${(it.cogs || 0).toFixed(1)}</td> <td class="py-1.5 text-center">${saleRuleBadge}</td> <td class="py-1.5 text-center text-slate-400">${cr}</td> <td class="py-1.5 text-center text-amber-300 font-bold">${co}</td> <td class="py-1.5 text-center text-slate-500">${so}</td> <td class="py-1.5 text-center text-emerald-400 font-black">${totalBalance}</td> <td class="py-1.5 text-right space-x-1"> <button type="button" onclick="openMoveStockPrompt('${it.id}')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-sky-300 font-bold border border-sky-500/30 cursor-pointer" title="Move from Main Storage to Storage"> Move </button> <button type="button" onclick="openMenuItemModal('${it.id}')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-300 font-bold border border-amber-500/30 cursor-pointer" title="Edit Item"> ✏️ </button> <button type="button" onclick="deleteMenuItem('${it.id}')" class="px-1.5 py-0.5 rounded bg-red-950/60 hover:bg-red-900 text-[10px] text-red-300 font-bold border border-red-500/30 cursor-pointer" title="Delete Item"> 🗑️ </button> </td> </tr>;
-});
-​tbody.innerHTML = html;
-}
-​function renderStaffManagementTable() {
-const tbody = document.getElementById('mgr-staff-table-body');
-if (!tbody) return;
-​let html = '';
-staffRoster.forEach((st, idx) => {
-html += <tr class="hover:bg-slate-800/40"> <td class="py-1.5 font-bold text-slate-200">${st.name}</td> <td class="py-1.5 text-slate-400">${st.role || 'Volunteer'}</td> <td class="py-1.5 text-center font-mono text-amber-400">${st.pin || '1234'}</td> <td class="py-1.5 text-right space-x-1"> <button type="button" onclick="openStaffModal(${idx})" class="text-xs text-amber-300 hover:text-amber-200 cursor-pointer" title="Edit Staff"> ✏️ </button> <button type="button" onclick="deleteStaffMember(${idx})" class="text-xs text-red-400 hover:text-red-300 cursor-pointer">🗑️</button> </td> </tr>;
-});
-tbody.innerHTML = html;
-}
-​/* ================= STATIONS CRUD ENGINE ================= */
-function renderStationManagementTable() {
-const tbody = document.getElementById('mgr-stations-table-body');
-if (!tbody) return;
-​let html = '';
-stationRegistry.forEach(st => {
-html += <tr class="hover:bg-slate-800/40"> <td class="py-1.5 font-bold text-slate-200"> <span class="mr-1">${st.icon}</span> <span>${st.name}</span> <span class="ml-1 text-[9px] font-mono text-slate-500 uppercase">(${st.id})</span> </td> <td class="py-1.5 text-slate-400">${st.desc || ''}</td> <td class="py-1.5 text-right space-x-1"> <button type="button" onclick="openStationModal('${st.id}')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-300 font-bold border border-amber-500/30 cursor-pointer">✏️</button> <button type="button" onclick="deleteStation('${st.id}')" class="px-1.5 py-0.5 rounded bg-red-950/60 hover:bg-red-900 text-[10px] text-red-300 font-bold border border-red-500/30 cursor-pointer">🗑️</button> </td> </tr>;
-});
-tbody.innerHTML = html;
-}
-​function openStationModal(stationId = null) {
-const editInput = document.getElementById('station-edit-id');
-const titleEl = document.getElementById('station-modal-title');
-const iconIn = document.getElementById('station-in-icon');
-const nameIn = document.getElementById('station-in-name');
-const descIn = document.getElementById('station-in-desc');
-​if (stationId) {
-const st = stationRegistry.find(s => s.id === stationId);
-if (st) {
-editInput.value = st.id;
-titleEl.textContent = 'Edit Station';
-iconIn.value = st.icon;
-nameIn.value = st.name;
-descIn.value = st.desc || '';
-}
-} else {
-editInput.value = '';
-titleEl.textContent = 'Add New Station';
-iconIn.value = '🥨';
-nameIn.value = '';
-descIn.value = '';
-}
-document.getElementById('modal-station').classList.remove('hidden');
-}
-​function closeStationModal() {
-document.getElementById('modal-station').classList.add('hidden');
-}
-​function saveStationForm() {
-const editId = document.getElementById('station-edit-id');
-const iconIn = document.getElementById('station-in-icon');
-const nameIn = document.getElementById('station-in-name');
-const descIn = document.getElementById('station-in-desc');
-if (!editId || !iconIn || !nameIn || !descIn) return;
-​const editVal = editId.value;
-const icon = iconIn.value.trim() || '📍';
-const name = nameIn.value.trim();
-const desc = descIn.value.trim();
-​if (!name) return;
-​if (editVal) {
-const st = stationRegistry.find(s => s.id === editVal);
-if (st) {
-st.icon = icon;
-st.name = name;
-st.desc = desc;
-}
-} else {
-const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-stationRegistry.push({
-id: newId,
-name: name,
-icon: icon,
-desc: desc
-});
-}
-​saveStateToStorage();
-closeStationModal();
-renderDynamicStationNav();
-renderStationManagementTable();
-populateLoginStationSelector();
-}
-​function deleteStation(stationId) {
-if (stationRegistry.length <= 1) return;
-const idx = stationRegistry.findIndex(s => s.id === stationId);
-if (idx > -1) {
-stationRegistry.splice(idx, 1);
-saveStateToStorage();
-renderDynamicStationNav();
-renderStationManagementTable();
-populateLoginStationSelector();
-}
-}
-​/* ================= UNIFIED MENU & STOCK CRUD ENGINE ================= */
-function openMenuItemModal(itemId = null) {
-const editInput = document.getElementById('menu-item-edit-id');
-const titleEl = document.getElementById('menu-modal-title');
-const nameIn = document.getElementById('menu-in-name');
-const catIn = document.getElementById('menu-in-category');
-const saleRuleIn = document.getElementById('menu-in-sale-rule');
-const rollIn = document.getElementById('menu-in-default-roll');
-const priceIn = document.getElementById('menu-in-price');
-const cogsIn = document.getElementById('menu-in-cogs');
-const crIn = document.getElementById('menu-in-coldroom');
-const coIn = document.getElementById('menu-in-cooler');
-const descIn = document.getElementById('menu-in-desc');
-​if (itemId) {
-const item = productCatalog.find(p => p.id === itemId);
-if (item) {
-editInput.value = item.id;
-titleEl.textContent = 'Edit Menu Item';
-nameIn.value = item.name;
-catIn.value = item.category || 'sausage';
-saleRuleIn.value = item.saleRule || 'both';
-rollIn.value = item.defaultRoll || 'crusty';
-priceIn.value = item.price;
-cogsIn.value = item.cogs || 0;
-crIn.value = item.coldRoom || 0;
-coIn.value = item.cooler || 0;
-descIn.value = item.desc || '';
-}
-} else {
-editInput.value = '';
-titleEl.textContent = 'Add Menu Item';
-nameIn.value = '';
-catIn.value = 'sausage';
-saleRuleIn.value = 'both';
-rollIn.value = 'crusty';
-priceIn.value = '60';
-cogsIn.value = '22';
-crIn.value = '0';
-coIn.value = '0';
-descIn.value = '';
-}
-​toggleCategoryFields();
-document.getElementById('modal-menu-item').classList.remove('hidden');
-}
-​function toggleCategoryFields() {
-const cat = document.getElementById('menu-in-category').value;
-const rollSel = document.getElementById('menu-in-default-roll');
-if (rollSel) {
-rollSel.disabled = (cat !== 'sausage');
-}
-}
-​function closeMenuItemModal() {
-document.getElementById('modal-menu-item').classList.add('hidden');
-}
-​function saveMenuItemForm() {
-const editId = document.getElementById('menu-item-edit-id').value;
-const name = document.getElementById('menu-in-name').value.trim();
-const category = document.getElementById('menu-in-category').value;
-const saleRule = document.getElementById('menu-in-sale-rule').value;
-const defaultRoll = document.getElementById('menu-in-default-roll').value;
-const price = parseFloat(document.getElementById('menu-in-price').value) || 0;
-const cogs = parseFloat(document.getElementById('menu-in-cogs').value) || 0;
-const coldRoom = parseInt(document.getElementById('menu-in-coldroom').value, 10) || 0;
-const cooler = parseInt(document.getElementById('menu-in-cooler').value, 10) || 0;
-const desc = document.getElementById('menu-in-desc').value.trim();
-​if (!name) return;
-​if (editId) {
-const item = productCatalog.find(p => p.id === editId);
-if (item) {
-item.name = name;
-item.category = category;
-item.saleRule = saleRule;
-item.defaultRoll = defaultRoll;
-item.price = price;
-item.cogs = cogs;
-item.coldRoom = coldRoom;
-item.cooler = cooler;
-item.desc = desc;
-}
-} else {
-const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-productCatalog.push({
-id: newId,
-name: name,
-category: category,
-saleRule: saleRule,
-price: price,
-cogs: cogs,
-defaultRoll: defaultRoll,
-desc: desc,
-coldRoom: coldRoom,
-cooler: cooler,
-sold: 0
-});
-}
-​saveStateToStorage();
-closeMenuItemModal();
-renderAllViews();
-}
-​function deleteMenuItem(itemId) {
-if (productCatalog.length <= 1) return;
-const item = productCatalog.find(p => p.id === itemId);
-if (!confirm(Are you sure you want to remove "${item ? item.name : itemId}" from the menu and stock catalog?)) return;
-const idx = productCatalog.findIndex(p => p.id === itemId);
-if (idx > -1) {
-productCatalog.splice(idx, 1);
-saveStateToStorage();
-renderAllViews();
-}
-}
-​/* ================= STAFF CRUD ENGINE ================= */
-function openStaffModal(idx = -1) {
-const editIdx = document.getElementById('staff-edit-idx');
-const titleEl = document.getElementById('staff-modal-title');
-const nameIn = document.getElementById('staff-in-name');
-const roleIn = document.getElementById('staff-in-role');
-const pinIn = document.getElementById('staff-in-pin');
-​if (idx >= 0 && staffRoster[idx]) {
-const st = staffRoster[idx];
-editIdx.value = idx;
-titleEl.textContent = 'Edit Staff Member';
-nameIn.value = st.name;
-roleIn.value = st.role || '';
-pinIn.value = st.pin || '1234';
-} else {
-editIdx.value = -1;
-titleEl.textContent = 'Add Staff Member';
-nameIn.value = '';
-roleIn.value = 'Volunteer';
-pinIn.value = '1234';
-}
-​document.getElementById('modal-staff-edit').classList.remove('hidden');
-}
-​function closeStaffModal() {
-document.getElementById('modal-staff-edit').classList.add('hidden');
-}
-​function saveStaffForm() {
-const idx = parseInt(document.getElementById('staff-edit-idx').value, 10);
-const name = document.getElementById('staff-in-name').value.trim();
-const role = document.getElementById('staff-in-role').value.trim() || 'Volunteer';
-const pin = document.getElementById('staff-in-pin').value.trim() || '1234';
-​if (!name) return;
-​if (idx >= 0 && staffRoster[idx]) {
-staffRoster[idx].name = name;
-staffRoster[idx].role = role;
-staffRoster[idx].pin = pin;
-} else {
-staffRoster.push({ name: name, role: role, pin: pin });
-}
-​saveStateToStorage();
-closeStaffModal();
-renderStaffManagementTable();
-populateLoginStaffChips();
-}
-​function deleteStaffMember(idx) {
-if (staffRoster.length <= 1) return;
-staffRoster.splice(idx, 1);
-saveStateToStorage();
-renderStaffManagementTable();
-populateLoginStaffChips();
-}
-​function openMoveStockPrompt(itemKey) {
-const item = productCatalog.find(p => p.id === itemKey);
-if (!item) return;
-​const qtyStr = prompt(Move how many "${item.name}" from Main Storage to Storage? (Available: ${item.coldRoom || 0}), "25");
-if (!qtyStr) return;
-const qty = parseInt(qtyStr, 10);
-if (!isNaN(qty) && qty > 0) {
-const moveQty = Math.min(qty, item.coldRoom || 0);
-item.coldRoom = (item.coldRoom || 0) - moveQty;
-item.cooler = (item.cooler || 0) + moveQty;
-saveStateToStorage();
-renderAllViews();
-}
-}
-​/* ================= LOGIN & SHIFT CONTROLLER ================= */
-function openLoginModal(targetStation = null) {
-loginPinBuffer = '';
-updatePinDisplay();
-hideLoginError();
-​if (!selectedLoginStaff && staffRoster.length > 0) {
-selectedLoginStaff = staffRoster[0].name;
-}
-populateLoginStaffChips();
-populateLoginStationSelector();
-​const stToSelect = targetStation || selectedLoginStation || currentStation || 'till';
-setLoginStation(stToSelect);
-document.getElementById('modal-login').classList.remove('hidden');
-}
-​function closeLoginModal() {
-// If user is not authenticated at all, keep modal open
-if (!isAuthenticated && !isManagerAuthenticated) {
-showLoginError('Please select your name, station, and enter PIN');
-return;
-}
-document.getElementById('modal-login').classList.add('hidden');
-loginPinBuffer = '';
-updatePinDisplay();
-hideLoginError();
-}
-​function showLoginError(msg) {
-const errBox = document.getElementById('login-error-msg');
-const errTxt = document.getElementById('login-error-text');
-if (errBox && errTxt) {
-errTxt.textContent = msg;
-errBox.classList.remove('hidden');
-}
-}
-​function hideLoginError() {
-const errBox = document.getElementById('login-error-msg');
-if (errBox) errBox.classList.add('hidden');
-}
-​function setLoginStation(st) {
-selectedLoginStation = st;
-hideLoginError();
-​stationRegistry.forEach(s => {
-const btn = document.getElementById(login-st-${s.id});
-if (!btn) return;
-if (s.id === st) {
-btn.className = 'p-1.5 rounded-lg border-2 border-amber-500 bg-amber-500/30 text-amber-300 font-black text-center transition cursor-pointer shadow-md shadow-amber-500/20';
-} else {
-btn.className = 'p-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-bold text-center transition hover:bg-slate-700 cursor-pointer';
-}
-});
-​const mgrBtn = document.getElementById('login-st-manager');
-if (mgrBtn) {
-if (st === 'manager') {
-mgrBtn.className = 'p-1.5 rounded-lg border-2 border-amber-500 bg-amber-500/30 text-amber-300 font-black text-center transition cursor-pointer shadow-md shadow-amber-500/20';
-} else {
-mgrBtn.className = 'p-1.5 rounded-lg border border-slate-700 bg-slate-800 text-amber-300 font-bold text-center transition hover:bg-slate-700 cursor-pointer';
-}
-}
-}
-​function populateLoginStationSelector() {
-const container = document.getElementById('login-station-selector');
-if (!container) return;
-​let html = '';
-stationRegistry.forEach(st => {
-html += <button type="button" id="login-st-${st.id}" onclick="setLoginStation('${st.id}')" class="p-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-bold text-center transition cursor-pointer"> <div class="text-xs pointer-events-none">${st.icon}</div> <div class="text-[10px] font-black leading-tight pointer-events-none truncate">${st.name}</div> </button>;
-});
-​// Manager Button
-html += <button type="button" id="login-st-manager" onclick="setLoginStation('manager')" class="p-1.5 rounded-lg border border-slate-700 bg-slate-800 text-amber-300 font-bold text-center transition cursor-pointer"> <div class="text-xs pointer-events-none">🔒</div> <div class="text-[10px] font-black leading-tight pointer-events-none">Mgr</div> </button>;
-​container.innerHTML = html;
-}
-​function populateLoginStaffChips() {
-const container = document.getElementById('login-staff-chips');
-if (!container) return;
-​let html = '';
-staffRoster.forEach(staff => {
-const isSelected = (selectedLoginStaff === staff.name);
-html += <button type="button" onclick="selectLoginStaff('${staff.name}')" class="p-1.5 rounded-lg text-left border transition active:scale-95 cursor-pointer truncate ${isSelected ? 'border-amber-400 bg-amber-500/25 text-amber-200 font-black shadow shadow-amber-500/30 ring-1 ring-amber-400' : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700'}"> <div class="text-[11px] font-bold truncate flex items-center justify-between"> <span>${staff.name}</span> ${isSelected ? '<span class="text-amber-400 text-[10px]">✓</span>' : ''} </div> </button>;
-});
-container.innerHTML = html;
-}
-​function selectLoginStaff(name) {
-selectedLoginStaff = name;
-hideLoginError();
-populateLoginStaffChips();
-}
-​function updatePinDisplay() {
-for (let i = 1; i <= 4; i++) {
-const dot = document.getElementById(pin-dot-${i});
-if (!dot) continue;
-if (i <= loginPinBuffer.length) {
-dot.className = 'w-3 h-3 rounded-full bg-amber-400 border border-amber-300 shadow shadow-amber-400/50 transition';
-} else {
-dot.className = 'w-3 h-3 rounded-full border border-slate-700 bg-slate-950 transition';
-}
-}
-const hiddenInput = document.getElementById('login-pin-input');
-if (hiddenInput) hiddenInput.value = loginPinBuffer;
-}
-​function pressLoginPinKey(num) {
-hideLoginError();
-if (loginPinBuffer.length < 4) {
-loginPinBuffer += num;
-updatePinDisplay();
-if (loginPinBuffer.length === 4) {
-setTimeout(performStaffLogin, 90);
-}
-}
-}
-​function clearLoginPinKey() {
-loginPinBuffer = '';
-updatePinDisplay();
-hideLoginError();
-}
-​function backspaceLoginPinKey() {
-loginPinBuffer = loginPinBuffer.slice(0, -1);
-updatePinDisplay();
-hideLoginError();
-}
-​function performStaffLogin() {
-const pin = loginPinBuffer.trim();
-​if (!selectedLoginStaff) {
-showLoginError('Please select your operator name first');
-return;
-}
-​if (pin.length === 0) {
-showLoginError('Enter 4-digit PIN');
-return;
-}
-​// If user types Master PIN 1978, authenticate with manager permissions and go to the selected station
-if (pin === '1978') {
-isAuthenticated = true;
-isManagerAuthenticated = true;
-currentOperator = selectedLoginStaff ? ${selectedLoginStaff} (Master) : 'Nicolas (Master)';
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-document.getElementById('modal-login').classList.add('hidden');
-const targetStation = selectedLoginStation || 'till';
-switchStationView(targetStation);
-return;
-}
-​// If trying to access Manager with regular PIN, block it strictly
-if (selectedLoginStation === 'manager') {
-showLoginError('Manager requires Master PIN');
-clearLoginPinKey();
-return;
-}
-​const staff = staffRoster.find(s => s.name.trim().toLowerCase() === (selectedLoginStaff || '').trim().toLowerCase());
-const validPin = staff ? String(staff.pin) : '1234';
-​if (pin === validPin || pin === '1234') {
-isAuthenticated = true;
-isManagerAuthenticated = false; // Regular staff does NOT get manager access
-currentOperator = staff ? staff.name : (selectedLoginStaff || 'Nicolas');
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-const targetStation = selectedLoginStation || 'till';
-document.getElementById('modal-login').classList.add('hidden');
-switchStationView(targetStation);
-} else {
-showLoginError('Incorrect PIN for ' + selectedLoginStaff);
-clearLoginPinKey();
-}
-}
-​/* ================= MASTER PIN DIRECT MODAL ================= */
-function openMasterPinModal() {
-openLoginModal('manager');
-}
-​function closeMasterPinModal() {
-document.getElementById('modal-master-pin').classList.add('hidden');
-masterPinBuffer = '';
-}
-​function pressMasterPinKey(num) {
-if (masterPinBuffer.length < 4) {
-masterPinBuffer += num;
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = masterPinBuffer;
-if (masterPinBuffer.length === 4) {
-setTimeout(submitMasterPin, 90);
-}
-}
-}
-​function clearMasterPinKey() {
-masterPinBuffer = '';
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = '';
-}
-​function backspaceMasterPinKey() {
-masterPinBuffer = masterPinBuffer.slice(0, -1);
-const pinIn = document.getElementById('master-pin-input');
-if (pinIn) pinIn.value = masterPinBuffer;
-}
-​function submitMasterPin() {
-const pinIn = document.getElementById('master-pin-input');
-const pin = masterPinBuffer.trim() || (pinIn ? pinIn.value.trim() : '');
-​if (pin === '1978') {
-isManagerAuthenticated = true;
-closeMasterPinModal();
-currentOperator = 'Nicolas (Master)';
-const userDisp = document.getElementById('current-user-display');
-if (userDisp) userDisp.textContent = currentOperator;
-switchStationView('manager');
-} else {
-const err = document.getElementById('master-pin-error');
-if (err) {
-err.textContent = 'Incorrect PIN';
-err.classList.remove('hidden');
-}
-clearMasterPinKey();
-}
-}
-​/* ================= QUICK STOCK SETTING ================= */
-function openQuickStockModal() {
-const container = document.getElementById('quick-stock-inputs-container');
-if (!container) return;
-​let html = '';
-productCatalog.forEach(it => {
-const cr = it.coldRoom || 0;
-const co = it.cooler || 0;
-html += <div class="p-2 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-1.5"> <span class="font-bold text-slate-200 text-[11px] truncate w-1/3">${it.name}</span> <div class="flex items-center gap-1.5"> <div> <span class="block text-[9px] text-slate-400">Main Storage:</span> <input type="number" id="qs-cr-${it.id}" value="${cr}" class="w-16 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-white text-xs"> </div> <div> <span class="block text-[9px] text-amber-400">Storage:</span> <input type="number" id="qs-co-${it.id}" value="${co}" class="w-16 bg-slate-900 border border-slate-700 rounded p-1 text-center font-mono text-amber-300 font-bold text-xs"> </div> </div> </div>;
-});
-​container.innerHTML = html;
-document.getElementById('modal-quick-stock').classList.remove('hidden');
-}
-​function closeQuickStockModal() {
-document.getElementById('modal-quick-stock').classList.add('hidden');
-}
-​function apply2026PresetStock() {
-const presets = {
-bratwurst: { coldRoom: 200, cooler: 75 },
-currywurst: { coldRoom: 0, cooler: 0 },
-bockwurst: { coldRoom: 50, cooler: 25 },
-cheesegriller: { coldRoom: 175, cooler: 75 },
-roll_crusty: { coldRoom: 250, cooler: 100 },
-roll_white: { coldRoom: 175, cooler: 75 }
-};
-​Object.keys(presets).forEach(k => {
-const cr = document.getElementById(qs-cr-${k});
-const co = document.getElementById(qs-co-${k});
-if (cr) cr.value = presets[k].coldRoom;
-if (co) co.value = presets[k].cooler;
-});
-}
-​function saveQuickStockInputs() {
-productCatalog.forEach(it => {
-const crInput = document.getElementById(qs-cr-${it.id});
-const coInput = document.getElementById(qs-co-${it.id});
-if (crInput) it.coldRoom = parseInt(crInput.value || '0', 10);
-if (coInput) it.cooler = parseInt(coInput.value || '0', 10);
-});
-​saveStateToStorage();
-closeQuickStockModal();
-renderAllViews();
-}
-​/* ================= OVERHEADS MODAL ================= */
-function openOverheadsModal() {
-document.getElementById('ovh-club-fee').value = overheadExpenses.clubFee;
-document.getElementById('ovh-labour').value = overheadExpenses.labour;
-document.getElementById('ovh-gas-fuel').value = overheadExpenses.gasFuel;
-document.getElementById('ovh-consumable-rate').value = overheadExpenses.consumablePerServing;
-document.getElementById('ovh-card-fee').value = overheadExpenses.cardFeePct;
-document.getElementById('modal-overheads').classList.remove('hidden');
-}
-​function closeOverheadsModal() {
-document.getElementById('modal-overheads').classList.add('hidden');
-}
-​function saveOverheadsConfig() {
-overheadExpenses.clubFee = parseFloat(document.getElementById('ovh-club-fee').value) || 2000;
-overheadExpenses.labour = parseFloat(document.getElementById('ovh-labour').value) || 2500;
-overheadExpenses.gasFuel = parseFloat(document.getElementById('ovh-gas-fuel').value) || 400;
-overheadExpenses.consumablePerServing = parseFloat(document.getElementById('ovh-consumable-rate').value) || 3.3;
-overheadExpenses.cardFeePct = parseFloat(document.getElementById('ovh-card-fee').value) || 2.6;
-​saveStateToStorage();
-closeOverheadsModal();
-renderAllViews();
-}
-​/* ================= PAIRING GUIDE MODAL ================= */
-function openPairingGuideModal() {
-const list = document.getElementById('pairing-guide-dynamic-list');
-if (list) {
-let html = '';
-productCatalog.forEach(it => {
-let matchText = 'No roll needed';
-if (it.defaultRoll === 'crusty') matchText = '🥖 German Crispy / Crusty Roll';
-else if (it.defaultRoll === 'white') matchText = '🥖 Standard Soft White Roll';
-​html += <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800"> <div class="flex justify-between items-baseline mb-0.5"> <span class="font-black text-amber-400">${it.name}</span> <span class="font-mono text-amber-300 font-bold">R${it.price.toFixed(2)}</span> </div> <p class="text-slate-300 font-bold">Best Match: ${matchText}</p> <p class="text-slate-400 text-[11px] mt-0.5">${it.desc || ''}</p> </div>;
-});
-list.innerHTML = html;
-}
-document.getElementById('modal-pairing-guide').classList.remove('hidden');
-}
-​function closePairingGuideModal() {
-document.getElementById('modal-pairing-guide').classList.add('hidden');
-}
-​/* ================= CSV AUDIT EXPORT ================= */
-function exportAuditCSV() {
-let csv = "OrderNumber,Time,Operator,PaymentMethod,Item,Roll,Quantity,Price\n";
-completedOrders.forEach(o => {
-o.items.forEach(it => {
-csv += ${o.orderNumber},"${o.timestamp}","${o.operator}","${o.paymentMethod}","${it.name}","${it.rollType}",${it.qty},${it.price}\n;
-});
-});
-​const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-const url = URL.createObjectURL(blob);
-const link = document.createElement("a");
-link.setAttribute("href", url);
-link.setAttribute("download", oktoberfest_2026_audit_${Date.now()}.csv);
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-}
-​/* ================= HARDWARE KEYBOARD LISTENERS ================= */
-function setupKeyboardListeners() {
-window.addEventListener('keydown', (e) => {
-const loginModal = document.getElementById('modal-login');
-if (loginModal && !loginModal.classList.contains('hidden')) {
-if (e.key >= '0' && e.key <= '9') {
-pressLoginPinKey(e.key);
-} else if (e.key === 'Backspace') {
-backspaceLoginPinKey();
-} else if (e.key === 'Enter') {
-performStaffLogin();
-} else if (e.key === 'Escape') {
-closeLoginModal();
-}
-return;
-}
-​const masterModal = document.getElementById('modal-master-pin');
-if (masterModal && !masterModal.classList.contains('hidden')) {
-if (e.key >= '0' && e.key <= '9') {
-pressMasterPinKey(e.key);
-} else if (e.key === 'Backspace') {
-backspaceMasterPinKey();
-} else if (e.key === 'Enter') {
-submitMasterPin();
-} else if (e.key === 'Escape') {
-closeMasterPinModal();
-}
-}
-});
-}
-</script>
+A'btn-delete-station');
+      const idInput = document.getElementById('station-edit-id');
+      const nameInput = document.getElementById('station-input-name');
+      const iconInput = document.getElementById('station-input-icon');
+      const keyInput = document.getElementById('station-input-key');
+      const roleInput = document.getElementById('station-input-role');
+
+      if (!modal) return;
+
+      if (stationId) {
+        const st = stationRegistry.find(s => s.id === stationId);
+        if (st) {
+          title.textContent = 'Configure Station';
+          idInput.value = st.id;
+          nameInput.value = st.name;
+          iconInput.value = st.icon;
+          keyInput.value = st.id;
+          keyInput.disabled = true;
+          roleInput.value = st.role || '';
+          deleteBtn.classList.remove('hidden');
+        }
+      } else {
+        title.textContent = 'Add Custom Station';
+        idInput.value = '';
+        nameInput.value = '';
+        iconInput.value = '🖥️';
+        keyInput.value = '';
+        keyInput.disabled = false;
+        roleInput.value = '';
+        deleteBtn.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeStationModal() {
+      const modal = document.getElementById('modal-station-editor');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveStationForm() {
+      const id = document.getElementById('station-edit-id').value;
+      const name = document.getElementById('station-input-name').value.trim();
+      const icon = document.getElementById('station-input-icon').value.trim() || '🖥️';
+      const key = document.getElementById('station-input-key').value.trim().toLowerCase();
+      const role = document.getElementById('station-input-role').value.trim();
+
+      if (!name || !key) {
+        showToast('Station name and key are required', true);
+        return;
+      }
+
+      if (id) {
+        const st = stationRegistry.find(s => s.id === id);
+        if (st) {
+          st.name = name;
+          st.icon = icon;
+          st.role = role;
+        }
+      } else {
+        if (stationRegistry.some(s => s.id === key)) {
+          showToast('Station key already exists', true);
+          return;
+        }
+        stationRegistry.push({ id: key, name, icon, role });
+      }
+
+      saveStateToStorage();
+      closeStationModal();
+      renderAllViews();
+      showToast(`Station saved: ${name}`, false);
+    }
+
+    function deleteStationAction() {
+      const id = document.getElementById('station-edit-id').value;
+      if (!id) return;
+      if (['till', 'braai', 'handout', 'manager'].includes(id)) {
+        showToast('Primary core stations cannot be deleted', true);
+        return;
+      }
+      stationRegistry = stationRegistry.filter(s => s.id !== id);
+      saveStateToStorage();
+      closeStationModal();
+      renderAllViews();
+      showToast('Station deleted', false);
+    }
+
+    // Catalog & Stock Modal
+    function openAddStockModal(productId = null) {
+      const modal = document.getElementById('modal-stock-editor');
+      const title = document.getElementById('stock-modal-title');
+      const deleteBtn = document.getElementById('btn-delete-stock');
+      const idInput = document.getElementById('stock-edit-id');
+      const nameInput = document.getElementById('stock-input-name');
+      const iconInput = document.getElementById('stock-input-icon');
+      const priceInput = document.getElementById('stock-input-price');
+      const cogsInput = document.getElementById('stock-input-cogs');
+      const coldInput = document.getElementById('stock-input-cold');
+      const coolerInput = document.getElementById('stock-input-cooler');
+      const categorySelect = document.getElementById('stock-input-category');
+      const saleRuleSelect = document.getElementById('stock-input-salerule');
+
+      if (!modal) return;
+
+      let currentPairings = [];
+
+      if (productId) {
+        const prod = productCatalog.find(p => p.id === productId);
+        if (prod) {
+          title.textContent = 'Configure Catalog Item';
+          idInput.value = prod.id;
+          nameInput.value = prod.name;
+          iconInput.value = prod.icon || '🌭';
+          priceInput.value = prod.price;
+          cogsInput.value = prod.cogs || 0;
+          coldInput.value = prod.cold || 0;
+          coolerInput.value = prod.cooler || 0;
+          categorySelect.value = prod.category || 'sausage';
+          saleRuleSelect.value = prod.saleRule || 'both';
+          currentPairings = prod.allowedPairings || [];
+          deleteBtn.classList.remove('hidden');
+        }
+      } else {
+        title.textContent = 'Add Catalog Item';
+        idInput.value = '';
+        nameInput.value = '';
+        iconInput.value = '🌭';
+        priceInput.value = '65';
+        cogsInput.value = '25';
+        coldInput.value = '100';
+        coolerInput.value = '30';
+        categorySelect.value = 'sausage';
+        saleRuleSelect.value = 'both';
+        currentPairings = ['roll_crusty', 'roll_white', 'serviette'];
+        deleteBtn.classList.add('hidden');
+      }
+
+      renderPairingCheckboxes(currentPairings);
+      modal.classList.remove('hidden');
+    }
+
+    function renderPairingCheckboxes(selectedPairings = []) {
+      const container = document.getElementById('stock-pairing-checkboxes-container');
+      if (!container) return;
+
+      const potentialOptions = [
+        { id: 'roll_crusty', label: '🥖 Crispy Roll' },
+        { id: 'roll_white', label: '🌭 White Roll' },
+        { id: 'curry_tray', label: '🍛 Curry Boat / Tray' },
+        { id: 'serviette', label: '🧻 Serviette (No Roll)' }
+      ];
+
+      container.innerHTML = potentialOptions.map(opt => `
+        <label class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] cursor-pointer hover:bg-slate-850">
+          <input type="checkbox" name="stock-allowed-pairing" value="${opt.id}" ${selectedPairings.includes(opt.id) ? 'checked' : ''} class="rounded border-slate-700 text-amber-500 focus:ring-amber-400" />
+          <span>${opt.label}</span>
+        </label>
+      `).join('');
+    }
+
+    function closeStockModal() {
+      const modal = document.getElementById('modal-stock-editor');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveStockForm() {
+      const id = document.getElementById('stock-edit-id').value;
+      const name = document.getElementById('stock-input-name').value.trim();
+      const icon = document.getElementById('stock-input-icon').value.trim() || '🌭';
+      const price = parseFloat(document.getElementById('stock-input-price').value) || 0;
+      const cogs = parseFloat(document.getElementById('stock-input-cogs').value) || 0;
+      const cold = parseInt(document.getElementById('stock-input-cold').value) || 0;
+      const cooler = parseInt(document.getElementById('stock-input-cooler').value) || 0;
+      const category = document.getElementById('stock-input-category').value;
+      const saleRule = document.getElementById('stock-input-salerule').value;
+
+      // Extract checked pairings
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="stock-allowed-pairing"]:checked'));
+      const allowedPairings = checkedBoxes.map(cb => cb.value);
+
+      if (!name) {
+        showToast('Product title is required', true);
+        return;
+      }
+
+      if (id) {
+        const prod = productCatalog.find(p => p.id === id);
+        if (prod) {
+          prod.name = name;
+          prod.icon = icon;
+          prod.price = price;
+          prod.cogs = cogs;
+          prod.cold = cold;
+          prod.cooler = cooler;
+          prod.category = category;
+          prod.saleRule = saleRule;
+          prod.allowedPairings = allowedPairings;
+        }
+      } else {
+        const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + `_${Date.now()}`;
+        productCatalog.push({
+          id: newId,
+          name,
+          icon,
+          price,
+          cogs,
+          cold,
+          cooler,
+          sold: 0,
+          category,
+          saleRule,
+          allowedPairings
+        });
+      }
+
+      saveStateToStorage();
+      closeStockModal();
+      renderAllViews();
+      showToast(`Product saved: ${name}`, false);
+    }
+
+    function deleteStockItemAction() {
+      const id = document.getElementById('stock-edit-id').value;
+      if (!id) return;
+      productCatalog = productCatalog.filter(p => p.id !== id);
+      saveStateToStorage();
+      closeStockModal();
+      renderAllViews();
+      showToast('Catalog item removed', false);
+    }
+
+    // Master Restock Modal
+    function openMasterRestockModal() {
+      const modal = document.getElementById('modal-master-restock');
+      const list = document.getElementById('master-restock-items-list');
+      if (!modal || !list) return;
+
+      list.innerHTML = productCatalog.map(p => `
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+          <div>
+            <span class="font-bold text-white block">${p.icon || '🌭'} ${p.name}</span>
+            <div class="text-[10px] font-mono text-slate-400">
+              Main Stock: <span class="text-amber-400 font-bold">${p.cold || 0}</span> | Storage: <span class="text-emerald-400 font-bold">${p.cooler || 0}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="transferMainToLocal('${p.id}', 10)" class="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs cursor-pointer shadow">+10</button>
+            <button type="button" onclick="transferMainToLocal('${p.id}', 25)" class="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black text-xs border border-amber-500/30 cursor-pointer">+25</button>
+          </div>
+        </div>
+      `).join('');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeMasterRestockModal() {
+      const modal = document.getElementById('modal-master-restock');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function transferMainToLocal(productId, count) {
+      const prod = productCatalog.find(p => p.id === productId);
+      if (!prod) return;
+      if (prod.cold !== undefined && prod.cold < count) {
+        showToast(`Only ${prod.cold} remaining in Main Storage`, true);
+        return;
+      }
+      if (prod.cold !== undefined) prod.cold -= count;
+      if (prod.cooler !== undefined) prod.cooler += count;
+      saveStateToStorage();
+      openMasterRestockModal();
+      renderAllViews();
+      showToast(`Transferred +${count} to Storage for ${prod.name}`, false);
+    }
+
+    // Z-Report Modal
+    function openZReportModal() {
+      const modal = document.getElementById('modal-z-report');
+      if (!modal) return;
+
+      const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      const cashRevenue = orders.filter(o => o.paymentMethod === 'cash').reduce((sum, o) => sum + (o.total || 0), 0);
+      const yocoRevenue = orders.filter(o => o.paymentMethod === 'yoco').reduce((sum, o) => sum + (o.total || 0), 0);
+      const totalCOGS = orders.reduce((sum, o) => sum + (o.totalCost || 0), 0);
+      const netProfit = totalRevenue - totalCOGS;
+
+      document.getElementById('zreport-event-year').textContent = currentEventYear;
+      document.getElementById('zreport-timestamp').textContent = new Date().toLocaleString();
+      document.getElementById('zreport-order-count').textContent = orders.length;
+      document.getElementById('zreport-gross-rev').textContent = `R${totalRevenue}`;
+      document.getElementById('zreport-cash-rev').textContent = `R${cashRevenue}`;
+      document.getElementById('zreport-yoco-rev').textContent = `R${yocoRevenue}`;
+      document.getElementById('zreport-cogs').textContent = `R${totalCOGS}`;
+      document.getElementById('zreport-net-profit').textContent = `R${netProfit}`;
+
+      const itemSalesBody = document.getElementById('zreport-items-breakdown');
+      if (itemSalesBody) {
+        itemSalesBody.innerHTML = productCatalog.map(p => `
+          <tr class="border-b border-slate-800 text-xs">
+            <td class="py-1 px-1 font-bold text-white">${p.name}</td>
+            <td class="py-1 px-1 text-center font-mono text-emerald-400">${p.sold || 0}</td>
+            <td class="py-1 px-1 text-right font-mono text-amber-400">R${(p.sold || 0) * (p.price || 0)}</td>
+          </tr>
+        `).join('');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeZReportModal() {
+      const modal = document.getElementById('modal-z-report');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function exportEventDataJSON() {
+      const exportPayload = {
+        eventYear: currentEventYear,
+        exportTimestamp: new Date().toISOString(),
+        productCatalog,
+        staffRoster,
+        stationRegistry,
+        orders,
+        orderSequence,
+        prepBuffer,
+        grillingNow,
+        rollBuffer,
+        trayBuffer
+      };
+
+      const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", jsonStr);
+      dlAnchor.setAttribute("download", `oktoberfest_backup_${currentEventYear}_${Date.now()}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+      showToast('Event backup exported as JSON', false);
+    }
+
+    // Reset Year Modal
+    function openResetYearModal() {
+      const modal = document.getElementById('modal-reset-confirm');
+      if (modal) {
+        document.getElementById('reset-confirm-year-label').textContent = currentEventYear;
+        const input = document.getElementById('reset-confirm-input');
+        if (input) input.value = '';
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeResetYearModal() {
+      const modal = document.getElementById('modal-reset-confirm');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function executeResetEventYearData() {
+      const input = document.getElementById('reset-confirm-input');
+      if (!input || input.value.trim().toUpperCase() !== 'RESET') {
+        showToast('Please type RESET to confirm', true);
+        return;
+      }
+      orders = [];
+      orderSequence = 1;
+      productCatalog.forEach(p => { p.sold = 0; });
+      Object.keys(prepBuffer).forEach(k => { prepBuffer[k] = 0; });
+      Object.keys(grillingNow).forEach(k => { grillingNow[k] = 0; });
+      rollBuffer = { roll_crusty: 0, roll_white: 0 };
+      trayBuffer = { curry_boat: 0 };
+
+      saveStateToStorage();
+      renderAllViews();
+      closeResetYearModal();
+      showToast(`Counters reset for ${currentEventYear}`, false);
+    }
+  </script>
 </body>
 </html>
