@@ -1,19 +1,26 @@
-<!-- ... existing code ... -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Oktoberfest KDS & Management Hub</title>
+  <title>Oktoberfest 2026 POS, KDS & Station Hub</title>
   <style>
-    /* Reset & Base */
+    /* ==========================================================================
+       RESET & BASE RESILIENT CSS (Zero External CDN Dependencies)
+       ========================================================================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100vh;
+      max-height: 100dvh;
+      overflow: hidden !important;
       background-color: #020617;
       color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       display: flex;
@@ -21,124 +28,147 @@
       user-select: none;
       -webkit-user-select: none;
     }
-    button, input, select { font-family: inherit; font-size: inherit; }
-    
-    /* Layout Elements */
+    button, input, select, textarea { font-family: inherit; font-size: inherit; }
+
+    /* Header Nav */
     header {
       background-color: #0f172a;
       border-bottom: 1px solid #1e293b;
-      padding: 10px 16px;
+      padding: 4px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 40;
       flex-shrink: 0;
+      gap: 6px;
+      height: 46px;
+      z-index: 50;
     }
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 12px;
-      max-width: 1800px;
+      padding: 6px 8px;
+      max-width: 1920px;
       width: 100%;
       margin: 0 auto;
-      gap: 12px;
+      gap: 6px;
+      height: calc(100vh - 46px);
+      height: calc(100dvh - 46px);
+      overflow: hidden !important;
+      position: relative;
+      min-height: 0;
     }
-    
-    /* Utility Classes */
+
+    /* Strict No-Scroll Standard for Operational Stations on All Devices */
+    .operational-view {
+      height: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: hidden !important;
+      min-height: 0;
+      flex: 1;
+    }
+
+    /* Manager Hub view is the ONLY view that allows vertical scrolling */
+    #view-manager {
+      height: 100%;
+      overflow-y: auto !important;
+      padding-right: 4px;
+      -webkit-overflow-scrolling: touch;
+      min-height: 0;
+      flex: 1;
+    }
+
+    /* Utility & Grid Classes */
     .hidden { display: none !important; }
     .flex { display: flex; }
     .flex-col { flex-direction: column; }
     .items-center { align-items: center; }
     .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
     .gap-1 { gap: 4px; }
     .gap-2 { gap: 8px; }
     .gap-3 { gap: 12px; }
-    .gap-4 { gap: 16px; }
     .grid { display: grid; }
+    .grid-1 { grid-template-columns: 1fr; }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-4 { grid-template-columns: repeat(4, 1fr); }
     .grid-5 { grid-template-columns: repeat(5, 1fr); }
 
-    @media (max-width: 900px) {
-      .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
-      .grid-3 { grid-template-columns: 1fr; }
-      .layout-till { flex-direction: column !important; }
-      .cart-drawer { width: 100% !important; min-width: 100% !important; }
-    }
-    @media (max-width: 600px) {
-      .grid-2, .grid-4 { grid-template-columns: 1fr; }
-    }
-
-    /* Cards & Panels */
+    /* Cards & Fast Touch Tiles */
     .card {
       background-color: #0f172a;
       border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 8px;
+      padding: 8px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
     }
     .card-tile {
       background-color: #0f172a;
       border: 1px solid #1e293b;
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 10px;
+      padding: 8px 10px;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 120px;
+      min-height: 0;
+      touch-action: manipulation;
     }
     .card-tile:hover {
       border-color: #f59e0b;
       transform: translateY(-2px);
     }
     .card-tile:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
-    /* Typography & Badges */
+    /* Typography & Accents */
     .title-gold {
       font-weight: 900;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #fbbf24;
     }
     .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
     .badge {
-      padding: 3px 8px;
-      border-radius: 6px;
+      padding: 3px 6px;
+      border-radius: 5px;
       font-size: 11px;
       font-weight: 700;
       font-family: ui-monospace, SFMono-Regular, monospace;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+      white-space: nowrap;
     }
     .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
     .badge-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
     .badge-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
     .badge-sky { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
 
-    /* Buttons */
+    /* Touch-Optimized Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 8px;
+      gap: 3px;
+      padding: 5px 9px;
+      border-radius: 6px;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s ease;
+      white-space: nowrap;
+      min-height: 28px;
+      touch-action: manipulation;
     }
-    .btn:active { transform: scale(0.97); }
+    .btn:active { transform: scale(0.96); }
     .btn-gold { background: #f59e0b; color: #020617; }
     .btn-gold:hover { background: #d97706; }
     .btn-dark { background: #1e293b; color: #f8fafc; border-color: #334155; }
@@ -147,9 +177,9 @@
     .btn-emerald:hover { background: #10b981; }
     .btn-rose { background: rgba(225, 29, 72, 0.2); color: #fb7185; border-color: rgba(225, 29, 72, 0.4); }
     .btn-rose:hover { background: rgba(225, 29, 72, 0.3); }
-    .btn-sm { padding: 4px 8px; font-size: 11px; }
+    .btn-sm { padding: 3px 6px; font-size: 10px; min-height: 24px; }
 
-    /* Modals */
+    /* Modals & Inputs */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -158,20 +188,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 12px;
       z-index: 100;
     }
     .modal-box {
       background: #0f172a;
       border: 1px solid #334155;
-      border-radius: 16px;
-      max-width: 520px;
+      border-radius: 14px;
+      max-width: 580px;
       width: 100%;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      gap: 10px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -179,220 +209,264 @@
       width: 100%;
       background: #020617;
       border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 8px 12px;
+      border-radius: 6px;
+      padding: 8px 10px;
       color: #ffffff;
       outline: none;
     }
     .input-field:focus { border-color: #f59e0b; }
-    
+
     /* Tables */
-    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-    th { background: #020617; padding: 8px 10px; color: #94a3b8; font-weight: 700; border-bottom: 1px solid #1e293b; }
-    td { padding: 8px 10px; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; }
+    th { background: #020617; padding: 6px 8px; color: #94a3b8; font-weight: 700; border-bottom: 1px solid #1e293b; }
+    td { padding: 6px 8px; border-bottom: 1px solid #1e293b; color: #e2e8f0; vertical-align: middle; }
+    tr:hover td { background-color: rgba(30, 41, 59, 0.5); }
+
+    /* ==========================================================================
+       RESPONSIVE BREAKPOINTS (Mobile Phones & Tablets - Strict No-Scroll Kept)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .layout-till { flex-direction: column !important; }
+      .cart-drawer { width: 100% !important; min-width: 100% !important; max-height: 40%; flex: 1; }
+    }
+    @media (max-width: 768px) {
+      header { padding: 3px 6px; height: 44px; }
+      .header-title-text { display: none; }
+      .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr !important; }
+      .cart-drawer { width: 100% !important; min-width: 100% !important; max-height: 42%; }
+      .btn { min-height: 32px; font-size: 11px; }
+      .btn-sm { min-height: 26px; font-size: 10px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER & STATION NAV -->
+  <!-- TOP HEADER & STATION NAV -->
   <header>
-    <div class="flex items-center gap-3">
-      <span style="font-size: 24px;">🍺</span>
+    <div class="flex items-center gap-2">
+      <span style="font-size: 22px;">🍺</span>
+      <div class="header-title-text">
+        <div class="title-gold" style="font-size: 13px;">OKTOBERFEST 2026</div>
+        <div class="font-mono" style="font-size: 9px; color: #94a3b8;" id="app-clock">12:00:00</div>
+      </div>
       <div>
-        <div class="title-gold" style="font-size: 15px;">OKTOBERFEST KDS</div>
-        <div class="font-mono" style="font-size: 10px; color: #94a3b8;" id="app-clock">12:00:00</div>
+        <select id="station-nav-select" onchange="switchStationView(this.value)" class="input-field font-mono" style="padding: 4px 6px; font-size: 11px; color: #fde68a; cursor: pointer; width: auto; font-weight: 700;"></select>
       </div>
-      <div style="margin-left: 12px;">
-        <select id="station-nav-select" onchange="switchStationView(this.value)" class="input-field font-mono" style="padding: 4px 8px; font-size: 12px; color: #fde68a; cursor: pointer; width: auto;">
-          <option value="till">💵 Till POS</option>
-          <option value="braai">🔥 Braai Master</option>
-          <option value="handout">🥖 Handout & Assembly</option>
-          <option value="dual">🖥️ Dual Monitor</option>
-          <option value="manager">👑 Manager Hub</option>
-        </select>
-      </div>
+      <button onclick="toggleTrialMode()" class="btn btn-dark btn-sm" id="btn-toggle-trial" style="border: 1px solid #f59e0b; color: #fde68a;">
+        <span id="trial-indicator-dot" style="width:7px; height:7px; border-radius:50%; background:#64748b; display:inline-block;"></span>
+        <span id="trial-indicator-text">Trial: OFF</span>
+      </button>
+      <button onclick="openInfoModal()" class="btn btn-dark btn-sm" title="Show station guide and crew shifts">ℹ️ Guide</button>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="badge badge-emerald" id="auth-status-badge">
         <span style="width:6px; height:6px; background:#10b981; border-radius:50%; display:inline-block;"></span>
-        <span id="current-user-name">Not Signed In</span>
+        <span id="current-user-name">Nicolas (Master)</span>
       </div>
-      <button onclick="openLoginModal()" class="btn btn-dark btn-sm">Switch User</button>
+      <button onclick="openLoginModal()" class="btn btn-gold btn-sm">🔒 Sign-In</button>
     </div>
   </header>
+
+  <!-- Trial Mode High-Visibility Alert Banner -->
+  <div id="trial-mode-banner" class="hidden flex items-center justify-between" style="background: linear-gradient(90deg, #b45309 0%, #78350f 100%); color: #fef3c7; padding: 6px 12px; font-size: 11px; font-weight: 800; border-bottom: 2px solid #f59e0b; flex-shrink: 0; flex-wrap: wrap; gap: 4px;">
+    <div class="flex items-center gap-2">
+      <span style="font-size: 16px;">🧪</span>
+      <span>PRACTICE TRAINING LAB ACTIVE — REAL INVENTORY UNTOUCHED</span>
+    </div>
+    <div class="flex items-center gap-1 font-mono">
+      <button onclick="seedTrialScenario()" class="btn btn-dark btn-sm" style="background: rgba(0,0,0,0.4); border: 1px solid #fbbf24; color: #fef08a;">Seed Demo Tickets</button>
+      <button onclick="clearTrialDataAction()" class="btn btn-rose btn-sm">Clear Test Data</button>
+      <button onclick="toggleTrialMode(false)" class="btn btn-dark btn-sm">Exit Trial</button>
+    </div>
+  </div>
 
   <!-- MAIN VIEWPORTS -->
   <main id="app-main-container">
 
     <!-- 1. TILL POS STATION -->
-    <section id="view-till" class="flex gap-3 layout-till" style="flex: 1; min-height: 0;">
-      <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; min-height: 0;">
-        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
-          <div style="font-size: 12px; color: #94a3b8;">
-            <strong style="color: #fbbf24;">4 Fast Touch Tiles:</strong> Tap sausage to add to cart, choose roll below
-          </div>
-          <div class="flex gap-2 font-mono" style="font-size: 11px;">
-            <button onclick="openTillTicketsModal('processing')" class="badge badge-amber" style="cursor: pointer; border: 1px solid rgba(245, 158, 11, 0.4);">
-              ⏳ Open Tickets: <strong id="till-counter-processing">0</strong>
-            </button>
-            <button onclick="openTillTicketsModal('delivered')" class="badge badge-emerald" style="cursor: pointer; border: 1px solid rgba(16, 185, 129, 0.4);">
-              ✓ Closed Tickets: <strong id="till-counter-delivered">0</strong>
-            </button>
-          </div>
+    <section id="view-till" class="operational-view">
+      <div class="card flex items-center justify-between" style="padding: 6px 10px; flex-shrink: 0; flex-wrap: wrap; gap: 4px;">
+        <div style="font-size: 11px; color: #94a3b8;">
+          <strong style="color: #fbbf24;">4 Fast Touch Tiles:</strong> Tap sausage to add to cart, choose roll/serviette below
         </div>
-
-        <!-- 4 Sausage Tiles Grid -->
-        <div id="pos-sausage-grid" class="grid grid-4 gap-3"></div>
-
-        <!-- Standalone Rolls (Excludes Combo-Only) -->
-        <div class="card flex flex-col gap-2">
-          <div class="flex items-center justify-between" style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">
-            <span>Extra Add-ons / Standalone Rolls</span>
-            <span style="color: #64748b;">(Combo-only rolls are excluded from solo sale)</span>
-          </div>
-          <div id="pos-standalone-rolls-bar" class="flex gap-2" style="flex-wrap: wrap;"></div>
+        <div class="flex gap-2 font-mono" style="font-size: 11px;">
+          <button onclick="openTillTicketsModal('processing')" class="badge badge-amber" style="cursor: pointer; border: 1px solid rgba(245, 158, 11, 0.4);">
+            ⏳ Open Tickets: <strong id="till-counter-processing">0</strong>
+          </button>
+          <button onclick="openTillTicketsModal('delivered')" class="badge badge-emerald" style="cursor: pointer; border: 1px solid rgba(16, 185, 129, 0.4);">
+            ✓ Closed Tickets: <strong id="till-counter-delivered">0</strong>
+          </button>
         </div>
       </div>
 
-      <!-- Cart Drawer -->
-      <div class="card cart-drawer flex flex-col" style="width: 380px; min-width: 320px; padding: 14px; justify-content: space-between;">
-        <div>
-          <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
-            <div class="title-gold" style="font-size: 13px;">🛒 Current Order</div>
-            <button onclick="clearCart()" style="background: none; border: none; color: #fb7185; font-size: 11px; cursor: pointer;">Clear Cart</button>
+      <div class="flex gap-3 layout-till" style="flex: 1; min-height: 0;">
+        <!-- Left: 4 Quadratic Sausage Tiles -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-height: 0;">
+          <div id="pos-sausage-grid" class="grid grid-2 gap-2" style="flex: 1;"></div>
+          <!-- Roll Policy Footer -->
+          <div class="card flex items-center justify-between" style="padding: 6px 10px; font-size: 10px; color: #94a3b8; flex-shrink: 0;">
+            <span>🥖 Rolls strictly accompany sausages — never sold solo.</span>
+            <span style="color: #34d399;">🧻 'No Roll' saves roll stock & serves with serviette only.</span>
           </div>
-          <div id="pos-cart-items" style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;"></div>
         </div>
 
-        <div style="border-top: 1px solid #1e293b; padding-top: 12px; margin-top: 12px;">
-          <div class="flex items-center justify-between" style="margin-bottom: 12px;">
-            <span style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Total Due</span>
-            <span class="font-mono title-gold" style="font-size: 26px;" id="pos-cart-total">R 0.00</span>
+        <!-- Right: Cart Drawer -->
+        <div class="card cart-drawer flex flex-col justify-between" style="width: 380px; min-width: 300px; padding: 10px;">
+          <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+            <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px; flex-shrink: 0;">
+              <div class="title-gold" style="font-size: 12px;">🛒 Active Cart</div>
+              <button onclick="clearCart()" style="background: none; border: none; color: #fb7185; font-size: 10px; cursor: pointer;">Clear Cart</button>
+            </div>
+            <div id="pos-cart-items" style="flex: 1; overflow-y: auto; margin-top: 6px; display: flex; flex-direction: column; gap: 6px; padding-right: 4px;"></div>
           </div>
-          <div class="grid grid-2 gap-2">
-            <button onclick="checkoutCurrentCart('CASH')" class="btn btn-emerald" style="padding: 12px; font-size: 14px;">💵 CASH</button>
-            <button onclick="checkoutCurrentCart('YOCO')" class="btn btn-gold" style="padding: 12px; font-size: 14px;">💳 YOCO / CARD</button>
+
+          <div style="border-top: 1px solid #1e293b; padding-top: 8px; margin-top: 8px; flex-shrink: 0;">
+            <div class="flex items-center justify-between" style="margin-bottom: 8px;">
+              <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Total Due</span>
+              <span class="font-mono title-gold" style="font-size: 22px;" id="pos-cart-total">R 0.00</span>
+            </div>
+            <div class="grid grid-2 gap-2">
+              <button onclick="checkoutCurrentCart('CASH')" class="btn btn-emerald" style="padding: 10px; font-size: 13px;">💵 CASH</button>
+              <button onclick="checkoutCurrentCart('YOCO')" class="btn btn-gold" style="padding: 10px; font-size: 13px;">💳 YOCO / CARD</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 2. BRAAI MASTER GRILL DECK -->
-    <section id="view-braai" class="hidden flex flex-col gap-3">
-      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 10px;">
-        <div class="flex items-center gap-3">
-          <span style="font-size: 28px;">🔥</span>
+    <section id="view-braai" class="operational-view hidden">
+      <div class="card flex items-center justify-between" style="padding: 6px 12px; background: linear-gradient(90deg, #1c1917 0%, #0f172a 100%); border: 1px solid #ea580c; flex-shrink: 0; flex-wrap: wrap; gap: 6px;">
+        <div class="flex items-center gap-2">
+          <span style="font-size: 24px;">🔥</span>
           <div>
-            <div class="title-gold" style="font-size: 14px;">BRAAI MASTER GRILL DECK</div>
-            <div style="font-size: 11px; color: #94a3b8;">Flow: Storage Cooler ➔ On Braai ➔ Precooked Buffer ➔ Handout</div>
+            <div class="title-gold" style="font-size: 13px; letter-spacing: 0.05em;">BRAAI MASTER GRILL DECK</div>
+            <div style="font-size: 10px; color: #fed7aa;">Main Cold Depot ➔ Local Cooler ➔ On Braai ➔ Buffer/Handout</div>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Restock from Main Storage</button>
+          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm" style="font-weight: 800;">📦 Transfer Depot ➔ Local Cooler</button>
           <span class="badge badge-amber font-mono">Tickets Waiting: <strong id="braai-stat-orders-waiting">0</strong></span>
         </div>
       </div>
 
-      <div id="braai-sausage-deck" class="grid grid-4 gap-3"></div>
+      <!-- Braai KPI Summary Bar -->
+      <div id="braai-kpi-summary-bar" class="grid grid-4 gap-2 font-mono" style="flex-shrink: 0;"></div>
+
+      <!-- Physical Sausage Cards -->
+      <div id="braai-sausage-deck" class="grid grid-3 gap-2" style="flex: 1; min-height: 0; overflow-y: auto;"></div>
     </section>
 
     <!-- 3. HANDOUT & ASSEMBLY STATION -->
-    <section id="view-handout" class="hidden flex flex-col gap-3">
-      <div class="card flex flex-col gap-3">
+    <section id="view-handout" class="operational-view hidden">
+      <div class="card flex flex-col gap-2" style="flex-shrink: 0;">
         <div class="flex items-center justify-between">
-          <div class="title-gold" style="font-size: 14px;">🥖 Handout & Assembly Overview</div>
-          <div class="badge badge-sky font-mono">Live Sync</div>
+          <div class="title-gold" style="font-size: 13px;">🍽️ Handout & Assembly Hub</div>
+          <div class="badge badge-sky font-mono">German Club Live Sync</div>
         </div>
-
         <div id="handout-overview-metrics" class="grid grid-5 gap-2"></div>
 
-        <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 12px; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 12px; font-weight: 700; color: #94a3b8;">⚡ Slicing & Tray Prep Buffer:</span>
-          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
-            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+        <!-- Working Pre-Prep Buffer Strip with Live Dynamic Counts -->
+        <div class="card flex items-center justify-between gap-2" style="background: #020617; padding: 6px 10px; border: 1px solid #1e293b; flex-wrap: wrap;">
+          <span style="font-size: 11px; font-weight: 700; color: #fbbf24;">⚡ Pre-Prep Slicing & Tray Buffer:</span>
+          <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+            <!-- Crispy Pre-Prep -->
+            <div class="flex items-center gap-2 font-mono" style="font-size: 11px; background:#0f172a; padding:4px 8px; border-radius:6px; border: 1px solid #334155;">
               <span style="color:#fbbf24;">🥖 Crispy:</span>
+              <span style="color:#cbd5e1; font-size:10px;">Sliced <strong id="buf-disp-crusty" style="color:#fbbf24; font-size:12px;">0</strong> | Uncut <strong id="buf-uncut-crusty" style="color:#38bdf8;">0</strong></span>
               <button onclick="sliceRollsForBuffer('roll_crusty', 1)" class="btn btn-dark btn-sm">+1</button>
               <button onclick="sliceRollsForBuffer('roll_crusty', 5)" class="btn btn-dark btn-sm">+5</button>
-              <button onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="btn btn-rose btn-sm">↩</button>
+              <button onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="btn btn-rose btn-sm" title="Undo sliced roll">↩</button>
             </div>
-            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+            <!-- White Pre-Prep -->
+            <div class="flex items-center gap-2 font-mono" style="font-size: 11px; background:#0f172a; padding:4px 8px; border-radius:6px; border: 1px solid #334155;">
               <span style="color:#38bdf8;">🌭 White:</span>
+              <span style="color:#cbd5e1; font-size:10px;">Sliced <strong id="buf-disp-white" style="color:#38bdf8; font-size:12px;">0</strong> | Uncut <strong id="buf-uncut-white" style="color:#38bdf8;">0</strong></span>
               <button onclick="sliceRollsForBuffer('roll_white', 1)" class="btn btn-dark btn-sm">+1</button>
               <button onclick="sliceRollsForBuffer('roll_white', 5)" class="btn btn-dark btn-sm">+5</button>
-              <button onclick="revertSlicedRollBuffer('roll_white', 1)" class="btn btn-rose btn-sm">↩</button>
+              <button onclick="revertSlicedRollBuffer('roll_white', 1)" class="btn btn-rose btn-sm" title="Undo sliced roll">↩</button>
             </div>
-            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+            <!-- Curry Tray Pre-Prep -->
+            <div class="flex items-center gap-2 font-mono" style="font-size: 11px; background:#0f172a; padding:4px 8px; border-radius:6px; border: 1px solid #334155;">
               <span style="color:#fde047;">🍛 Curry Boats:</span>
+              <span style="color:#cbd5e1; font-size:10px;">Ready <strong id="buf-disp-tray" style="color:#fde047; font-size:12px;">0</strong></span>
               <button onclick="prepCurryTraysBuffer(1)" class="btn btn-dark btn-sm">+1</button>
               <button onclick="prepCurryTraysBuffer(5)" class="btn btn-dark btn-sm">+5</button>
-              <button onclick="revertCurryTraysBuffer(1)" class="btn btn-rose btn-sm">↩</button>
+              <button onclick="revertCurryTraysBuffer(1)" class="btn btn-rose btn-sm" title="Undo ready tray">↩</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="handout-orders-queue" class="grid grid-3 gap-3"></div>
+      <!-- Orders Fulfillment Queue Area -->
+      <div id="handout-orders-queue" class="grid grid-3 gap-2" style="flex: 1; overflow-y: auto;"></div>
     </section>
 
     <!-- 4. DUAL VIEW (BRAAI + HANDOUT SPLIT) -->
-    <section id="view-dual" class="hidden flex gap-3 layout-till">
-      <div class="card flex flex-col gap-2" style="flex: 1;">
-        <div class="title-gold" style="font-size: 13px;">🔥 Braai Quick Monitor</div>
-        <div id="dual-braai-deck" class="grid grid-2 gap-2"></div>
-      </div>
-      <div class="card flex flex-col gap-2" style="flex: 1;">
-        <div class="title-gold" style="font-size: 13px;">🥖 Handout Queue</div>
-        <div id="dual-handout-queue" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    <section id="view-dual" class="operational-view hidden">
+      <div class="flex gap-2 layout-till" style="flex: 1; min-height: 0;">
+        <div class="card flex flex-col gap-2" style="flex: 1; min-height: 0;">
+          <div class="title-gold" style="font-size: 12px; flex-shrink: 0;">🔥 Braai Quick Monitor</div>
+          <div id="dual-braai-deck" class="grid grid-1 gap-2" style="flex: 1; overflow-y: auto;"></div>
+        </div>
+        <div class="card flex flex-col gap-2" style="flex: 1; min-height: 0;">
+          <div class="title-gold" style="font-size: 12px; flex-shrink: 0;">🍽️ Handout Queue</div>
+          <div id="dual-handout-queue" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
       </div>
     </section>
 
-    <!-- 5. MANAGER HUB VIEW -->
-    <section id="view-manager" class="hidden flex flex-col gap-4">
-      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 10px; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border-color: rgba(245, 158, 11, 0.4);">
+    <!-- 5. MANAGER & MASTER HUB VIEW (SCROLLABLE) -->
+    <section id="view-manager" class="hidden flex flex-col gap-3">
+      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 8px; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border-color: rgba(245, 158, 11, 0.4);">
         <div class="flex items-center gap-3">
-          <span style="font-size: 28px;">👑</span>
+          <span style="font-size: 26px;">👑</span>
           <div>
-            <div class="title-gold" style="font-size: 15px;">Oktoberfest Manager Hub</div>
-            <div style="font-size: 11px; color: #cbd5e1;">Live Financials, Depots, Pairings & End-of-Day Closeout</div>
+            <div class="title-gold" style="font-size: 14px;">Oktoberfest Master Management Hub</div>
+            <div style="font-size: 11px; color: #cbd5e1;">Live Financials, Depots, Pairings, Shifts & End-of-Day Closeout</div>
           </div>
         </div>
         <div class="flex items-center gap-2" style="flex-wrap: wrap;">
-          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Transfer Main ➔ Local</button>
+          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Transfer Depot ➔ Local</button>
           <button onclick="openZReportModal()" class="btn btn-dark btn-sm">📊 Z-Report Closeout</button>
-          <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Export Backup</button>
-          <button onclick="seedSamplePresetData()" class="btn btn-dark btn-sm">🔄 Load Oktoberfest Preset</button>
+          <button onclick="seedTrialScenario()" class="btn btn-dark btn-sm">🧪 Seed Trial Data</button>
+          <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Backup JSON</button>
+          <button onclick="openCatalogModal()" class="btn btn-emerald btn-sm">+ Add Catalog Item</button>
         </div>
       </div>
 
       <!-- Financial Metric Cards -->
-      <div class="grid grid-4 gap-3">
+      <div class="grid grid-4 gap-2">
         <div class="card">
           <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Gross Turnover</div>
-          <div class="font-mono title-gold" style="font-size: 24px; margin-top: 4px;" id="mgr-stat-turnover">R 0.00</div>
+          <div class="font-mono title-gold" style="font-size: 22px; margin-top: 2px;" id="mgr-stat-turnover">R 0.00</div>
           <div style="font-size: 10px; color: #64748b;" id="mgr-stat-payment-split">Cash: R0 • Yoco: R0</div>
         </div>
         <div class="card">
           <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Food COGS</div>
-          <div class="font-mono" style="font-size: 24px; color: #fb7185; margin-top: 4px; font-weight: 900;" id="mgr-stat-cogs">R 0.00</div>
-          <div style="font-size: 10px; color: #64748b;">Wholesale cost of goods sold</div>
+          <div class="font-mono" style="font-size: 22px; color: #fb7185; margin-top: 2px; font-weight: 900;" id="mgr-stat-cogs">R 0.00</div>
+          <div style="font-size: 10px; color: #64748b;">Cost of goods sold</div>
         </div>
         <div class="card">
           <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Gross Profit</div>
-          <div class="font-mono" style="font-size: 24px; color: #34d399; margin-top: 4px; font-weight: 900;" id="mgr-stat-profit">R 0.00</div>
+          <div class="font-mono" style="font-size: 22px; color: #34d399; margin-top: 2px; font-weight: 900;" id="mgr-stat-profit">R 0.00</div>
           <div style="font-size: 10px; color: #64748b;" id="mgr-stat-margin-pct">Margin: 0.0%</div>
         </div>
         <div class="card">
           <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Sausages Sold</div>
-          <div class="font-mono" style="font-size: 24px; color: #ffffff; margin-top: 4px; font-weight: 900;" id="mgr-stat-sold-count">0</div>
+          <div class="font-mono" style="font-size: 22px; color: #ffffff; margin-top: 2px; font-weight: 900;" id="mgr-stat-sold-count">0</div>
           <div style="font-size: 10px; color: #64748b;" id="mgr-stat-orders-count">0 orders total</div>
         </div>
       </div>
 
       <!-- Catalog Table -->
       <div class="card flex flex-col gap-2">
-        <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
-          <div class="title-gold" style="font-size: 13px;">🌭 Catalog, Stock & Pairings</div>
+        <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+          <div class="title-gold" style="font-size: 13px;">🌭 Product Catalog, Pricing, Depots & Companion Rules</div>
+          <button onclick="openCatalogModal()" class="btn btn-emerald btn-sm">+ Add Product</button>
         </div>
         <div style="overflow-x: auto;">
           <table>
@@ -400,43 +474,262 @@
               <tr>
                 <th>Item</th>
                 <th>Category</th>
-                <th>Selling Price</th>
+                <th>Price</th>
                 <th>COGS</th>
                 <th>Main Stock</th>
-                <th>Local Cooler</th>
+                <th>Cooler</th>
                 <th>Sold</th>
-                <th>Sale Rule & Pairings</th>
-                <th style="text-align: right;">Action</th>
+                <th>Pairing Rules</th>
+                <th style="text-align: right;">Actions</th>
               </tr>
             </thead>
             <tbody id="mgr-table-catalog" class="font-mono"></tbody>
           </table>
         </div>
       </div>
+
+      <!-- Stations & Crew CRUD Panels -->
+      <div class="grid grid-2 gap-2">
+        <!-- Stations CRUD -->
+        <div class="card flex flex-col gap-2">
+          <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+            <div class="title-gold" style="font-size: 12px;">🖥️ Registered Stations</div>
+            <button onclick="openStationModal()" class="btn btn-dark btn-sm">+ Add Station</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Station</th>
+                  <th>ID Key</th>
+                  <th>Role</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="mgr-table-stations" class="font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Crew CRUD -->
+        <div class="card flex flex-col gap-2">
+          <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+            <div class="title-gold" style="font-size: 12px;">👥 Staff & Crew Assignments</div>
+            <button onclick="openStaffModal()" class="btn btn-dark btn-sm">+ Add Crew Member</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Station</th>
+                  <th>PIN</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="mgr-table-staff" class="font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- MODAL: FIRST-TIME MASTER SETUP -->
-  <div id="modal-master-setup" class="modal-backdrop hidden">
+  <!-- ==========================================================================
+       MODALS SECTION
+       ========================================================================== -->
+
+  <!-- MODAL: SIGN IN / SWITCH USER -->
+  <div id="modal-login" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="title-gold" style="font-size: 15px; border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
-        👑 First-Time Master Registration
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">Station Crew Sign-In</div>
+        <button onclick="closeLoginModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div style="font-size: 12px; color: #94a3b8;">
-        The system starts with clean zero counters and no pre-entered staff. Please register as Master to configure the festival.
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px;">Select Crew Member</label>
+          <select id="login-staff-select" onchange="onLoginUserSelectChange()" class="input-field font-mono"></select>
+        </div>
+        <div>
+          <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px;">Target Station</label>
+          <select id="login-station-target" class="input-field font-mono"></select>
+        </div>
+        <div>
+          <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px;">Enter 4-Digit PIN</label>
+          <input type="password" id="login-staff-pin" maxlength="4" class="input-field font-mono" placeholder="••••" style="font-size: 16px; letter-spacing: 0.2em; text-align: center;">
+          <div id="login-error-msg" class="hidden" style="color: #fb7185; font-size: 11px; margin-top: 4px; font-weight: 700;">Incorrect PIN. Please re-enter.</div>
+        </div>
+        <div class="flex items-center justify-between" style="border-top: 1px solid #1e293b; padding-top: 8px; margin-top: 4px;">
+          <button type="button" onclick="closeLoginModal()" class="btn btn-dark">Cancel</button>
+          <button type="button" onclick="confirmCrewLogin()" class="btn btn-gold">Authenticate & Enter Station</button>
+        </div>
       </div>
-      <div class="flex flex-col gap-2">
-        <label style="font-size: 12px; color: #cbd5e1;">Master Name</label>
-        <input type="text" id="setup-master-name" class="input-field" placeholder="e.g. Nicolas">
+    </div>
+  </div>
+
+  <!-- MODAL: CATALOG ITEM EDITOR (CRUD) -->
+  <div id="modal-catalog-editor" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" id="modal-catalog-title" style="font-size: 14px;">Product Configuration</div>
+        <button onclick="closeCatalogModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div class="flex flex-col gap-2">
-        <label style="font-size: 12px; color: #cbd5e1;">Private 4-Digit Master PIN</label>
-        <input type="password" id="setup-master-pin" maxlength="4" class="input-field font-mono" placeholder="••••">
+      <form id="form-catalog-item" onsubmit="saveCatalogItem(event)" class="flex flex-col gap-2">
+        <input type="hidden" id="cat-item-id">
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Product Name</label>
+            <input type="text" id="cat-item-name" required class="input-field">
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Emoji Icon</label>
+            <input type="text" id="cat-item-icon" required maxlength="4" class="input-field" style="width: 80px;">
+          </div>
+        </div>
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Category</label>
+            <select id="cat-item-category" class="input-field">
+              <option value="sausage">Sausage (Braai)</option>
+              <option value="roll">Bread Roll / Bun</option>
+              <option value="drink">Beverage / Drink</option>
+              <option value="extra">Snack / Side / Condiment</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Sale Rule</label>
+            <select id="cat-item-salerule" class="input-field">
+              <option value="both">Standard (Solo or Combo)</option>
+              <option value="combo_only">Combo Only (Strictly served with sausage)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Selling Price (R)</label>
+            <input type="number" step="0.5" id="cat-item-price" oninput="updateCatalogModalLiveCalc()" required class="input-field font-mono">
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Wholesale COGS (R)</label>
+            <input type="number" step="0.1" id="cat-item-cogs" oninput="updateCatalogModalLiveCalc()" required class="input-field font-mono">
+          </div>
+        </div>
+
+        <div class="card flex items-center justify-between font-mono" style="background: #020617; border: 1px solid #1e293b; padding: 6px 10px; margin: 2px 0;">
+          <div>
+            <div style="font-size: 9px; color: #94a3b8;">Unit Profit</div>
+            <div id="modal-calc-unit-profit" style="font-size: 13px; font-weight: 800; color: #34d399;">R 0.00</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; color: #94a3b8;">Profit Margin</div>
+            <div id="modal-calc-margin" style="font-size: 13px; font-weight: 800; color: #fbbf24;">0.0%</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; color: #94a3b8;">Markup</div>
+            <div id="modal-calc-markup" style="font-size: 13px; font-weight: 800; color: #38bdf8;">0.0%</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Main Cold Storage (Depot)</label>
+            <input type="number" id="cat-item-coldroom" required class="input-field font-mono">
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Local Cooler (Tent / Braai)</label>
+            <input type="number" id="cat-item-cooler" required class="input-field font-mono">
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; color:#94a3b8; display:block; margin-bottom: 4px;">Allowed Companion Pairings / Plating</label>
+          <div id="cat-pairings-checkboxes" class="grid grid-2 gap-2" style="background:#020617; padding:8px; border-radius:8px; border:1px solid #1e293b;"></div>
+        </div>
+        <div class="flex items-center justify-between" style="border-top:1px solid #1e293b; padding-top:8px; margin-top:6px;">
+          <button type="button" id="btn-delete-catalog-item" onclick="deleteCatalogItemAction()" class="btn btn-rose btn-sm hidden">Delete Product</button>
+          <div class="flex gap-2" style="margin-left: auto;">
+            <button type="button" onclick="closeCatalogModal()" class="btn btn-dark">Cancel</button>
+            <button type="submit" class="btn btn-gold">Save Product</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: STATION EDITOR (CRUD) -->
+  <div id="modal-station-editor" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" id="modal-station-title" style="font-size: 14px;">Station Configuration</div>
+        <button onclick="closeStationModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div class="flex flex-col gap-2" style="margin-top: 8px;">
-        <button onclick="registerMasterUser()" class="btn btn-gold">Complete Master Registration</button>
-        <button onclick="seedAndRegisterMaster()" class="btn btn-dark btn-sm">Or Register & Seed Oktoberfest Preset</button>
+      <form id="form-station" onsubmit="saveStationForm(event)" class="flex flex-col gap-2">
+        <input type="hidden" id="st-edit-id">
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Station Name</label>
+            <input type="text" id="st-name" required class="input-field">
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Icon Emoji</label>
+            <input type="text" id="st-icon" required maxlength="4" class="input-field" style="width: 80px;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; color:#94a3b8;">Station Key ID (lowercase, e.g. bar, till2)</label>
+          <input type="text" id="st-key" required class="input-field font-mono">
+        </div>
+        <div>
+          <label style="font-size: 11px; color:#94a3b8;">Operational Role / Instructions</label>
+          <input type="text" id="st-role" required class="input-field">
+        </div>
+        <div class="flex items-center justify-between" style="border-top:1px solid #1e293b; padding-top:8px; margin-top:6px;">
+          <button type="button" id="btn-delete-station" onclick="deleteStationAction()" class="btn btn-rose btn-sm hidden">Delete Station</button>
+          <div class="flex gap-2" style="margin-left: auto;">
+            <button type="button" onclick="closeStationModal()" class="btn btn-dark">Cancel</button>
+            <button type="submit" class="btn btn-gold">Save Station</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: STAFF MEMBER EDITOR (CRUD) -->
+  <div id="modal-staff-editor" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" id="modal-staff-title" style="font-size: 14px;">Crew Member Configuration</div>
+        <button onclick="closeStaffModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
+      <form id="form-staff" onsubmit="saveStaffForm(event)" class="flex flex-col gap-2">
+        <input type="hidden" id="staff-edit-id">
+        <div>
+          <label style="font-size: 11px; color:#94a3b8;">Staff Member Name</label>
+          <input type="text" id="staff-name" required class="input-field">
+        </div>
+        <div class="grid grid-2 gap-2">
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Role Title</label>
+            <input type="text" id="staff-role" required placeholder="e.g. Griller, Cashier" class="input-field">
+          </div>
+          <div>
+            <label style="font-size: 11px; color:#94a3b8;">Private 4-Digit PIN</label>
+            <input type="password" id="staff-pin" maxlength="4" required class="input-field font-mono" placeholder="••••">
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; color:#94a3b8;">Assigned Station Binding</label>
+          <select id="staff-station-binding" class="input-field font-mono"></select>
+        </div>
+        <div class="flex items-center justify-between" style="border-top:1px solid #1e293b; padding-top:8px; margin-top:6px;">
+          <button type="button" id="btn-delete-staff" onclick="deleteStaffMemberAction()" class="btn btn-rose btn-sm hidden">Remove Member</button>
+          <div class="flex gap-2" style="margin-left: auto;">
+            <button type="button" onclick="closeStaffModal()" class="btn btn-dark">Cancel</button>
+            <button type="submit" class="btn btn-gold">Save Member</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -454,37 +747,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Z-REPORT -->
-  <div id="modal-z-report" class="modal-backdrop hidden">
-    <div class="modal-box font-mono" style="font-size: 12px;">
-      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 14px;">📊 Oktoberfest Closeout (Z-Report)</div>
-        <button onclick="closeZReportModal()" class="btn btn-dark btn-sm">✕</button>
-      </div>
-      <div id="z-report-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
-      <div class="flex items-center justify-between" style="border-top: 1px solid #1e293b; padding-top: 8px;">
-        <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Download JSON</button>
-        <button onclick="closeZReportModal()" class="btn btn-gold btn-sm">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: SIGN IN / SWITCH USER -->
-  <div id="modal-login" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 14px;">Station Sign-In</div>
-        <button onclick="closeLoginModal()" class="btn btn-dark btn-sm">✕</button>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <label style="font-size: 12px; color: #94a3b8;">Select Crew Member</label>
-        <select id="login-staff-select" class="input-field"></select>
-        <button onclick="confirmCrewLogin()" class="btn btn-gold" style="margin-top: 8px;">Confirm Sign In</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: TILL TICKETS INSPECTION (OPEN & CLOSED) -->
+  <!-- MODAL: TILL TICKETS INSPECTION -->
   <div id="modal-till-tickets" class="modal-backdrop hidden">
     <div class="modal-box" style="max-width: 640px;">
       <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
@@ -507,18 +770,63 @@
     </div>
   </div>
 
-  <!-- CORE SCRIPT ENGINE -->
+  <!-- MODAL: Z-REPORT -->
+  <div id="modal-z-report" class="modal-backdrop hidden">
+    <div class="modal-box font-mono" style="font-size: 12px;">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">📊 Oktoberfest Closeout (Z-Report)</div>
+        <button onclick="closeZReportModal()" class="btn btn-dark btn-sm">✕</button>
+      </div>
+      <div id="z-report-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      <div class="flex items-center justify-between" style="border-top: 1px solid #1e293b; padding-top: 8px;">
+        <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Download JSON</button>
+        <button onclick="closeZReportModal()" class="btn btn-gold btn-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STATION SHIFTS & GUIDE INFO -->
+  <div id="modal-info-guide" class="modal-backdrop hidden">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">ℹ️ Station Guide & Crew Shifts</div>
+        <button onclick="closeInfoModal()" class="btn btn-dark btn-sm">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12px;">
+        <div class="card" style="background:#020617; border-color:#334155;">
+          <strong style="color:#fbbf24;">Oktoberfest 2026 Roster & Station Shifts:</strong>
+          <div style="margin-top: 6px; display:flex; flex-direction:column; gap:4px;" class="font-mono" id="info-shifts-roster-list"></div>
+        </div>
+        <div class="card" style="background:#020617; border-color:#334155;">
+          <strong style="color:#38bdf8;">Standard Operating Guidelines:</strong>
+          <ul style="margin-top: 6px; padding-left: 18px; line-height: 1.5; color: #cbd5e1;">
+            <li><strong>Currywurst is a Bratwurst:</strong> Grillers cook Bratwurst sausages; Handout prepares curry sauce and kraft boats.</li>
+            <li><strong>Roll Governance:</strong> Rolls are strictly combo-only and never sold separately. If a customer chooses 'No Roll', zero rolls are consumed.</li>
+            <li><strong>Stock Movement:</strong> Both Braai and Master can pull batches from Cold Depot into Local Cooler with 1 tap.</li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align: right; border-top: 1px solid #1e293b; padding-top: 8px;">
+        <button onclick="closeInfoModal()" class="btn btn-dark btn-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       CORE SCRIPT ENGINE
+       ========================================================================== -->
   <script>
-    const samplePresetCatalog = {
+    // Master Sheet 2026 Preloaded German Club Catalog
+    const defaultCatalog = {
       bratwurst: {
         id: 'bratwurst',
         name: 'Original German Bratwurst (140g)',
         icon: '🌭',
         category: 'sausage',
         price: 50.0,
-        cogs: 17.5,
-        coldRoom: 200,
-        cooler: 75,
+        cogs: 15.54,
+        coldRoom: 275,
+        cooler: 0,
         sold: 0,
         saleRule: 'both',
         allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
@@ -529,7 +837,7 @@
         icon: '🍛',
         category: 'sausage',
         price: 60.0,
-        cogs: 21.0,
+        cogs: 15.54,
         coldRoom: 0,
         cooler: 0,
         sold: 0,
@@ -542,35 +850,35 @@
         icon: '🌭',
         category: 'sausage',
         price: 50.0,
-        cogs: 18.0,
-        coldRoom: 50,
-        cooler: 25,
+        cogs: 16.10,
+        coldRoom: 75,
+        cooler: 0,
         sold: 0,
         saleRule: 'both',
         allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
       },
       cheesegriller: {
         id: 'cheesegriller',
-        name: 'Smoked Cheesegriller (110g)',
+        name: 'Käsegriller (110g, Continental)',
         icon: '🧀',
         category: 'sausage',
         price: 50.0,
-        cogs: 14.0,
-        coldRoom: 175,
-        cooler: 75,
+        cogs: 11.50,
+        coldRoom: 250,
+        cooler: 0,
         sold: 0,
         saleRule: 'both',
         allowedPairings: ['roll_white', 'roll_crusty', 'serviette']
       },
       roll_crusty: {
         id: 'roll_crusty',
-        name: 'Crispy German Roll (85g)',
+        name: 'German Crispy Roll (85g)',
         icon: '🥖',
         category: 'roll',
         price: 10.0,
-        cogs: 4.5,
-        coldRoom: 250,
-        cooler: 104,
+        cogs: 4.57,
+        coldRoom: 354,
+        cooler: 0,
         sold: 0,
         saleRule: 'combo_only',
         allowedPairings: []
@@ -581,42 +889,66 @@
         icon: '🌭',
         category: 'roll',
         price: 10.0,
-        cogs: 3.5,
-        coldRoom: 170,
-        cooler: 82,
+        cogs: 3.52,
+        coldRoom: 252,
+        cooler: 0,
         sold: 0,
         saleRule: 'combo_only',
         allowedPairings: []
       },
       curry_tray: {
         id: 'curry_tray',
-        name: 'Currywurst Serving Boat / Tray',
+        name: 'Currywurst Kraft Serving Boat',
         icon: '🍛',
-        category: 'condiment',
+        category: 'extra',
         price: 0.0,
-        cogs: 1.2,
-        coldRoom: 100,
-        cooler: 50,
+        cogs: 1.20,
+        coldRoom: 150,
+        cooler: 0,
         sold: 0,
         saleRule: 'combo_only',
         allowedPairings: []
       }
     };
 
-    // Clean Zero Start State
-    let productCatalog = JSON.parse(JSON.stringify(samplePresetCatalog));
-    let staffRoster = [];
-    let masterUser = null;
+    // Preloaded Stations Registry
+    const defaultStations = [
+      { id: 'till', name: 'Till POS', icon: '💵', role: 'Cashier checkout & recall' },
+      { id: 'braai', name: 'Braai Master', icon: '🔥', role: 'Multi-stage grill & buffer' },
+      { id: 'handout', name: 'Handout Hub', icon: '🍽️', role: 'Roll slicing & order assembly' },
+      { id: 'dual', name: 'Dual Screen', icon: '🖥️', role: 'Split grill and handout monitor' },
+      { id: 'manager', name: 'Manager Hub', icon: '👑', role: 'Inventory, financials & audit' }
+    ];
+
+    // Preloaded 2026 Crew Roster with Shift Hours & Private PINs
+    const defaultStaff = [
+      { id: 'nicolas', name: 'Nicolas (Master)', role: 'Master Admin', station: 'manager', pin: '1978', shift: '15:00 - 24:00' },
+      { id: 'bernus', name: 'Bernus', role: 'Head Cashier', station: 'till', pin: '2001', shift: '16:00 - 24:00' },
+      { id: 'nicole', name: 'Nicole', role: 'Handout Lead', station: 'handout', pin: '2002', shift: '16:00 - 24:00' },
+      { id: 'margret', name: 'Margret', role: 'Roll Prep Lead', station: 'handout', pin: '2003', shift: '16:00 - 24:00' },
+      { id: 'joost', name: 'Joost', role: 'Braai Master', station: 'braai', pin: '2004', shift: '16:00 - 24:00' },
+      { id: 'nick', name: 'Nick', role: 'Braai Master', station: 'braai', pin: '2005', shift: '16:00 - 24:00' }
+    ];
+
+    // State Variables
+    let productCatalog = JSON.parse(JSON.stringify(defaultCatalog));
+    let registeredStations = JSON.parse(JSON.stringify(defaultStations));
+    let staffRoster = JSON.parse(JSON.stringify(defaultStaff));
     let currentStation = 'till';
-    let currentStaffUser = null;
+    let currentStaffUser = staffRoster[0];
     let orders = [];
     let currentCart = [];
     let orderSequenceNumber = 101;
+    let isTrialMode = false;
 
+    // Operational Buffers
     let prepBuffer = {};
     let grillingNow = {};
     let rollBuffer = { roll_crusty: 0, roll_white: 0 };
     let trayBuffer = { curry_tray: 0 };
+
+    // Trial Mode Snapshots
+    let officialBackupState = null;
 
     function startLiveClock() {
       const el = document.getElementById('app-clock');
@@ -624,6 +956,15 @@
         const d = new Date();
         if (el) el.textContent = d.toTimeString().split(' ')[0];
       }, 1000);
+    }
+
+    function populateStationDropdown() {
+      const navSel = document.getElementById('station-nav-select');
+      if (!navSel) return;
+      navSel.innerHTML = registeredStations.map(s => `
+        <option value="${s.id}">${s.icon} ${s.name}</option>
+      `).join('');
+      navSel.value = currentStation;
     }
 
     function switchStationView(stationId) {
@@ -649,25 +990,143 @@
         if (currentStation === 'dual') renderDualStation();
         if (currentStation === 'manager') renderManagerStation();
       } catch (err) {
-        console.error('Render error:', err);
+        console.error('Render error in station:', currentStation, err);
       }
     }
 
+    // ==========================================================================
+    // TRIAL & TRAINING PRACTICE MODE
+    // ==========================================================================
+    function toggleTrialMode(forcedState = null) {
+      isTrialMode = forcedState !== null ? forcedState : !isTrialMode;
+      const banner = document.getElementById('trial-mode-banner');
+      const text = document.getElementById('trial-indicator-text');
+      const dot = document.getElementById('trial-indicator-dot');
+
+      if (isTrialMode) {
+        if (banner) banner.classList.remove('hidden');
+        if (text) text.textContent = 'Trial: ACTIVE';
+        if (dot) dot.style.background = '#fbbf24';
+
+        // Snapshot official state
+        if (!officialBackupState) {
+          officialBackupState = {
+            productCatalog: JSON.parse(JSON.stringify(productCatalog)),
+            orders: JSON.parse(JSON.stringify(orders)),
+            prepBuffer: JSON.parse(JSON.stringify(prepBuffer)),
+            grillingNow: JSON.parse(JSON.stringify(grillingNow)),
+            rollBuffer: JSON.parse(JSON.stringify(rollBuffer)),
+            trayBuffer: JSON.parse(JSON.stringify(trayBuffer))
+          };
+        }
+      } else {
+        if (banner) banner.classList.add('hidden');
+        if (text) text.textContent = 'Trial: OFF';
+        if (dot) dot.style.background = '#64748b';
+
+        // Restore official state
+        if (officialBackupState) {
+          productCatalog = JSON.parse(JSON.stringify(officialBackupState.productCatalog));
+          orders = JSON.parse(JSON.stringify(officialBackupState.orders));
+          prepBuffer = JSON.parse(JSON.stringify(officialBackupState.prepBuffer));
+          grillingNow = JSON.parse(JSON.stringify(officialBackupState.grillingNow));
+          rollBuffer = JSON.parse(JSON.stringify(officialBackupState.rollBuffer));
+          trayBuffer = JSON.parse(JSON.stringify(officialBackupState.trayBuffer));
+          officialBackupState = null;
+        }
+      }
+      renderAllViews();
+    }
+
+    function seedTrialScenario() {
+      if (!isTrialMode) toggleTrialMode(true);
+
+      // Seed local working cooler stock
+      if (productCatalog['bratwurst']) productCatalog['bratwurst'].cooler = 45;
+      if (productCatalog['bockwurst']) productCatalog['bockwurst'].cooler = 20;
+      if (productCatalog['cheesegriller']) productCatalog['cheesegriller'].cooler = 35;
+      if (productCatalog['roll_crusty']) productCatalog['roll_crusty'].cooler = 60;
+      if (productCatalog['roll_white']) productCatalog['roll_white'].cooler = 40;
+      if (productCatalog['curry_tray']) productCatalog['curry_tray'].cooler = 30;
+
+      // Seed grilling & buffers
+      grillingNow = { bratwurst: 12, bockwurst: 4, cheesegriller: 8 };
+      prepBuffer = { bratwurst: 6, bockwurst: 2, cheesegriller: 4 };
+      rollBuffer = { roll_crusty: 10, roll_white: 8 };
+      trayBuffer = { curry_tray: 6 };
+
+      // Seed demo tickets
+      orders = [
+        {
+          id: 'demo_101',
+          num: 101,
+          timestamp: '16:15:02',
+          status: 'processing',
+          paymentMethod: 'YOCO',
+          total: 100.0,
+          items: [
+            { cartId: 'c1', productId: 'bratwurst', name: 'Original German Bratwurst (140g)', icon: '🌭', price: 50.0, selectedRoll: 'roll_crusty', allowedPairings: ['roll_crusty', 'roll_white', 'serviette'] },
+            { cartId: 'c2', productId: 'cheesegriller', name: 'Käsegriller (110g, Continental)', icon: '🧀', price: 50.0, selectedRoll: 'roll_white', allowedPairings: ['roll_white', 'roll_crusty', 'serviette'] }
+          ]
+        },
+        {
+          id: 'demo_102',
+          num: 102,
+          timestamp: '16:18:24',
+          status: 'processing',
+          paymentMethod: 'CASH',
+          total: 60.0,
+          items: [
+            { cartId: 'c3', productId: 'currywurst', name: 'Oktoberfest Currywurst Spezial', icon: '🍛', price: 60.0, selectedRoll: 'curry_tray', allowedPairings: ['curry_tray', 'serviette'] }
+          ]
+        },
+        {
+          id: 'demo_100',
+          num: 100,
+          timestamp: '16:08:11',
+          status: 'delivered',
+          paymentMethod: 'CASH',
+          total: 50.0,
+          items: [
+            { cartId: 'c0', productId: 'bratwurst', name: 'Original German Bratwurst (140g)', icon: '🌭', price: 50.0, selectedRoll: 'serviette', allowedPairings: ['roll_crusty', 'roll_white', 'serviette'] }
+          ]
+        }
+      ];
+
+      renderAllViews();
+    }
+
+    function clearTrialDataAction() {
+      orders = [];
+      orderSequenceNumber = 101;
+      prepBuffer = {};
+      grillingNow = {};
+      rollBuffer = { roll_crusty: 0, roll_white: 0 };
+      trayBuffer = { curry_tray: 0 };
+      renderAllViews();
+    }
+
+    // ==========================================================================
+    // 1. TILL POS STATION
+    // ==========================================================================
     function renderTillStation() {
       const grid = document.getElementById('pos-sausage-grid');
-      const rollsBar = document.getElementById('pos-standalone-rolls-bar');
       const pCounter = document.getElementById('till-counter-processing');
       const dCounter = document.getElementById('till-counter-delivered');
 
       if (pCounter) pCounter.textContent = orders.filter(o => o.status === 'processing').length;
       if (dCounter) dCounter.textContent = orders.filter(o => o.status === 'delivered').length;
 
+      // 4 Quadratic Sausage Tiles (Currywurst, Bratwurst, Bockwurst, Käsegriller)
       const sausages = Object.values(productCatalog).filter(p => p.category === 'sausage');
       if (grid) {
-        if (sausages.length === 0) {
-          grid.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 24px;">No sausages configured. Open Manager Hub to add products.</div>`;
-        } else {
-          grid.innerHTML = sausages.map(s => `
+        grid.innerHTML = sausages.map(s => {
+          // If Currywurst, display remaining stock from the Bratwurst pool
+          const stockCount = s.id === 'currywurst' 
+            ? ((productCatalog['bratwurst'] && productCatalog['bratwurst'].cooler) || 0)
+            : s.cooler;
+
+          return `
             <div onclick="addSausageToCart('${s.id}')" class="card-tile">
               <div class="flex items-center justify-between">
                 <span style="font-size: 32px;">${s.icon}</span>
@@ -676,26 +1135,13 @@
               <div>
                 <div style="font-weight: 700; font-size: 13px; color: #ffffff;">${s.name}</div>
                 <div class="flex items-center justify-between" style="margin-top: 6px; font-size: 11px; color: #94a3b8;">
-                  <span>Storage: <strong style="color: #34d399;">${s.cooler}</strong></span>
+                  <span>Cooler: <strong style="color: #34d399;">${stockCount}</strong></span>
                   <span style="color: #f59e0b; font-weight: 700;">+ Tap to Add</span>
                 </div>
               </div>
             </div>
-          `).join('');
-        }
-      }
-
-      if (rollsBar) {
-        const standalone = Object.values(productCatalog).filter(p => p.category === 'roll' && p.saleRule !== 'combo_only');
-        if (standalone.length === 0) {
-          rollsBar.innerHTML = `<span style="font-size: 11px; color: #64748b; font-style: italic;">All rolls configured as Combo-Only (Strictly served with sausages).</span>`;
-        } else {
-          rollsBar.innerHTML = standalone.map(item => `
-            <button onclick="addStandaloneItemToCart('${item.id}')" class="btn btn-dark btn-sm">
-              <span>${item.icon}</span> ${item.name} (R ${item.price.toFixed(2)})
-            </button>
-          `).join('');
-        }
+          `;
+        }).join('');
       }
 
       renderCartUI();
@@ -713,21 +1159,6 @@
         price: prod.price,
         selectedRoll: defRoll,
         allowedPairings: prod.allowedPairings || ['roll_crusty', 'roll_white', 'serviette']
-      });
-      renderCartUI();
-    }
-
-    function addStandaloneItemToCart(id) {
-      const prod = productCatalog[id];
-      if (!prod) return;
-      currentCart.push({
-        cartId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-        productId: prod.id,
-        name: prod.name,
-        icon: prod.icon,
-        price: prod.price,
-        selectedRoll: null,
-        allowedPairings: []
       });
       renderCartUI();
     }
@@ -764,22 +1195,19 @@
       let total = 0;
       container.innerHTML = currentCart.map(item => {
         total += item.price;
-        const isSausage = item.selectedRoll !== null;
         return `
           <div class="card" style="background: #020617; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px;">
             <div class="flex items-center justify-between">
               <span style="font-weight: 700; font-size: 12px;">${item.icon} ${item.name}</span>
               <div class="flex items-center gap-2">
                 <span class="font-mono" style="color: #fbbf24; font-weight: 700; font-size: 12px;">R ${item.price.toFixed(2)}</span>
-                <button onclick="removeCartItem('${item.cartId}')" style="background:none; border:none; color:#fb7185; cursor:pointer;">✕</button>
+                <button onclick="removeCartItem('${item.cartId}')" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:12px;">✕</button>
               </div>
             </div>
-            ${isSausage ? `
-              <div class="flex items-center gap-1" style="font-size: 10px;">
-                <span style="color: #64748b;">Serving:</span>
-                ${renderRollOptionButtons(item)}
-              </div>
-            ` : ''}
+            <div class="flex items-center gap-1" style="font-size: 10px; flex-wrap: wrap;">
+              <span style="color: #64748b;">Plating:</span>
+              ${renderRollOptionButtons(item)}
+            </div>
           </div>
         `;
       }).join('');
@@ -817,10 +1245,22 @@
         const prod = productCatalog[item.productId];
         if (prod) {
           prod.sold = (prod.sold || 0) + 1;
-          // Currywurst depletes Bratwurst inventory in storage
+          // Currywurst uses Bratwurst sausage stock
           const inventoryTargetId = item.productId === 'currywurst' ? 'bratwurst' : item.productId;
           const invProd = productCatalog[inventoryTargetId];
-          if (invProd && invProd.cooler > 0) invProd.cooler -= 1;
+          if (invProd && invProd.cooler > 0) {
+            invProd.cooler -= 1;
+          }
+        }
+
+        // ROLL INVENTORY DEDUCTION:
+        // 'serviette' (No Roll) does NOT deduct any roll stock. Roll stays in inventory.
+        if (item.selectedRoll === 'roll_crusty' || item.selectedRoll === 'roll_white') {
+          const rollItem = productCatalog[item.selectedRoll];
+          if (rollItem) {
+            rollItem.sold = (rollItem.sold || 0) + 1;
+            if (rollItem.cooler > 0) rollItem.cooler -= 1;
+          }
         }
       });
 
@@ -838,6 +1278,7 @@
       renderAllViews();
     }
 
+    // Till Ticket Inspection & Cashier Recall
     let activeTillTicketsTab = 'processing';
 
     function openTillTicketsModal(tab = 'processing') {
@@ -924,7 +1365,7 @@
       if (idx === -1) return;
       const order = orders[idx];
 
-      // Restore inventory
+      // Restore sausage & roll inventory
       order.items.forEach(item => {
         const targetId = item.productId === 'currywurst' ? 'bratwurst' : item.productId;
         const prod = productCatalog[targetId];
@@ -932,23 +1373,35 @@
           prod.cooler += 1;
           if (prod.sold > 0) prod.sold -= 1;
         }
+
+        if (item.selectedRoll === 'roll_crusty' || item.selectedRoll === 'roll_white') {
+          const rollItem = productCatalog[item.selectedRoll];
+          if (rollItem) {
+            rollItem.cooler += 1;
+            if (rollItem.sold > 0) rollItem.sold -= 1;
+          }
+        }
       });
 
-      // Load items back to cart for modifications
+      // Load items back to cart for modifications with REV tracking
       currentCart = order.items.map(i => ({
         ...i,
+        name: i.name.includes('(REV)') ? i.name : `${i.name} (REV)`,
         cartId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)
       }));
 
-      // Remove from closed orders
       orders.splice(idx, 1);
       closeTillTicketsModal();
       switchStationView('till');
       renderAllViews();
     }
 
+    // ==========================================================================
+    // 2. BRAAI MASTER GRILL DECK
+    // ==========================================================================
     function renderBraaiStation() {
       const deck = document.getElementById('braai-sausage-deck');
+      const kpiBar = document.getElementById('braai-kpi-summary-bar');
       const statWaiting = document.getElementById('braai-stat-orders-waiting');
       if (!deck) return;
 
@@ -958,75 +1411,146 @@
       const demand = {};
       pending.forEach(o => o.items.forEach(i => demand[i.productId] = (demand[i.productId] || 0) + 1));
 
-      // Braai Standard: Currywurst is physically a Bratwurst!
-      // We only show physical sausages to grill on the deck (Bratwurst, Bockwurst, Cheesegriller)
+      // Standard: Currywurst is physically a Bratwurst on the grill deck!
       const physicalSausages = Object.values(productCatalog).filter(p => p.category === 'sausage' && p.id !== 'currywurst');
+
+      let totalOnGrill = 0;
+      let totalBuffer = 0;
+      let totalDemand = 0;
+      let totalRemainingStock = 0;
+
+      physicalSausages.forEach(s => {
+        let waiting = demand[s.id] || 0;
+        if (s.id === 'bratwurst') waiting += (demand['currywurst'] || 0);
+
+        const onGrill = grillingNow[s.id] || 0;
+        const buffer = prepBuffer[s.id] || 0;
+        const totalRem = (s.coldRoom || 0) + (s.cooler || 0) + onGrill + buffer;
+
+        totalOnGrill += onGrill;
+        totalBuffer += buffer;
+        totalDemand += waiting;
+        totalRemainingStock += totalRem;
+      });
+
+      if (kpiBar) {
+        kpiBar.innerHTML = `
+          <div class="card flex flex-col justify-between" style="background:#020617; border: 1px solid rgba(251, 113, 133, 0.4); padding: 8px 10px;">
+            <div style="font-size: 10px; color: #fb7185; font-weight: 700;">🔥 SIZZLING ON BRAAI</div>
+            <div style="font-size: 20px; font-weight: 900; color: #fb7185;">${totalOnGrill}</div>
+            <div style="font-size: 9px; color: #94a3b8;">Currently cooking</div>
+          </div>
+          <div class="card flex flex-col justify-between" style="background:#020617; border: 1px solid rgba(52, 211, 153, 0.4); padding: 8px 10px;">
+            <div style="font-size: 10px; color: #34d399; font-weight: 700;">♨️ HOT BUFFER READY</div>
+            <div style="font-size: 20px; font-weight: 900; color: #34d399;">${totalBuffer}</div>
+            <div style="font-size: 9px; color: #94a3b8;">Ready for handout</div>
+          </div>
+          <div class="card flex flex-col justify-between" style="background:#020617; border: 1px solid rgba(251, 191, 36, 0.4); padding: 8px 10px;">
+            <div style="font-size: 10px; color: #fbbf24; font-weight: 700;">⏳ TOTAL DEMAND</div>
+            <div style="font-size: 20px; font-weight: 900; color: #fbbf24;">${totalDemand}</div>
+            <div style="font-size: 9px; color: #94a3b8;">Across all tickets</div>
+          </div>
+          <div class="card flex flex-col justify-between" style="background:#020617; border: 1px solid rgba(56, 189, 248, 0.4); padding: 8px 10px;">
+            <div style="font-size: 10px; color: #38bdf8; font-weight: 700;">📦 TOTAL REMAINING</div>
+            <div style="font-size: 20px; font-weight: 900; color: #38bdf8;">${totalRemainingStock}</div>
+            <div style="font-size: 9px; color: #94a3b8;">Cold room + tent cooler</div>
+          </div>
+        `;
+      }
 
       deck.innerHTML = physicalSausages.map(s => {
         let waiting = demand[s.id] || 0;
-        let extraNote = '';
+        let extraBadge = '';
 
-        // Fold Currywurst count into Bratwurst
         if (s.id === 'bratwurst') {
           const curryDemand = demand['currywurst'] || 0;
           waiting += curryDemand;
           if (curryDemand > 0) {
-            extraNote = `<div style="font-size: 10px; color: #fde047; margin-top: 2px;">(incl. ${curryDemand} Currywurst)</div>`;
+            extraBadge = `<span class="badge badge-amber font-mono" style="background: rgba(245, 158, 11, 0.2); border-color: #f59e0b; color: #fde047; font-size: 10px;">(incl. ${curryDemand} Currywurst)</span>`;
           }
         }
 
+        const genStock = s.coldRoom || 0;
+        const localStock = s.cooler || 0;
         const onGrill = grillingNow[s.id] || 0;
         const buffer = prepBuffer[s.id] || 0;
+        const totalRemaining = genStock + localStock + onGrill + buffer;
         const netNeed = Math.max(0, waiting - (onGrill + buffer));
 
         return `
-          <div class="card flex flex-col justify-between gap-3">
-            <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+          <div class="card flex flex-col justify-between gap-1" style="border: 1px solid #334155; background: #0f172a; padding: 6px 8px; min-height: 0; flex: 1;">
+            <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 4px; flex-wrap: wrap; gap: 2px;">
               <div>
-                <div style="font-weight: 700; font-size: 13px;">${s.icon} ${s.name}</div>
-                ${extraNote}
-                <div class="flex items-center gap-2" style="font-size: 11px; margin-top: 2px;">
-                  <span style="color: #94a3b8;">Storage: <strong style="color: #34d399;">${s.cooler}</strong></span>
-                  <button onclick="transferMainToLocal('${s.id}', 10)" class="btn btn-dark btn-sm" style="font-size: 10px;">+10 Restock</button>
+                <div style="font-weight: 900; font-size: 13px; color: #ffffff; display: flex; align-items: center; gap: 4px;">
+                  <span style="font-size: 16px;">${s.icon}</span> ${s.name}
+                </div>
+                <div class="flex items-center gap-1" style="margin-top: 1px;">
+                  ${extraBadge}
+                  <span style="font-size: 9px; color: #cbd5e1;">Total Depot: <strong style="color: #38bdf8;">${totalRemaining}</strong></span>
                 </div>
               </div>
-              <div>
+              <div class="flex items-center gap-1">
                 ${netNeed > 0 
-                  ? `<span class="badge badge-rose">Need +${netNeed}</span>` 
-                  : `<span class="badge badge-emerald">Covered</span>`}
+                  ? `<span class="badge badge-rose font-mono" style="font-size: 10px; padding: 1px 4px;">Need +${netNeed}</span>` 
+                  : `<span class="badge badge-emerald font-mono" style="font-size: 10px; padding: 1px 4px;">✓ OK</span>`}
+                <button onclick="transferMainToLocal('${s.id}', 10)" class="btn btn-dark btn-sm font-mono" style="border: 1px solid #f59e0b; color: #fde68a; font-size: 9px; padding: 2px 5px;">+10 Depot➔Cooler</button>
               </div>
             </div>
 
-            <div class="grid grid-3 gap-2" style="text-align: center;">
-              <div class="card" style="background: #020617; padding: 6px;">
-                <div style="font-size: 9px; color: #94a3b8;">Orders Waiting</div>
-                <div class="font-mono title-gold" style="font-size: 16px;">${waiting}</div>
+            <div class="grid grid-5 gap-1 font-mono" style="text-align: center; font-size: 8px;">
+              <div class="card" style="background: #020617; padding: 3px 1px; border: 1px solid #1e293b;">
+                <div style="color: #38bdf8; font-weight: 700;">General</div>
+                <div style="font-size: 13px; font-weight: 900; color: #38bdf8; margin-top: 1px;">${genStock}</div>
               </div>
-              <div class="card" style="background: #020617; padding: 6px;">
-                <div style="font-size: 9px; color: #94a3b8;">On Braai</div>
-                <div class="font-mono" style="font-size: 16px; color: #fb7185; font-weight: 900;">${onGrill}</div>
+              <div class="card" style="background: #020617; padding: 3px 1px; border: 1px solid rgba(245, 158, 11, 0.4);">
+                <div style="color: #fbbf24; font-weight: 700;">Cooler</div>
+                <div style="font-size: 13px; font-weight: 900; color: #fbbf24; margin-top: 1px;">${localStock}</div>
               </div>
-              <div class="card" style="background: #020617; padding: 6px;">
-                <div style="font-size: 9px; color: #94a3b8;">Hot Buffer</div>
-                <div class="font-mono" style="font-size: 16px; color: #34d399; font-weight: 900;">${buffer}</div>
+              <div class="card" style="background: #020617; padding: 3px 1px; border: 1px solid rgba(251, 113, 133, 0.5);">
+                <div style="color: #fb7185; font-weight: 800;">On Braai</div>
+                <div style="font-size: 13px; font-weight: 900; color: #fb7185; margin-top: 1px;">${onGrill}</div>
+              </div>
+              <div class="card" style="background: #020617; padding: 3px 1px; border: 1px solid rgba(52, 211, 153, 0.5);">
+                <div style="color: #34d399; font-weight: 800;">Buffer</div>
+                <div style="font-size: 13px; font-weight: 900; color: #34d399; margin-top: 1px;">${buffer}</div>
+              </div>
+              <div class="card" style="background: #020617; padding: 3px 1px; border: 1px solid #334155;">
+                <div style="color: #e2e8f0; font-weight: 700;">Demand</div>
+                <div class="title-gold" style="font-size: 13px; margin-top: 1px;">${waiting}</div>
               </div>
             </div>
 
-            <div class="flex flex-col gap-2" style="font-size: 11px; border-top: 1px solid #1e293b; padding-top: 6px;">
-              <div class="flex items-center justify-between">
-                <span>➔ Onto Braai:</span>
-                <div class="flex gap-1 font-mono">
-                  <button onclick="moveBraaiStage('${s.id}', 'to_grill', 1)" class="btn btn-dark btn-sm">+1</button>
-                  <button onclick="moveBraaiStage('${s.id}', 'to_grill', 5)" class="btn btn-dark btn-sm">+5</button>
-                  <button onclick="moveBraaiStage('${s.id}', 'undo_grill', 1)" class="btn btn-rose btn-sm">↩</button>
+            <div class="flex flex-col gap-1 font-mono" style="font-size: 10px; border-top: 1px solid #1e293b; padding-top: 4px;">
+              <div class="flex items-center justify-between" style="background: #020617; padding: 2px 5px; border-radius: 4px;">
+                <span>1. Cooler➔<strong style="color: #fb7185;">Braai</strong>:</span>
+                <div class="flex gap-1">
+                  <button onclick="moveBraaiStage('${s.id}', 'local_to_braai', 1)" class="btn btn-dark btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'local_to_braai', 5)" class="btn btn-dark btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_braai_to_local', 1)" class="btn btn-rose btn-sm" title="Return to cooler">↩</button>
                 </div>
               </div>
-              <div class="flex items-center justify-between">
-                <span>➔ To Hot Buffer:</span>
-                <div class="flex gap-1 font-mono">
-                  <button onclick="moveBraaiStage('${s.id}', 'to_buffer', 1)" class="btn btn-dark btn-sm">+1</button>
-                  <button onclick="moveBraaiStage('${s.id}', 'to_buffer', 5)" class="btn btn-dark btn-sm">+5</button>
-                  <button onclick="moveBraaiStage('${s.id}', 'undo_buffer', 1)" class="btn btn-rose btn-sm">↩</button>
+              <div class="flex items-center justify-between" style="background: #020617; padding: 2px 5px; border-radius: 4px;">
+                <span>2. Braai➔<strong style="color: #fbbf24;">Buffer</strong>:</span>
+                <div class="flex gap-1">
+                  <button onclick="moveBraaiStage('${s.id}', 'braai_to_buffer', 1)" class="btn btn-dark btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'braai_to_buffer', 5)" class="btn btn-dark btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_buffer_to_braai', 1)" class="btn btn-rose btn-sm" title="Back to grill">↩</button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between" style="background: #020617; padding: 2px 5px; border-radius: 4px;">
+                <span>3. Braai➔<strong style="color: #34d399;">Handout</strong>:</span>
+                <div class="flex gap-1">
+                  <button onclick="moveBraaiStage('${s.id}', 'braai_to_handout', 1)" class="btn btn-emerald btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'braai_to_handout', 5)" class="btn btn-emerald btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_handout_to_braai', 1)" class="btn btn-rose btn-sm" title="Return to grill">↩</button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between" style="background: #020617; padding: 2px 5px; border-radius: 4px;">
+                <span>4. Buffer➔<strong style="color: #38bdf8;">Handout</strong>:</span>
+                <div class="flex gap-1">
+                  <button onclick="moveBraaiStage('${s.id}', 'buffer_to_handout', 1)" class="btn btn-dark btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'buffer_to_handout', 5)" class="btn btn-dark btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_handout_to_buffer', 1)" class="btn btn-rose btn-sm" title="Return to buffer">↩</button>
                 </div>
               </div>
             </div>
@@ -1035,34 +1559,60 @@
       }).join('');
     }
 
-    function moveBraaiStage(sausageId, action, count) {
+    function moveBraaiStage(sausageId, transition, count) {
       if (!grillingNow[sausageId]) grillingNow[sausageId] = 0;
       if (!prepBuffer[sausageId]) prepBuffer[sausageId] = 0;
       const prod = productCatalog[sausageId];
 
-      if (action === 'to_grill') {
+      if (transition === 'local_to_braai') {
         const amt = Math.min(count, prod ? prod.cooler : count);
         if (prod) prod.cooler = Math.max(0, prod.cooler - amt);
         grillingNow[sausageId] += amt;
-      } else if (action === 'undo_grill') {
+      } 
+      else if (transition === 'undo_braai_to_local') {
         const amt = Math.min(count, grillingNow[sausageId]);
         grillingNow[sausageId] -= amt;
         if (prod) prod.cooler += amt;
-      } else if (action === 'to_buffer') {
+      } 
+      else if (transition === 'braai_to_buffer') {
         const amt = Math.min(count, grillingNow[sausageId]);
         grillingNow[sausageId] -= amt;
         prepBuffer[sausageId] += amt;
-      } else if (action === 'undo_buffer') {
+      } 
+      else if (transition === 'undo_buffer_to_braai') {
         const amt = Math.min(count, prepBuffer[sausageId]);
         prepBuffer[sausageId] -= amt;
         grillingNow[sausageId] += amt;
       }
+      else if (transition === 'braai_to_handout') {
+        const amt = Math.min(count, grillingNow[sausageId]);
+        grillingNow[sausageId] -= amt;
+      }
+      else if (transition === 'undo_handout_to_braai') {
+        grillingNow[sausageId] += count;
+      }
+      else if (transition === 'buffer_to_handout') {
+        const amt = Math.min(count, prepBuffer[sausageId]);
+        prepBuffer[sausageId] -= amt;
+      }
+      else if (transition === 'undo_handout_to_buffer') {
+        prepBuffer[sausageId] += count;
+      }
+
       renderAllViews();
     }
 
+    // ==========================================================================
+    // 3. HANDOUT & ASSEMBLY STATION
+    // ==========================================================================
     function renderHandoutStation() {
       const metricsEl = document.getElementById('handout-overview-metrics');
       const queueEl = document.getElementById('handout-orders-queue');
+      const dispCrusty = document.getElementById('buf-disp-crusty');
+      const uncutCrusty = document.getElementById('buf-uncut-crusty');
+      const dispWhite = document.getElementById('buf-disp-white');
+      const uncutWhite = document.getElementById('buf-uncut-white');
+      const dispTray = document.getElementById('buf-disp-tray');
       if (!metricsEl || !queueEl) return;
 
       const pending = orders.filter(o => o.status === 'processing');
@@ -1081,36 +1631,46 @@
         });
       });
 
+      const totalPrecookedAvailable = Object.values(prepBuffer).reduce((a, b) => a + b, 0);
+      const stockCrusty = (productCatalog['roll_crusty'] && productCatalog['roll_crusty'].cooler) || 0;
+      const stockWhite = (productCatalog['roll_white'] && productCatalog['roll_white'].cooler) || 0;
+
+      if (dispCrusty) dispCrusty.textContent = rollBuffer.roll_crusty || 0;
+      if (uncutCrusty) uncutCrusty.textContent = stockCrusty;
+      if (dispWhite) dispWhite.textContent = rollBuffer.roll_white || 0;
+      if (uncutWhite) uncutWhite.textContent = stockWhite;
+      if (dispTray) dispTray.textContent = trayBuffer.curry_tray || 0;
+
       metricsEl.innerHTML = `
         <div class="card" style="background:#020617;">
-          <div style="font-size:10px; color:#94a3b8;">🥖 Crispy Needed</div>
+          <div style="font-size:10px; color:#94a3b8;">🥖 Crispy Rolls Needed</div>
           <div class="font-mono title-gold" style="font-size:18px;">${crispyNeeded}</div>
-          <div style="font-size:10px; color:#64748b;">Sliced: ${rollBuffer.roll_crusty || 0}</div>
+          <div style="font-size:10px; color:#64748b;">Sliced Ready: <strong style="color: #fbbf24;">${rollBuffer.roll_crusty || 0}</strong></div>
         </div>
         <div class="card" style="background:#020617;">
-          <div style="font-size:10px; color:#94a3b8;">🌭 White Needed</div>
+          <div style="font-size:10px; color:#94a3b8;">🌭 White Rolls Needed</div>
           <div class="font-mono" style="font-size:18px; color:#38bdf8; font-weight:900;">${whiteNeeded}</div>
-          <div style="font-size:10px; color:#64748b;">Sliced: ${rollBuffer.roll_white || 0}</div>
+          <div style="font-size:10px; color:#64748b;">Sliced Ready: <strong style="color: #38bdf8;">${rollBuffer.roll_white || 0}</strong></div>
         </div>
         <div class="card" style="background:#020617;">
-          <div style="font-size:10px; color:#94a3b8;">🍛 Curry Boats</div>
+          <div style="font-size:10px; color:#94a3b8;">🍛 Curry Boats Needed</div>
           <div class="font-mono" style="font-size:18px; color:#fde047; font-weight:900;">${curryTraysNeeded}</div>
-          <div style="font-size:10px; color:#64748b;">Ready: ${trayBuffer.curry_tray || 0}</div>
+          <div style="font-size:10px; color:#64748b;">Trays Ready: <strong style="color: #fde047;">${trayBuffer.curry_tray || 0}</strong></div>
         </div>
         <div class="card" style="background:#020617;">
-          <div style="font-size:10px; color:#94a3b8;">🧻 Serviette Only</div>
+          <div style="font-size:10px; color:#94a3b8;">🧻 Serviette Only (No Roll)</div>
           <div class="font-mono" style="font-size:18px; color:#ffffff; font-weight:900;">${serviettesNeeded}</div>
-          <div style="font-size:10px; color:#64748b;">Direct Plate</div>
+          <div style="font-size:10px; color:#34d399;">Roll Stays in Stock</div>
         </div>
         <div class="card" style="background:#020617;">
-          <div style="font-size:10px; color:#94a3b8;">⏳ Waiting Orders</div>
-          <div class="font-mono" style="font-size:18px; color:#34d399; font-weight:900;">${pending.length}</div>
-          <div style="font-size:10px; color:#64748b;">Tickets</div>
+          <div style="font-size:10px; color:#94a3b8;">🔥 Precooked Sausages</div>
+          <div class="font-mono" style="font-size:18px; color:#34d399; font-weight:900;">${totalPrecookedAvailable}</div>
+          <div style="font-size:10px; color:#64748b;">Hot in Chafing Buffer</div>
         </div>
       `;
 
       if (pending.length === 0) {
-        queueEl.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 36px 0;">No active tickets in queue.</div>`;
+        queueEl.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 36px 0;">No active tickets in queue. Ready for next order!</div>`;
         return;
       }
 
@@ -1129,12 +1689,14 @@
             ${order.items.map(i => `
               <div class="flex items-center justify-between" style="background: #020617; padding: 6px 8px; border-radius: 6px; font-size: 11px;">
                 <span>${i.icon} ${i.name}</span>
-                <span class="badge badge-amber">${formatRollDisplay(i.selectedRoll)}</span>
+                <span class="badge ${i.selectedRoll === 'serviette' ? 'badge-emerald' : 'badge-amber'}">
+                  ${formatRollDisplay(i.selectedRoll)}
+                </span>
               </div>
             `).join('')}
           </div>
 
-          <button onclick="completeHandoutOrder('${order.id}')" class="btn btn-emerald" style="padding: 10px;">
+          <button onclick="completeHandoutOrder('${order.id}')" class="btn btn-emerald" style="padding: 10px; font-size: 13px;">
             ✓ Complete & Handed Out
           </button>
         </div>
@@ -1142,27 +1704,63 @@
     }
 
     function sliceRollsForBuffer(rollKey, count) {
-      rollBuffer[rollKey] = (rollBuffer[rollKey] || 0) + count;
-      renderAllViews();
-    }
-    function revertSlicedRollBuffer(rollKey, count) {
-      rollBuffer[rollKey] = Math.max(0, (rollBuffer[rollKey] || 0) - count);
-      renderAllViews();
-    }
-    function prepCurryTraysBuffer(count) {
-      trayBuffer.curry_tray = (trayBuffer.curry_tray || 0) + count;
-      renderAllViews();
-    }
-    function revertCurryTraysBuffer(count) {
-      trayBuffer.curry_tray = Math.max(0, (trayBuffer.curry_tray || 0) - count);
-      renderAllViews();
-    }
-    function completeHandoutOrder(orderId) {
-      const o = orders.find(x => x.id === orderId);
-      if (o) o.status = 'delivered';
+      const prod = productCatalog[rollKey];
+      const amt = Math.min(count, prod ? prod.cooler : count);
+      if (prod) prod.cooler = Math.max(0, prod.cooler - amt);
+      rollBuffer[rollKey] = (rollBuffer[rollKey] || 0) + amt;
       renderAllViews();
     }
 
+    function revertSlicedRollBuffer(rollKey, count) {
+      const amt = Math.min(count, rollBuffer[rollKey] || 0);
+      rollBuffer[rollKey] = Math.max(0, (rollBuffer[rollKey] || 0) - amt);
+      const prod = productCatalog[rollKey];
+      if (prod) prod.cooler += amt;
+      renderAllViews();
+    }
+
+    function prepCurryTraysBuffer(count) {
+      const prod = productCatalog['curry_tray'];
+      const amt = Math.min(count, prod ? prod.cooler : count);
+      if (prod) prod.cooler = Math.max(0, prod.cooler - amt);
+      trayBuffer.curry_tray = (trayBuffer.curry_tray || 0) + amt;
+      renderAllViews();
+    }
+
+    function revertCurryTraysBuffer(count) {
+      const amt = Math.min(count, trayBuffer.curry_tray || 0);
+      trayBuffer.curry_tray = Math.max(0, (trayBuffer.curry_tray || 0) - amt);
+      const prod = productCatalog['curry_tray'];
+      if (prod) prod.cooler += amt;
+      renderAllViews();
+    }
+
+    function completeHandoutOrder(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (o) {
+        o.status = 'delivered';
+
+        o.items.forEach(i => {
+          if (i.selectedRoll === 'roll_crusty' && rollBuffer.roll_crusty > 0) {
+            rollBuffer.roll_crusty -= 1;
+          } else if (i.selectedRoll === 'roll_white' && rollBuffer.roll_white > 0) {
+            rollBuffer.roll_white -= 1;
+          } else if (i.selectedRoll === 'curry_tray' && trayBuffer.curry_tray > 0) {
+            trayBuffer.curry_tray -= 1;
+          }
+
+          const sausageKey = i.productId === 'currywurst' ? 'bratwurst' : i.productId;
+          if (prepBuffer[sausageKey] && prepBuffer[sausageKey] > 0) {
+            prepBuffer[sausageKey] -= 1;
+          }
+        });
+      }
+      renderAllViews();
+    }
+
+    // ==========================================================================
+    // 4. DUAL MONITOR SPLIT SCREEN
+    // ==========================================================================
     function renderDualStation() {
       const bDeck = document.getElementById('dual-braai-deck');
       const hQueue = document.getElementById('dual-handout-queue');
@@ -1174,7 +1772,7 @@
           <div class="card" style="background: #020617; font-size: 11px;">
             <div class="flex items-center justify-between">
               <strong>${s.icon} ${s.name}</strong>
-              <span style="color:#34d399;">St: ${s.cooler}</span>
+              <span style="color:#34d399;">Cooler: ${s.cooler}</span>
             </div>
             <div class="flex items-center justify-between font-mono" style="margin-top: 6px;">
               <span>Grill: <strong style="color:#fb7185;">${grillingNow[s.id] || 0}</strong></span>
@@ -1186,7 +1784,7 @@
 
       if (hQueue) {
         if (pending.length === 0) {
-          hQueue.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px;">No pending orders.</div>`;
+          hQueue.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px; padding: 12px 0;">No pending tickets.</div>`;
         } else {
           hQueue.innerHTML = pending.map(o => `
             <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 10px;">
@@ -1201,6 +1799,9 @@
       }
     }
 
+    // ==========================================================================
+    // 5. MANAGER & MASTER HUB
+    // ==========================================================================
     function renderManagerStation() {
       let turnover = 0;
       let cash = 0;
@@ -1230,6 +1831,7 @@
       const sEl = document.getElementById('mgr-stat-sold-count');
       const splitEl = document.getElementById('mgr-stat-payment-split');
       const marginEl = document.getElementById('mgr-stat-margin-pct');
+      const ordersCountEl = document.getElementById('mgr-stat-orders-count');
 
       if (tEl) tEl.textContent = `R ${turnover.toFixed(2)}`;
       if (cEl) cEl.textContent = `R ${cogs.toFixed(2)}`;
@@ -1237,27 +1839,329 @@
       if (sEl) sEl.textContent = sausagesSold;
       if (splitEl) splitEl.textContent = `Cash: R ${cash.toFixed(2)} • Yoco: R ${yoco.toFixed(2)}`;
       if (marginEl) marginEl.textContent = `Margin: ${margin.toFixed(1)}%`;
+      if (ordersCountEl) ordersCountEl.textContent = `${orders.length} orders total`;
 
-      const tbody = document.getElementById('mgr-table-catalog');
-      if (tbody) {
-        tbody.innerHTML = Object.values(productCatalog).map(p => `
+      // 1. Catalog Table
+      const catTable = document.getElementById('mgr-table-catalog');
+      if (catTable) {
+        catTable.innerHTML = Object.values(productCatalog).map(p => `
           <tr>
             <td>${p.icon} <strong>${p.name}</strong></td>
-            <td>${p.category}</td>
+            <td><span class="badge ${p.category === 'sausage' ? 'badge-amber' : 'badge-sky'}">${p.category}</span></td>
             <td style="color:#fbbf24;">R ${p.price.toFixed(2)}</td>
             <td style="color:#fb7185;">R ${(p.cogs || 0).toFixed(2)}</td>
             <td style="color:#38bdf8;">${p.coldRoom}</td>
             <td style="color:#34d399;">${p.cooler}</td>
             <td>${p.sold || 0}</td>
-            <td>${p.saleRule === 'combo_only' ? 'Combo Only' : 'Solo & Combo'}</td>
+            <td style="font-size: 11px; color: #94a3b8;">
+              ${p.saleRule === 'combo_only' ? '<span class="badge badge-rose">Combo Only</span>' : 'Solo & Combo'}
+              ${p.allowedPairings && p.allowedPairings.length > 0 ? `(${p.allowedPairings.length} pairings)` : ''}
+            </td>
             <td style="text-align: right;">
-              <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm">+10 Transfer</button>
+              <div class="flex gap-1" style="justify-content: flex-end;">
+                <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm">+10</button>
+                <button onclick="openCatalogModal('${p.id}')" class="btn btn-gold btn-sm">Edit</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 2. Stations Table
+      const stTable = document.getElementById('mgr-table-stations');
+      if (stTable) {
+        stTable.innerHTML = registeredStations.map(st => `
+          <tr>
+            <td>${st.icon} <strong>${st.name}</strong></td>
+            <td><span class="badge badge-sky">${st.id}</span></td>
+            <td style="font-size: 11px; color:#cbd5e1;">${st.role}</td>
+            <td style="text-align: right;">
+              <button onclick="openStationModal('${st.id}')" class="btn btn-dark btn-sm">Edit</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 3. Staff Table
+      const staffTable = document.getElementById('mgr-table-staff');
+      if (staffTable) {
+        staffTable.innerHTML = staffRoster.map(s => `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td><span class="badge badge-amber">${s.role}</span></td>
+            <td>${s.station ? `<span class="badge badge-emerald">${s.station}</span>` : 'All'}</td>
+            <td>••••</td>
+            <td style="text-align: right;">
+              <button onclick="openStaffModal('${s.id}')" class="btn btn-dark btn-sm">Edit</button>
             </td>
           </tr>
         `).join('');
       }
     }
 
+    // Catalog CRUD Functions
+    function openCatalogModal(productId = null) {
+      const modal = document.getElementById('modal-catalog-editor');
+      const form = document.getElementById('form-catalog-item');
+      const title = document.getElementById('modal-catalog-title');
+      const delBtn = document.getElementById('btn-delete-catalog-item');
+      const checkboxesDiv = document.getElementById('cat-pairings-checkboxes');
+      if (!modal || !form) return;
+
+      const nonSausages = Object.values(productCatalog).filter(x => x.category !== 'sausage');
+      checkboxesDiv.innerHTML = `
+        <label class="flex items-center gap-1" style="font-size: 11px; cursor: pointer;">
+          <input type="checkbox" value="serviette" id="pair-opt-serviette"> 🧻 Serviette
+        </label>
+        ${nonSausages.map(p => `
+          <label class="flex items-center gap-1" style="font-size: 11px; cursor: pointer;">
+            <input type="checkbox" value="${p.id}" id="pair-opt-${p.id}"> ${p.icon} ${p.name}
+          </label>
+        `).join('')}
+      `;
+
+      if (productId && productCatalog[productId]) {
+        const item = productCatalog[productId];
+        title.textContent = `Edit Product: ${item.name}`;
+        document.getElementById('cat-item-id').value = item.id;
+        document.getElementById('cat-item-name').value = item.name;
+        document.getElementById('cat-item-icon').value = item.icon;
+        document.getElementById('cat-item-category').value = item.category;
+        document.getElementById('cat-item-salerule').value = item.saleRule;
+        document.getElementById('cat-item-price').value = item.price;
+        document.getElementById('cat-item-cogs').value = item.cogs;
+        document.getElementById('cat-item-coldroom').value = item.coldRoom;
+        document.getElementById('cat-item-cooler').value = item.cooler;
+
+        (item.allowedPairings || []).forEach(pKey => {
+          const cb = document.getElementById(`pair-opt-${pKey}`);
+          if (cb) cb.checked = true;
+        });
+
+        if (delBtn) delBtn.classList.remove('hidden');
+      } else {
+        title.textContent = '+ Add New Catalog Product';
+        form.reset();
+        document.getElementById('cat-item-id').value = '';
+        if (delBtn) delBtn.classList.add('hidden');
+      }
+
+      updateCatalogModalLiveCalc();
+      modal.classList.remove('hidden');
+    }
+
+    function updateCatalogModalLiveCalc() {
+      const priceInput = document.getElementById('cat-item-price');
+      const cogsInput = document.getElementById('cat-item-cogs');
+      const profitEl = document.getElementById('modal-calc-unit-profit');
+      const marginEl = document.getElementById('modal-calc-margin');
+      const markupEl = document.getElementById('modal-calc-markup');
+
+      if (!priceInput || !cogsInput || !profitEl || !marginEl || !markupEl) return;
+
+      const price = parseFloat(priceInput.value) || 0;
+      const cogs = parseFloat(cogsInput.value) || 0;
+      const profit = price - cogs;
+      const margin = price > 0 ? (profit / price) * 100 : 0;
+      const markup = cogs > 0 ? (profit / cogs) * 100 : 0;
+
+      profitEl.textContent = `R ${profit.toFixed(2)}`;
+      profitEl.style.color = profit >= 0 ? '#34d399' : '#fb7185';
+      marginEl.textContent = `${margin.toFixed(1)}%`;
+      markupEl.textContent = `${markup.toFixed(1)}%`;
+    }
+
+    function closeCatalogModal() {
+      const modal = document.getElementById('modal-catalog-editor');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveCatalogItem(e) {
+      e.preventDefault();
+      const existingId = document.getElementById('cat-item-id').value;
+      const name = document.getElementById('cat-item-name').value.trim();
+      const id = existingId || ('prod_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString(36).substr(2, 3));
+
+      const pairings = [];
+      document.querySelectorAll('#cat-pairings-checkboxes input[type="checkbox"]:checked').forEach(cb => {
+        pairings.push(cb.value);
+      });
+
+      productCatalog[id] = {
+        id: id,
+        name: name,
+        icon: document.getElementById('cat-item-icon').value.trim() || '🌭',
+        category: document.getElementById('cat-item-category').value,
+        saleRule: document.getElementById('cat-item-salerule').value,
+        price: parseFloat(document.getElementById('cat-item-price').value) || 0,
+        cogs: parseFloat(document.getElementById('cat-item-cogs').value) || 0,
+        coldRoom: parseInt(document.getElementById('cat-item-coldroom').value) || 0,
+        cooler: parseInt(document.getElementById('cat-item-cooler').value) || 0,
+        sold: (productCatalog[id] && productCatalog[id].sold) || 0,
+        allowedPairings: pairings
+      };
+
+      closeCatalogModal();
+      renderAllViews();
+    }
+
+    function deleteCatalogItemAction() {
+      const id = document.getElementById('cat-item-id').value;
+      if (id && productCatalog[id]) {
+        delete productCatalog[id];
+        closeCatalogModal();
+        renderAllViews();
+      }
+    }
+
+    // Stations CRUD
+    function openStationModal(stationId = null) {
+      const modal = document.getElementById('modal-station-editor');
+      const form = document.getElementById('form-station');
+      const title = document.getElementById('modal-station-title');
+      const delBtn = document.getElementById('btn-delete-station');
+      if (!modal || !form) return;
+
+      if (stationId) {
+        const st = registeredStations.find(s => s.id === stationId);
+        if (st) {
+          title.textContent = `Edit Station: ${st.name}`;
+          document.getElementById('st-edit-id').value = st.id;
+          document.getElementById('st-name').value = st.name;
+          document.getElementById('st-icon').value = st.icon;
+          document.getElementById('st-key').value = st.id;
+          document.getElementById('st-role').value = st.role;
+          if (delBtn) delBtn.classList.remove('hidden');
+        }
+      } else {
+        title.textContent = '+ Add New Station';
+        form.reset();
+        document.getElementById('st-edit-id').value = '';
+        if (delBtn) delBtn.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeStationModal() {
+      const modal = document.getElementById('modal-station-editor');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveStationForm(e) {
+      e.preventDefault();
+      const origId = document.getElementById('st-edit-id').value;
+      const key = document.getElementById('st-key').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+      const name = document.getElementById('st-name').value.trim();
+      const icon = document.getElementById('st-icon').value.trim() || '🖥️';
+      const role = document.getElementById('st-role').value.trim();
+
+      const existingIdx = registeredStations.findIndex(s => s.id === origId || s.id === key);
+      const newSt = { id: key, name, icon, role };
+
+      if (existingIdx !== -1) {
+        registeredStations[existingIdx] = newSt;
+      } else {
+        registeredStations.push(newSt);
+      }
+
+      closeStationModal();
+      populateStationDropdown();
+      renderAllViews();
+    }
+
+    function deleteStationAction() {
+      const origId = document.getElementById('st-edit-id').value;
+      if (origId && registeredStations.length > 1) {
+        registeredStations = registeredStations.filter(s => s.id !== origId);
+        closeStationModal();
+        populateStationDropdown();
+        renderAllViews();
+      }
+    }
+
+    // Staff & Crew CRUD
+    function openStaffModal(staffId = null) {
+      const modal = document.getElementById('modal-staff-editor');
+      const form = document.getElementById('form-staff');
+      const title = document.getElementById('modal-staff-title');
+      const delBtn = document.getElementById('btn-delete-staff');
+      const selStation = document.getElementById('staff-station-binding');
+      if (!modal || !form) return;
+
+      selStation.innerHTML = `<option value="">All Stations Access</option>` + registeredStations.map(s => `
+        <option value="${s.id}">${s.icon} ${s.name}</option>
+      `).join('');
+
+      if (staffId) {
+        const staff = staffRoster.find(s => s.id === staffId);
+        if (staff) {
+          title.textContent = `Edit Crew Member: ${staff.name}`;
+          document.getElementById('staff-edit-id').value = staff.id;
+          document.getElementById('staff-name').value = staff.name;
+          document.getElementById('staff-role').value = staff.role;
+          document.getElementById('staff-pin').value = staff.pin || '';
+          selStation.value = staff.station || '';
+          if (delBtn) delBtn.classList.remove('hidden');
+        }
+      } else {
+        title.textContent = '+ Add Crew Member';
+        form.reset();
+        document.getElementById('staff-edit-id').value = '';
+        if (delBtn) delBtn.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeStaffModal() {
+      const modal = document.getElementById('modal-staff-editor');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveStaffForm(e) {
+      e.preventDefault();
+      const editId = document.getElementById('staff-edit-id').value;
+      const name = document.getElementById('staff-name').value.trim();
+      const role = document.getElementById('staff-role').value.trim();
+      const pin = document.getElementById('staff-pin').value.trim();
+      const station = document.getElementById('staff-station-binding').value;
+
+      if (editId) {
+        const member = staffRoster.find(s => s.id === editId);
+        if (member) {
+          member.name = name;
+          member.role = role;
+          member.pin = pin;
+          member.station = station;
+        }
+      } else {
+        const newMember = {
+          id: 'stf_' + Date.now().toString(36),
+          name: name,
+          role: role,
+          pin: pin,
+          station: station
+        };
+        staffRoster.push(newMember);
+      }
+
+      closeStaffModal();
+      renderAllViews();
+    }
+
+    function deleteStaffMemberAction() {
+      const editId = document.getElementById('staff-edit-id').value;
+      if (editId && staffRoster.length > 1) {
+        staffRoster = staffRoster.filter(s => s.id !== editId);
+        closeStaffModal();
+        renderAllViews();
+      }
+    }
+
+    // ==========================================================================
+    // DUAL-STATION RESTOCK CONTROLS (MAIN ➔ LOCAL)
+    // ==========================================================================
     function openMasterRestockModal() {
       const modal = document.getElementById('modal-master-restock');
       const list = document.getElementById('restock-transfer-list');
@@ -1269,12 +2173,13 @@
           <div>
             <div style="font-weight: 700; font-size: 12px;">${p.icon} ${p.name}</div>
             <div class="font-mono" style="font-size: 11px; color: #94a3b8;">
-              Main: <strong style="color: #38bdf8;">${p.coldRoom}</strong> ➔ Cooler: <strong style="color: #34d399;">${p.cooler}</strong>
+              Main Depot: <strong style="color: #38bdf8;">${p.coldRoom}</strong> ➔ Local Cooler: <strong style="color: #34d399;">${p.cooler}</strong>
             </div>
           </div>
           <div class="flex gap-1 font-mono">
             <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm">+10</button>
             <button onclick="transferMainToLocal('${p.id}', 25)" class="btn btn-dark btn-sm">+25</button>
+            <button onclick="transferMainToLocal('${p.id}', 50)" class="btn btn-dark btn-sm">+50</button>
           </div>
         </div>
       `).join('');
@@ -1295,6 +2200,9 @@
       renderAllViews();
     }
 
+    // ==========================================================================
+    // CLOSEOUT Z-REPORT & DATABASE EXPORT
+    // ==========================================================================
     function openZReportModal() {
       const modal = document.getElementById('modal-z-report');
       const content = document.getElementById('z-report-content');
@@ -1323,7 +2231,7 @@
       content.innerHTML = `
         <div style="text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
           <strong style="color: #fbbf24;">GERMAN CLUB OKTOBERFEST 2026</strong>
-          <div style="color: #94a3b8; font-size: 10px;">Official Day Closeout Z-Report</div>
+          <div style="color: #94a3b8; font-size: 10px;">Official Day Closeout Z-Report ${isTrialMode ? '(🧪 TRIAL MODE)' : ''}</div>
         </div>
         <div class="flex justify-between"><span>Orders Completed:</span><strong>${orders.length}</strong></div>
         <div class="flex justify-between"><span>Sausages Sold:</span><strong style="color:#fbbf24;">${sausages}</strong></div>
@@ -1345,8 +2253,11 @@
     function exportEventDataJSON() {
       const data = {
         exportDate: new Date().toISOString(),
+        isTrialMode,
         productCatalog,
         orders,
+        registeredStations,
+        staffRoster,
         prepBuffer,
         grillingNow,
         rollBuffer,
@@ -1356,59 +2267,47 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Oktoberfest_Backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `Oktoberfest_${isTrialMode ? 'TRIAL_' : ''}Backup_${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
 
-    function seedSamplePresetData() {
-      productCatalog = JSON.parse(JSON.stringify(samplePresetCatalog));
-      orders = [];
-      orderSequenceNumber = 101;
-      prepBuffer = {};
-      grillingNow = {};
-      rollBuffer = { roll_crusty: 0, roll_white: 0 };
-      trayBuffer = { curry_tray: 0 };
-      renderAllViews();
-    }
-
-    function registerMasterUser() {
-      const nameInput = document.getElementById('setup-master-name');
-      const pinInput = document.getElementById('setup-master-pin');
-      const name = (nameInput && nameInput.value.trim()) || 'Master';
-      const pin = (pinInput && pinInput.value.trim()) || '1978';
-
-      masterUser = { id: 'master', name: `${name} (Master)`, role: 'Master Admin', station: 'manager', pin: pin };
-      staffRoster = [masterUser];
-      currentStaffUser = masterUser;
-
-      document.getElementById('current-user-name').textContent = masterUser.name;
-      const setupModal = document.getElementById('modal-master-setup');
-      if (setupModal) setupModal.classList.add('hidden');
-      renderAllViews();
-    }
-
-    function seedAndRegisterMaster() {
-      registerMasterUser();
-      seedSamplePresetData();
-    }
-
+    // ==========================================================================
+    // AUTHENTICATION & STATION LOGIN
+    // ==========================================================================
     function openLoginModal() {
-      if (!masterUser && staffRoster.length === 0) {
-        const setupModal = document.getElementById('modal-master-setup');
-        if (setupModal) setupModal.classList.remove('hidden');
-        return;
-      }
       const modal = document.getElementById('modal-login');
       const sel = document.getElementById('login-staff-select');
+      const selStation = document.getElementById('login-station-target');
       const pinInput = document.getElementById('login-staff-pin');
+      const errMsg = document.getElementById('login-error-msg');
       if (pinInput) pinInput.value = '';
+      if (errMsg) errMsg.classList.add('hidden');
 
-      if (modal && sel) {
+      if (modal && sel && selStation) {
         sel.innerHTML = staffRoster.map(s => `<option value="${s.id}">${s.name} (${s.role})</option>`).join('');
+        sel.value = currentStaffUser ? currentStaffUser.id : staffRoster[0].id;
+        
+        selStation.innerHTML = registeredStations.map(st => `<option value="${st.id}">${st.icon} ${st.name}</option>`).join('');
+        const user = staffRoster.find(x => x.id === sel.value);
+        if (user && user.station) {
+          selStation.value = user.station;
+        } else {
+          selStation.value = currentStation;
+        }
+
         modal.classList.remove('hidden');
+      }
+    }
+
+    function onLoginUserSelectChange() {
+      const sel = document.getElementById('login-staff-select');
+      const selStation = document.getElementById('login-station-target');
+      const user = staffRoster.find(x => x.id === sel.value);
+      if (user && user.station && selStation) {
+        selStation.value = user.station;
       }
     }
 
@@ -1419,18 +2318,43 @@
 
     function confirmCrewLogin() {
       const sel = document.getElementById('login-staff-select');
+      const selStation = document.getElementById('login-station-target');
       const pinInput = document.getElementById('login-staff-pin');
+      const errMsg = document.getElementById('login-error-msg');
       const s = staffRoster.find(x => x.id === sel.value);
+
       if (s) {
-        if (s.pin && pinInput && pinInput.value !== s.pin) {
+        if (s.pin && pinInput && pinInput.value.trim() !== s.pin) {
+          if (errMsg) errMsg.classList.remove('hidden');
           pinInput.style.borderColor = '#fb7185';
           return;
         }
         currentStaffUser = s;
         document.getElementById('current-user-name').textContent = s.name;
-        if (s.station && s.station !== 'all') switchStationView(s.station);
+        if (selStation && selStation.value) {
+          switchStationView(selStation.value);
+        }
       }
       closeLoginModal();
+    }
+
+    function openInfoModal() {
+      const modal = document.getElementById('modal-info-guide');
+      const list = document.getElementById('info-shifts-roster-list');
+      if (modal && list) {
+        list.innerHTML = staffRoster.map(s => `
+          <div class="flex items-center justify-between" style="background:#0f172a; padding:4px 8px; border-radius:4px;">
+            <span><strong>${s.name}</strong> (${s.role})</span>
+            <span style="color:#fbbf24;">${s.station.toUpperCase()} | ${s.shift || '16:00 - 24:00'}</span>
+          </div>
+        `).join('');
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeInfoModal() {
+      const modal = document.getElementById('modal-info-guide');
+      if (modal) modal.classList.add('hidden');
     }
 
     function formatRollDisplay(rollKey) {
@@ -1438,16 +2362,19 @@
       if (rollKey === 'roll_white') return '🌭 White';
       if (rollKey === 'curry_tray') return '🍛 Curry Boat';
       if (rollKey === 'serviette') return '🧻 Serviette';
-      return 'Direct Serve';
+      return 'Direct Plate';
     }
 
+    // ==========================================================================
+    // BOOTSTRAP INITIALIZATION
+    // ==========================================================================
     function initBootstrap() {
       startLiveClock();
+      populateStationDropdown();
       renderAllViews();
-      if (!masterUser && staffRoster.length === 0) {
-        const setupModal = document.getElementById('modal-master-setup');
-        if (setupModal) setupModal.classList.remove('hidden');
-      }
+
+      // Show station sign-in on first load
+      openLoginModal();
     }
 
     if (document.readyState === 'loading') {
