@@ -1,605 +1,1308 @@
-<!-- Station Selector Dropdown -->
-  <div class="relative ml-2 sm:ml-4">
-    <select id="station-nav-select" onchange="switchStationView(this.value)" class="bg-slate-800 border border-slate-700 hover:border-amber-500/60 text-amber-300 font-bold text-xs sm:text-sm rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 transition cursor-pointer">
-      <option value="till">💵 Till POS</option>
-      <option value="braai">🔥 Braai Master</option>
-      <option value="handout">🥖 Handout & Assembly</option>
-      <option value="dual">🖥️ Dual View (Braai+Handout)</option>
-      <option value="manager">👑 Manager Hub</option>
-    </select>
-  </div>
-</div>
+<!-- ... existing code ... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Oktoberfest KDS & Management Hub</title>
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    button, input, select { font-family: inherit; font-size: inherit; }
+    
+    /* Layout Elements */
+    header {
+      background-color: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-shrink: 0;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      max-width: 1800px;
+      width: 100%;
+      margin: 0 auto;
+      gap: 12px;
+    }
+    
+    /* Utility Classes */
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 4px; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .grid { display: grid; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-5 { grid-template-columns: repeat(5, 1fr); }
 
-<!-- Active Staff & Master Auth Badge -->
-<div class="flex items-center gap-2">
-  <div id="active-staff-badge" class="hidden sm:flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 px-2.5 py-1 rounded-full text-xs">
-    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-    <span class="text-slate-300 font-medium" id="current-user-name">Not Signed In</span>
-  </div>
+    @media (max-width: 900px) {
+      .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .layout-till { flex-direction: column !important; }
+      .cart-drawer { width: 100% !important; min-width: 100% !important; }
+    }
+    @media (max-width: 600px) {
+      .grid-2, .grid-4 { grid-template-columns: 1fr; }
+    }
 
-  <button type="button" onclick="openLoginModal()" id="btn-header-auth" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition flex items-center gap-1 cursor-pointer">
-    <span>👤</span>
-    <span id="btn-auth-label">Sign In</span>
-  </button>
-</div>
+    /* Cards & Panels */
+    .card {
+      background-color: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+    .card-tile {
+      background-color: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 120px;
+    }
+    .card-tile:hover {
+      border-color: #f59e0b;
+      transform: translateY(-2px);
+    }
+    .card-tile:active {
+      transform: scale(0.98);
+    }
 
+    /* Typography & Badges */
+    .title-gold {
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #fbbf24;
+    }
+    .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-rose { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .badge-sky { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
 
-<!-- 1. TILL POS STATION VIEW -->
-<section id="view-till" class="flex-1 flex flex-col lg:flex-row gap-3 min-h-0">
-  <!-- Left: 4 Quadratic Sausage Cards & Extra Items -->
-  <div class="flex-1 flex flex-col gap-3 min-h-0 overflow-y-auto pr-1">
-    <!-- Top Banner / Queue stats -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-xs">
-      <div class="flex items-center gap-2">
-        <span class="text-amber-400 font-bold">Fast POS Register</span>
-        <span class="text-slate-500">•</span>
-        <span class="text-slate-400">Tap sausages to add, select roll choice below</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button type="button" onclick="openTillLiveOrdersModal('processing')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono text-[11px] border border-slate-700 cursor-pointer">
-          ⏳ Queue: <strong id="till-counter-processing">0</strong>
-        </button>
-        <button type="button" onclick="openTillLiveOrdersModal('delivered')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 font-mono text-[11px] border border-slate-700 cursor-pointer">
-          ✅ Delivered: <strong id="till-counter-delivered">0</strong>
-        </button>
-      </div>
-    </div>
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-gold { background: #f59e0b; color: #020617; }
+    .btn-gold:hover { background: #d97706; }
+    .btn-dark { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    .btn-dark:hover { background: #334155; }
+    .btn-emerald { background: #059669; color: #ffffff; }
+    .btn-emerald:hover { background: #10b981; }
+    .btn-rose { background: rgba(225, 29, 72, 0.2); color: #fb7185; border-color: rgba(225, 29, 72, 0.4); }
+    .btn-rose:hover { background: rgba(225, 29, 72, 0.3); }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    <!-- 4 Quadratic Sausage Tiles Grid -->
-    <div id="pos-sausage-grid" class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-2.5 sm:gap-3">
-      <!-- Dynamically populated via renderTillStation() -->
-    </div>
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+    .modal-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .input-field {
+      width: 100%;
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #ffffff;
+      outline: none;
+    }
+    .input-field:focus { border-color: #f59e0b; }
+    
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th { background: #020617; padding: 8px 10px; color: #94a3b8; font-weight: 700; border-bottom: 1px solid #1e293b; }
+    td { padding: 8px 10px; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
+  </style>
+</head>
+<body>
 
-    <!-- Standalone / Extra Buns Bar (Strictly filter out combo-only items) -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-col gap-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Extra Add-ons / Standalone Rolls</span>
-        <span class="text-[10px] text-slate-500 font-mono">Combo-only rolls are excluded</span>
-      </div>
-      <div id="pos-standalone-rolls-bar" class="flex flex-wrap gap-2">
-        <!-- Dynamically populated -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Right: Cart & Fast Checkout Drawer -->
-  <div class="w-full lg:w-96 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-2xl">
-    <div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
-      <div class="flex items-center gap-2">
-        <span class="text-base">🛒</span>
-        <h2 class="font-bold text-sm text-white">Active Order Cart</h2>
-      </div>
-      <button type="button" onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold px-2 py-0.5 rounded hover:bg-rose-500/10 transition cursor-pointer">
-        Clear
-      </button>
-    </div>
-
-    <!-- Cart Items List -->
-    <div id="pos-cart-items" class="flex-1 overflow-y-auto p-2.5 space-y-2 min-h-[220px]">
-      <!-- Cart rows populated dynamically -->
-    </div>
-
-    <!-- Cart Total & Fast Pay Buttons -->
-    <div class="p-3 border-t border-slate-800 bg-slate-950/80 space-y-2.5">
-      <div class="flex items-center justify-between">
-        <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Due</span>
-        <span class="text-2xl font-black text-amber-400 font-mono" id="pos-cart-total">R 0.00</span>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" onclick="checkoutCurrentCart('CASH')" id="btn-pay-cash" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm tracking-wide shadow-lg shadow-emerald-900/30 transition flex flex-col items-center justify-center cursor-pointer">
-          <span>💵 CASH</span>
-          <span class="text-[10px] font-normal opacity-80">Instant Ticket</span>
-        </button>
-        <button type="button" onclick="checkoutCurrentCart('YOCO')" id="btn-pay-yoco" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-black text-sm tracking-wide shadow-lg shadow-sky-900/30 transition flex flex-col items-center justify-center cursor-pointer">
-          <span>💳 YOCO / CARD</span>
-          <span class="text-[10px] font-normal opacity-80">Tap & Pay</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 2. BRAAI MASTER GRILL STATION VIEW -->
-<section id="view-braai" class="hidden flex-1 flex flex-col gap-3 min-h-0 overflow-y-auto">
-  <!-- Braai Header & Restock Bar -->
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+  <!-- HEADER & STATION NAV -->
+  <header>
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-xl">
-        🔥
-      </div>
+      <span style="font-size: 24px;">🍺</span>
       <div>
-        <h2 class="font-black text-sm sm:text-base text-white tracking-wide">BRAAI MASTER GRILL DECK</h2>
-        <p class="text-xs text-slate-400">Flow: Storage Cooler ➔ On Braai ➔ Precooked Buffer ➔ Handout</p>
+        <div class="title-gold" style="font-size: 15px;">OKTOBERFEST KDS</div>
+        <div class="font-mono" style="font-size: 10px; color: #94a3b8;" id="app-clock">12:00:00</div>
+      </div>
+      <div style="margin-left: 12px;">
+        <select id="station-nav-select" onchange="switchStationView(this.value)" class="input-field font-mono" style="padding: 4px 8px; font-size: 12px; color: #fde68a; cursor: pointer; width: auto;">
+          <option value="till">💵 Till POS</option>
+          <option value="braai">🔥 Braai Master</option>
+          <option value="handout">🥖 Handout & Assembly</option>
+          <option value="dual">🖥️ Dual Monitor</option>
+          <option value="manager">👑 Manager Hub</option>
+        </select>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
-      <!-- Direct Transfer from Main Storage (Accessible by Braai & Master) -->
-      <button type="button" onclick="openMasterRestockModal()" id="btn-braai-master-restock" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-amber-500/20">
-        <span>📦</span>
-        <span>Restock from Main Storage</span>
-      </button>
-      <div class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-mono text-slate-300">
-        Pending Orders: <strong class="text-amber-400" id="braai-stat-orders-waiting">0</strong>
+      <div class="badge badge-emerald" id="auth-status-badge">
+        <span style="width:6px; height:6px; background:#10b981; border-radius:50%; display:inline-block;"></span>
+        <span id="current-user-name">Not Signed In</span>
       </div>
+      <button onclick="openLoginModal()" class="btn btn-dark btn-sm">Switch User</button>
     </div>
-  </div>
+  </header>
 
-  <!-- Sausage Deck Cards -->
-  <div id="braai-sausage-deck" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-    <!-- Dynamically rendered via renderBraaiStation() -->
-  </div>
-</section>
+  <!-- MAIN VIEWPORTS -->
+  <main id="app-main-container">
 
-<!-- 3. HANDOUT & ASSEMBLY STATION VIEW -->
-<section id="view-handout" class="hidden flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
-  <!-- Top Overview Grid (Enlarged) -->
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col gap-2.5 shadow-lg">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🥖</span>
-        <h2 class="font-black text-sm sm:text-base text-white">HANDOUT & PLATING DEMAND OVERVIEW</h2>
-      </div>
-      <span class="text-xs text-slate-400 font-mono">Live Sync</span>
-    </div>
-
-    <!-- Requirements Matrix -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 text-xs" id="handout-overview-metrics">
-      <!-- Dynamically populated via renderHandoutStation() -->
-    </div>
-
-    <!-- Bread Slicing & Curry Boat Staging Bar (+1 / +5 / Undo) -->
-    <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2 text-xs font-bold text-slate-300">
-        <span>⚡ Buffer Prep:</span>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2 text-xs">
-        <!-- Crispy Rolls -->
-        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
-          <span class="text-amber-400 font-semibold">🥖 Crispy:</span>
-          <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
-          <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
-          <button type="button" onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 roll">↩</button>
+    <!-- 1. TILL POS STATION -->
+    <section id="view-till" class="flex gap-3 layout-till" style="flex: 1; min-height: 0;">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; min-height: 0;">
+        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
+          <div style="font-size: 12px; color: #94a3b8;">
+            <strong style="color: #fbbf24;">4 Fast Touch Tiles:</strong> Tap sausage to add to cart, choose roll below
+          </div>
+          <div class="flex gap-2 font-mono" style="font-size: 11px;">
+            <span class="badge badge-amber">Waiting: <strong id="till-counter-processing">0</strong></span>
+            <span class="badge badge-emerald">Done: <strong id="till-counter-delivered">0</strong></span>
+          </div>
         </div>
 
-        <!-- White Hot Dog Rolls -->
-        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
-          <span class="text-sky-400 font-semibold">🌭 White:</span>
-          <button type="button" onclick="sliceRollsForBuffer('roll_white', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
-          <button type="button" onclick="sliceRollsForBuffer('roll_white', 5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
-          <button type="button" onclick="revertSlicedRollBuffer('roll_white', 1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 roll">↩</button>
-        </div>
+        <!-- 4 Sausage Tiles Grid -->
+        <div id="pos-sausage-grid" class="grid grid-4 gap-3"></div>
 
-        <!-- Currywurst Trays Only -->
-        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
-          <span class="text-yellow-400 font-semibold">🍛 Curry Trays:</span>
-          <button type="button" onclick="prepCurryTraysBuffer(1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
-          <button type="button" onclick="prepCurryTraysBuffer(5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
-          <button type="button" onclick="revertCurryTraysBuffer(1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 tray">↩</button>
+        <!-- Standalone Rolls (Excludes Combo-Only) -->
+        <div class="card flex flex-col gap-2">
+          <div class="flex items-center justify-between" style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">
+            <span>Extra Add-ons / Standalone Rolls</span>
+            <span style="color: #64748b;">(Combo-only rolls are excluded from solo sale)</span>
+          </div>
+          <div id="pos-standalone-rolls-bar" class="flex gap-2" style="flex-wrap: wrap;"></div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Live Order Tickets Queue -->
-  <div class="flex-1 overflow-y-auto">
-    <div id="handout-orders-queue" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-      <!-- Dynamically populated order tickets -->
-    </div>
-  </div>
-</section>
+      <!-- Cart Drawer -->
+      <div class="card cart-drawer flex flex-col" style="width: 380px; min-width: 320px; padding: 14px; justify-content: space-between;">
+        <div>
+          <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+            <div class="title-gold" style="font-size: 13px;">🛒 Current Order</div>
+            <button onclick="clearCart()" style="background: none; border: none; color: #fb7185; font-size: 11px; cursor: pointer;">Clear Cart</button>
+          </div>
+          <div id="pos-cart-items" style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;"></div>
+        </div>
 
-<!-- 4. DUAL VIEW (BRAAI + HANDOUT SPLIT) -->
-<section id="view-dual" class="hidden flex-1 flex flex-col lg:flex-row gap-3 min-h-0 overflow-hidden">
-  <!-- Left: Compact Braai View -->
-  <div class="flex-1 flex flex-col gap-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-2.5 overflow-y-auto min-h-0">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-      <span class="font-bold text-xs text-rose-400 flex items-center gap-1.5">🔥 Braai Quick Monitor</span>
-      <button type="button" onclick="openMasterRestockModal()" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded cursor-pointer">📦 Restock</button>
-    </div>
-    <div id="dual-braai-deck" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
-
-  <!-- Right: Compact Handout Queue -->
-  <div class="flex-1 flex flex-col gap-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-2.5 overflow-hidden min-h-0">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-      <span class="font-bold text-xs text-emerald-400 flex items-center gap-1.5">🥖 Handout Active Queue</span>
-      <span class="text-[10px] text-slate-400 font-mono" id="dual-handout-badge-count">0 tickets</span>
-    </div>
-    <div id="dual-handout-queue" class="flex-1 overflow-y-auto space-y-2 pr-1">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
-</section>
-
-<!-- 5. MANAGER HUB VIEW -->
-<section id="view-manager" class="hidden flex-1 overflow-y-auto pr-1 space-y-4 pb-8">
-  <!-- Master Control Banner -->
-  <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/30 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xl">
-    <div class="flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl">
-        👑
+        <div style="border-top: 1px solid #1e293b; padding-top: 12px; margin-top: 12px;">
+          <div class="flex items-center justify-between" style="margin-bottom: 12px;">
+            <span style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Total Due</span>
+            <span class="font-mono title-gold" style="font-size: 26px;" id="pos-cart-total">R 0.00</span>
+          </div>
+          <div class="grid grid-2 gap-2">
+            <button onclick="checkoutCurrentCart('CASH')" class="btn btn-emerald" style="padding: 12px; font-size: 14px;">💵 CASH</button>
+            <button onclick="checkoutCurrentCart('YOCO')" class="btn btn-gold" style="padding: 12px; font-size: 14px;">💳 YOCO / CARD</button>
+          </div>
+        </div>
       </div>
-      <div>
-        <h2 class="font-black text-base text-white">MASTER EVENT MANAGEMENT HUB</h2>
-        <p class="text-xs text-slate-300">Catalog, Pricing, Station Registry, Staff Roster & End-of-Day Closeout</p>
-      </div>
-    </div>
+    </section>
 
-    <div class="flex flex-wrap items-center gap-2 text-xs">
-      <button type="button" onclick="openMasterRestockModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center gap-1 cursor-pointer">
-        <span>📦</span>
-        <span>Transfer Main ➔ Local</span>
-      </button>
-      <button type="button" onclick="openZReportModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 font-semibold transition flex items-center gap-1 cursor-pointer">
-        <span>📊</span>
-        <span>Z-Report Closeout</span>
-      </button>
-      <button type="button" onclick="exportEventDataJSON()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/30 font-semibold transition flex items-center gap-1 cursor-pointer">
-        <span>💾</span>
-        <span>Export Backup</span>
-      </button>
-      <button type="button" onclick="confirmResetEventYearData()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 font-semibold transition flex items-center gap-1 cursor-pointer">
-        <span>⚠️</span>
-        <span>Reset Event Data</span>
-      </button>
+    <!-- 2. BRAAI MASTER GRILL DECK -->
+    <section id="view-braai" class="hidden flex flex-col gap-3">
+      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 10px;">
+        <div class="flex items-center gap-3">
+          <span style="font-size: 28px;">🔥</span>
+          <div>
+            <div class="title-gold" style="font-size: 14px;">BRAAI MASTER GRILL DECK</div>
+            <div style="font-size: 11px; color: #94a3b8;">Flow: Storage Cooler ➔ On Braai ➔ Precooked Buffer ➔ Handout</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Restock from Main Storage</button>
+          <span class="badge badge-amber font-mono">Tickets Waiting: <strong id="braai-stat-orders-waiting">0</strong></span>
+        </div>
+      </div>
+
+      <div id="braai-sausage-deck" class="grid grid-4 gap-3"></div>
+    </section>
+
+    <!-- 3. HANDOUT & ASSEMBLY STATION -->
+    <section id="view-handout" class="hidden flex flex-col gap-3">
+      <div class="card flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div class="title-gold" style="font-size: 14px;">🥖 Handout & Assembly Overview</div>
+          <div class="badge badge-sky font-mono">Live Sync</div>
+        </div>
+
+        <div id="handout-overview-metrics" class="grid grid-5 gap-2"></div>
+
+        <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 12px; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 12px; font-weight: 700; color: #94a3b8;">⚡ Slicing & Tray Prep Buffer:</span>
+          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
+            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+              <span style="color:#fbbf24;">🥖 Crispy:</span>
+              <button onclick="sliceRollsForBuffer('roll_crusty', 1)" class="btn btn-dark btn-sm">+1</button>
+              <button onclick="sliceRollsForBuffer('roll_crusty', 5)" class="btn btn-dark btn-sm">+5</button>
+              <button onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="btn btn-rose btn-sm">↩</button>
+            </div>
+            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+              <span style="color:#38bdf8;">🌭 White:</span>
+              <button onclick="sliceRollsForBuffer('roll_white', 1)" class="btn btn-dark btn-sm">+1</button>
+              <button onclick="sliceRollsForBuffer('roll_white', 5)" class="btn btn-dark btn-sm">+5</button>
+              <button onclick="revertSlicedRollBuffer('roll_white', 1)" class="btn btn-rose btn-sm">↩</button>
+            </div>
+            <div class="flex items-center gap-1 font-mono" style="font-size: 11px;">
+              <span style="color:#fde047;">🍛 Curry Boats:</span>
+              <button onclick="prepCurryTraysBuffer(1)" class="btn btn-dark btn-sm">+1</button>
+              <button onclick="prepCurryTraysBuffer(5)" class="btn btn-dark btn-sm">+5</button>
+              <button onclick="revertCurryTraysBuffer(1)" class="btn btn-rose btn-sm">↩</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="handout-orders-queue" class="grid grid-3 gap-3"></div>
+    </section>
+
+    <!-- 4. DUAL VIEW (BRAAI + HANDOUT SPLIT) -->
+    <section id="view-dual" class="hidden flex gap-3 layout-till">
+      <div class="card flex flex-col gap-2" style="flex: 1;">
+        <div class="title-gold" style="font-size: 13px;">🔥 Braai Quick Monitor</div>
+        <div id="dual-braai-deck" class="grid grid-2 gap-2"></div>
+      </div>
+      <div class="card flex flex-col gap-2" style="flex: 1;">
+        <div class="title-gold" style="font-size: 13px;">🥖 Handout Queue</div>
+        <div id="dual-handout-queue" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+    </section>
+
+    <!-- 5. MANAGER HUB VIEW -->
+    <section id="view-manager" class="hidden flex flex-col gap-4">
+      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 10px; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border-color: rgba(245, 158, 11, 0.4);">
+        <div class="flex items-center gap-3">
+          <span style="font-size: 28px;">👑</span>
+          <div>
+            <div class="title-gold" style="font-size: 15px;">Oktoberfest Manager Hub</div>
+            <div style="font-size: 11px; color: #cbd5e1;">Live Financials, Depots, Pairings & End-of-Day Closeout</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+          <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Transfer Main ➔ Local</button>
+          <button onclick="openZReportModal()" class="btn btn-dark btn-sm">📊 Z-Report Closeout</button>
+          <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Export Backup</button>
+          <button onclick="seedSamplePresetData()" class="btn btn-dark btn-sm">🔄 Load Oktoberfest Preset</button>
+        </div>
+      </div>
+
+      <!-- Financial Metric Cards -->
+      <div class="grid grid-4 gap-3">
+        <div class="card">
+          <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Gross Turnover</div>
+          <div class="font-mono title-gold" style="font-size: 24px; margin-top: 4px;" id="mgr-stat-turnover">R 0.00</div>
+          <div style="font-size: 10px; color: #64748b;" id="mgr-stat-payment-split">Cash: R0 • Yoco: R0</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Food COGS</div>
+          <div class="font-mono" style="font-size: 24px; color: #fb7185; margin-top: 4px; font-weight: 900;" id="mgr-stat-cogs">R 0.00</div>
+          <div style="font-size: 10px; color: #64748b;">Wholesale cost of goods sold</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Gross Profit</div>
+          <div class="font-mono" style="font-size: 24px; color: #34d399; margin-top: 4px; font-weight: 900;" id="mgr-stat-profit">R 0.00</div>
+          <div style="font-size: 10px; color: #64748b;" id="mgr-stat-margin-pct">Margin: 0.0%</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Sausages Sold</div>
+          <div class="font-mono" style="font-size: 24px; color: #ffffff; margin-top: 4px; font-weight: 900;" id="mgr-stat-sold-count">0</div>
+          <div style="font-size: 10px; color: #64748b;" id="mgr-stat-orders-count">0 orders total</div>
+        </div>
+      </div>
+
+      <!-- Catalog Table -->
+      <div class="card flex flex-col gap-2">
+        <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+          <div class="title-gold" style="font-size: 13px;">🌭 Catalog, Stock & Pairings</div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Selling Price</th>
+                <th>COGS</th>
+                <th>Main Stock</th>
+                <th>Local Cooler</th>
+                <th>Sold</th>
+                <th>Sale Rule & Pairings</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="mgr-table-catalog" class="font-mono"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: FIRST-TIME MASTER SETUP -->
+  <div id="modal-master-setup" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="title-gold" style="font-size: 15px; border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        👑 First-Time Master Registration
+      </div>
+      <div style="font-size: 12px; color: #94a3b8;">
+        The system starts with clean zero counters and no pre-entered staff. Please register as Master to configure the festival.
+      </div>
+      <div class="flex flex-col gap-2">
+        <label style="font-size: 12px; color: #cbd5e1;">Master Name</label>
+        <input type="text" id="setup-master-name" class="input-field" placeholder="e.g. Nicolas">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label style="font-size: 12px; color: #cbd5e1;">Private 4-Digit Master PIN</label>
+        <input type="password" id="setup-master-pin" maxlength="4" class="input-field font-mono" placeholder="••••">
+      </div>
+      <div class="flex flex-col gap-2" style="margin-top: 8px;">
+        <button onclick="registerMasterUser()" class="btn btn-gold">Complete Master Registration</button>
+        <button onclick="seedAndRegisterMaster()" class="btn btn-dark btn-sm">Or Register & Seed Oktoberfest Preset</button>
+      </div>
     </div>
   </div>
 
-  <!-- Real-Time Financial & Volume Cards -->
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Gross Turnover</span>
-      <div class="text-xl sm:text-2xl font-black text-amber-400 font-mono mt-1" id="mgr-stat-turnover">R 0.00</div>
-      <span class="text-[10px] text-slate-500" id="mgr-stat-payment-split">Cash: R0 • Yoco: R0</span>
-    </div>
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Food COGS (Cost)</span>
-      <div class="text-xl sm:text-2xl font-black text-rose-400 font-mono mt-1" id="mgr-stat-cogs">R 0.00</div>
-      <span class="text-[10px] text-slate-500">Based on units sold</span>
-    </div>
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Gross Profit</span>
-      <div class="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-1" id="mgr-stat-profit">R 0.00</div>
-      <span class="text-[10px] text-slate-500" id="mgr-stat-margin-pct">Margin: 0.0%</span>
-    </div>
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Sausages Sold</span>
-      <div class="text-xl sm:text-2xl font-black text-white font-mono mt-1" id="mgr-stat-sold-count">0</div>
-      <span class="text-[10px] text-slate-500" id="mgr-stat-orders-count">0 total orders</span>
+  <!-- MODAL: RESTOCK (MAIN ➔ LOCAL) -->
+  <div id="modal-master-restock" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">📦 Restock: Main Storage ➔ Local Tent Cooler</div>
+        <button onclick="closeMasterRestockModal()" class="btn btn-dark btn-sm">✕</button>
+      </div>
+      <div id="restock-transfer-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      <div style="text-align: right; border-top: 1px solid #1e293b; padding-top: 8px;">
+        <button onclick="closeMasterRestockModal()" class="btn btn-dark">Done</button>
+      </div>
     </div>
   </div>
 
-  <!-- Section: Catalog, Stock, Pricing & Product Pairing Rules -->
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-      <div>
-        <h3 class="font-bold text-sm text-white">🌭 Catalog, Stock, Pricing & Product Pairing Rules</h3>
-        <p class="text-xs text-slate-400">Configure prices, unit COGS, depots, and companion bun pairing rules</p>
+  <!-- MODAL: Z-REPORT -->
+  <div id="modal-z-report" class="modal-backdrop hidden">
+    <div class="modal-box font-mono" style="font-size: 12px;">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">📊 Oktoberfest Closeout (Z-Report)</div>
+        <button onclick="closeZReportModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <button type="button" onclick="openAddStockModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
-        <span>+</span>
-        <span>Add Catalog Item</span>
-      </button>
+      <div id="z-report-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      <div class="flex items-center justify-between" style="border-top: 1px solid #1e293b; padding-top: 8px;">
+        <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Download JSON</button>
+        <button onclick="closeZReportModal()" class="btn btn-gold btn-sm">Close</button>
+      </div>
     </div>
+  </div>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs text-slate-300">
-        <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+  <!-- MODAL: SIGN IN / SWITCH USER -->
+  <div id="modal-login" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+        <div class="title-gold" style="font-size: 14px;">Station Sign-In</div>
+        <button onclick="closeLoginModal()" class="btn btn-dark btn-sm">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-size: 12px; color: #94a3b8;">Select Crew Member</label>
+        <select id="login-staff-select" class="input-field"></select>
+        <label style="font-size: 12px; color: #94a3b8; margin-top: 6px;">Enter PIN</label>
+        <input type="password" id="login-staff-pin" maxlength="4" class="input-field font-mono" placeholder="••••">
+        <button onclick="confirmCrewLogin()" class="btn btn-gold" style="margin-top: 8px;">Confirm Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPT ENGINE -->
+  <script>
+    const samplePresetCatalog = {
+      bratwurst: {
+        id: 'bratwurst',
+        name: 'Original German Bratwurst (140g)',
+        icon: '🌭',
+        category: 'sausage',
+        price: 50.0,
+        cogs: 17.5,
+        coldRoom: 200,
+        cooler: 75,
+        sold: 0,
+        saleRule: 'both',
+        allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
+      },
+      currywurst: {
+        id: 'currywurst',
+        name: 'Oktoberfest Currywurst Spezial',
+        icon: '🍛',
+        category: 'sausage',
+        price: 60.0,
+        cogs: 21.0,
+        coldRoom: 0,
+        cooler: 0,
+        sold: 0,
+        saleRule: 'both',
+        allowedPairings: ['curry_tray', 'serviette']
+      },
+      bockwurst: {
+        id: 'bockwurst',
+        name: 'Traditionelle Bockwurst (140g)',
+        icon: '🌭',
+        category: 'sausage',
+        price: 50.0,
+        cogs: 18.0,
+        coldRoom: 50,
+        cooler: 25,
+        sold: 0,
+        saleRule: 'both',
+        allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
+      },
+      cheesegriller: {
+        id: 'cheesegriller',
+        name: 'Smoked Cheesegriller (110g)',
+        icon: '🧀',
+        category: 'sausage',
+        price: 50.0,
+        cogs: 14.0,
+        coldRoom: 175,
+        cooler: 75,
+        sold: 0,
+        saleRule: 'both',
+        allowedPairings: ['roll_white', 'roll_crusty', 'serviette']
+      },
+      roll_crusty: {
+        id: 'roll_crusty',
+        name: 'Crispy German Roll (85g)',
+        icon: '🥖',
+        category: 'roll',
+        price: 10.0,
+        cogs: 4.5,
+        coldRoom: 250,
+        cooler: 104,
+        sold: 0,
+        saleRule: 'combo_only',
+        allowedPairings: []
+      },
+      roll_white: {
+        id: 'roll_white',
+        name: 'Regular Hot Dog Roll',
+        icon: '🌭',
+        category: 'roll',
+        price: 10.0,
+        cogs: 3.5,
+        coldRoom: 170,
+        cooler: 82,
+        sold: 0,
+        saleRule: 'combo_only',
+        allowedPairings: []
+      },
+      curry_tray: {
+        id: 'curry_tray',
+        name: 'Currywurst Serving Boat / Tray',
+        icon: '🍛',
+        category: 'condiment',
+        price: 0.0,
+        cogs: 1.2,
+        coldRoom: 100,
+        cooler: 50,
+        sold: 0,
+        saleRule: 'combo_only',
+        allowedPairings: []
+      }
+    };
+
+    // Clean Zero Start State
+    let productCatalog = JSON.parse(JSON.stringify(samplePresetCatalog));
+    let staffRoster = [];
+    let masterUser = null;
+    let currentStation = 'till';
+    let currentStaffUser = null;
+    let orders = [];
+    let currentCart = [];
+    let orderSequenceNumber = 101;
+
+    let prepBuffer = {};
+    let grillingNow = {};
+    let rollBuffer = { roll_crusty: 0, roll_white: 0 };
+    let trayBuffer = { curry_tray: 0 };
+
+    function startLiveClock() {
+      const el = document.getElementById('app-clock');
+      setInterval(() => {
+        const d = new Date();
+        if (el) el.textContent = d.toTimeString().split(' ')[0];
+      }, 1000);
+    }
+
+    function switchStationView(stationId) {
+      currentStation = stationId;
+      const navSel = document.getElementById('station-nav-select');
+      if (navSel) navSel.value = stationId;
+
+      ['till', 'braai', 'handout', 'dual', 'manager'].forEach(s => {
+        const el = document.getElementById(`view-${s}`);
+        if (el) {
+          if (s === stationId) el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        }
+      });
+      renderAllViews();
+    }
+
+    function renderAllViews() {
+      try {
+        if (currentStation === 'till') renderTillStation();
+        if (currentStation === 'braai') renderBraaiStation();
+        if (currentStation === 'handout') renderHandoutStation();
+        if (currentStation === 'dual') renderDualStation();
+        if (currentStation === 'manager') renderManagerStation();
+      } catch (err) {
+        console.error('Render error:', err);
+      }
+    }
+
+    function renderTillStation() {
+      const grid = document.getElementById('pos-sausage-grid');
+      const rollsBar = document.getElementById('pos-standalone-rolls-bar');
+      const pCounter = document.getElementById('till-counter-processing');
+      const dCounter = document.getElementById('till-counter-delivered');
+
+      if (pCounter) pCounter.textContent = orders.filter(o => o.status === 'processing').length;
+      if (dCounter) dCounter.textContent = orders.filter(o => o.status === 'delivered').length;
+
+      const sausages = Object.values(productCatalog).filter(p => p.category === 'sausage');
+      if (grid) {
+        if (sausages.length === 0) {
+          grid.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 24px;">No sausages configured. Open Manager Hub to add products.</div>`;
+        } else {
+          grid.innerHTML = sausages.map(s => `
+            <div onclick="addSausageToCart('${s.id}')" class="card-tile">
+              <div class="flex items-center justify-between">
+                <span style="font-size: 32px;">${s.icon}</span>
+                <span class="font-mono title-gold" style="font-size: 18px;">R ${s.price.toFixed(2)}</span>
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 13px; color: #ffffff;">${s.name}</div>
+                <div class="flex items-center justify-between" style="margin-top: 6px; font-size: 11px; color: #94a3b8;">
+                  <span>Storage: <strong style="color: #34d399;">${s.cooler}</strong></span>
+                  <span style="color: #f59e0b; font-weight: 700;">+ Tap to Add</span>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      if (rollsBar) {
+        const standalone = Object.values(productCatalog).filter(p => p.category === 'roll' && p.saleRule !== 'combo_only');
+        if (standalone.length === 0) {
+          rollsBar.innerHTML = `<span style="font-size: 11px; color: #64748b; font-style: italic;">All rolls configured as Combo-Only (Strictly served with sausages).</span>`;
+        } else {
+          rollsBar.innerHTML = standalone.map(item => `
+            <button onclick="addStandaloneItemToCart('${item.id}')" class="btn btn-dark btn-sm">
+              <span>${item.icon}</span> ${item.name} (R ${item.price.toFixed(2)})
+            </button>
+          `).join('');
+        }
+      }
+
+      renderCartUI();
+    }
+
+    function addSausageToCart(id) {
+      const prod = productCatalog[id];
+      if (!prod) return;
+      const defRoll = id === 'currywurst' ? 'curry_tray' : 'roll_crusty';
+      currentCart.push({
+        cartId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        productId: prod.id,
+        name: prod.name,
+        icon: prod.icon,
+        price: prod.price,
+        selectedRoll: defRoll,
+        allowedPairings: prod.allowedPairings || ['roll_crusty', 'roll_white', 'serviette']
+      });
+      renderCartUI();
+    }
+
+    function addStandaloneItemToCart(id) {
+      const prod = productCatalog[id];
+      if (!prod) return;
+      currentCart.push({
+        cartId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        productId: prod.id,
+        name: prod.name,
+        icon: prod.icon,
+        price: prod.price,
+        selectedRoll: null,
+        allowedPairings: []
+      });
+      renderCartUI();
+    }
+
+    function updateCartRollChoice(cartId, rollKey) {
+      const item = currentCart.find(i => i.cartId === cartId);
+      if (item) {
+        item.selectedRoll = rollKey;
+        renderCartUI();
+      }
+    }
+
+    function removeCartItem(cartId) {
+      currentCart = currentCart.filter(i => i.cartId !== cartId);
+      renderCartUI();
+    }
+
+    function clearCart() {
+      currentCart = [];
+      renderCartUI();
+    }
+
+    function renderCartUI() {
+      const container = document.getElementById('pos-cart-items');
+      const totalEl = document.getElementById('pos-cart-total');
+      if (!container || !totalEl) return;
+
+      if (currentCart.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 12px; padding: 24px 0;">Cart is empty. Tap sausages above.</div>`;
+        totalEl.textContent = 'R 0.00';
+        return;
+      }
+
+      let total = 0;
+      container.innerHTML = currentCart.map(item => {
+        total += item.price;
+        const isSausage = item.selectedRoll !== null;
+        return `
+          <div class="card" style="background: #020617; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px;">
+            <div class="flex items-center justify-between">
+              <span style="font-weight: 700; font-size: 12px;">${item.icon} ${item.name}</span>
+              <div class="flex items-center gap-2">
+                <span class="font-mono" style="color: #fbbf24; font-weight: 700; font-size: 12px;">R ${item.price.toFixed(2)}</span>
+                <button onclick="removeCartItem('${item.cartId}')" style="background:none; border:none; color:#fb7185; cursor:pointer;">✕</button>
+              </div>
+            </div>
+            ${isSausage ? `
+              <div class="flex items-center gap-1" style="font-size: 10px;">
+                <span style="color: #64748b;">Serving:</span>
+                ${renderRollOptionButtons(item)}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      totalEl.textContent = `R ${total.toFixed(2)}`;
+    }
+
+    function renderRollOptionButtons(item) {
+      const p = item.allowedPairings || [];
+      let html = '';
+      if (p.includes('roll_crusty')) {
+        const act = item.selectedRoll === 'roll_crusty';
+        html += `<button onclick="updateCartRollChoice('${item.cartId}', 'roll_crusty')" class="btn btn-sm ${act ? 'btn-gold' : 'btn-dark'}">🥖 Crispy</button>`;
+      }
+      if (p.includes('roll_white')) {
+        const act = item.selectedRoll === 'roll_white';
+        html += `<button onclick="updateCartRollChoice('${item.cartId}', 'roll_white')" class="btn btn-sm ${act ? 'btn-gold' : 'btn-dark'}">🌭 White</button>`;
+      }
+      if (p.includes('curry_tray')) {
+        const act = item.selectedRoll === 'curry_tray';
+        html += `<button onclick="updateCartRollChoice('${item.cartId}', 'curry_tray')" class="btn btn-sm ${act ? 'btn-gold' : 'btn-dark'}">🍛 Curry Boat</button>`;
+      }
+      if (p.includes('serviette') || html === '') {
+        const act = item.selectedRoll === 'serviette';
+        html += `<button onclick="updateCartRollChoice('${item.cartId}', 'serviette')" class="btn btn-sm ${act ? 'btn-gold' : 'btn-dark'}">🧻 Serviette</button>`;
+      }
+      return html;
+    }
+
+    function checkoutCurrentCart(payMethod) {
+      if (currentCart.length === 0) return;
+      const total = currentCart.reduce((sum, i) => sum + i.price, 0);
+
+      currentCart.forEach(item => {
+        const prod = productCatalog[item.productId];
+        if (prod) {
+          prod.sold = (prod.sold || 0) + 1;
+          if (prod.cooler > 0) prod.cooler -= 1;
+        }
+      });
+
+      orders.push({
+        id: 'ord_' + Date.now(),
+        num: orderSequenceNumber++,
+        timestamp: new Date().toLocaleTimeString(),
+        status: 'processing',
+        paymentMethod: payMethod,
+        total: total,
+        items: [...currentCart]
+      });
+
+      currentCart = [];
+      renderAllViews();
+    }
+
+    function renderBraaiStation() {
+      const deck = document.getElementById('braai-sausage-deck');
+      const statWaiting = document.getElementById('braai-stat-orders-waiting');
+      if (!deck) return;
+
+      const pending = orders.filter(o => o.status === 'processing');
+      if (statWaiting) statWaiting.textContent = pending.length;
+
+      const demand = {};
+      pending.forEach(o => o.items.forEach(i => demand[i.productId] = (demand[i.productId] || 0) + 1));
+
+      const sausages = Object.values(productCatalog).filter(p => p.category === 'sausage');
+      deck.innerHTML = sausages.map(s => {
+        const waiting = demand[s.id] || 0;
+        const onGrill = grillingNow[s.id] || 0;
+        const buffer = prepBuffer[s.id] || 0;
+        const netNeed = Math.max(0, waiting - (onGrill + buffer));
+
+        return `
+          <div class="card flex flex-col justify-between gap-3">
+            <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+              <div>
+                <div style="font-weight: 700; font-size: 13px;">${s.icon} ${s.name}</div>
+                <div class="flex items-center gap-2" style="font-size: 11px; margin-top: 2px;">
+                  <span style="color: #94a3b8;">Storage: <strong style="color: #34d399;">${s.cooler}</strong></span>
+                  <button onclick="transferMainToLocal('${s.id}', 10)" class="btn btn-dark btn-sm" style="font-size: 10px;">+10 Restock</button>
+                </div>
+              </div>
+              <div>
+                ${netNeed > 0 
+                  ? `<span class="badge badge-rose">Need +${netNeed}</span>` 
+                  : `<span class="badge badge-emerald">Covered</span>`}
+              </div>
+            </div>
+
+            <div class="grid grid-3 gap-2" style="text-align: center;">
+              <div class="card" style="background: #020617; padding: 6px;">
+                <div style="font-size: 9px; color: #94a3b8;">Orders Waiting</div>
+                <div class="font-mono title-gold" style="font-size: 16px;">${waiting}</div>
+              </div>
+              <div class="card" style="background: #020617; padding: 6px;">
+                <div style="font-size: 9px; color: #94a3b8;">On Braai</div>
+                <div class="font-mono" style="font-size: 16px; color: #fb7185; font-weight: 900;">${onGrill}</div>
+              </div>
+              <div class="card" style="background: #020617; padding: 6px;">
+                <div style="font-size: 9px; color: #94a3b8;">Hot Buffer</div>
+                <div class="font-mono" style="font-size: 16px; color: #34d399; font-weight: 900;">${buffer}</div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2" style="font-size: 11px; border-top: 1px solid #1e293b; padding-top: 6px;">
+              <div class="flex items-center justify-between">
+                <span>➔ Onto Braai:</span>
+                <div class="flex gap-1 font-mono">
+                  <button onclick="moveBraaiStage('${s.id}', 'to_grill', 1)" class="btn btn-dark btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'to_grill', 5)" class="btn btn-dark btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_grill', 1)" class="btn btn-rose btn-sm">↩</button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>➔ To Hot Buffer:</span>
+                <div class="flex gap-1 font-mono">
+                  <button onclick="moveBraaiStage('${s.id}', 'to_buffer', 1)" class="btn btn-dark btn-sm">+1</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'to_buffer', 5)" class="btn btn-dark btn-sm">+5</button>
+                  <button onclick="moveBraaiStage('${s.id}', 'undo_buffer', 1)" class="btn btn-rose btn-sm">↩</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function moveBraaiStage(sausageId, action, count) {
+      if (!grillingNow[sausageId]) grillingNow[sausageId] = 0;
+      if (!prepBuffer[sausageId]) prepBuffer[sausageId] = 0;
+      const prod = productCatalog[sausageId];
+
+      if (action === 'to_grill') {
+        const amt = Math.min(count, prod ? prod.cooler : count);
+        if (prod) prod.cooler = Math.max(0, prod.cooler - amt);
+        grillingNow[sausageId] += amt;
+      } else if (action === 'undo_grill') {
+        const amt = Math.min(count, grillingNow[sausageId]);
+        grillingNow[sausageId] -= amt;
+        if (prod) prod.cooler += amt;
+      } else if (action === 'to_buffer') {
+        const amt = Math.min(count, grillingNow[sausageId]);
+        grillingNow[sausageId] -= amt;
+        prepBuffer[sausageId] += amt;
+      } else if (action === 'undo_buffer') {
+        const amt = Math.min(count, prepBuffer[sausageId]);
+        prepBuffer[sausageId] -= amt;
+        grillingNow[sausageId] += amt;
+      }
+      renderAllViews();
+    }
+
+    function renderHandoutStation() {
+      const metricsEl = document.getElementById('handout-overview-metrics');
+      const queueEl = document.getElementById('handout-orders-queue');
+      if (!metricsEl || !queueEl) return;
+
+      const pending = orders.filter(o => o.status === 'processing');
+
+      let crispyNeeded = 0;
+      let whiteNeeded = 0;
+      let curryTraysNeeded = 0;
+      let serviettesNeeded = 0;
+
+      pending.forEach(o => {
+        o.items.forEach(item => {
+          if (item.selectedRoll === 'roll_crusty') crispyNeeded++;
+          else if (item.selectedRoll === 'roll_white') whiteNeeded++;
+          else if (item.selectedRoll === 'curry_tray') curryTraysNeeded++;
+          else if (item.selectedRoll === 'serviette') serviettesNeeded++;
+        });
+      });
+
+      metricsEl.innerHTML = `
+        <div class="card" style="background:#020617;">
+          <div style="font-size:10px; color:#94a3b8;">🥖 Crispy Needed</div>
+          <div class="font-mono title-gold" style="font-size:18px;">${crispyNeeded}</div>
+          <div style="font-size:10px; color:#64748b;">Sliced: ${rollBuffer.roll_crusty || 0}</div>
+        </div>
+        <div class="card" style="background:#020617;">
+          <div style="font-size:10px; color:#94a3b8;">🌭 White Needed</div>
+          <div class="font-mono" style="font-size:18px; color:#38bdf8; font-weight:900;">${whiteNeeded}</div>
+          <div style="font-size:10px; color:#64748b;">Sliced: ${rollBuffer.roll_white || 0}</div>
+        </div>
+        <div class="card" style="background:#020617;">
+          <div style="font-size:10px; color:#94a3b8;">🍛 Curry Boats</div>
+          <div class="font-mono" style="font-size:18px; color:#fde047; font-weight:900;">${curryTraysNeeded}</div>
+          <div style="font-size:10px; color:#64748b;">Ready: ${trayBuffer.curry_tray || 0}</div>
+        </div>
+        <div class="card" style="background:#020617;">
+          <div style="font-size:10px; color:#94a3b8;">🧻 Serviette Only</div>
+          <div class="font-mono" style="font-size:18px; color:#ffffff; font-weight:900;">${serviettesNeeded}</div>
+          <div style="font-size:10px; color:#64748b;">Direct Plate</div>
+        </div>
+        <div class="card" style="background:#020617;">
+          <div style="font-size:10px; color:#94a3b8;">⏳ Waiting Orders</div>
+          <div class="font-mono" style="font-size:18px; color:#34d399; font-weight:900;">${pending.length}</div>
+          <div style="font-size:10px; color:#64748b;">Tickets</div>
+        </div>
+      `;
+
+      if (pending.length === 0) {
+        queueEl.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 36px 0;">No active tickets in queue.</div>`;
+        return;
+      }
+
+      queueEl.innerHTML = pending.map(order => `
+        <div class="card flex flex-col justify-between gap-3">
+          <div class="flex items-center justify-between" style="border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+            <div class="flex items-center gap-2">
+              <span class="font-mono title-gold" style="font-size: 16px;">#${order.num}</span>
+              <span class="font-mono" style="font-size: 10px; color: #94a3b8;">${order.timestamp}</span>
+              <span class="badge ${order.paymentMethod === 'CASH' ? 'badge-emerald' : 'badge-sky'}">${order.paymentMethod}</span>
+            </div>
+            <span class="font-mono" style="font-weight: 700;">R ${order.total.toFixed(2)}</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            ${order.items.map(i => `
+              <div class="flex items-center justify-between" style="background: #020617; padding: 6px 8px; border-radius: 6px; font-size: 11px;">
+                <span>${i.icon} ${i.name}</span>
+                <span class="badge badge-amber">${formatRollDisplay(i.selectedRoll)}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <button onclick="completeHandoutOrder('${order.id}')" class="btn btn-emerald" style="padding: 10px;">
+            ✓ Complete & Handed Out
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function sliceRollsForBuffer(rollKey, count) {
+      rollBuffer[rollKey] = (rollBuffer[rollKey] || 0) + count;
+      renderAllViews();
+    }
+    function revertSlicedRollBuffer(rollKey, count) {
+      rollBuffer[rollKey] = Math.max(0, (rollBuffer[rollKey] || 0) - count);
+      renderAllViews();
+    }
+    function prepCurryTraysBuffer(count) {
+      trayBuffer.curry_tray = (trayBuffer.curry_tray || 0) + count;
+      renderAllViews();
+    }
+    function revertCurryTraysBuffer(count) {
+      trayBuffer.curry_tray = Math.max(0, (trayBuffer.curry_tray || 0) - count);
+      renderAllViews();
+    }
+    function completeHandoutOrder(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (o) o.status = 'delivered';
+      renderAllViews();
+    }
+
+    function renderDualStation() {
+      const bDeck = document.getElementById('dual-braai-deck');
+      const hQueue = document.getElementById('dual-handout-queue');
+      const sausages = Object.values(productCatalog).filter(p => p.category === 'sausage');
+      const pending = orders.filter(o => o.status === 'processing');
+
+      if (bDeck) {
+        bDeck.innerHTML = sausages.map(s => `
+          <div class="card" style="background: #020617; font-size: 11px;">
+            <div class="flex items-center justify-between">
+              <strong>${s.icon} ${s.name}</strong>
+              <span style="color:#34d399;">St: ${s.cooler}</span>
+            </div>
+            <div class="flex items-center justify-between font-mono" style="margin-top: 6px;">
+              <span>Grill: <strong style="color:#fb7185;">${grillingNow[s.id] || 0}</strong></span>
+              <span>Buffer: <strong style="color:#34d399;">${prepBuffer[s.id] || 0}</strong></span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      if (hQueue) {
+        if (pending.length === 0) {
+          hQueue.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px;">No pending orders.</div>`;
+        } else {
+          hQueue.innerHTML = pending.map(o => `
+            <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 10px;">
+              <div>
+                <span class="font-mono title-gold">#${o.num}</span>
+                <span style="font-size: 11px; margin-left: 6px;">${o.items.map(i => i.name).join(', ')}</span>
+              </div>
+              <button onclick="completeHandoutOrder('${o.id}')" class="btn btn-emerald btn-sm">Done</button>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function renderManagerStation() {
+      let turnover = 0;
+      let cash = 0;
+      let yoco = 0;
+      let cogs = 0;
+      let sausagesSold = 0;
+
+      orders.forEach(o => {
+        turnover += o.total;
+        if (o.paymentMethod === 'CASH') cash += o.total;
+        else yoco += o.total;
+        o.items.forEach(i => {
+          const p = productCatalog[i.productId];
+          if (p) {
+            cogs += (p.cogs || 0);
+            if (p.category === 'sausage') sausagesSold++;
+          }
+        });
+      });
+
+      const profit = turnover - cogs;
+      const margin = turnover > 0 ? (profit / turnover) * 100 : 0;
+
+      const tEl = document.getElementById('mgr-stat-turnover');
+      const cEl = document.getElementById('mgr-stat-cogs');
+      const pEl = document.getElementById('mgr-stat-profit');
+      const sEl = document.getElementById('mgr-stat-sold-count');
+      const splitEl = document.getElementById('mgr-stat-payment-split');
+      const marginEl = document.getElementById('mgr-stat-margin-pct');
+
+      if (tEl) tEl.textContent = `R ${turnover.toFixed(2)}`;
+      if (cEl) cEl.textContent = `R ${cogs.toFixed(2)}`;
+      if (pEl) pEl.textContent = `R ${profit.toFixed(2)}`;
+      if (sEl) sEl.textContent = sausagesSold;
+      if (splitEl) splitEl.textContent = `Cash: R ${cash.toFixed(2)} • Yoco: R ${yoco.toFixed(2)}`;
+      if (marginEl) marginEl.textContent = `Margin: ${margin.toFixed(1)}%`;
+
+      const tbody = document.getElementById('mgr-table-catalog');
+      if (tbody) {
+        tbody.innerHTML = Object.values(productCatalog).map(p => `
           <tr>
-            <th class="py-2.5 px-3">Item</th>
-            <th class="py-2.5 px-3">Category</th>
-            <th class="py-2.5 px-3">Selling Price</th>
-            <th class="py-2.5 px-3">Unit COGS</th>
-            <th class="py-2.5 px-3">Main Depot</th>
-            <th class="py-2.5 px-3">Tent Storage</th>
-            <th class="py-2.5 px-3">Sold</th>
-            <th class="py-2.5 px-3">Sale Rule & Pairings</th>
-            <th class="py-2.5 px-3 text-right">Actions</th>
+            <td>${p.icon} <strong>${p.name}</strong></td>
+            <td>${p.category}</td>
+            <td style="color:#fbbf24;">R ${p.price.toFixed(2)}</td>
+            <td style="color:#fb7185;">R ${(p.cogs || 0).toFixed(2)}</td>
+            <td style="color:#38bdf8;">${p.coldRoom}</td>
+            <td style="color:#34d399;">${p.cooler}</td>
+            <td>${p.sold || 0}</td>
+            <td>${p.saleRule === 'combo_only' ? 'Combo Only' : 'Solo & Combo'}</td>
+            <td style="text-align: right;">
+              <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm">+10 Transfer</button>
+            </td>
           </tr>
-        </thead>
-        <tbody id="mgr-table-catalog" class="divide-y divide-slate-800/60 font-mono">
-          <!-- Dynamically populated -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+        `).join('');
+      }
+    }
 
-  <!-- Section: Operational Stations Configuration -->
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-      <div>
-        <h3 class="font-bold text-sm text-white">🖥️ Operational Stations Registry</h3>
-        <p class="text-xs text-slate-400">Add or customize active stations across the festival site</p>
-      </div>
-      <button type="button" onclick="openStationModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
-        <span>+</span>
-        <span>Add Station</span>
-      </button>
-    </div>
+    function openMasterRestockModal() {
+      const modal = document.getElementById('modal-master-restock');
+      const list = document.getElementById('restock-transfer-list');
+      if (!modal || !list) return;
+      modal.classList.remove('hidden');
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3" id="mgr-stations-grid">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
+      list.innerHTML = Object.values(productCatalog).map(p => `
+        <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 12px;">
+          <div>
+            <div style="font-weight: 700; font-size: 12px;">${p.icon} ${p.name}</div>
+            <div class="font-mono" style="font-size: 11px; color: #94a3b8;">
+              Main: <strong style="color: #38bdf8;">${p.coldRoom}</strong> ➔ Cooler: <strong style="color: #34d399;">${p.cooler}</strong>
+            </div>
+          </div>
+          <div class="flex gap-1 font-mono">
+            <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm">+10</button>
+            <button onclick="transferMainToLocal('${p.id}', 25)" class="btn btn-dark btn-sm">+25</button>
+          </div>
+        </div>
+      `).join('');
+    }
 
-  <!-- Section: Staff & Crew Roster -->
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-      <div>
-        <h3 class="font-bold text-sm text-white">👥 Staff Crew Roster & Station Sign-In PINs</h3>
-        <p class="text-xs text-slate-400">Manage crew members, roles, assigned stations, and private PINs</p>
-      </div>
-      <button type="button" onclick="openStaffModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
-        <span>+</span>
-        <span>Add Staff Member</span>
-      </button>
-    </div>
+    function closeMasterRestockModal() {
+      const modal = document.getElementById('modal-master-restock');
+      if (modal) modal.classList.add('hidden');
+    }
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3" id="mgr-staff-grid">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
-</section>
+    function transferMainToLocal(id, count) {
+      const p = productCatalog[id];
+      if (!p) return;
+      const amt = Math.min(count, p.coldRoom);
+      p.coldRoom = Math.max(0, p.coldRoom - amt);
+      p.cooler += (amt > 0 ? amt : count);
+      openMasterRestockModal();
+      renderAllViews();
+    }
 
+    function openZReportModal() {
+      const modal = document.getElementById('modal-z-report');
+      const content = document.getElementById('z-report-content');
+      if (!modal || !content) return;
+      modal.classList.remove('hidden');
 
-  <!-- Dynamic Mode A: First-Time Master Registration -->
-  <div id="login-master-setup-view" class="py-3 space-y-3 hidden">
-    <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200">
-      <strong class="font-bold text-amber-300">Welcome to Oktoberfest KDS!</strong><br>
-      System initialized clean at zero. Please register the Event Master and choose your private 4-digit PIN.
-    </div>
-    <div>
-      <label class="block text-xs text-slate-300 mb-1">Master / Manager Name</label>
-      <input type="text" id="setup-master-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="e.g. Nicolas">
-    </div>
-    <div>
-      <label class="block text-xs text-slate-300 mb-1">Create Private 4-Digit PIN</label>
-      <input type="password" maxlength="4" id="setup-master-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono text-center tracking-widest focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="••••">
-    </div>
-    <button type="button" onclick="completeMasterRegistration()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer">
-      Complete Registration & Enter
-    </button>
-    <button type="button" onclick="seedSamplePresetData()" class="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer">
-      Or seed sample Oktoberfest crew & menu preset
-    </button>
-  </div>
+      let turnover = 0;
+      let cash = 0;
+      let yoco = 0;
+      let cogs = 0;
+      let sausages = 0;
 
-  <!-- Dynamic Mode B: Standard Crew Sign-In -->
-  <div id="login-standard-crew-view" class="py-3 space-y-3 hidden">
-    <div>
-      <label class="block text-xs text-slate-300 mb-1">Select Your Name</label>
-      <select id="login-staff-select" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-amber-500">
-        <!-- Populated dynamically -->
-      </select>
-    </div>
-    <div>
-      <label class="block text-xs text-slate-300 mb-1">Enter 4-Digit Passcode</label>
-      <input type="password" maxlength="4" id="login-staff-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono text-center tracking-widest focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="••••">
-    </div>
-    <div id="login-pin-error" class="text-rose-400 text-xs font-semibold text-center hidden">Incorrect PIN</div>
-    <button type="button" onclick="verifyStaffLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer">
-      Sign In to Station
-    </button>
-  </div>
-</div>
+      orders.forEach(o => {
+        turnover += o.total;
+        if (o.paymentMethod === 'CASH') cash += o.total;
+        else yoco += o.total;
+        o.items.forEach(i => {
+          const p = productCatalog[i.productId];
+          if (p) {
+            cogs += (p.cogs || 0);
+            if (p.category === 'sausage') sausages++;
+          }
+        });
+      });
 
+      content.innerHTML = `
+        <div style="text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+          <strong style="color: #fbbf24;">GERMAN CLUB OKTOBERFEST 2026</strong>
+          <div style="color: #94a3b8; font-size: 10px;">Official Day Closeout Z-Report</div>
+        </div>
+        <div class="flex justify-between"><span>Orders Completed:</span><strong>${orders.length}</strong></div>
+        <div class="flex justify-between"><span>Sausages Sold:</span><strong style="color:#fbbf24;">${sausages}</strong></div>
+        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:4px;"><span>Gross Turnover:</span><strong style="color:#fbbf24;">R ${turnover.toFixed(2)}</strong></div>
+        <div class="flex justify-between" style="color:#94a3b8;"><span>- Cash Receipts:</span><span>R ${cash.toFixed(2)}</span></div>
+        <div class="flex justify-between" style="color:#94a3b8;"><span>- Yoco / Card:</span><span>R ${yoco.toFixed(2)}</span></div>
+        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:4px;"><span>Food COGS:</span><strong style="color:#fb7185;">R ${cogs.toFixed(2)}</strong></div>
+        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:4px; font-size:14px; font-weight:900;">
+          <span>Net Trade Profit:</span><strong style="color:#34d399;">R ${(turnover - cogs).toFixed(2)}</strong>
+        </div>
+      `;
+    }
 
-  <p class="text-xs text-slate-300">
-    Move chilled sausages or rolls from bulk cold storage (refrigerated truck / cold room) into the active braai and handout station coolers.
-  </p>
+    function closeZReportModal() {
+      const modal = document.getElementById('modal-z-report');
+      if (modal) modal.classList.add('hidden');
+    }
 
-  <div class="space-y-2 max-h-[340px] overflow-y-auto pr-1" id="restock-transfer-list">
-    <!-- Dynamically rendered list of items -->
-  </div>
+    function exportEventDataJSON() {
+      const data = {
+        exportDate: new Date().toISOString(),
+        productCatalog,
+        orders,
+        prepBuffer,
+        grillingNow,
+        rollBuffer,
+        trayBuffer
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Oktoberfest_Backup_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
 
-  <div class="pt-2 border-t border-slate-800 flex justify-end">
-    <button type="button" onclick="closeMasterRestockModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">
-      Done
-    </button>
-  </div>
-</div>
+    function seedSamplePresetData() {
+      productCatalog = JSON.parse(JSON.stringify(samplePresetCatalog));
+      orders = [];
+      orderSequenceNumber = 101;
+      prepBuffer = {};
+      grillingNow = {};
+      rollBuffer = { roll_crusty: 0, roll_white: 0 };
+      trayBuffer = { curry_tray: 0 };
+      renderAllViews();
+    }
 
+    function registerMasterUser() {
+      const nameInput = document.getElementById('setup-master-name');
+      const pinInput = document.getElementById('setup-master-pin');
+      const name = (nameInput && nameInput.value.trim()) || 'Master';
+      const pin = (pinInput && pinInput.value.trim()) || '1978';
 
-  <input type="hidden" id="edit-stock-id">
+      masterUser = { id: 'master', name: `${name} (Master)`, role: 'Master Admin', station: 'manager', pin: pin };
+      staffRoster = [masterUser];
+      currentStaffUser = masterUser;
 
-  <div class="grid grid-cols-2 gap-3 text-xs">
-    <div class="col-span-2">
-      <label class="block text-slate-300 mb-1">Item Name</label>
-      <input type="text" id="edit-stock-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Original Bratwurst (140g)">
-    </div>
+      document.getElementById('current-user-name').textContent = masterUser.name;
+      const setupModal = document.getElementById('modal-master-setup');
+      if (setupModal) setupModal.classList.add('hidden');
+      renderAllViews();
+    }
 
-    <div>
-      <label class="block text-slate-300 mb-1">Icon / Emoji</label>
-      <input type="text" id="edit-stock-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-center" placeholder="🌭">
-    </div>
+    function seedAndRegisterMaster() {
+      registerMasterUser();
+      seedSamplePresetData();
+    }
 
-    <div>
-      <label class="block text-slate-300 mb-1">Category</label>
-      <select id="edit-stock-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
-        <option value="sausage">Sausage (Braai)</option>
-        <option value="roll">Roll / Bread</option>
-        <option value="condiment">Condiment / Packaging</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
+    function openLoginModal() {
+      if (!masterUser && staffRoster.length === 0) {
+        const setupModal = document.getElementById('modal-master-setup');
+        if (setupModal) setupModal.classList.remove('hidden');
+        return;
+      }
+      const modal = document.getElementById('modal-login');
+      const sel = document.getElementById('login-staff-select');
+      const pinInput = document.getElementById('login-staff-pin');
+      if (pinInput) pinInput.value = '';
 
-    <div>
-      <label class="block text-slate-300 mb-1">Selling Price (ZAR)</label>
-      <input type="number" step="0.5" id="edit-stock-price" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="50.00">
-    </div>
+      if (modal && sel) {
+        sel.innerHTML = staffRoster.map(s => `<option value="${s.id}">${s.name} (${s.role})</option>`).join('');
+        modal.classList.remove('hidden');
+      }
+    }
 
-    <div>
-      <label class="block text-slate-300 mb-1">Unit COGS (Cost)</label>
-      <input type="number" step="0.1" id="edit-stock-cogs" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="17.50">
-    </div>
+    function closeLoginModal() {
+      const modal = document.getElementById('modal-login');
+      if (modal) modal.classList.add('hidden');
+    }
 
-    <div>
-      <label class="block text-slate-300 mb-1">Main Bulk Stock</label>
-      <input type="number" id="edit-stock-coldroom" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="200">
-    </div>
+    function confirmCrewLogin() {
+      const sel = document.getElementById('login-staff-select');
+      const pinInput = document.getElementById('login-staff-pin');
+      const s = staffRoster.find(x => x.id === sel.value);
+      if (s) {
+        if (s.pin && pinInput && pinInput.value !== s.pin) {
+          pinInput.style.borderColor = '#fb7185';
+          return;
+        }
+        currentStaffUser = s;
+        document.getElementById('current-user-name').textContent = s.name;
+        if (s.station && s.station !== 'all') switchStationView(s.station);
+      }
+      closeLoginModal();
+    }
 
-    <div>
-      <label class="block text-slate-300 mb-1">Local Tent Storage</label>
-      <input type="number" id="edit-stock-cooler" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="75">
-    </div>
+    function formatRollDisplay(rollKey) {
+      if (rollKey === 'roll_crusty') return '🥖 Crispy';
+      if (rollKey === 'roll_white') return '🌭 White';
+      if (rollKey === 'curry_tray') return '🍛 Curry Boat';
+      if (rollKey === 'serviette') return '🧻 Serviette';
+      return 'Direct Serve';
+    }
 
-    <div class="col-span-2">
-      <label class="block text-slate-300 mb-1">Sale Rule (Individual Sale vs Combo Only)</label>
-      <select id="edit-stock-sale-rule" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
-        <option value="both">Solo & Combo (Allowed alone or paired with sausage)</option>
-        <option value="combo_only">Combo Only (No solo sale — strictly served with sausage)</option>
-        <option value="standalone_only">Solo Only (Sold individually only)</option>
-      </select>
-    </div>
+    function initBootstrap() {
+      startLiveClock();
+      renderAllViews();
+      if (!masterUser && staffRoster.length === 0) {
+        const setupModal = document.getElementById('modal-master-setup');
+        if (setupModal) setupModal.classList.remove('hidden');
+      }
+    }
 
-    <div class="col-span-2">
-      <label class="block text-slate-300 mb-1">Allowed Companion Pairings (Check all that apply)</label>
-      <div id="edit-stock-pairings-checklist" class="grid grid-cols-2 gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
-    <button type="button" onclick="deleteStockItemAction()" id="btn-delete-stock" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
-      Delete Item
-    </button>
-    <div class="flex items-center gap-2 ml-auto">
-      <button type="button" onclick="closeStockModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
-        Cancel
-      </button>
-      <button type="button" onclick="saveStockForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
-        Save Item
-      </button>
-    </div>
-  </div>
-</div>
-
-
-  <input type="hidden" id="edit-station-id">
-
-  <div class="space-y-2.5 text-xs">
-    <div>
-      <label class="block text-slate-300 mb-1">Station ID Key</label>
-      <input type="text" id="edit-station-key" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="e.g. till2">
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Station Name</label>
-      <input type="text" id="edit-station-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Till Register 2">
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Icon / Emoji</label>
-      <input type="text" id="edit-station-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-center" placeholder="💵">
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Operational Role</label>
-      <input type="text" id="edit-station-role" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Fast Order Taking">
-    </div>
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
-    <button type="button" onclick="deleteStationAction()" id="btn-delete-station" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
-      Delete
-    </button>
-    <div class="flex items-center gap-2 ml-auto">
-      <button type="button" onclick="closeStationModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
-        Cancel
-      </button>
-      <button type="button" onclick="saveStationForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
-        Save Station
-      </button>
-    </div>
-  </div>
-</div>
-
-
-  <input type="hidden" id="edit-staff-id">
-
-  <div class="space-y-2.5 text-xs">
-    <div>
-      <label class="block text-slate-300 mb-1">Full Name</label>
-      <input type="text" id="edit-staff-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Nick">
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Role Title</label>
-      <input type="text" id="edit-staff-role" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Till Lead Cashier">
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Assigned Station</label>
-      <select id="edit-staff-station" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
-        <!-- Populated dynamically -->
-      </select>
-    </div>
-    <div>
-      <label class="block text-slate-300 mb-1">Private 4-Digit PIN</label>
-      <input type="password" maxlength="4" id="edit-staff-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono text-center tracking-widest" placeholder="••••">
-    </div>
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
-    <button type="button" onclick="deleteStaffMemberAction()" id="btn-delete-staff" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
-      Delete
-    </button>
-    <div class="flex items-center gap-2 ml-auto">
-      <button type="button" onclick="closeStaffModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
-        Cancel
-      </button>
-      <button type="button" onclick="saveStaffForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
-        Save Staff
-      </button>
-    </div>
-  </div>
-</div>
-
-
-  <div id="till-orders-modal-list" class="flex-1 overflow-y-auto py-3 space-y-2.5">
-    <!-- List of active or delivered orders with Recall button -->
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex justify-end">
-    <button type="button" onclick="closeTillLiveOrdersModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">
-      Close Drawer
-    </button>
-  </div>
-</div>
-
-
-  <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 text-xs font-mono" id="z-report-content">
-    <!-- Rendered dynamically -->
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex justify-end gap-2">
-    <button type="button" onclick="exportEventDataJSON()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs font-bold cursor-pointer">
-      💾 Download Backup JSON
-    </button>
-    <button type="button" onclick="closeZReportModal()" class="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
-      Close Report
-    </button>
-  </div>
-</div>
-
-
-  <p class="text-xs text-slate-300 leading-relaxed">
-    This action will reset orders, sales counters, and kitchen buffers back to zero for a clean start. 
-    Catalog definitions, stations, and staff roster will be preserved.
-  </p>
-
-  <div>
-    <label class="block text-xs text-slate-400 mb-1">Type <strong class="text-rose-400">RESET</strong> to confirm:</label>
-    <input type="text" id="input-reset-confirmation" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono uppercase focus:outline-none focus:ring-1 focus:ring-rose-500" placeholder="RESET">
-  </div>
-
-  <div class="pt-2 border-t border-slate-800 flex items-center justify-end gap-2">
-    <button type="button" onclick="closeResetConfirmModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
-      Cancel
-    </button>
-    <button type="button" onclick="executeResetEventYearData()" class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold cursor-pointer">
-      Yes, Reset Event Counters
-    </button>
-  </div>
-</div>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBootstrap);
+    } else {
+      initBootstrap();
+    }
+  </script>
+</body>
+</html>
