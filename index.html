@@ -1,2808 +1,605 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oktoberfest KDS & Hub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-    /* Hide scrollbars but keep functionality */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    .animate-pulse-subtle { animation: pulse-subtle 2s infinite ease-in-out; }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950 antialiased">
+<!-- Station Selector Dropdown -->
+  <div class="relative ml-2 sm:ml-4">
+    <select id="station-nav-select" onchange="switchStationView(this.value)" class="bg-slate-800 border border-slate-700 hover:border-amber-500/60 text-amber-300 font-bold text-xs sm:text-sm rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 transition cursor-pointer">
+      <option value="till">💵 Till POS</option>
+      <option value="braai">🔥 Braai Master</option>
+      <option value="handout">🥖 Handout & Assembly</option>
+      <option value="dual">🖥️ Dual View (Braai+Handout)</option>
+      <option value="manager">👑 Manager Hub</option>
+    </select>
+  </div>
+</div>
 
-  <!-- TOP APP HEADER -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-3 py-2 sm:px-6 sm:py-2.5 flex items-center justify-between shadow-lg">
-    <!-- Brand & Event Switcher -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-slate-950 text-base sm:text-lg font-black shadow-md shadow-amber-500/20">
-        🥨
+<!-- Active Staff & Master Auth Badge -->
+<div class="flex items-center gap-2">
+  <div id="active-staff-badge" class="hidden sm:flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 px-2.5 py-1 rounded-full text-xs">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="text-slate-300 font-medium" id="current-user-name">Not Signed In</span>
+  </div>
+
+  <button type="button" onclick="openLoginModal()" id="btn-header-auth" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition flex items-center gap-1 cursor-pointer">
+    <span>👤</span>
+    <span id="btn-auth-label">Sign In</span>
+  </button>
+</div>
+
+
+<!-- 1. TILL POS STATION VIEW -->
+<section id="view-till" class="flex-1 flex flex-col lg:flex-row gap-3 min-h-0">
+  <!-- Left: 4 Quadratic Sausage Cards & Extra Items -->
+  <div class="flex-1 flex flex-col gap-3 min-h-0 overflow-y-auto pr-1">
+    <!-- Top Banner / Queue stats -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 font-bold">Fast POS Register</span>
+        <span class="text-slate-500">•</span>
+        <span class="text-slate-400">Tap sausages to add, select roll choice below</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="openTillLiveOrdersModal('processing')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono text-[11px] border border-slate-700 cursor-pointer">
+          ⏳ Queue: <strong id="till-counter-processing">0</strong>
+        </button>
+        <button type="button" onclick="openTillLiveOrdersModal('delivered')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 font-mono text-[11px] border border-slate-700 cursor-pointer">
+          ✅ Delivered: <strong id="till-counter-delivered">0</strong>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Quadratic Sausage Tiles Grid -->
+    <div id="pos-sausage-grid" class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-2.5 sm:gap-3">
+      <!-- Dynamically populated via renderTillStation() -->
+    </div>
+
+    <!-- Standalone / Extra Buns Bar (Strictly filter out combo-only items) -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-col gap-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Extra Add-ons / Standalone Rolls</span>
+        <span class="text-[10px] text-slate-500 font-mono">Combo-only rolls are excluded</span>
+      </div>
+      <div id="pos-standalone-rolls-bar" class="flex flex-wrap gap-2">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Cart & Fast Checkout Drawer -->
+  <div class="w-full lg:w-96 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+    <div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🛒</span>
+        <h2 class="font-bold text-sm text-white">Active Order Cart</h2>
+      </div>
+      <button type="button" onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold px-2 py-0.5 rounded hover:bg-rose-500/10 transition cursor-pointer">
+        Clear
+      </button>
+    </div>
+
+    <!-- Cart Items List -->
+    <div id="pos-cart-items" class="flex-1 overflow-y-auto p-2.5 space-y-2 min-h-[220px]">
+      <!-- Cart rows populated dynamically -->
+    </div>
+
+    <!-- Cart Total & Fast Pay Buttons -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950/80 space-y-2.5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Due</span>
+        <span class="text-2xl font-black text-amber-400 font-mono" id="pos-cart-total">R 0.00</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="checkoutCurrentCart('CASH')" id="btn-pay-cash" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm tracking-wide shadow-lg shadow-emerald-900/30 transition flex flex-col items-center justify-center cursor-pointer">
+          <span>💵 CASH</span>
+          <span class="text-[10px] font-normal opacity-80">Instant Ticket</span>
+        </button>
+        <button type="button" onclick="checkoutCurrentCart('YOCO')" id="btn-pay-yoco" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-black text-sm tracking-wide shadow-lg shadow-sky-900/30 transition flex flex-col items-center justify-center cursor-pointer">
+          <span>💳 YOCO / CARD</span>
+          <span class="text-[10px] font-normal opacity-80">Tap & Pay</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. BRAAI MASTER GRILL STATION VIEW -->
+<section id="view-braai" class="hidden flex-1 flex flex-col gap-3 min-h-0 overflow-y-auto">
+  <!-- Braai Header & Restock Bar -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-xl">
+        🔥
       </div>
       <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-xs sm:text-sm font-black tracking-wide uppercase text-white flex items-center gap-1.5">
-            Oktoberfest <span class="text-amber-400">KDS Hub</span>
-          </h1>
-          <span id="active-station-badge" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">
-            Till
-          </span>
-        </div>
-        <div class="flex items-center gap-2 text-[10px] text-slate-400">
-          <span>Event Year:</span>
-          <select id="event-year-select" onchange="changeEventYear(this.value)" class="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-amber-400 font-mono text-[10px] focus:outline-none focus:border-amber-500 cursor-pointer">
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-          </select>
-        </div>
+        <h2 class="font-black text-sm sm:text-base text-white tracking-wide">BRAAI MASTER GRILL DECK</h2>
+        <p class="text-xs text-slate-400">Flow: Storage Cooler ➔ On Braai ➔ Precooked Buffer ➔ Handout</p>
       </div>
     </div>
 
-    <!-- Center Station Selector Dropdown (Clean, No Overlapping Pills) -->
-    <div class="flex items-center">
-      <div class="relative">
-        <select id="master-station-dropdown" onchange="switchStationView(this.value)" class="bg-slate-950 text-slate-100 border border-slate-700/80 hover:border-amber-500 rounded-xl px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold tracking-wide focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer appearance-none pr-8 shadow-inner">
-          <!-- Dynamically populated from stationRegistry -->
-        </select>
-        <div class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
-          ▼
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Controls: Operator Profile & Actions -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <div id="operator-info-chip" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/80 border border-slate-700 text-xs">
-        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-        <span id="operator-display-name" class="font-bold text-slate-200">Staff</span>
-        <span id="operator-display-role" class="text-[10px] text-slate-400 font-mono">Cashier</span>
-      </div>
-
-      <button type="button" onclick="openLoginModal()" class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer">
-        <span>🔑</span>
-        <span class="hidden sm:inline">Sign In / Switch</span>
+    <div class="flex items-center gap-2">
+      <!-- Direct Transfer from Main Storage (Accessible by Braai & Master) -->
+      <button type="button" onclick="openMasterRestockModal()" id="btn-braai-master-restock" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-amber-500/20">
+        <span>📦</span>
+        <span>Restock from Main Storage</span>
       </button>
+      <div class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-mono text-slate-300">
+        Pending Orders: <strong class="text-amber-400" id="braai-stat-orders-waiting">0</strong>
+      </div>
+    </div>
+  </div>
 
-      <button type="button" onclick="switchStationView('dual')" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold transition border border-amber-500/30 cursor-pointer" title="Dual Station Split">
-        <span>⚏</span>
-        <span class="hidden sm:inline ml-1">Split View</span>
+  <!-- Sausage Deck Cards -->
+  <div id="braai-sausage-deck" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+    <!-- Dynamically rendered via renderBraaiStation() -->
+  </div>
+</section>
+
+<!-- 3. HANDOUT & ASSEMBLY STATION VIEW -->
+<section id="view-handout" class="hidden flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
+  <!-- Top Overview Grid (Enlarged) -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col gap-2.5 shadow-lg">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🥖</span>
+        <h2 class="font-black text-sm sm:text-base text-white">HANDOUT & PLATING DEMAND OVERVIEW</h2>
+      </div>
+      <span class="text-xs text-slate-400 font-mono">Live Sync</span>
+    </div>
+
+    <!-- Requirements Matrix -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 text-xs" id="handout-overview-metrics">
+      <!-- Dynamically populated via renderHandoutStation() -->
+    </div>
+
+    <!-- Bread Slicing & Curry Boat Staging Bar (+1 / +5 / Undo) -->
+    <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 text-xs font-bold text-slate-300">
+        <span>⚡ Buffer Prep:</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <!-- Crispy Rolls -->
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
+          <span class="text-amber-400 font-semibold">🥖 Crispy:</span>
+          <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
+          <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
+          <button type="button" onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 roll">↩</button>
+        </div>
+
+        <!-- White Hot Dog Rolls -->
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
+          <span class="text-sky-400 font-semibold">🌭 White:</span>
+          <button type="button" onclick="sliceRollsForBuffer('roll_white', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
+          <button type="button" onclick="sliceRollsForBuffer('roll_white', 5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
+          <button type="button" onclick="revertSlicedRollBuffer('roll_white', 1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 roll">↩</button>
+        </div>
+
+        <!-- Currywurst Trays Only -->
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 gap-1.5">
+          <span class="text-yellow-400 font-semibold">🍛 Curry Trays:</span>
+          <button type="button" onclick="prepCurryTraysBuffer(1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+1</button>
+          <button type="button" onclick="prepCurryTraysBuffer(5)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono cursor-pointer">+5</button>
+          <button type="button" onclick="revertCurryTraysBuffer(1)" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-mono cursor-pointer" title="Undo 1 tray">↩</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Order Tickets Queue -->
+  <div class="flex-1 overflow-y-auto">
+    <div id="handout-orders-queue" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+      <!-- Dynamically populated order tickets -->
+    </div>
+  </div>
+</section>
+
+<!-- 4. DUAL VIEW (BRAAI + HANDOUT SPLIT) -->
+<section id="view-dual" class="hidden flex-1 flex flex-col lg:flex-row gap-3 min-h-0 overflow-hidden">
+  <!-- Left: Compact Braai View -->
+  <div class="flex-1 flex flex-col gap-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-2.5 overflow-y-auto min-h-0">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <span class="font-bold text-xs text-rose-400 flex items-center gap-1.5">🔥 Braai Quick Monitor</span>
+      <button type="button" onclick="openMasterRestockModal()" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded cursor-pointer">📦 Restock</button>
+    </div>
+    <div id="dual-braai-deck" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Right: Compact Handout Queue -->
+  <div class="flex-1 flex flex-col gap-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-2.5 overflow-hidden min-h-0">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <span class="font-bold text-xs text-emerald-400 flex items-center gap-1.5">🥖 Handout Active Queue</span>
+      <span class="text-[10px] text-slate-400 font-mono" id="dual-handout-badge-count">0 tickets</span>
+    </div>
+    <div id="dual-handout-queue" class="flex-1 overflow-y-auto space-y-2 pr-1">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+</section>
+
+<!-- 5. MANAGER HUB VIEW -->
+<section id="view-manager" class="hidden flex-1 overflow-y-auto pr-1 space-y-4 pb-8">
+  <!-- Master Control Banner -->
+  <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/30 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl">
+        👑
+      </div>
+      <div>
+        <h2 class="font-black text-base text-white">MASTER EVENT MANAGEMENT HUB</h2>
+        <p class="text-xs text-slate-300">Catalog, Pricing, Station Registry, Staff Roster & End-of-Day Closeout</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 text-xs">
+      <button type="button" onclick="openMasterRestockModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center gap-1 cursor-pointer">
+        <span>📦</span>
+        <span>Transfer Main ➔ Local</span>
+      </button>
+      <button type="button" onclick="openZReportModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 font-semibold transition flex items-center gap-1 cursor-pointer">
+        <span>📊</span>
+        <span>Z-Report Closeout</span>
+      </button>
+      <button type="button" onclick="exportEventDataJSON()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/30 font-semibold transition flex items-center gap-1 cursor-pointer">
+        <span>💾</span>
+        <span>Export Backup</span>
+      </button>
+      <button type="button" onclick="confirmResetEventYearData()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 font-semibold transition flex items-center gap-1 cursor-pointer">
+        <span>⚠️</span>
+        <span>Reset Event Data</span>
       </button>
     </div>
-  </header>
+  </div>
 
-  <!-- TOAST NOTIFICATIONS -->
-  <div id="toast-container" class="fixed top-14 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <!-- Real-Time Financial & Volume Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
+      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Gross Turnover</span>
+      <div class="text-xl sm:text-2xl font-black text-amber-400 font-mono mt-1" id="mgr-stat-turnover">R 0.00</div>
+      <span class="text-[10px] text-slate-500" id="mgr-stat-payment-split">Cash: R0 • Yoco: R0</span>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
+      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Food COGS (Cost)</span>
+      <div class="text-xl sm:text-2xl font-black text-rose-400 font-mono mt-1" id="mgr-stat-cogs">R 0.00</div>
+      <span class="text-[10px] text-slate-500">Based on units sold</span>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
+      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Gross Profit</span>
+      <div class="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-1" id="mgr-stat-profit">R 0.00</div>
+      <span class="text-[10px] text-slate-500" id="mgr-stat-margin-pct">Margin: 0.0%</span>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
+      <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Sausages Sold</span>
+      <div class="text-xl sm:text-2xl font-black text-white font-mono mt-1" id="mgr-stat-sold-count">0</div>
+      <span class="text-[10px] text-slate-500" id="mgr-stat-orders-count">0 total orders</span>
+    </div>
+  </div>
 
-  <!-- MAIN VIEWPORT CONTAINER -->
-  <main class="flex-1 p-2 sm:p-4 max-w-7xl mx-auto w-full flex flex-col overflow-hidden">
-    
-    <!-- 1. TILL POS STATION VIEW -->
-    <section id="view-till" class="station-view flex-1 flex flex-col lg:flex-row gap-3 overflow-hidden">
-      <!-- Left: Quadratic Sausage Tiles & Products -->
-      <div class="flex-1 flex flex-col gap-3 overflow-y-auto no-scrollbar pb-6">
-        <!-- Live status bar with Queue Counters & Recall -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Till POS Register</span>
-            <span class="text-xs text-slate-500">•</span>
-            <span class="text-xs text-amber-400 font-mono" id="till-time-display">--:--</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="openTillLiveOrdersModal('processing')" class="px-2.5 py-1 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-              <span>⏳ Processing:</span>
-              <span id="till-processing-count" class="font-mono bg-amber-500 text-slate-950 px-1.5 rounded-full text-[10px] font-black">0</span>
-            </button>
-            <button type="button" onclick="openTillLiveOrdersModal('delivered')" class="px-2.5 py-1 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-              <span>✅ Delivered:</span>
-              <span id="till-delivered-count" class="font-mono bg-emerald-500 text-slate-950 px-1.5 rounded-full text-[10px] font-black">0</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 4 Quadratic Sausage Grid -->
-        <div>
-          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-            <span>Primary Oktoberfest Sausages (Quadratic Grid)</span>
-            <span class="text-[11px] text-slate-500 font-normal">Tap to add to order</span>
-          </h2>
-          <div id="till-sausage-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <!-- Dynamically populated 4 quadratic cards -->
-          </div>
-        </div>
-
-        <!-- Extra / Standalone Items -->
-        <div id="till-extra-items-section" class="mt-1">
-          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-            <span>Buns, Sides & Standalone Items</span>
-          </h2>
-          <div id="till-extras-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <!-- Dynamically populated extras (excluding combo-only buns) -->
-          </div>
-        </div>
+  <!-- Section: Catalog, Stock, Pricing & Product Pairing Rules -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+      <div>
+        <h3 class="font-bold text-sm text-white">🌭 Catalog, Stock, Pricing & Product Pairing Rules</h3>
+        <p class="text-xs text-slate-400">Configure prices, unit COGS, depots, and companion bun pairing rules</p>
       </div>
+      <button type="button" onclick="openAddStockModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+        <span>+</span>
+        <span>Add Catalog Item</span>
+      </button>
+    </div>
 
-      <!-- Right: Active Order Cart & Checkout -->
-      <div class="w-full lg:w-96 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col shadow-xl overflow-hidden">
-        <!-- Cart Header -->
-        <div class="p-3 bg-slate-850 border-b border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🛒</span>
-            <div>
-              <h3 class="text-sm font-bold text-white">Current Order</h3>
-              <div id="cart-order-number-label" class="text-[11px] text-amber-400 font-mono font-bold">New Ticket</div>
-            </div>
-          </div>
-          <button type="button" onclick="clearCart()" class="text-xs text-rose-400 hover:text-rose-300 transition font-bold px-2 py-1 rounded bg-rose-500/10 border border-rose-500/20 cursor-pointer">
-            Clear
-          </button>
-        </div>
-
-        <!-- Active Order Recall Notice if in Edit Mode -->
-        <div id="cart-recalled-warning" class="hidden p-2 bg-amber-500/20 border-b border-amber-500/40 text-amber-300 text-xs font-bold flex items-center justify-between">
-          <span>⚠️ Modifying Recalled Order #<span id="recalled-order-id"></span></span>
-          <span class="text-[10px] uppercase bg-amber-400 text-slate-950 px-1.5 py-0.5 rounded font-black">REV</span>
-        </div>
-
-        <!-- Cart Items List -->
-        <div id="cart-items-container" class="flex-1 p-3 overflow-y-auto no-scrollbar space-y-2 text-xs">
-          <!-- Dynamically populated items with roll modifiers -->
-        </div>
-
-        <!-- Cart Summary & Actions -->
-        <div class="p-3 bg-slate-850 border-t border-slate-800 flex flex-col gap-2">
-          <div class="flex justify-between items-baseline text-xs text-slate-400">
-            <span>Items Count:</span>
-            <span id="cart-total-qty" class="font-bold text-white font-mono">0</span>
-          </div>
-          <div class="flex justify-between items-baseline text-sm">
-            <span class="font-bold text-slate-200">Total Due:</span>
-            <span id="cart-total-price" class="text-xl font-black text-amber-400 font-mono">R0.00</span>
-          </div>
-
-          <!-- Checkout Buttons -->
-          <div class="grid grid-cols-2 gap-2 mt-1">
-            <button type="button" onclick="processCheckout('cash')" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-900/30 transition cursor-pointer">
-              <span>💵</span>
-              <span>CASH</span>
-            </button>
-            <button type="button" onclick="processCheckout('yoco')" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-sky-900/30 transition cursor-pointer">
-              <span>💳</span>
-              <span>YOCO</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. BRAAI GRILL STATION VIEW -->
-    <section id="view-braai" class="station-view hidden flex-1 flex flex-col gap-3 overflow-hidden">
-      <!-- Top Station Bar -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🔥</span>
-          <div>
-            <h2 class="text-sm font-black uppercase tracking-wider text-white">Braai Master Station</h2>
-            <p class="text-[11px] text-slate-400">Live Sausage Demand, Active Heat & Pre-Cook Buffer</p>
-          </div>
-        </div>
-        
-        <div class="flex items-center gap-2">
-          <!-- Pre-cooking authorization indicator -->
-          <span id="braai-precook-permission-badge" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-            <span>🛡️</span>
-            <span>Self-Precooking Allowed</span>
-          </span>
-          <!-- Master Quick Restock Button (visible to Manager/Master) -->
-          <button type="button" onclick="openMasterRestockModal()" id="btn-braai-master-restock" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-            <span>📦</span>
-            <span>Master Restock (Main ➔ Storage)</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Dynamic Sausage Pipeline Cards (+1, +5, Undo, Net Need) -->
-      <div id="braai-sausages-pipeline" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <!-- Dynamically populated cards with Storage -> On Braai -> Precooked -> Handout -->
-      </div>
-
-      <!-- Open Tickets on the Braai Screen -->
-      <div class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col overflow-hidden shadow-sm">
-        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span>Active Grill Orders Queue</span>
-            <span id="braai-ticket-count" class="font-mono bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full text-[11px] font-bold">0</span>
-          </h3>
-          <span class="text-[11px] text-slate-500">Tickets awaiting grilling & handout</span>
-        </div>
-        <div id="braai-orders-feed" class="flex-1 overflow-y-auto no-scrollbar pt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
-          <!-- Dynamically populated tickets -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. HANDOUT & ASSEMBLY STATION VIEW -->
-    <section id="view-handout" class="station-view hidden flex-1 flex flex-col gap-3 overflow-hidden">
-      <!-- Station Top Bar -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-2.5">
-          <span class="text-2xl">🍽️</span>
-          <div>
-            <h2 class="text-base font-black uppercase tracking-wider text-white">Handout & Assembly</h2>
-            <p class="text-xs text-slate-400">Order Verification, Roll Slicing & Rapid Plating</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400">Pending Handouts:</span>
-          <span id="handout-pending-counter" class="font-mono bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full text-xs font-black">0</span>
-        </div>
-      </div>
-
-      <!-- Handout Live Overview & Roll Requirements (Enlarged) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col gap-3 shadow-md">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <h3 class="text-xs sm:text-sm font-black uppercase tracking-wider text-amber-400 flex items-center gap-2">
-            <span>📊 Live Assembly & Bread Requirements</span>
-          </h3>
-          <span class="text-[11px] text-slate-400">Total requirements from open tickets</span>
-        </div>
-
-        <!-- Metric Grid -->
-        <div id="handout-overview-metrics" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 text-xs">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-slate-300">
+        <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+          <tr>
+            <th class="py-2.5 px-3">Item</th>
+            <th class="py-2.5 px-3">Category</th>
+            <th class="py-2.5 px-3">Selling Price</th>
+            <th class="py-2.5 px-3">Unit COGS</th>
+            <th class="py-2.5 px-3">Main Depot</th>
+            <th class="py-2.5 px-3">Tent Storage</th>
+            <th class="py-2.5 px-3">Sold</th>
+            <th class="py-2.5 px-3">Sale Rule & Pairings</th>
+            <th class="py-2.5 px-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="mgr-table-catalog" class="divide-y divide-slate-800/60 font-mono">
           <!-- Dynamically populated -->
-        </div>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        <!-- Prep & Buffer Controls (+1, +5, Undo for Rolls & Curry Boats) -->
-        <div class="border-t border-slate-800 pt-3">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold uppercase text-slate-300">Prep Controls (Slice Rolls / Prepare Currywurst Trays)</span>
-            <span class="text-[11px] text-slate-500">Tap to increment sliced buffer</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <!-- Crispy Roll Slicing -->
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-slate-200 block">🥖 Crispy German Roll</span>
-                <span class="text-[11px] text-slate-400 font-mono">Sliced Buffer: <strong id="buf-roll-crusty-display" class="text-amber-400">0</strong></span>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 1)" class="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black text-xs border border-amber-500/30 cursor-pointer">+1</button>
-                <button type="button" onclick="sliceRollsForBuffer('roll_crusty', 5)" class="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs cursor-pointer shadow">+5</button>
-                <button type="button" onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs cursor-pointer" title="Undo">↩</button>
-              </div>
-            </div>
-
-            <!-- White Hot Dog Roll Slicing -->
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-slate-200 block">🌭 White Hot Dog Roll</span>
-                <span class="text-[11px] text-slate-400 font-mono">Sliced Buffer: <strong id="buf-roll-white-display" class="text-amber-400">0</strong></span>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button" onclick="sliceRollsForBuffer('roll_white', 1)" class="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black text-xs border border-amber-500/30 cursor-pointer">+1</button>
-                <button type="button" onclick="sliceRollsForBuffer('roll_white', 5)" class="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs cursor-pointer shadow">+5</button>
-                <button type="button" onclick="revertSlicedRollBuffer('roll_white', 1)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs cursor-pointer" title="Undo">↩</button>
-              </div>
-            </div>
-
-            <!-- Currywurst Trays Only (Trays strictly for Currywurst) -->
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-slate-200 block">🍛 Currywurst Trays</span>
-                <span class="text-[11px] text-slate-400 font-mono">Ready Buffer: <strong id="buf-curry-tray-display" class="text-amber-400">0</strong></span>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button" onclick="prepCurryTraysBuffer(1)" class="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black text-xs border border-amber-500/30 cursor-pointer">+1</button>
-                <button type="button" onclick="prepCurryTraysBuffer(5)" class="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs cursor-pointer shadow">+5</button>
-                <button type="button" onclick="revertCurryTraysBuffer(1)" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs cursor-pointer" title="Undo">↩</button>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Section: Operational Stations Configuration -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div>
+        <h3 class="font-bold text-sm text-white">🖥️ Operational Stations Registry</h3>
+        <p class="text-xs text-slate-400">Add or customize active stations across the festival site</p>
       </div>
+      <button type="button" onclick="openStationModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+        <span>+</span>
+        <span>Add Station</span>
+      </button>
+    </div>
 
-      <!-- Handout Active Order Tickets Feed -->
-      <div class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col overflow-hidden shadow-sm">
-        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <span>Assembly Post-It Tickets</span>
-            <span class="text-xs text-slate-500">• Tap "Handed Out" to complete</span>
-          </h3>
-          <span class="text-xs text-amber-400 font-mono" id="handout-queue-count">0 tickets waiting</span>
-        </div>
-        <div id="handout-orders-feed" class="flex-1 overflow-y-auto no-scrollbar pt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          <!-- Dynamically populated order cards with 1-tap complete -->
-        </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3" id="mgr-stations-grid">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Section: Staff & Crew Roster -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div>
+        <h3 class="font-bold text-sm text-white">👥 Staff Crew Roster & Station Sign-In PINs</h3>
+        <p class="text-xs text-slate-400">Manage crew members, roles, assigned stations, and private PINs</p>
       </div>
-    </section>
+      <button type="button" onclick="openStaffModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+        <span>+</span>
+        <span>Add Staff Member</span>
+      </button>
+    </div>
 
-    <!-- 4. DUAL SPLIT-SCREEN VIEW -->
-    <section id="view-dual" class="station-view hidden flex-1 flex flex-col gap-3 overflow-hidden">
-      <!-- Selector bar -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 flex items-center justify-between shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-base">⚏</span>
-          <span class="text-xs font-black uppercase tracking-wider text-white">Dual Screen Split Station</span>
-        </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span>Left:</span>
-          <select id="dual-left-select" onchange="renderDualSplit()" class="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-amber-400 font-bold">
-            <option value="till">Till POS</option>
-            <option value="braai" selected>Braai Grill</option>
-            <option value="handout">Handout</option>
-          </select>
-          <span>Right:</span>
-          <select id="dual-right-select" onchange="renderDualSplit()" class="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-amber-400 font-bold">
-            <option value="till">Till POS</option>
-            <option value="braai">Braai Grill</option>
-            <option value="handout" selected>Handout</option>
-          </select>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3" id="mgr-staff-grid">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+</section>
 
-      <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-hidden">
-        <div id="dual-pane-left" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-3 flex flex-col overflow-y-auto no-scrollbar"></div>
-        <div id="dual-pane-right" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-3 flex flex-col overflow-y-auto no-scrollbar"></div>
-      </div>
-    </section>
 
-    <!-- 5. MANAGER & MASTER HUB VIEW -->
-    <section id="view-manager" class="station-view hidden flex-1 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-8">
-      <!-- Master Top Overview Cards -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
-          <span class="text-xs text-slate-400 font-medium block">Total Revenue</span>
-          <span id="mgr-stat-revenue" class="text-xl sm:text-2xl font-black text-amber-400 font-mono mt-0.5 block">R0.00</span>
-          <span class="text-[10px] text-slate-500">Gross festival receipts</span>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
-          <span class="text-xs text-slate-400 font-medium block">Total Orders</span>
-          <span id="mgr-stat-orders" class="text-xl sm:text-2xl font-black text-white font-mono mt-0.5 block">0</span>
-          <span class="text-[10px] text-slate-500">Completed tickets</span>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
-          <span class="text-xs text-slate-400 font-medium block">Cash vs Yoco</span>
-          <div class="text-xs font-bold text-slate-200 mt-1 font-mono">
-            💵 <span id="mgr-stat-cash">R0</span> | 💳 <span id="mgr-stat-yoco">R0</span>
-          </div>
-          <span class="text-[10px] text-slate-500">Tender breakdown</span>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
-          <span class="text-xs text-slate-400 font-medium block">Est. Net Profit</span>
-          <span id="mgr-stat-profit" class="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-0.5 block">R0.00</span>
-          <span class="text-[10px] text-slate-500">Gross minus COGS</span>
-        </div>
-      </div>
+  <!-- Dynamic Mode A: First-Time Master Registration -->
+  <div id="login-master-setup-view" class="py-3 space-y-3 hidden">
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200">
+      <strong class="font-bold text-amber-300">Welcome to Oktoberfest KDS!</strong><br>
+      System initialized clean at zero. Please register the Event Master and choose your private 4-digit PIN.
+    </div>
+    <div>
+      <label class="block text-xs text-slate-300 mb-1">Master / Manager Name</label>
+      <input type="text" id="setup-master-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="e.g. Nicolas">
+    </div>
+    <div>
+      <label class="block text-xs text-slate-300 mb-1">Create Private 4-Digit PIN</label>
+      <input type="password" maxlength="4" id="setup-master-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono text-center tracking-widest focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="••••">
+    </div>
+    <button type="button" onclick="completeMasterRegistration()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer">
+      Complete Registration & Enter
+    </button>
+    <button type="button" onclick="seedSamplePresetData()" class="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer">
+      Or seed sample Oktoberfest crew & menu preset
+    </button>
+  </div>
 
-      <!-- Master Action Bar: Z-Report, Restock, Pre-cooking Permission -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">🛠️</span>
-          <span class="text-xs font-black uppercase text-white">Master Event Controls</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <label class="flex items-center gap-2 text-xs text-slate-300 bg-slate-950 px-2.5 py-1.5 rounded-xl border border-slate-800 cursor-pointer">
-            <input type="checkbox" id="mgr-precook-toggle" onchange="togglePrecookPermission(this.checked)" class="rounded border-slate-700 text-amber-500 focus:ring-amber-400">
-            <span>Allow Braai Self-Precooking</span>
-          </label>
-          <button type="button" onclick="openZReportModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow transition cursor-pointer">
-            📊 Z-Report (Closeout)
-          </button>
-          <button type="button" onclick="exportEventDataJSON()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition cursor-pointer">
-            💾 Export JSON Backup
-          </button>
-          <button type="button" onclick="openResetYearModal()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition cursor-pointer">
-            ⚠️ Reset Event Data
-          </button>
-        </div>
-      </div>
+  <!-- Dynamic Mode B: Standard Crew Sign-In -->
+  <div id="login-standard-crew-view" class="py-3 space-y-3 hidden">
+    <div>
+      <label class="block text-xs text-slate-300 mb-1">Select Your Name</label>
+      <select id="login-staff-select" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-amber-500">
+        <!-- Populated dynamically -->
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs text-slate-300 mb-1">Enter 4-Digit Passcode</label>
+      <input type="password" maxlength="4" id="login-staff-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono text-center tracking-widest focus:outline-none focus:ring-1 focus:ring-amber-500" placeholder="••••">
+    </div>
+    <div id="login-pin-error" class="text-rose-400 text-xs font-semibold text-center hidden">Incorrect PIN</div>
+    <button type="button" onclick="verifyStaffLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer">
+      Sign In to Station
+    </button>
+  </div>
+</div>
 
-      <!-- Station Management Section -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span>🖥️ Station Registry & Configuration</span>
-            </h3>
-            <p class="text-[11px] text-slate-400">Configure physical station destinations, icons, and workflow screens</p>
-          </div>
-          <button type="button" onclick="openStationModal()" class="px-3 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition cursor-pointer shadow">
-            + Add Station
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="py-2 px-2">Icon</th>
-                <th class="py-2 px-2">Station Name</th>
-                <th class="py-2 px-2">Station ID Key</th>
-                <th class="py-2 px-2">Assigned Role</th>
-                <th class="py-2 px-2 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="mgr-stations-table-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      <!-- Staff Roster & Station Assignment Section -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span>👥 Staff Roster, Station Assignment & PINs</span>
-            </h3>
-            <p class="text-[11px] text-slate-400">Assign staff to stations, configure private PINs, and designate duties</p>
-          </div>
-          <button type="button" onclick="openStaffModal()" class="px-3 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition cursor-pointer shadow">
-            + Add Staff Member
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="py-2 px-2">Staff Member</th>
-                <th class="py-2 px-2">Role</th>
-                <th class="py-2 px-2">Assigned Station</th>
-                <th class="py-2 px-2 text-center">PIN Protected</th>
-                <th class="py-2 px-2 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="mgr-staff-table-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <p class="text-xs text-slate-300">
+    Move chilled sausages or rolls from bulk cold storage (refrigerated truck / cold room) into the active braai and handout station coolers.
+  </p>
 
-      <!-- Inventory, Menu Pricing & Pairings Catalog Section -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span>🌭 Catalog, Stock, Pricing & Product Pairing Rules</span>
-            </h3>
-            <p class="text-[11px] text-slate-400">Configure Main Storage (Bulk Depot), Local Storage (On-site), prices, and bundle rules</p>
-          </div>
-          <button type="button" onclick="openAddStockModal()" class="px-3 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition cursor-pointer shadow">
-            + Add Catalog Item
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="py-2 px-2">Item</th>
-                <th class="py-2 px-2">Price</th>
-                <th class="py-2 px-2">COGS</th>
-                <th class="py-2 px-2 text-center">Main Stock</th>
-                <th class="py-2 px-2 text-center">Storage</th>
-                <th class="py-2 px-2 text-center">Sold</th>
-                <th class="py-2 px-2">Sale Rule</th>
-                <th class="py-2 px-2">Allowed Pairings</th>
-                <th class="py-2 px-2 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="mgr-inventory-table-body">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+  <div class="space-y-2 max-h-[340px] overflow-y-auto pr-1" id="restock-transfer-list">
+    <!-- Dynamically rendered list of items -->
+  </div>
 
-  </main>
+  <div class="pt-2 border-t border-slate-800 flex justify-end">
+    <button type="button" onclick="closeMasterRestockModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">
+      Done
+    </button>
+  </div>
+</div>
 
-  <!-- ==================== MODALS ==================== -->
 
-  <!-- 1. SIGN IN & FIRST-TIME SETUP MODAL -->
-  <div id="modal-login" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-5">
-      
-      <!-- FIRST RUN MASTER REGISTRATION (shown if no staff exists) -->
-      <div id="login-master-setup-view" class="hidden flex flex-col gap-4">
-        <div class="text-center">
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 text-2xl flex items-center justify-center mx-auto mb-2 font-black shadow-lg shadow-amber-500/20">
-            👑
-          </div>
-          <h2 class="text-lg font-black text-white">First-Time Master Setup</h2>
-          <p class="text-xs text-slate-400 mt-1">Register the festival Master Administrator to initialize the KDS hub from clean zero.</p>
-        </div>
+  <input type="hidden" id="edit-stock-id">
 
-        <div class="space-y-3">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Master Full Name</label>
-            <input type="text" id="setup-master-name" placeholder="e.g. Nicolas (Festmeister)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Create Private 4-Digit Master PIN</label>
-            <input type="password" maxlength="4" id="setup-master-pin" placeholder="••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center text-sm font-mono tracking-widest text-amber-400 focus:outline-none focus:border-amber-500">
-            <span class="text-[10px] text-slate-500 block mt-1">This PIN unlocks manager privileges across all stations.</span>
-          </div>
-        </div>
+  <div class="grid grid-cols-2 gap-3 text-xs">
+    <div class="col-span-2">
+      <label class="block text-slate-300 mb-1">Item Name</label>
+      <input type="text" id="edit-stock-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Original Bratwurst (140g)">
+    </div>
 
-        <button type="button" onclick="submitMasterFirstTimeRegistration()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-500/20 cursor-pointer">
-          Register Master & Initialize
-        </button>
+    <div>
+      <label class="block text-slate-300 mb-1">Icon / Emoji</label>
+      <input type="text" id="edit-stock-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-center" placeholder="🌭">
+    </div>
 
-        <div class="border-t border-slate-800 pt-3 text-center">
-          <button type="button" onclick="seedSampleDataset()" class="text-xs text-amber-400/80 hover:text-amber-300 underline cursor-pointer">
-            Or seed sample Oktoberfest crew & menu preset
-          </button>
-        </div>
-      </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Category</label>
+      <select id="edit-stock-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
+        <option value="sausage">Sausage (Braai)</option>
+        <option value="roll">Roll / Bread</option>
+        <option value="condiment">Condiment / Packaging</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
 
-      <!-- STANDARD OPERATOR LOGIN VIEW -->
-      <div id="login-standard-view" class="flex flex-col gap-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🔑</span>
-            <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Station Sign-In</h2>
-              <p class="text-[11px] text-slate-400">Select your name and enter your private 4-digit PIN</p>
-            </div>
-          </div>
-          <button type="button" onclick="closeLoginModal()" class="text-slate-400 hover:text-white text-sm cursor-pointer p-1">✕</button>
-        </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Selling Price (ZAR)</label>
+      <input type="number" step="0.5" id="edit-stock-price" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="50.00">
+    </div>
 
-        <!-- Staff Member Selection Chips -->
-        <div>
-          <label class="text-[11px] font-bold text-slate-400 block mb-1.5 uppercase tracking-wider">Select Staff Member</label>
-          <div id="login-staff-chips-container" class="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto no-scrollbar">
-            <!-- Dynamically populated staff chips -->
-          </div>
-        </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Unit COGS (Cost)</label>
+      <input type="number" step="0.1" id="edit-stock-cogs" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="17.50">
+    </div>
 
-        <!-- Destination Station Selector -->
-        <div>
-          <label class="text-[11px] font-bold text-slate-400 block mb-1.5 uppercase tracking-wider">Select Destination Station</label>
-          <div id="login-stations-container" class="grid grid-cols-3 gap-1.5">
-            <!-- Dynamically populated stations -->
-          </div>
-        </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Main Bulk Stock</label>
+      <input type="number" id="edit-stock-coldroom" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="200">
+    </div>
 
-        <!-- 4-Digit PIN Mask Dots -->
-        <div class="flex flex-col items-center gap-2 pt-1">
-          <span class="text-[11px] text-slate-400">Enter Private 4-Digit PIN:</span>
-          <div class="flex gap-3">
-            <div id="pin-dot-1" class="w-3.5 h-3.5 rounded-full border-2 border-slate-700 bg-slate-950 transition"></div>
-            <div id="pin-dot-2" class="w-3.5 h-3.5 rounded-full border-2 border-slate-700 bg-slate-950 transition"></div>
-            <div id="pin-dot-3" class="w-3.5 h-3.5 rounded-full border-2 border-slate-700 bg-slate-950 transition"></div>
-            <div id="pin-dot-4" class="w-3.5 h-3.5 rounded-full border-2 border-slate-700 bg-slate-950 transition"></div>
-          </div>
-        </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Local Tent Storage</label>
+      <input type="number" id="edit-stock-cooler" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="75">
+    </div>
 
-        <!-- Numeric Keypad -->
-        <div class="grid grid-cols-3 gap-2 pt-1">
-          <button type="button" onclick="keypadPress('1')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">1</button>
-          <button type="button" onclick="keypadPress('2')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">2</button>
-          <button type="button" onclick="keypadPress('3')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">3</button>
-          <button type="button" onclick="keypadPress('4')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">4</button>
-          <button type="button" onclick="keypadPress('5')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">5</button>
-          <button type="button" onclick="keypadPress('6')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">6</button>
-          <button type="button" onclick="keypadPress('7')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">7</button>
-          <button type="button" onclick="keypadPress('8')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">8</button>
-          <button type="button" onclick="keypadPress('9')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">9</button>
-          <button type="button" onclick="keypadClear()" class="py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs transition">CLR</button>
-          <button type="button" onclick="keypadPress('0')" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-bold text-sm transition">0</button>
-          <button type="button" onclick="keypadBackspace()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm transition">⌫</button>
-        </div>
+    <div class="col-span-2">
+      <label class="block text-slate-300 mb-1">Sale Rule (Individual Sale vs Combo Only)</label>
+      <select id="edit-stock-sale-rule" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
+        <option value="both">Solo & Combo (Allowed alone or paired with sausage)</option>
+        <option value="combo_only">Combo Only (No solo sale — strictly served with sausage)</option>
+        <option value="standalone_only">Solo Only (Sold individually only)</option>
+      </select>
+    </div>
+
+    <div class="col-span-2">
+      <label class="block text-slate-300 mb-1">Allowed Companion Pairings (Check all that apply)</label>
+      <div id="edit-stock-pairings-checklist" class="grid grid-cols-2 gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+        <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- 2. TILL LIVE ORDERS MODAL (Processing / Delivered Drawers & Recall) -->
-  <div id="modal-till-live-orders" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-5 shadow-2xl flex flex-col max-h-[85vh]">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span id="till-modal-icon" class="text-lg">⏳</span>
-          <div>
-            <h3 id="till-modal-title" class="text-sm font-black text-white uppercase tracking-wider">Processing Orders Queue</h3>
-            <p class="text-[11px] text-slate-400">Cashier order inspection and 1-tap recall</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeTillLiveOrdersModal()" class="text-slate-400 hover:text-white cursor-pointer">✕</button>
-      </div>
+  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+    <button type="button" onclick="deleteStockItemAction()" id="btn-delete-stock" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
+      Delete Item
+    </button>
+    <div class="flex items-center gap-2 ml-auto">
+      <button type="button" onclick="closeStockModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+        Cancel
+      </button>
+      <button type="button" onclick="saveStockForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
+        Save Item
+      </button>
+    </div>
+  </div>
+</div>
 
-      <div id="till-modal-orders-list" class="flex-1 overflow-y-auto no-scrollbar py-3 space-y-2 text-xs">
-        <!-- Dynamically rendered orders -->
-      </div>
+
+  <input type="hidden" id="edit-station-id">
+
+  <div class="space-y-2.5 text-xs">
+    <div>
+      <label class="block text-slate-300 mb-1">Station ID Key</label>
+      <input type="text" id="edit-station-key" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono" placeholder="e.g. till2">
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Station Name</label>
+      <input type="text" id="edit-station-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Till Register 2">
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Icon / Emoji</label>
+      <input type="text" id="edit-station-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-center" placeholder="💵">
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Operational Role</label>
+      <input type="text" id="edit-station-role" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Fast Order Taking">
     </div>
   </div>
 
-  <!-- 3. STATION REGISTRY EDITOR MODAL -->
-  <div id="modal-station-editor" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col gap-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <h3 id="station-modal-title" class="text-sm font-black text-white uppercase">Configure Station</h3>
-        <button type="button" onclick="closeStationModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-      <input type="hidden" id="station-edit-id">
-      <div class="space-y-3">
-        <div>
-          <label class="text-[11px] font-bold text-slate-300 block mb-1">Station Name</label>
-          <input type="text" id="station-input-name" placeholder="e.g. Bar & Drinks" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Station Emoji Icon</label>
-            <input type="text" id="station-input-icon" placeholder="🍺" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Station Key ID</label>
-            <input type="text" id="station-input-key" placeholder="bar" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono">
-          </div>
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-slate-300 block mb-1">Operational Role Description</label>
-          <input type="text" id="station-input-role" placeholder="Beverage dispensing and tap management" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-      </div>
-      <div class="flex items-center justify-between border-t border-slate-800 pt-3">
-        <button type="button" id="btn-delete-station" onclick="deleteStationAction()" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 font-bold text-xs hover:bg-rose-500/30">Delete</button>
-        <div class="flex gap-2">
-          <button type="button" onclick="closeStationModal()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">Cancel</button>
-          <button type="button" onclick="saveStationForm()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs">Save Station</button>
-        </div>
-      </div>
+  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+    <button type="button" onclick="deleteStationAction()" id="btn-delete-station" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
+      Delete
+    </button>
+    <div class="flex items-center gap-2 ml-auto">
+      <button type="button" onclick="closeStationModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+        Cancel
+      </button>
+      <button type="button" onclick="saveStationForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
+        Save Station
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  <input type="hidden" id="edit-staff-id">
+
+  <div class="space-y-2.5 text-xs">
+    <div>
+      <label class="block text-slate-300 mb-1">Full Name</label>
+      <input type="text" id="edit-staff-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Nick">
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Role Title</label>
+      <input type="text" id="edit-staff-role" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white" placeholder="e.g. Till Lead Cashier">
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Assigned Station</label>
+      <select id="edit-staff-station" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white">
+        <!-- Populated dynamically -->
+      </select>
+    </div>
+    <div>
+      <label class="block text-slate-300 mb-1">Private 4-Digit PIN</label>
+      <input type="password" maxlength="4" id="edit-staff-pin" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white font-mono text-center tracking-widest" placeholder="••••">
     </div>
   </div>
 
-  <!-- 4. STAFF ROSTER EDITOR MODAL -->
-  <div id="modal-staff-editor" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col gap-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <h3 id="staff-modal-title" class="text-sm font-black text-white uppercase">Configure Staff Member</h3>
-        <button type="button" onclick="closeStaffModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-      <input type="hidden" id="staff-edit-id">
-      <div class="space-y-3">
-        <div>
-          <label class="text-[11px] font-bold text-slate-300 block mb-1">Staff Member Name</label>
-          <input type="text" id="staff-input-name" placeholder="e.g. Hans Gruber" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Role Title</label>
-            <input type="text" id="staff-input-role" placeholder="Grill Master / Cashier" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Private 4-Digit PIN</label>
-            <input type="password" maxlength="4" id="staff-input-pin" placeholder="••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-center text-xs font-mono tracking-widest text-amber-400">
-          </div>
-        </div>
-        <div>
-          <label class="text-[11px] font-bold text-slate-300 block mb-1">Assigned Station Binding</label>
-          <select id="staff-input-station" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-            <!-- Dynamically populated from stationRegistry -->
-          </select>
-        </div>
-      </div>
-      <div class="flex items-center justify-between border-t border-slate-800 pt-3">
-        <button type="button" id="btn-delete-staff" onclick="deleteStaffMemberAction()" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 font-bold text-xs hover:bg-rose-500/30">Delete</button>
-        <div class="flex gap-2">
-          <button type="button" onclick="closeStaffModal()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">Cancel</button>
-          <button type="button" onclick="saveStaffForm()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs">Save Staff</button>
-        </div>
-      </div>
+  <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+    <button type="button" onclick="deleteStaffMemberAction()" id="btn-delete-staff" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold cursor-pointer hidden">
+      Delete
+    </button>
+    <div class="flex items-center gap-2 ml-auto">
+      <button type="button" onclick="closeStaffModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+        Cancel
+      </button>
+      <button type="button" onclick="saveStaffForm()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
+        Save Staff
+      </button>
     </div>
   </div>
+</div>
 
-  <!-- 5. CATALOG ITEM & PAIRINGS MODAL -->
-  <div id="modal-stock-editor" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <h3 id="stock-modal-title" class="text-sm font-black text-white uppercase">Configure Catalog Item</h3>
-        <button type="button" onclick="closeStockModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-      <input type="hidden" id="stock-edit-id">
-      <div class="space-y-3">
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2">
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Product Title</label>
-            <input type="text" id="stock-input-name" placeholder="e.g. Traditional Bratwurst" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Icon</label>
-            <input type="text" id="stock-input-icon" placeholder="🌭" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white text-center">
-          </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Selling Price (ZAR)</label>
-            <input type="number" id="stock-input-price" placeholder="65" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-400 font-mono font-bold">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Cost of Goods (COGS)</label>
-            <input type="number" id="stock-input-cogs" placeholder="25" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 font-mono">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Main Stock (Bulk Depot)</label>
-            <input type="number" id="stock-input-cold" placeholder="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 font-mono">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Storage (On-Site Cooler)</label>
-            <input type="number" id="stock-input-cooler" placeholder="30" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 font-mono">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Category</label>
-            <select id="stock-input-category" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="sausage">Sausage (Braai)</option>
-              <option value="roll">Roll / Bread</option>
-              <option value="side">Side / Extra</option>
-              <option value="beverage">Beverage</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-300 block mb-1">Sale Rule (Solo vs Combo)</label>
-            <select id="stock-input-salerule" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="both">Solo & Combo (Allowed alone or with sausage)</option>
-              <option value="combo_only">Combo Only (No solo sale — strictly with sausage)</option>
-              <option value="standalone_only">Solo Only (Sold individually only)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Allowed Pairings Multi-Select Checkboxes -->
-        <div class="border-t border-slate-800 pt-2">
-          <label class="text-[11px] font-bold text-slate-300 block mb-1">Allowed Companion Pairings</label>
-          <p class="text-[10px] text-slate-500 mb-2">Select which bread/tray options can accompany this item in the Till POS cart.</p>
-          <div id="stock-pairing-checkboxes-container" class="grid grid-cols-2 gap-2">
-            <!-- Dynamically populated options -->
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between border-t border-slate-800 pt-3">
-        <button type="button" id="btn-delete-stock" onclick="deleteStockItemAction()" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 font-bold text-xs hover:bg-rose-500/30">Delete</button>
-        <div class="flex gap-2">
-          <button type="button" onclick="closeStockModal()" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">Cancel</button>
-          <button type="button" onclick="saveStockForm()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs">Save Catalog Item</button>
-        </div>
-      </div>
-    </div>
+  <div id="till-orders-modal-list" class="flex-1 overflow-y-auto py-3 space-y-2.5">
+    <!-- List of active or delivered orders with Recall button -->
   </div>
 
-  <!-- 6. MASTER RESTOCK (MAIN STORAGE ➔ STORAGE) MODAL -->
-  <div id="modal-master-restock" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-5 shadow-2xl flex flex-col gap-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">📦</span>
-          <div>
-            <h3 class="text-sm font-black text-white uppercase">Master Bulk Stock Transfer</h3>
-            <p class="text-[11px] text-slate-400">Transfer from Main Storage (Bulk Depot) into Local Storage (On-Site)</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeMasterRestockModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
+  <div class="pt-2 border-t border-slate-800 flex justify-end">
+    <button type="button" onclick="closeTillLiveOrdersModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">
+      Close Drawer
+    </button>
+  </div>
+</div>
 
-      <div id="master-restock-items-list" class="space-y-2 max-h-72 overflow-y-auto no-scrollbar">
-        <!-- Dynamically populated transfer rows -->
-      </div>
-    </div>
+
+  <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 text-xs font-mono" id="z-report-content">
+    <!-- Rendered dynamically -->
   </div>
 
-  <!-- 7. Z-REPORT CLOSEOUT MODAL -->
-  <div id="modal-z-report" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">📊</span>
-          <h3 class="text-sm font-black text-white uppercase">Oktoberfest Z-Report</h3>
-        </div>
-        <button type="button" onclick="closeZReportModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
+  <div class="pt-2 border-t border-slate-800 flex justify-end gap-2">
+    <button type="button" onclick="exportEventDataJSON()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs font-bold cursor-pointer">
+      💾 Download Backup JSON
+    </button>
+    <button type="button" onclick="closeZReportModal()" class="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black cursor-pointer">
+      Close Report
+    </button>
+  </div>
+</div>
 
-      <div class="text-xs space-y-3 font-mono">
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Event Year:</span>
-          <span id="zreport-event-year" class="text-amber-400 font-bold">2026</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Report Generated:</span>
-          <span id="zreport-timestamp" class="text-slate-300">--</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Total Orders Settled:</span>
-          <span id="zreport-order-count" class="text-white font-bold">0</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Gross Turnover:</span>
-          <span id="zreport-gross-rev" class="text-amber-400 font-bold">R0.00</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Cash Receipts:</span>
-          <span id="zreport-cash-rev" class="text-emerald-400 font-bold">R0.00</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Yoco Receipts:</span>
-          <span id="zreport-yoco-rev" class="text-sky-400 font-bold">R0.00</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Estimated Cost of Goods:</span>
-          <span id="zreport-cogs" class="text-rose-400 font-bold">R0.00</span>
-        </div>
-        <div class="flex justify-between border-b border-slate-800 pb-1">
-          <span class="text-slate-400">Net Estimated Profit:</span>
-          <span id="zreport-net-profit" class="text-emerald-400 font-black text-sm">R0.00</span>
-        </div>
 
-        <div class="pt-2">
-          <span class="text-slate-400 block mb-1">Item Sales Breakdown:</span>
-          <table class="w-full text-left text-[11px]">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-500">
-                <th class="py-1 px-1">Item</th>
-                <th class="py-1 px-1 text-center">Qty</th>
-                <th class="py-1 px-1 text-right">Revenue</th>
-              </tr>
-            </thead>
-            <tbody id="zreport-items-breakdown">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <p class="text-xs text-slate-300 leading-relaxed">
+    This action will reset orders, sales counters, and kitchen buffers back to zero for a clean start. 
+    Catalog definitions, stations, and staff roster will be preserved.
+  </p>
 
-      <div class="border-t border-slate-800 pt-3 flex justify-end">
-        <button type="button" onclick="closeZReportModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs hover:bg-slate-700">Done</button>
-      </div>
-    </div>
+  <div>
+    <label class="block text-xs text-slate-400 mb-1">Type <strong class="text-rose-400">RESET</strong> to confirm:</label>
+    <input type="text" id="input-reset-confirmation" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono uppercase focus:outline-none focus:ring-1 focus:ring-rose-500" placeholder="RESET">
   </div>
 
-  <!-- 8. RESET YEAR CONFIRMATION MODAL -->
-  <div id="modal-reset-confirm" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-rose-500/40 rounded-3xl max-w-sm w-full p-5 shadow-2xl flex flex-col gap-3">
-      <div class="flex items-center gap-2 text-rose-400">
-        <span class="text-xl">⚠️</span>
-        <h3 class="text-sm font-black uppercase">Confirm Data Reset</h3>
-      </div>
-      <p class="text-xs text-slate-300">
-        This will wipe orders, queue sequence, and reset counters for <strong id="reset-confirm-year-label" class="text-amber-400">2026</strong>.
-      </p>
-      <p class="text-[11px] text-slate-400">Type <strong class="text-rose-400 font-mono">RESET</strong> to proceed:</p>
-      <input type="text" id="reset-confirm-input" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono uppercase tracking-wider text-center">
-      <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="closeResetYearModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Cancel</button>
-        <button type="button" onclick="executeResetEventYearData()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black">Reset Data</button>
-      </div>
-    </div>
+  <div class="pt-2 border-t border-slate-800 flex items-center justify-end gap-2">
+    <button type="button" onclick="closeResetConfirmModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+      Cancel
+    </button>
+    <button type="button" onclick="executeResetEventYearData()" class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold cursor-pointer">
+      Yes, Reset Event Counters
+    </button>
   </div>
-
-  <!-- ==================== JAVASCRIPT ENGINE ==================== -->
-  <script>
-    // Global State
-    let currentEventYear = '2026';
-    let currentStation = 'till';
-    let isAuthenticated = false;
-    let isManagerAuthenticated = false;
-    let currentStaff = null;
-    let selectedLoginStation = 'till';
-    let pinInputBuffer = '';
-
-    // Master Configuration Key Names
-    const STORAGE_PREFIX = 'okt_kds_hub_';
-    const REGISTRY_STATIONS_KEY = STORAGE_PREFIX + 'stations';
-    const ROSTER_KEY = STORAGE_PREFIX + 'roster';
-    const CATALOG_KEY = STORAGE_PREFIX + 'catalog';
-
-    // In-memory Stores
-    let stationRegistry = [];
-    let staffRoster = [];
-    let productCatalog = [];
-    let orders = [];
-    let orderSequence = 1;
-    let activeCart = [];
-    let recallingOrderId = null;
-
-    // Prep & Kitchen Buffers
-    let prepBuffer = {};     // Hot-holding / pre-cooked chafing buffer: { bratwurst: 0, ... }
-    let grillingNow = {};    // Sizzling on the active braai grill: { bratwurst: 0, ... }
-    let rollBuffer = { roll_crusty: 0, roll_white: 0 };
-    let trayBuffer = { curry_boat: 0 };
-    let allowBraaiSelfPrecook = true;
-
-    // ==================== INITIALIZATION ====================
-    window.addEventListener('DOMContentLoaded', () => {
-      loadStorageData();
-      updateClock();
-      setInterval(updateClock, 1000);
-
-      // Check if Master exists
-      const hasMaster = staffRoster.some(s => s.role && s.role.toLowerCase().includes('master'));
-      if (!hasMaster && staffRoster.length === 0) {
-        openLoginModal('first_run');
-      } else {
-        openLoginModal('till');
-      }
-
-      renderAllViews();
-    });
-
-    function updateClock() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const el = document.getElementById('till-time-display');
-      if (el) el.textContent = timeStr;
-    }
-
-    // ==================== STORAGE & MULTI-YEAR PERSISTENCE ====================
-    function getYearKey(suffix) {
-      return `${STORAGE_PREFIX}${currentEventYear}_${suffix}`;
-    }
-
-    function loadStorageData() {
-      // 1. Stations
-      const savedStations = localStorage.getItem(REGISTRY_STATIONS_KEY);
-      if (savedStations) {
-        try { stationRegistry = JSON.parse(savedStations); } catch (e) { stationRegistry = []; }
-      }
-      if (!stationRegistry || stationRegistry.length === 0) {
-        stationRegistry = [
-          { id: 'till', name: 'Till POS', icon: '🛒', role: 'Cashier & Ordering' },
-          { id: 'braai', name: 'Braai Grill', icon: '🔥', role: 'Grill Master & Cook' },
-          { id: 'handout', name: 'Handout Station', icon: '🍽️', role: 'Plating & Assembly' },
-          { id: 'manager', name: 'Manager Hub', icon: '👑', role: 'Administrative Hub' }
-        ];
-      }
-
-      // 2. Staff Roster (Starts clean zero unless saved)
-      const savedStaff = localStorage.getItem(ROSTER_KEY);
-      if (savedStaff) {
-        try { staffRoster = JSON.parse(savedStaff); } catch (e) { staffRoster = []; }
-      }
-
-      // 3. Product Catalog
-      const savedCatalog = localStorage.getItem(CATALOG_KEY);
-      if (savedCatalog) {
-        try { productCatalog = JSON.parse(savedCatalog); } catch (e) { productCatalog = []; }
-      }
-
-      // 4. Year-Specific Orders & Sequences
-      const savedOrders = localStorage.getItem(getYearKey('orders'));
-      if (savedOrders) {
-        try { orders = JSON.parse(savedOrders); } catch (e) { orders = []; }
-      } else {
-        orders = [];
-      }
-
-      const savedSeq = localStorage.getItem(getYearKey('sequence'));
-      orderSequence = savedSeq ? parseInt(savedSeq, 10) : 1;
-
-      // 5. Year-Specific Kitchen Buffers
-      const savedPrep = localStorage.getItem(getYearKey('prep_buf'));
-      if (savedPrep) {
-        try { prepBuffer = JSON.parse(savedPrep); } catch (e) { prepBuffer = {}; }
-      } else {
-        prepBuffer = {};
-      }
-
-      const savedGrill = localStorage.getItem(getYearKey('grill_buf'));
-      if (savedGrill) {
-        try { grillingNow = JSON.parse(savedGrill); } catch (e) { grillingNow = {}; }
-      } else {
-        grillingNow = {};
-      }
-
-      const savedRolls = localStorage.getItem(getYearKey('roll_buf'));
-      if (savedRolls) {
-        try { rollBuffer = JSON.parse(savedRolls); } catch (e) { rollBuffer = { roll_crusty: 0, roll_white: 0 }; }
-      } else {
-        rollBuffer = { roll_crusty: 0, roll_white: 0 };
-      }
-
-      const savedTrays = localStorage.getItem(getYearKey('tray_buf'));
-      if (savedTrays) {
-        try { trayBuffer = JSON.parse(savedTrays); } catch (e) { trayBuffer = { curry_boat: 0 }; }
-      } else {
-        trayBuffer = { curry_boat: 0 };
-      }
-
-      const savedPolicy = localStorage.getItem(STORAGE_PREFIX + 'precook_policy');
-      if (savedPolicy !== null) {
-        allowBraaiSelfPrecook = savedPolicy === 'true';
-      }
-    }
-
-    function saveStateToStorage() {
-      localStorage.setItem(REGISTRY_STATIONS_KEY, JSON.stringify(stationRegistry));
-      localStorage.setItem(ROSTER_KEY, JSON.stringify(staffRoster));
-      localStorage.setItem(CATALOG_KEY, JSON.stringify(productCatalog));
-
-      localStorage.setItem(getYearKey('orders'), JSON.stringify(orders));
-      localStorage.setItem(getYearKey('sequence'), orderSequence.toString());
-      localStorage.setItem(getYearKey('prep_buf'), JSON.stringify(prepBuffer));
-      localStorage.setItem(getYearKey('grill_buf'), JSON.stringify(grillingNow));
-      localStorage.setItem(getYearKey('roll_buf'), JSON.stringify(rollBuffer));
-      localStorage.setItem(getYearKey('tray_buf'), JSON.stringify(trayBuffer));
-      localStorage.setItem(STORAGE_PREFIX + 'precook_policy', allowBraaiSelfPrecook.toString());
-    }
-
-    function changeEventYear(year) {
-      currentEventYear = year;
-      loadStorageData();
-      renderAllViews();
-      showToast(`Switched to Event Year: ${year}`, false);
-    }
-
-    // ==================== SEED SAMPLE PRESET ====================
-    function seedSampleDataset() {
-      // 1. Staff
-      staffRoster = [
-        { id: 'staff_1', name: 'Nicolas Festmeister', role: 'Event Master', station: 'manager', pin: '1978' },
-        { id: 'staff_2', name: 'Hans Gruber', role: 'Braai Grill Master', station: 'braai', pin: '1234' },
-        { id: 'staff_3', name: 'Greta Meyer', role: 'Till Cashier', station: 'till', pin: '1234' },
-        { id: 'staff_4', name: 'Otto Becker', role: 'Handout Assembly', station: 'handout', pin: '1234' }
-      ];
-
-      // 2. Product Catalog
-      productCatalog = [
-        {
-          id: 'bratwurst',
-          name: 'Traditional Bratwurst',
-          icon: '🌭',
-          price: 65,
-          cogs: 24,
-          cold: 120,
-          cooler: 40,
-          sold: 0,
-          category: 'sausage',
-          saleRule: 'both',
-          allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
-        },
-        {
-          id: 'currywurst',
-          name: 'Berlin Currywurst',
-          icon: '🍛',
-          price: 75,
-          cogs: 28,
-          cold: 90,
-          cooler: 30,
-          sold: 0,
-          category: 'sausage',
-          saleRule: 'both',
-          allowedPairings: ['curry_tray', 'serviette']
-        },
-        {
-          id: 'bockwurst',
-          name: 'Smoked Bockwurst',
-          icon: '🌭',
-          price: 65,
-          cogs: 22,
-          cold: 80,
-          cooler: 25,
-          sold: 0,
-          category: 'sausage',
-          saleRule: 'both',
-          allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
-        },
-        {
-          id: 'cheesegriller',
-          name: 'Alpine Cheese Griller',
-          icon: '🧀',
-          price: 70,
-          cogs: 26,
-          cold: 100,
-          cooler: 35,
-          sold: 0,
-          category: 'sausage',
-          saleRule: 'both',
-          allowedPairings: ['roll_crusty', 'roll_white', 'serviette']
-        },
-        {
-          id: 'roll_crusty',
-          name: 'Crispy German Crusty Roll',
-          icon: '🥖',
-          price: 15,
-          cogs: 4,
-          cold: 200,
-          cooler: 60,
-          sold: 0,
-          category: 'roll',
-          saleRule: 'combo_only', // Combo only: cannot be bought alone
-          allowedPairings: []
-        },
-        {
-          id: 'roll_white',
-          name: 'White Hot Dog Bun',
-          icon: '🌭',
-          price: 12,
-          cogs: 3,
-          cold: 150,
-          cooler: 50,
-          sold: 0,
-          category: 'roll',
-          saleRule: 'combo_only',
-          allowedPairings: []
-        },
-        {
-          id: 'pretzel',
-          name: 'Bavarian Pretzel',
-          icon: '🥨',
-          price: 35,
-          cogs: 12,
-          cold: 50,
-          cooler: 20,
-          sold: 0,
-          category: 'side',
-          saleRule: 'standalone_only',
-          allowedPairings: []
-        }
-      ];
-
-      saveStateToStorage();
-      closeLoginModal();
-      switchStationView('till');
-      renderAllViews();
-      showToast('Sample Oktoberfest dataset initialized successfully!', false);
-    }
-
-    // ==================== AUTHENTICATION & LOGIN ENGINE ====================
-    function openLoginModal(mode = 'standard') {
-      const modal = document.getElementById('modal-login');
-      const firstRunView = document.getElementById('login-master-setup-view');
-      const standardView = document.getElementById('login-standard-view');
-
-      if (!modal) return;
-      pinInputBuffer = '';
-      updatePinDots();
-
-      const hasMaster = staffRoster.some(s => s.role && s.role.toLowerCase().includes('master'));
-      if (mode === 'first_run' || (!hasMaster && staffRoster.length === 0)) {
-        firstRunView.classList.remove('hidden');
-        standardView.classList.add('hidden');
-      } else {
-        firstRunView.classList.add('hidden');
-        standardView.classList.remove('hidden');
-        populateLoginStaffChips();
-        renderLoginStationButtons();
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeLoginModal() {
-      const modal = document.getElementById('modal-login');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function submitMasterFirstTimeRegistration() {
-      const name = document.getElementById('setup-master-name').value.trim();
-      const pin = document.getElementById('setup-master-pin').value.trim();
-
-      if (!name) {
-        showToast('Please enter the Master name', true);
-        return;
-      }
-      if (pin.length !== 4 || isNaN(pin)) {
-        showToast('Master PIN must be 4 numeric digits', true);
-        return;
-      }
-
-      const masterMember = {
-        id: 'master_root_' + Date.now(),
-        name: name,
-        role: 'Event Master',
-        station: 'manager',
-        pin: pin
-      };
-
-      staffRoster.push(masterMember);
-      saveStateToStorage();
-
-      currentStaff = masterMember;
-      isAuthenticated = true;
-      isManagerAuthenticated = true;
-
-      closeLoginModal();
-      switchStationView('manager');
-      renderAllViews();
-      showToast(`Master registered: ${name}. Welcome!`, false);
-    }
-
-    function populateLoginStaffChips() {
-      const container = document.getElementById('login-staff-chips-container');
-      if (!container) return;
-
-      if (staffRoster.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center text-xs text-amber-400 py-2">No staff registered yet. Master setup required.</div>`;
-        return;
-      }
-
-      container.innerHTML = staffRoster.map(s => `
-        <button type="button" onclick="selectLoginStaff('${s.id}')" id="chip-staff-${s.id}" class="staff-chip p-2 rounded-xl border border-slate-800 bg-slate-950 text-left hover:border-amber-500 transition cursor-pointer flex flex-col">
-          <span class="font-bold text-xs text-white">${s.name}</span>
-          <span class="text-[10px] text-slate-400 font-mono">${s.role || 'Staff'}</span>
-        </button>
-      `).join('');
-
-      // Auto-select first staff
-      if (staffRoster.length > 0 && !currentStaff) {
-        selectLoginStaff(staffRoster[0].id);
-      } else if (currentStaff) {
-        selectLoginStaff(currentStaff.id);
-      }
-    }
-
-    function selectLoginStaff(staffId) {
-      document.querySelectorAll('.staff-chip').forEach(el => {
-        el.classList.remove('border-amber-500', 'bg-amber-500/10');
-      });
-      const chip = document.getElementById(`chip-staff-${staffId}`);
-      if (chip) chip.classList.add('border-amber-500', 'bg-amber-500/10');
-
-      const staff = staffRoster.find(s => s.id === staffId);
-      if (staff) {
-        currentStaff = staff;
-        if (staff.station) selectLoginStation(staff.station);
-      }
-    }
-
-    function renderLoginStationButtons() {
-      const container = document.getElementById('login-stations-container');
-      if (!container) return;
-
-      container.innerHTML = stationRegistry.map(st => `
-        <button type="button" onclick="selectLoginStation('${st.id}')" id="login-st-btn-${st.id}" class="login-station-btn py-2 px-1 rounded-xl border border-slate-800 bg-slate-950 text-center text-xs font-bold hover:border-amber-500 transition cursor-pointer">
-          <span class="block text-sm">${st.icon || '🖥️'}</span>
-          <span class="text-[10px] text-slate-200 block truncate">${st.name}</span>
-        </button>
-      `).join('');
-
-      selectLoginStation(selectedLoginStation);
-    }
-
-    function selectLoginStation(stId) {
-      selectedLoginStation = stId;
-      document.querySelectorAll('.login-station-btn').forEach(btn => {
-        btn.classList.remove('border-amber-500', 'bg-amber-500/20');
-      });
-      const target = document.getElementById(`login-st-btn-${stId}`);
-      if (target) target.classList.add('border-amber-500', 'bg-amber-500/20');
-    }
-
-    function keypadPress(digit) {
-      if (pinInputBuffer.length < 4) {
-        pinInputBuffer += digit;
-        updatePinDots();
-        if (pinInputBuffer.length === 4) {
-          validatePinSubmission();
-        }
-      }
-    }
-
-    function keypadClear() {
-      pinInputBuffer = '';
-      updatePinDots();
-    }
-
-    function keypadBackspace() {
-      if (pinInputBuffer.length > 0) {
-        pinInputBuffer = pinInputBuffer.slice(0, -1);
-        updatePinDots();
-      }
-    }
-
-    function updatePinDots() {
-      for (let i = 1; i <= 4; i++) {
-        const dot = document.getElementById(`pin-dot-${i}`);
-        if (!dot) continue;
-        if (i <= pinInputBuffer.length) {
-          dot.classList.add('bg-amber-400', 'border-amber-400');
-          dot.classList.remove('bg-slate-950', 'border-slate-700');
-        } else {
-          dot.classList.remove('bg-amber-400', 'border-amber-400');
-          dot.classList.add('bg-slate-950', 'border-slate-700');
-        }
-      }
-    }
-
-    function validatePinSubmission() {
-      if (!currentStaff) {
-        showToast('Please select a staff member first', true);
-        keypadClear();
-        return;
-      }
-
-      // Find Master member
-      const masterMember = staffRoster.find(s => s.role && s.role.toLowerCase().includes('master'));
-      const isMasterPin = masterMember && masterMember.pin === pinInputBuffer;
-      const isStaffPin = currentStaff.pin === pinInputBuffer;
-
-      if (isStaffPin || isMasterPin) {
-        isAuthenticated = true;
-        if (isMasterPin || (currentStaff.role && currentStaff.role.toLowerCase().includes('master'))) {
-          isManagerAuthenticated = true;
-        }
-
-        closeLoginModal();
-        switchStationView(selectedLoginStation);
-        renderAllViews();
-        showToast(`Signed in: ${currentStaff.name} (${currentStaff.role || 'Staff'})`, false);
-      } else {
-        showToast('Invalid PIN. Please try again.', true);
-        keypadClear();
-      }
-    }
-
-    // ==================== STATION NAVIGATION & RENDERING ====================
-    function switchStationView(stationId) {
-      currentStation = stationId;
-
-      // Update dropdown selector
-      const select = document.getElementById('master-station-dropdown');
-      if (select && select.value !== stationId) select.value = stationId;
-
-      // Update active badge
-      const badge = document.getElementById('active-station-badge');
-      if (badge) {
-        const found = stationRegistry.find(s => s.id === stationId);
-        badge.textContent = found ? found.name : stationId.toUpperCase();
-      }
-
-      // Hide all station sections
-      document.querySelectorAll('.station-view').forEach(view => {
-        view.classList.add('hidden');
-      });
-
-      // Show requested view
-      const targetView = document.getElementById(`view-${stationId}`);
-      if (targetView) {
-        targetView.classList.remove('hidden');
-      }
-
-      renderAllViews();
-    }
-
-    function renderAllViews() {
-      renderHeaderDropdown();
-      renderOperatorBadge();
-      renderTillStation();
-      renderBraaiStation();
-      renderHandoutStation();
-      renderManagerStation();
-      if (currentStation === 'dual') renderDualSplit();
-    }
-
-    function renderHeaderDropdown() {
-      const select = document.getElementById('master-station-dropdown');
-      if (!select) return;
-
-      const options = stationRegistry.map(st => `
-        <option value="${st.id}" ${currentStation === st.id ? 'selected' : ''}>
-          ${st.icon || '🖥️'} ${st.name}
-        </option>
-      `);
-
-      // Add dual split option
-      options.push(`<option value="dual" ${currentStation === 'dual' ? 'selected' : ''}>⚏ Dual Screen Split</option>`);
-      select.innerHTML = options.join('');
-    }
-
-    function renderOperatorBadge() {
-      const nameEl = document.getElementById('operator-display-name');
-      const roleEl = document.getElementById('operator-display-role');
-      if (nameEl && roleEl) {
-        if (currentStaff) {
-          nameEl.textContent = currentStaff.name;
-          roleEl.textContent = currentStaff.role || 'Staff';
-        } else {
-          nameEl.textContent = 'Guest Operator';
-          roleEl.textContent = 'Unsigned';
-        }
-      }
-    }
-
-    // ==================== 1. TILL POS STATION ENGINE ====================
-    function renderTillStation() {
-      // 1. Live Counters
-      const processing = orders.filter(o => o.status === 'processing');
-      const delivered = orders.filter(o => o.status === 'delivered');
-
-      const procCountEl = document.getElementById('till-processing-count');
-      const delCountEl = document.getElementById('till-delivered-count');
-      if (procCountEl) procCountEl.textContent = processing.length;
-      if (delCountEl) delCountEl.textContent = delivered.length;
-
-      // 2. Render 4 Quadratic Sausage Grid
-      const sausageGrid = document.getElementById('till-sausage-grid');
-      if (sausageGrid) {
-        const sausages = productCatalog.filter(p => p.category === 'sausage');
-        if (sausages.length === 0) {
-          sausageGrid.innerHTML = `
-            <div class="col-span-4 p-6 text-center border border-dashed border-slate-800 rounded-2xl text-xs text-slate-500">
-              No sausages configured in catalog. Visit Manager Hub to add sausages.
-            </div>`;
-        } else {
-          sausageGrid.innerHTML = sausages.map(p => `
-            <button type="button" onclick="addToCart('${p.id}')" class="aspect-square bg-slate-900 hover:bg-slate-850 active:scale-95 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-3 flex flex-col justify-between text-left transition shadow-sm cursor-pointer group">
-              <div class="flex items-start justify-between w-full">
-                <span class="text-3xl">${p.icon || '🌭'}</span>
-                <span class="text-amber-400 font-mono font-bold text-xs bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20">
-                  R${p.price}
-                </span>
-              </div>
-              <div>
-                <span class="font-black text-sm text-white group-hover:text-amber-400 transition leading-tight block">
-                  ${p.name}
-                </span>
-                <span class="text-[10px] text-slate-500 font-mono mt-0.5 block">
-                  In Storage: ${p.cooler || 0}
-                </span>
-              </div>
-            </button>
-          `).join('');
-        }
-      }
-
-      // 3. Render Extras & Standalone Items (Exclude combo-only rolls)
-      const extrasGrid = document.getElementById('till-extras-grid');
-      if (extrasGrid) {
-        const extras = productCatalog.filter(p => p.category !== 'sausage' && p.saleRule !== 'combo_only');
-        if (extras.length === 0) {
-          extrasGrid.innerHTML = `
-            <div class="col-span-4 p-2 text-center text-xs text-slate-600">
-              No standalone sides configured (Rolls are set to combo-only with sausages).
-            </div>`;
-        } else {
-          extrasGrid.innerHTML = extras.map(p => `
-            <button type="button" onclick="addToCart('${p.id}')" class="bg-slate-900 hover:bg-slate-850 active:scale-95 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-left transition cursor-pointer">
-              <div class="flex items-center gap-2">
-                <span class="text-xl">${p.icon || '🥨'}</span>
-                <div>
-                  <span class="font-bold text-xs text-white block leading-tight">${p.name}</span>
-                  <span class="text-[10px] text-slate-500 font-mono">Stock: ${p.cooler || 0}</span>
-                </div>
-              </div>
-              <span class="text-amber-400 font-mono font-bold text-xs">R${p.price}</span>
-            </button>
-          `).join('');
-        }
-      }
-
-      // 4. Render Active Cart Items
-      renderCartUI();
-    }
-
-    function addToCart(productId) {
-      const prod = productCatalog.find(p => p.id === productId);
-      if (!prod) return;
-
-      if (prod.saleRule === 'combo_only') {
-        showToast(`${prod.name} cannot be sold alone (combo only with sausage)`, true);
-        return;
-      }
-
-      // Default pairing assignment
-      let defaultPairing = 'none';
-      if (prod.allowedPairings && prod.allowedPairings.length > 0) {
-        if (prod.allowedPairings.includes('roll_crusty')) {
-          defaultPairing = 'roll_crusty';
-        } else if (prod.allowedPairings.includes('curry_tray')) {
-          defaultPairing = 'curry_tray';
-        } else {
-          defaultPairing = prod.allowedPairings[0];
-        }
-      }
-
-      activeCart.push({
-        uid: Date.now() + Math.random().toString(),
-        productId: prod.id,
-        name: prod.name,
-        price: prod.price,
-        cogs: prod.cogs || 0,
-        selectedPairing: defaultPairing
-      });
-
-      renderCartUI();
-    }
-
-    function removeCartItem(uid) {
-      activeCart = activeCart.filter(item => item.uid !== uid);
-      renderCartUI();
-    }
-
-    function setCartItemPairing(uid, pairingId) {
-      const item = activeCart.find(i => i.uid === uid);
-      if (item) {
-        item.selectedPairing = pairingId;
-        renderCartUI();
-      }
-    }
-
-    function clearCart() {
-      activeCart = [];
-      recallingOrderId = null;
-      renderCartUI();
-    }
-
-    function renderCartUI() {
-      const container = document.getElementById('cart-items-container');
-      const orderLabel = document.getElementById('cart-order-number-label');
-      const recallWarning = document.getElementById('cart-recalled-warning');
-      const recalledIdEl = document.getElementById('recalled-order-id');
-      const totalQtyEl = document.getElementById('cart-total-qty');
-      const totalPriceEl = document.getElementById('cart-total-price');
-
-      if (!container) return;
-
-      if (recallingOrderId) {
-        if (recallWarning) recallWarning.classList.remove('hidden');
-        if (recalledIdEl) recalledIdEl.textContent = recallingOrderId;
-        if (orderLabel) orderLabel.textContent = `Revision #${recallingOrderId}`;
-      } else {
-        if (recallWarning) recallWarning.classList.add('hidden');
-        if (orderLabel) orderLabel.textContent = `Ticket #${orderSequence}`;
-      }
-
-      if (activeCart.length === 0) {
-        container.innerHTML = `
-          <div class="h-44 flex flex-col items-center justify-center text-slate-500 text-xs">
-            <span class="text-3xl mb-1">🛒</span>
-            <span>Cart is empty</span>
-            <span class="text-[10px] text-slate-600">Tap sausages above to begin ticket</span>
-          </div>`;
-        if (totalQtyEl) totalQtyEl.textContent = '0';
-        if (totalPriceEl) totalPriceEl.textContent = 'R0.00';
-        return;
-      }
-
-      let totalPrice = 0;
-      container.innerHTML = activeCart.map(item => {
-        totalPrice += item.price;
-        const prod = productCatalog.find(p => p.id === item.productId);
-        const pairings = prod ? (prod.allowedPairings || []) : [];
-
-        // Build pairing buttons
-        let pairingButtonsHTML = '';
-        if (pairings.length > 0) {
-          pairingButtonsHTML = pairings.map(pairKey => {
-            let label = pairKey;
-            if (pairKey === 'roll_crusty') label = '🥖 Crispy';
-            if (pairKey === 'roll_white') label = '🌭 White';
-            if (pairKey === 'curry_tray') label = '🍛 Curry Boat';
-            if (pairKey === 'serviette') label = '🧻 Serviette';
-
-            const isSelected = item.selectedPairing === pairKey;
-            return `
-              <button type="button" onclick="setCartItemPairing('${item.uid}', '${pairKey}')" class="px-2 py-0.5 rounded text-[10px] font-bold transition cursor-pointer ${
-                isSelected
-                  ? 'bg-amber-500 text-slate-950 shadow-sm'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }">
-                ${label}
-              </button>
-            `;
-          }).join('');
-        }
-
-        return `
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 flex flex-col gap-1.5">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-white text-xs">${item.name}</span>
-              <div class="flex items-center gap-2">
-                <span class="font-mono text-amber-400 font-bold">R${item.price}</span>
-                <button type="button" onclick="removeCartItem('${item.uid}')" class="text-rose-400 hover:text-rose-300 font-bold text-xs cursor-pointer p-0.5">✕</button>
-              </div>
-            </div>
-            ${pairings.length > 0 ? `
-              <div class="flex items-center gap-1.5 pt-1 border-t border-slate-850">
-                <span class="text-[9px] uppercase font-bold text-slate-400">Serving:</span>
-                <div class="flex flex-wrap gap-1">
-                  ${pairingButtonsHTML}
-                </div>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-
-      if (totalQtyEl) totalQtyEl.textContent = activeCart.length;
-      if (totalPriceEl) totalPriceEl.textContent = `R${totalPrice.toFixed(2)}`;
-    }
-
-    function processCheckout(method) {
-      if (activeCart.length === 0) {
-        showToast('Cart is empty', true);
-        return;
-      }
-
-      const total = activeCart.reduce((s, i) => s + i.price, 0);
-      const totalCost = activeCart.reduce((s, i) => s + i.cogs, 0);
-
-      // Decrement inventory stock
-      activeCart.forEach(cartItem => {
-        const prod = productCatalog.find(p => p.id === cartItem.productId);
-        if (prod) {
-          if (prod.cooler !== undefined && prod.cooler > 0) {
-            prod.cooler -= 1;
-          }
-          prod.sold = (prod.sold || 0) + 1;
-        }
-
-        // Decrement roll inventory if combo roll selected
-        if (cartItem.selectedPairing === 'roll_crusty' || cartItem.selectedPairing === 'roll_white') {
-          const rollProd = productCatalog.find(p => p.id === cartItem.selectedPairing);
-          if (rollProd && rollProd.cooler !== undefined && rollProd.cooler > 0) {
-            rollProd.cooler -= 1;
-          }
-        }
-      });
-
-      if (recallingOrderId) {
-        // Update existing order revision
-        const existing = orders.find(o => o.id === recallingOrderId);
-        if (existing) {
-          existing.items = [...activeCart];
-          existing.total = total;
-          existing.totalCost = totalCost;
-          existing.paymentMethod = method;
-          existing.status = 'processing';
-          existing.revision = (existing.revision || 0) + 1;
-          existing.recalledAt = new Date().toISOString();
-        }
-        showToast(`Order #${recallingOrderId} Revised and Relaunched!`, false);
-      } else {
-        // Create new ticket
-        const newOrder = {
-          id: orderSequence++,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          items: [...activeCart],
-          total: total,
-          totalCost: totalCost,
-          paymentMethod: method,
-          status: 'processing',
-          cashier: currentStaff ? currentStaff.name : 'Till Cashier'
-        };
-        orders.unshift(newOrder);
-        showToast(`Ticket #${newOrder.id} Placed (${method.toUpperCase()})`, false);
-      }
-
-      saveStateToStorage();
-      clearCart();
-      renderAllViews();
-    }
-
-    // Till Processing/Delivered Drawer & Recall Modal
-    function openTillLiveOrdersModal(type = 'processing') {
-      const modal = document.getElementById('modal-till-live-orders');
-      const title = document.getElementById('till-modal-title');
-      const icon = document.getElementById('till-modal-icon');
-      const list = document.getElementById('till-modal-orders-list');
-
-      if (!modal || !list) return;
-
-      const filtered = orders.filter(o => o.status === type);
-      if (type === 'processing') {
-        title.textContent = 'Processing Orders Queue';
-        icon.textContent = '⏳';
-      } else {
-        title.textContent = 'Recent Delivered Orders';
-        icon.textContent = '✅';
-      }
-
-      if (filtered.length === 0) {
-        list.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs">No ${type} orders at this time.</div>`;
-      } else {
-        list.innerHTML = filtered.map(order => `
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-white text-sm">Ticket #${order.id}</span>
-                <span class="text-[10px] font-mono text-slate-400">${order.timestamp}</span>
-                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded ${
-                  order.paymentMethod === 'cash' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-sky-500/20 text-sky-300'
-                }">
-                  ${order.paymentMethod}
-                </span>
-                ${order.revision ? `<span class="text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded">REV ${order.revision}</span>` : ''}
-              </div>
-              <div class="text-[11px] text-slate-300 mt-1">
-                ${order.items.map(i => `${i.name} (${formatPairingLabel(i.selectedPairing)})`).join(', ')}
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="font-mono font-bold text-amber-400 text-sm">R${order.total}</span>
-              <button type="button" onclick="recallOrderToCart(${order.id})" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-pointer">
-                ↩ Recall
-              </button>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeTillLiveOrdersModal() {
-      const modal = document.getElementById('modal-till-live-orders');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function recallOrderToCart(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-
-      activeCart = order.items.map(i => ({ ...i, uid: Date.now() + Math.random().toString() }));
-      recallingOrderId = order.id;
-
-      closeTillLiveOrdersModal();
-      switchStationView('till');
-      renderCartUI();
-      showToast(`Recalled Order #${orderId} to Till for modification`, false);
-    }
-
-    function formatPairingLabel(key) {
-      if (key === 'roll_crusty') return 'Crispy';
-      if (key === 'roll_white') return 'White';
-      if (key === 'curry_tray') return 'Curry Boat';
-      if (key === 'serviette') return 'Serviette';
-      return 'None';
-    }
-
-    // ==================== 2. BRAAI GRILL STATION ENGINE ====================
-    function renderBraaiStation() {
-      const pipelineContainer = document.getElementById('braai-sausages-pipeline');
-      const ordersFeed = document.getElementById('braai-orders-feed');
-      const ticketCountEl = document.getElementById('braai-ticket-count');
-
-      // Calculate sausage demands from pending processing orders
-      const pendingOrders = orders.filter(o => o.status === 'processing');
-      if (ticketCountEl) ticketCountEl.textContent = pendingOrders.length;
-
-      const demand = {};
-      pendingOrders.forEach(o => {
-        o.items.forEach(item => {
-          demand[item.productId] = (demand[item.productId] || 0) + 1;
-        });
-      });
-
-      // Render sausages pipeline
-      if (pipelineContainer) {
-        const sausages = productCatalog.filter(p => p.category === 'sausage');
-        if (sausages.length === 0) {
-          pipelineContainer.innerHTML = `<div class="col-span-4 p-4 text-center text-slate-500 text-xs">No sausages configured in catalog.</div>`;
-        } else {
-          pipelineContainer.innerHTML = sausages.map(s => {
-            const ticketDemand = demand[s.id] || 0;
-            const grilling = grillingNow[s.id] || 0;
-            const precooked = prepBuffer[s.id] || 0;
-            const coveredCount = grilling + precooked;
-            const netNeed = ticketDemand - coveredCount;
-
-            return `
-              <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col gap-2.5 shadow-sm">
-                <!-- Header -->
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="text-2xl">${s.icon || '🌭'}</span>
-                    <div>
-                      <h4 class="font-bold text-xs text-white">${s.name}</h4>
-                      <span class="text-[10px] text-slate-400 font-mono">Storage: <strong class="text-emerald-400">${s.cooler || 0}</strong></span>
-                    </div>
-                  </div>
-                  <!-- Net Need Indicator -->
-                  ${netNeed > 0 ? `
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse">
-                      Need +${netNeed}
-                    </span>
-                  ` : `
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      Covered
-                    </span>
-                  `}
-                </div>
-
-                <!-- 3 Metrics: Tickets Demand, On Braai, Precooked -->
-                <div class="grid grid-cols-3 gap-1.5 text-center">
-                  <div class="bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Orders</span>
-                    <span class="text-sm font-black font-mono text-amber-400">${ticketDemand}</span>
-                  </div>
-                  <div class="bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <span class="text-[9px] uppercase font-bold text-slate-500 block">On Braai</span>
-                    <span class="text-sm font-black font-mono text-orange-400">${grilling}</span>
-                  </div>
-                  <div class="bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Precooked</span>
-                    <span class="text-sm font-black font-mono text-emerald-400">${precooked}</span>
-                  </div>
-                </div>
-
-                <!-- Granular Movement Pipeline (+1, +5, Undo) -->
-                <div class="space-y-1.5 pt-1 border-t border-slate-800 text-[11px]">
-                  <!-- Step 1: Storage -> On Braai -->
-                  <div class="flex items-center justify-between bg-slate-950 px-2 py-1.5 rounded-xl border border-slate-850">
-                    <span class="text-slate-400 text-[10px]">To Braai:</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="moveStorageToBraai('${s.id}', 1)" class="px-1.5 py-0.5 rounded bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 font-bold border border-orange-500/30 cursor-pointer">+1</button>
-                      <button type="button" onclick="moveStorageToBraai('${s.id}', 5)" class="px-2 py-0.5 rounded bg-orange-500 hover:bg-orange-400 text-slate-950 font-black cursor-pointer">+5</button>
-                      <button type="button" onclick="revertBraaiToStorage('${s.id}', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 cursor-pointer" title="Undo">↩</button>
-                    </div>
-                  </div>
-
-                  <!-- Step 2: On Braai -> Precooked (Chafing Dish) -->
-                  <div class="flex items-center justify-between bg-slate-950 px-2 py-1.5 rounded-xl border border-slate-850">
-                    <span class="text-slate-400 text-[10px]">To Precooked:</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="moveBraaiToPrecooked('${s.id}', 1)" class="px-1.5 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold border border-emerald-500/30 cursor-pointer">+1</button>
-                      <button type="button" onclick="moveBraaiToPrecooked('${s.id}', 5)" class="px-2 py-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black cursor-pointer">+5</button>
-                      <button type="button" onclick="revertPrecookedToBraai('${s.id}', 1)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 cursor-pointer" title="Undo">↩</button>
-                    </div>
-                  </div>
-
-                  <!-- Step 3: Direct to Handout -->
-                  <div class="flex items-center justify-between bg-slate-950 px-2 py-1.5 rounded-xl border border-slate-850">
-                    <span class="text-slate-400 text-[10px]">To Handout:</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" onclick="dispatchSausageToHandout('${s.id}', 1)" class="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black border border-amber-500/30 cursor-pointer">+1</button>
-                      <button type="button" onclick="dispatchSausageToHandout('${s.id}', 5)" class="px-2.5 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black cursor-pointer">+5</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // Render Braai Open Tickets
-      if (ordersFeed) {
-        if (pendingOrders.length === 0) {
-          ordersFeed.innerHTML = `<div class="col-span-4 p-8 text-center text-slate-500 text-xs">No active orders in queue. Grill buffer ready.</div>`;
-        } else {
-          ordersFeed.innerHTML = pendingOrders.map(o => `
-            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-between gap-2 shadow-sm">
-              <div class="flex items-center justify-between border-b border-slate-850 pb-1.5">
-                <span class="font-bold text-white text-xs">#${o.id}</span>
-                <span class="text-[10px] font-mono text-slate-400">${o.timestamp}</span>
-              </div>
-              <div class="space-y-1 text-xs">
-                ${o.items.map(i => `
-                  <div class="flex justify-between items-center text-slate-300">
-                    <span>${i.name}</span>
-                    <span class="text-[10px] text-amber-400 font-mono">${formatPairingLabel(i.selectedPairing)}</span>
-                  </div>
-                `).join('')}
-              </div>
-              <div class="border-t border-slate-850 pt-1 text-[10px] text-slate-500 flex justify-between">
-                <span>Items: ${o.items.length}</span>
-                <span>${o.paymentMethod.toUpperCase()}</span>
-              </div>
-            </div>
-          `).join('');
-        }
-      }
-    }
-
-    // Braai Sausage Movement Handlers
-    function moveStorageToBraai(sausageId, count) {
-      const prod = productCatalog.find(p => p.id === sausageId);
-      if (!prod) return;
-      if (prod.cooler !== undefined && prod.cooler < count) {
-        showToast(`Only ${prod.cooler} ${prod.name} in Storage`, true);
-        return;
-      }
-      if (prod.cooler !== undefined) prod.cooler -= count;
-      grillingNow[sausageId] = (grillingNow[sausageId] || 0) + count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function revertBraaiToStorage(sausageId, count) {
-      if ((grillingNow[sausageId] || 0) < count) return;
-      grillingNow[sausageId] -= count;
-      const prod = productCatalog.find(p => p.id === sausageId);
-      if (prod && prod.cooler !== undefined) prod.cooler += count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function moveBraaiToPrecooked(sausageId, count) {
-      if ((grillingNow[sausageId] || 0) < count) {
-        showToast(`Not enough ${sausageId} currently on braai`, true);
-        return;
-      }
-      grillingNow[sausageId] -= count;
-      prepBuffer[sausageId] = (prepBuffer[sausageId] || 0) + count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function revertPrecookedToBraai(sausageId, count) {
-      if ((prepBuffer[sausageId] || 0) < count) return;
-      prepBuffer[sausageId] -= count;
-      grillingNow[sausageId] = (grillingNow[sausageId] || 0) + count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function dispatchSausageToHandout(sausageId, count) {
-      // Dispatches from precooked buffer or braai
-      if ((prepBuffer[sausageId] || 0) >= count) {
-        prepBuffer[sausageId] -= count;
-      } else if ((grillingNow[sausageId] || 0) >= count) {
-        grillingNow[sausageId] -= count;
-      } else {
-        showToast(`No ${sausageId} ready to dispatch`, true);
-        return;
-      }
-      saveStateToStorage();
-      renderAllViews();
-      showToast(`Dispatched ${count} sausage(s) to Handout`, false);
-    }
-
-    // ==================== 3. HANDOUT STATION ENGINE ====================
-    function renderHandoutStation() {
-      const metricsContainer = document.getElementById('handout-overview-metrics');
-      const ordersFeed = document.getElementById('handout-orders-feed');
-      const pendingCounter = document.getElementById('handout-pending-counter');
-      const queueCountEl = document.getElementById('handout-queue-count');
-
-      // Update Buffers Display
-      const crustyBufEl = document.getElementById('buf-roll-crusty-display');
-      const whiteBufEl = document.getElementById('buf-roll-white-display');
-      const curryBufEl = document.getElementById('buf-curry-tray-display');
-      if (crustyBufEl) crustyBufEl.textContent = rollBuffer.roll_crusty || 0;
-      if (whiteBufEl) whiteBufEl.textContent = rollBuffer.roll_white || 0;
-      if (curryBufEl) curryBufEl.textContent = trayBuffer.curry_boat || 0;
-
-      const pendingOrders = orders.filter(o => o.status === 'processing');
-      if (pendingCounter) pendingCounter.textContent = pendingOrders.length;
-      if (queueCountEl) queueCountEl.textContent = `${pendingOrders.length} tickets waiting`;
-
-      // Calculate Total Bread & Plating Requirements
-      let crustyNeeded = 0;
-      let whiteNeeded = 0;
-      let curryTraysNeeded = 0;
-      let serviettesNeeded = 0;
-      const sausageDemands = {};
-
-      pendingOrders.forEach(order => {
-        order.items.forEach(item => {
-          if (item.selectedPairing === 'roll_crusty') crustyNeeded++;
-          else if (item.selectedPairing === 'roll_white') whiteNeeded++;
-          else if (item.selectedPairing === 'curry_tray') curryTraysNeeded++;
-          else if (item.selectedPairing === 'serviette') serviettesNeeded++;
-
-          sausageDemands[item.productId] = (sausageDemands[item.productId] || 0) + 1;
-        });
-      });
-
-      // Render Overview Metrics Cards
-      if (metricsContainer) {
-        const crustyProd = productCatalog.find(p => p.id === 'roll_crusty');
-        const whiteProd = productCatalog.find(p => p.id === 'roll_white');
-        const unslicedCrusty = crustyProd ? (crustyProd.cooler || 0) : 0;
-        const unslicedWhite = whiteProd ? (whiteProd.cooler || 0) : 0;
-
-        metricsContainer.innerHTML = `
-          <!-- Crispy Rolls -->
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] font-bold text-slate-400 block">🥖 Crispy Rolls</span>
-            <div class="text-base font-black font-mono text-amber-400 mt-0.5">
-              Need: ${crustyNeeded} | Ready: ${rollBuffer.roll_crusty || 0}
-            </div>
-            <span class="text-[10px] text-slate-500 font-mono">Unsliced in storage: ${unslicedCrusty}</span>
-          </div>
-
-          <!-- White Rolls -->
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] font-bold text-slate-400 block">🌭 White Rolls</span>
-            <div class="text-base font-black font-mono text-amber-400 mt-0.5">
-              Need: ${whiteNeeded} | Ready: ${rollBuffer.roll_white || 0}
-            </div>
-            <span class="text-[10px] text-slate-500 font-mono">Unsliced in storage: ${unslicedWhite}</span>
-          </div>
-
-          <!-- Currywurst Trays Only -->
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] font-bold text-slate-400 block">🍛 Curry Trays</span>
-            <div class="text-base font-black font-mono text-amber-400 mt-0.5">
-              Need: ${curryTraysNeeded} | Ready: ${trayBuffer.curry_boat || 0}
-            </div>
-            <span class="text-[10px] text-slate-500">Trays for Currywurst only</span>
-          </div>
-
-          <!-- Serviette Only -->
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] font-bold text-slate-400 block">🧻 Serviette Only</span>
-            <div class="text-base font-black font-mono text-emerald-400 mt-0.5">
-              Needed: ${serviettesNeeded}
-            </div>
-            <span class="text-[10px] text-slate-500">Dispense with napkin</span>
-          </div>
-        `;
-      }
-
-      // Render Handout Order Tickets with 1-Tap Fulfillment
-      if (ordersFeed) {
-        if (pendingOrders.length === 0) {
-          ordersFeed.innerHTML = `
-            <div class="col-span-4 p-8 text-center text-slate-500 text-xs">
-              All tickets assembled and handed out! Ready for next customer.
-            </div>`;
-        } else {
-          ordersFeed.innerHTML = pendingOrders.map(order => `
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 flex flex-col justify-between gap-3 shadow-md">
-              <div>
-                <div class="flex items-center justify-between border-b border-slate-850 pb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-base font-black text-amber-400 font-mono">#${order.id}</span>
-                    <span class="text-[10px] font-mono text-slate-400">${order.timestamp}</span>
-                  </div>
-                  <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded ${
-                    order.paymentMethod === 'cash' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-sky-500/20 text-sky-300'
-                  }">
-                    ${order.paymentMethod}
-                  </span>
-                </div>
-
-                <div class="space-y-2 pt-2.5 text-xs">
-                  ${order.items.map(item => `
-                    <div class="flex items-center justify-between bg-slate-900/60 p-1.5 rounded-lg border border-slate-800/80">
-                      <span class="font-bold text-white">${item.name}</span>
-                      <span class="text-[11px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                        item.selectedPairing === 'roll_crusty' ? 'bg-amber-500/20 text-amber-300' :
-                        item.selectedPairing === 'roll_white' ? 'bg-orange-500/20 text-orange-300' :
-                        item.selectedPairing === 'curry_tray' ? 'bg-red-500/20 text-red-300' :
-                        'bg-slate-800 text-slate-300'
-                      }">
-                        ${formatPairingLabel(item.selectedPairing)}
-                      </span>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-
-              <button type="button" onclick="completeHandoutOrder(${order.id})" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-950/40 cursor-pointer flex items-center justify-center gap-1.5">
-                <span>✓</span>
-                <span>Handed Out</span>
-              </button>
-            </div>
-          `).join('');
-        }
-      }
-    }
-
-    function sliceRollsForBuffer(rollType, count) {
-      const prod = productCatalog.find(p => p.id === rollType);
-      if (!prod) return;
-      if (prod.cooler !== undefined && prod.cooler < count) {
-        showToast(`Only ${prod.cooler} unsliced rolls in storage`, true);
-        return;
-      }
-      if (prod.cooler !== undefined) prod.cooler -= count;
-      rollBuffer[rollType] = (rollBuffer[rollType] || 0) + count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function revertSlicedRollBuffer(rollType, count) {
-      if ((rollBuffer[rollType] || 0) < count) return;
-      rollBuffer[rollType] -= count;
-      const prod = productCatalog.find(p => p.id === rollType);
-      if (prod && prod.cooler !== undefined) prod.cooler += count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function prepCurryTraysBuffer(count) {
-      trayBuffer.curry_boat = (trayBuffer.curry_boat || 0) + count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function revertCurryTraysBuffer(count) {
-      if ((trayBuffer.curry_boat || 0) < count) return;
-      trayBuffer.curry_boat -= count;
-      saveStateToStorage();
-      renderAllViews();
-    }
-
-    function completeHandoutOrder(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-
-      order.status = 'delivered';
-      order.deliveredAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      // Deduct rolls & trays from ready buffers
-      order.items.forEach(item => {
-        if (item.selectedPairing === 'roll_crusty' && rollBuffer.roll_crusty > 0) {
-          rollBuffer.roll_crusty--;
-        } else if (item.selectedPairing === 'roll_white' && rollBuffer.roll_white > 0) {
-          rollBuffer.roll_white--;
-        } else if (item.selectedPairing === 'curry_tray' && trayBuffer.curry_boat > 0) {
-          trayBuffer.curry_boat--;
-        }
-      });
-
-      saveStateToStorage();
-      renderAllViews();
-      showToast(`Order #${orderId} Handed Out!`, false);
-    }
-
-    // ==================== 4. DUAL SPLIT-SCREEN ENGINE ====================
-    function renderDualSplit() {
-      const leftSelect = document.getElementById('dual-left-select');
-      const rightSelect = document.getElementById('dual-right-select');
-      const leftPane = document.getElementById('dual-pane-left');
-      const rightPane = document.getElementById('dual-pane-right');
-
-      if (!leftPane || !rightPane) return;
-
-      const leftView = leftSelect ? leftSelect.value : 'braai';
-      const rightView = rightSelect ? rightSelect.value : 'handout';
-
-      renderSubViewIntoContainer(leftView, leftPane);
-      renderSubViewIntoContainer(rightView, rightPane);
-    }
-
-    function renderSubViewIntoContainer(viewType, container) {
-      if (viewType === 'braai') {
-        const pending = orders.filter(o => o.status === 'processing');
-        container.innerHTML = `
-          <div class="flex items-center justify-between pb-2 border-b border-slate-800 mb-2">
-            <span class="font-bold text-xs uppercase text-amber-400">🔥 Braai Orders Queue (${pending.length})</span>
-          </div>
-          <div class="space-y-2 text-xs">
-            ${pending.map(o => `
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                <div class="flex justify-between font-bold text-white">
-                  <span>#${o.id}</span>
-                  <span class="text-slate-400 font-mono">${o.timestamp}</span>
-                </div>
-                <div class="text-slate-300 mt-1">${o.items.map(i => i.name).join(', ')}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else if (viewType === 'handout') {
-        const pending = orders.filter(o => o.status === 'processing');
-        container.innerHTML = `
-          <div class="flex items-center justify-between pb-2 border-b border-slate-800 mb-2">
-            <span class="font-bold text-xs uppercase text-amber-400">🍽️ Handout Assembly (${pending.length})</span>
-          </div>
-          <div class="space-y-2 text-xs">
-            ${pending.map(o => `
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-white">#${o.id}</span>
-                  <div class="text-[11px] text-slate-300">${o.items.map(i => `${i.name} (${formatPairingLabel(i.selectedPairing)})`).join(', ')}</div>
-                </div>
-                <button type="button" onclick="completeHandoutOrder(${o.id})" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs">✓ Done</button>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else {
-        container.innerHTML = `<div class="p-4 text-center text-xs text-slate-500">Till view not supported in split screen pane.</div>`;
-      }
-    }
-
-    // ==================== 5. MANAGER & MASTER HUB ENGINE ====================
-    function renderManagerStation() {
-      // 1. Metric Calculations
-      const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-      const totalOrders = orders.length;
-      const cashRevenue = orders.filter(o => o.paymentMethod === 'cash').reduce((sum, o) => sum + (o.total || 0), 0);
-      const yocoRevenue = orders.filter(o => o.paymentMethod === 'yoco').reduce((sum, o) => sum + (o.total || 0), 0);
-      const totalCOGS = orders.reduce((sum, o) => sum + (o.totalCost || 0), 0);
-      const netProfit = totalRevenue - totalCOGS;
-
-      const revEl = document.getElementById('mgr-stat-revenue');
-      const ordEl = document.getElementById('mgr-stat-orders');
-      const cashEl = document.getElementById('mgr-stat-cash');
-      const yocoEl = document.getElementById('mgr-stat-yoco');
-      const profitEl = document.getElementById('mgr-stat-profit');
-
-      if (revEl) revEl.textContent = `R${totalRevenue.toFixed(2)}`;
-      if (ordEl) ordEl.textContent = totalOrders;
-      if (cashEl) cashEl.textContent = `R${cashRevenue.toFixed(2)}`;
-      if (yocoEl) yocoEl.textContent = `R${yocoRevenue.toFixed(2)}`;
-      if (profitEl) profitEl.textContent = `R${netProfit.toFixed(2)}`;
-
-      const precookToggle = document.getElementById('mgr-precook-toggle');
-      if (precookToggle) precookToggle.checked = allowBraaiSelfPrecook;
-
-      // 2. Render Station Management Table
-      const stTable = document.getElementById('mgr-stations-table-body');
-      if (stTable) {
-        stTable.innerHTML = stationRegistry.map(st => `
-          <tr class="border-b border-slate-800 text-slate-300">
-            <td class="py-2 px-2 text-base">${st.icon || '🖥️'}</td>
-            <td class="py-2 px-2 font-bold text-white">${st.name}</td>
-            <td class="py-2 px-2 font-mono text-amber-400">${st.id}</td>
-            <td class="py-2 px-2 text-slate-400">${st.role || '--'}</td>
-            <td class="py-2 px-2 text-right">
-              <button type="button" onclick="openStationModal('${st.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs cursor-pointer">Edit</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      // 3. Render Staff Roster Table
-      const staffTable = document.getElementById('mgr-staff-table-body');
-      if (staffTable) {
-        if (staffRoster.length === 0) {
-          staffTable.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">No staff registered yet.</td></tr>`;
-        } else {
-          staffTable.innerHTML = staffRoster.map(s => `
-            <tr class="border-b border-slate-800 text-slate-300">
-              <td class="py-2 px-2 font-bold text-white">${s.name}</td>
-              <td class="py-2 px-2 text-slate-400">${s.role || 'Staff'}</td>
-              <td class="py-2 px-2 font-mono text-amber-400 uppercase">${s.station || 'till'}</td>
-              <td class="py-2 px-2 text-center font-mono text-slate-400">••••</td>
-              <td class="py-2 px-2 text-right">
-                <button type="button" onclick="openStaffModal('${s.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs cursor-pointer">Edit</button>
-              </td>
-            </tr>
-          `).join('');
-        }
-      }
-
-      // 4. Render Inventory & Product Catalog Table
-      const invTable = document.getElementById('mgr-inventory-table-body');
-      if (invTable) {
-        if (productCatalog.length === 0) {
-          invTable.innerHTML = `<tr><td colspan="9" class="py-4 text-center text-slate-500">No items configured in catalog.</td></tr>`;
-        } else {
-          invTable.innerHTML = productCatalog.map(p => `
-            <tr class="border-b border-slate-800 text-slate-300">
-              <td class="py-2 px-2 font-bold text-white flex items-center gap-1.5">
-                <span>${p.icon || '🌭'}</span>
-                <span>${p.name}</span>
-              </td>
-              <td class="py-2 px-2 font-mono text-amber-400">R${p.price}</td>
-              <td class="py-2 px-2 font-mono text-slate-400">R${p.cogs || 0}</td>
-              <td class="py-2 px-2 text-center font-mono text-slate-300">${p.cold || 0}</td>
-              <td class="py-2 px-2 text-center font-mono text-emerald-400 font-bold">${p.cooler || 0}</td>
-              <td class="py-2 px-2 text-center font-mono text-amber-400">${p.sold || 0}</td>
-              <td class="py-2 px-2 font-mono text-[10px] uppercase">${p.saleRule || 'both'}</td>
-              <td class="py-2 px-2 text-[10px] text-slate-400">${(p.allowedPairings || []).join(', ') || 'None'}</td>
-              <td class="py-2 px-2 text-right">
-                <button type="button" onclick="openAddStockModal('${p.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs cursor-pointer">Edit</button>
-              </td>
-            </tr>
-          `).join('');
-        }
-      }
-    }
-
-    function togglePrecookPermission(checked) {
-      allowBraaiSelfPrecook = checked;
-      saveStateToStorage();
-      renderAllViews();
-      showToast(`Braai Self-Precooking ${checked ? 'Allowed' : 'Restricted'}`, false);
-    }
-
-    // ==================== MODAL CRUD OPERATIONS ====================
-
-    // Staff Roster Modal
-    function openStaffModal(staffId = null) {
-      const modal = document.getElementById('modal-staff-editor');
-      const title = document.getElementById('staff-modal-title');
-      const deleteBtn = document.getElementById('btn-delete-staff');
-      const idInput = document.getElementById('staff-edit-id');
-      const nameInput = document.getElementById('staff-input-name');
-      const roleInput = document.getElementById('staff-input-role');
-      const pinInput = document.getElementById('staff-input-pin');
-      const stationSelect = document.getElementById('staff-input-station');
-
-      if (!modal) return;
-
-      // Populate stations in select
-      stationSelect.innerHTML = stationRegistry.map(st => `
-        <option value="${st.id}">${st.icon || '🖥️'} ${st.name}</option>
-      `).join('');
-
-      if (staffId) {
-        const staff = staffRoster.find(s => s.id === staffId);
-        if (staff) {
-          title.textContent = 'Configure Staff Member';
-          idInput.value = staff.id;
-          nameInput.value = staff.name;
-          roleInput.value = staff.role || '';
-          pinInput.value = staff.pin || '';
-          stationSelect.value = staff.station || 'till';
-          deleteBtn.classList.remove('hidden');
-        }
-      } else {
-        title.textContent = 'Add Staff Member';
-        idInput.value = '';
-        nameInput.value = '';
-        roleInput.value = 'Till Cashier';
-        pinInput.value = '';
-        stationSelect.value = 'till';
-        deleteBtn.classList.add('hidden');
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeStaffModal() {
-      const modal = document.getElementById('modal-staff-editor');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function saveStaffForm() {
-      const id = document.getElementById('staff-edit-id').value;
-      const name = document.getElementById('staff-input-name').value.trim();
-      const role = document.getElementById('staff-input-role').value.trim();
-      const pin = document.getElementById('staff-input-pin').value.trim();
-      const station = document.getElementById('staff-input-station').value;
-
-      if (!name) {
-        showToast('Staff name is required', true);
-        return;
-      }
-      if (pin.length !== 4 || isNaN(pin)) {
-        showToast('PIN must be 4 numeric digits', true);
-        return;
-      }
-
-      if (id) {
-        const staff = staffRoster.find(s => s.id === id);
-        if (staff) {
-          staff.name = name;
-          staff.role = role;
-          staff.pin = pin;
-          staff.station = station;
-        }
-      } else {
-        staffRoster.push({
-          id: 'staff_' + Date.now(),
-          name,
-          role,
-          pin,
-          station
-        });
-      }
-
-      saveStateToStorage();
-      closeStaffModal();
-      renderAllViews();
-      showToast(`Staff member saved: ${name}`, false);
-    }
-
-    function deleteStaffMemberAction() {
-      const id = document.getElementById('staff-edit-id').value;
-      if (!id) return;
-      staffRoster = staffRoster.filter(s => s.id !== id);
-      saveStateToStorage();
-      closeStaffModal();
-      renderAllViews();
-      showToast('Staff member deleted', false);
-    }
-
-    // Station Registry Modal
-    function openStationModal(stationId = null) {
-      const modal = document.getElementById('modal-station-editor');
-      const title = document.getElementById('station-modal-title');
-      const deleteBtn = document.getElementById('btn-delete-station');
-      const idInput = document.getElementById('station-edit-id');
-      const nameInput = document.getElementById('station-input-name');
-      const iconInput = document.getElementById('station-input-icon');
-      const keyInput = document.getElementById('station-input-key');
-      const roleInput = document.getElementById('station-input-role');
-
-      if (!modal) return;
-
-      if (stationId) {
-        const st = stationRegistry.find(s => s.id === stationId);
-        if (st) {
-          title.textContent = 'Configure Station';
-          idInput.value = st.id;
-          nameInput.value = st.name;
-          iconInput.value = st.icon;
-          keyInput.value = st.id;
-          keyInput.disabled = true;
-          roleInput.value = st.role || '';
-          deleteBtn.classList.remove('hidden');
-        }
-      } else {
-        title.textContent = 'Add Custom Station';
-        idInput.value = '';
-        nameInput.value = '';
-        iconInput.value = '🖥️';
-        keyInput.value = '';
-        keyInput.disabled = false;
-        roleInput.value = '';
-        deleteBtn.classList.add('hidden');
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeStationModal() {
-      const modal = document.getElementById('modal-station-editor');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function saveStationForm() {
-      const id = document.getElementById('station-edit-id').value;
-      const name = document.getElementById('station-input-name').value.trim();
-      const icon = document.getElementById('station-input-icon').value.trim() || '🖥️';
-      const key = document.getElementById('station-input-key').value.trim().toLowerCase();
-      const role = document.getElementById('station-input-role').value.trim();
-
-      if (!name || !key) {
-        showToast('Station name and key are required', true);
-        return;
-      }
-
-      if (id) {
-        const st = stationRegistry.find(s => s.id === id);
-        if (st) {
-          st.name = name;
-          st.icon = icon;
-          st.role = role;
-        }
-      } else {
-        if (stationRegistry.some(s => s.id === key)) {
-          showToast('Station key already exists', true);
-          return;
-        }
-        stationRegistry.push({ id: key, name, icon, role });
-      }
-
-      saveStateToStorage();
-      closeStationModal();
-      renderAllViews();
-      showToast(`Station saved: ${name}`, false);
-    }
-
-    function deleteStationAction() {
-      const id = document.getElementById('station-edit-id').value;
-      if (!id) return;
-      if (['till', 'braai', 'handout', 'manager'].includes(id)) {
-        showToast('Primary core stations cannot be deleted', true);
-        return;
-      }
-      stationRegistry = stationRegistry.filter(s => s.id !== id);
-      saveStateToStorage();
-      closeStationModal();
-      renderAllViews();
-      showToast('Station deleted', false);
-    }
-
-    // Catalog & Stock Modal
-    function openAddStockModal(productId = null) {
-      const modal = document.getElementById('modal-stock-editor');
-      const title = document.getElementById('stock-modal-title');
-      const deleteBtn = document.getElementById('btn-delete-stock');
-      const idInput = document.getElementById('stock-edit-id');
-      const nameInput = document.getElementById('stock-input-name');
-      const iconInput = document.getElementById('stock-input-icon');
-      const priceInput = document.getElementById('stock-input-price');
-      const cogsInput = document.getElementById('stock-input-cogs');
-      const coldInput = document.getElementById('stock-input-cold');
-      const coolerInput = document.getElementById('stock-input-cooler');
-      const categorySelect = document.getElementById('stock-input-category');
-      const saleRuleSelect = document.getElementById('stock-input-salerule');
-
-      if (!modal) return;
-
-      let currentPairings = [];
-
-      if (productId) {
-        const prod = productCatalog.find(p => p.id === productId);
-        if (prod) {
-          title.textContent = 'Configure Catalog Item';
-          idInput.value = prod.id;
-          nameInput.value = prod.name;
-          iconInput.value = prod.icon || '🌭';
-          priceInput.value = prod.price;
-          cogsInput.value = prod.cogs || 0;
-          coldInput.value = prod.cold || 0;
-          coolerInput.value = prod.cooler || 0;
-          categorySelect.value = prod.category || 'sausage';
-          saleRuleSelect.value = prod.saleRule || 'both';
-          currentPairings = prod.allowedPairings || [];
-          deleteBtn.classList.remove('hidden');
-        }
-      } else {
-        title.textContent = 'Add Catalog Item';
-        idInput.value = '';
-        nameInput.value = '';
-        iconInput.value = '🌭';
-        priceInput.value = '65';
-        cogsInput.value = '25';
-        coldInput.value = '100';
-        coolerInput.value = '30';
-        categorySelect.value = 'sausage';
-        saleRuleSelect.value = 'both';
-        currentPairings = ['roll_crusty', 'roll_white', 'serviette'];
-        deleteBtn.classList.add('hidden');
-      }
-
-      renderPairingCheckboxes(currentPairings);
-      modal.classList.remove('hidden');
-    }
-
-    function renderPairingCheckboxes(selectedPairings = []) {
-      const container = document.getElementById('stock-pairing-checkboxes-container');
-      if (!container) return;
-
-      const potentialOptions = [
-        { id: 'roll_crusty', label: '🥖 Crispy Roll' },
-        { id: 'roll_white', label: '🌭 White Roll' },
-        { id: 'curry_tray', label: '🍛 Curry Boat / Tray' },
-        { id: 'serviette', label: '🧻 Serviette (No Roll)' }
-      ];
-
-      container.innerHTML = potentialOptions.map(opt => `
-        <label class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-[11px] cursor-pointer hover:bg-slate-850">
-          <input type="checkbox" name="stock-allowed-pairing" value="${opt.id}" ${selectedPairings.includes(opt.id) ? 'checked' : ''} class="rounded border-slate-700 text-amber-500 focus:ring-amber-400" />
-          <span>${opt.label}</span>
-        </label>
-      `).join('');
-    }
-
-    function closeStockModal() {
-      const modal = document.getElementById('modal-stock-editor');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function saveStockForm() {
-      const id = document.getElementById('stock-edit-id').value;
-      const name = document.getElementById('stock-input-name').value.trim();
-      const icon = document.getElementById('stock-input-icon').value.trim() || '🌭';
-      const price = parseFloat(document.getElementById('stock-input-price').value) || 0;
-      const cogs = parseFloat(document.getElementById('stock-input-cogs').value) || 0;
-      const cold = parseInt(document.getElementById('stock-input-cold').value) || 0;
-      const cooler = parseInt(document.getElementById('stock-input-cooler').value) || 0;
-      const category = document.getElementById('stock-input-category').value;
-      const saleRule = document.getElementById('stock-input-salerule').value;
-
-      // Extract checked pairings
-      const checkedBoxes = Array.from(document.querySelectorAll('input[name="stock-allowed-pairing"]:checked'));
-      const allowedPairings = checkedBoxes.map(cb => cb.value);
-
-      if (!name) {
-        showToast('Product title is required', true);
-        return;
-      }
-
-      if (id) {
-        const prod = productCatalog.find(p => p.id === id);
-        if (prod) {
-          prod.name = name;
-          prod.icon = icon;
-          prod.price = price;
-          prod.cogs = cogs;
-          prod.cold = cold;
-          prod.cooler = cooler;
-          prod.category = category;
-          prod.saleRule = saleRule;
-          prod.allowedPairings = allowedPairings;
-        }
-      } else {
-        const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + `_${Date.now()}`;
-        productCatalog.push({
-          id: newId,
-          name,
-          icon,
-          price,
-          cogs,
-          cold,
-          cooler,
-          sold: 0,
-          category,
-          saleRule,
-          allowedPairings
-        });
-      }
-
-      saveStateToStorage();
-      closeStockModal();
-      renderAllViews();
-      showToast(`Product saved: ${name}`, false);
-    }
-
-    function deleteStockItemAction() {
-      const id = document.getElementById('stock-edit-id').value;
-      if (!id) return;
-      productCatalog = productCatalog.filter(p => p.id !== id);
-      saveStateToStorage();
-      closeStockModal();
-      renderAllViews();
-      showToast('Catalog item removed', false);
-    }
-
-    // Master Restock Modal
-    function openMasterRestockModal() {
-      const modal = document.getElementById('modal-master-restock');
-      const list = document.getElementById('master-restock-items-list');
-      if (!modal || !list) return;
-
-      list.innerHTML = productCatalog.map(p => `
-        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
-          <div>
-            <span class="font-bold text-white block">${p.icon || '🌭'} ${p.name}</span>
-            <div class="text-[10px] font-mono text-slate-400">
-              Main Stock: <span class="text-amber-400 font-bold">${p.cold || 0}</span> | Storage: <span class="text-emerald-400 font-bold">${p.cooler || 0}</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-1">
-            <button type="button" onclick="transferMainToLocal('${p.id}', 10)" class="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs cursor-pointer shadow">+10</button>
-            <button type="button" onclick="transferMainToLocal('${p.id}', 25)" class="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black text-xs border border-amber-500/30 cursor-pointer">+25</button>
-          </div>
-        </div>
-      `).join('');
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeMasterRestockModal() {
-      const modal = document.getElementById('modal-master-restock');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function transferMainToLocal(productId, count) {
-      const prod = productCatalog.find(p => p.id === productId);
-      if (!prod) return;
-      if (prod.cold !== undefined && prod.cold < count) {
-        showToast(`Only ${prod.cold} remaining in Main Storage`, true);
-        return;
-      }
-      if (prod.cold !== undefined) prod.cold -= count;
-      if (prod.cooler !== undefined) prod.cooler += count;
-      saveStateToStorage();
-      openMasterRestockModal();
-      renderAllViews();
-      showToast(`Transferred +${count} to Storage for ${prod.name}`, false);
-    }
-
-    // Z-Report Modal
-    function openZReportModal() {
-      const modal = document.getElementById('modal-z-report');
-      if (!modal) return;
-
-      const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-      const cashRevenue = orders.filter(o => o.paymentMethod === 'cash').reduce((sum, o) => sum + (o.total || 0), 0);
-      const yocoRevenue = orders.filter(o => o.paymentMethod === 'yoco').reduce((sum, o) => sum + (o.total || 0), 0);
-      const totalCOGS = orders.reduce((sum, o) => sum + (o.totalCost || 0), 0);
-      const netProfit = totalRevenue - totalCOGS;
-
-      document.getElementById('zreport-event-year').textContent = currentEventYear;
-      document.getElementById('zreport-timestamp').textContent = new Date().toLocaleString();
-      document.getElementById('zreport-order-count').textContent = orders.length;
-      document.getElementById('zreport-gross-rev').textContent = `R${totalRevenue.toFixed(2)}`;
-      document.getElementById('zreport-cash-rev').textContent = `R${cashRevenue.toFixed(2)}`;
-      document.getElementById('zreport-yoco-rev').textContent = `R${yocoRevenue.toFixed(2)}`;
-      document.getElementById('zreport-cogs').textContent = `R${totalCOGS.toFixed(2)}`;
-      document.getElementById('zreport-net-profit').textContent = `R${netProfit.toFixed(2)}`;
-
-      const itemSalesBody = document.getElementById('zreport-items-breakdown');
-      if (itemSalesBody) {
-        itemSalesBody.innerHTML = productCatalog.map(p => `
-          <tr class="border-b border-slate-800 text-xs">
-            <td class="py-1 px-1 font-bold text-white">${p.name}</td>
-            <td class="py-1 px-1 text-center font-mono text-emerald-400">${p.sold || 0}</td>
-            <td class="py-1 px-1 text-right font-mono text-amber-400">R${((p.sold || 0) * (p.price || 0)).toFixed(2)}</td>
-          </tr>
-        `).join('');
-      }
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeZReportModal() {
-      const modal = document.getElementById('modal-z-report');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function exportEventDataJSON() {
-      const exportPayload = {
-        eventYear: currentEventYear,
-        exportTimestamp: new Date().toISOString(),
-        productCatalog,
-        staffRoster,
-        stationRegistry,
-        orders,
-        orderSequence,
-        prepBuffer,
-        grillingNow,
-        rollBuffer,
-        trayBuffer
-      };
-
-      const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
-      const dlAnchor = document.createElement('a');
-      dlAnchor.setAttribute("href", jsonStr);
-      dlAnchor.setAttribute("download", `oktoberfest_backup_${currentEventYear}_${Date.now()}.json`);
-      document.body.appendChild(dlAnchor);
-      dlAnchor.click();
-      dlAnchor.remove();
-      showToast('Event backup exported as JSON', false);
-    }
-
-    // Reset Year Modal
-    function openResetYearModal() {
-      const modal = document.getElementById('modal-reset-confirm');
-      if (modal) {
-        document.getElementById('reset-confirm-year-label').textContent = currentEventYear;
-        const input = document.getElementById('reset-confirm-input');
-        if (input) input.value = '';
-        modal.classList.remove('hidden');
-      }
-    }
-
-    function closeResetYearModal() {
-      const modal = document.getElementById('modal-reset-confirm');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function executeResetEventYearData() {
-      const input = document.getElementById('reset-confirm-input');
-      if (!input || input.value.trim().toUpperCase() !== 'RESET') {
-        showToast('Please type RESET to confirm', true);
-        return;
-      }
-      orders = [];
-      orderSequence = 1;
-      productCatalog.forEach(p => { p.sold = 0; });
-      Object.keys(prepBuffer).forEach(k => { prepBuffer[k] = 0; });
-      Object.keys(grillingNow).forEach(k => { grillingNow[k] = 0; });
-      rollBuffer = { roll_crusty: 0, roll_white: 0 };
-      trayBuffer = { curry_boat: 0 };
-
-      saveStateToStorage();
-      renderAllViews();
-      closeResetYearModal();
-      showToast(`Counters reset for ${currentEventYear}`, false);
-    }
-
-    // ==================== TOAST MESSAGES ====================
-    function showToast(message, isError = false) {
-      const container = document.getElementById('toast-container');
-      if (!container) return;
-
-      const toast = document.createElement('div');
-      toast.className = `px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto flex items-center gap-2 border ${
-        isError
-          ? 'bg-rose-950 text-rose-200 border-rose-800'
-          : 'bg-slate-900 text-amber-300 border-amber-500/40'
-      }`;
-
-      toast.innerHTML = `<span>${isError ? '⚠️' : '✓'}</span><span>${message}</span>`;
-      container.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      });
-
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-  </script>
-</body>
-</html>
+</div>
