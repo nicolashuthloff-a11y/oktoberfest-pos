@@ -6,7 +6,7 @@
   <title>Oktoberfest 2026 POS, KDS & Management Hub</title>
   <style>
     /* ==========================================================================
-       RESET & ZERO-SCROLL ERGONOMICS (HIGH-VISIBILITY STANDARD)
+       RESET & ZERO-SCROLL ERGONOMICS (FITS 100% VIEWPORT ON 14" LAPTOPS)
        ========================================================================== */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -36,32 +36,31 @@
       outline: none;
     }
 
-    /* HEADER */
+    /* COMPACT HEADER (48px to save vertical space on 14" screens) */
     header {
       background-color: #0b1120;
-      border-bottom: 3px solid #1e293b;
-      padding: 6px 14px;
+      border-bottom: 2px solid #1e293b;
+      padding: 4px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 56px;
+      height: 48px;
       flex-shrink: 0;
       z-index: 50;
-      gap: 10px;
+      gap: 8px;
     }
 
     /* DEVICE VIEWPORT WRAPPER */
     #device-viewport-frame {
       flex: 1;
-      height: calc(100vh - 56px);
-      height: calc(100dvh - 56px);
+      height: calc(100vh - 48px);
+      height: calc(100dvh - 48px);
       display: flex;
       flex-direction: column;
-      padding: 8px;
+      padding: 6px;
       margin: 0 auto;
       width: 100%;
       max-width: 100%;
-      transition: max-width 0.2s ease;
       overflow: hidden !important;
     }
 
@@ -69,12 +68,9 @@
       max-width: 520px;
       border-left: 3px solid #334155;
       border-right: 3px solid #334155;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
     }
     body[data-device="tablet"] #device-viewport-frame {
-      max-width: 1120px;
-      border-left: 2px solid #1e293b;
-      border-right: 2px solid #1e293b;
+      max-width: 100%;
     }
     body[data-device="desktop"] #device-viewport-frame {
       max-width: 100%;
@@ -87,54 +83,54 @@
     .items-center { align-items: center; }
     .justify-between { justify-content: space-between; }
     .justify-center { justify-content: center; }
-    .gap-1 { gap: 6px; }
-    .gap-2 { gap: 10px; }
-    .gap-3 { gap: 14px; }
+    .gap-1 { gap: 4px; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 10px; }
     .grid { display: grid; }
     .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
     .card {
       background-color: #0f172a;
       border: 2px solid #1e293b;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 10px;
+      padding: 8px;
     }
     .title-gold {
       font-weight: 900;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #fde047;
     }
     .badge {
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 900;
       font-family: ui-monospace, SFMono-Regular, monospace;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
-    .badge-amber { background: rgba(245, 158, 11, 0.25); color: #fde047; border: 2px solid #f59e0b; }
-    .badge-emerald { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 2px solid #10b981; }
-    .badge-rose { background: rgba(244, 63, 94, 0.25); color: #fb7185; border: 2px solid #f43f5e; }
-    .badge-sky { background: rgba(14, 165, 233, 0.25); color: #38bdf8; border: 2px solid #0ea5e9; }
+    .badge-amber { background: rgba(245, 158, 11, 0.25); color: #fde047; border: 1.5px solid #f59e0b; }
+    .badge-emerald { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1.5px solid #10b981; }
+    .badge-rose { background: rgba(244, 63, 94, 0.25); color: #fb7185; border: 1.5px solid #f43f5e; }
+    .badge-sky { background: rgba(14, 165, 233, 0.25); color: #38bdf8; border: 1.5px solid #0ea5e9; }
 
-    /* HIGH-VISIBILITY BUTTONS */
+    /* HIGH-VISIBILITY TOUCH BUTTONS */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 10px;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
       font-weight: 900;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: transform 0.06s ease, background-color 0.1s ease;
+      transition: transform 0.05s ease, filter 0.1s ease;
       touch-action: manipulation;
-      min-height: 48px;
+      min-height: 40px;
     }
     .btn:active {
       transform: scale(0.96);
@@ -150,51 +146,58 @@
     .btn-rose:hover { background: rgba(225, 29, 72, 0.5); }
     
     .btn-stepper {
-      min-height: 48px;
-      min-width: 52px;
-      padding: 8px 12px;
-      font-size: 16px;
+      min-height: 38px;
+      min-width: 44px;
+      padding: 4px 8px;
+      font-size: 14px;
       font-weight: 900;
     }
-    .btn-sm { padding: 6px 12px; font-size: 13px; min-height: 38px; }
+    .btn-sm { padding: 4px 10px; font-size: 12px; min-height: 34px; }
 
-    /* OPERATIONAL 2-COLUMN VIEWPORT */
+    /* OPERATIONAL 2-COLUMN VIEWPORT (POS, BRAAI, HANDOUT) */
     .operational-view {
       width: 100%;
       height: 100%;
       overflow: hidden !important;
       display: flex;
       flex-direction: row;
-      gap: 10px;
+      gap: 8px;
     }
 
+    /* DEDICATED MANAGER HUB VIEWPORT */
     #view-manager {
       width: 100%;
       height: 100%;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       overflow-y: auto !important;
       overflow-x: hidden;
-      gap: 12px;
+      gap: 10px;
       padding-bottom: 40px;
     }
 
     .pinned-drawer {
-      width: 390px;
-      min-width: 350px;
-      padding: 12px;
+      width: 360px;
+      min-width: 320px;
+      padding: 10px;
       flex-shrink: 0;
       background: #0b1120;
       border: 2px solid #1e293b;
-      border-radius: 12px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
     }
 
     /* 1-TAP FAST POS TILES */
     .till-touch-tile {
       background: #0f172a;
-      border: 3px solid #334155;
-      border-radius: 14px;
-      padding: 14px;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -212,6 +215,36 @@
       border-color: #fde047;
     }
 
+    /* VIEW SHIFTER (UP / DOWN NAVIGATION WITHOUT SCROLLING) */
+    .view-shifter-bar {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .btn-shift {
+      background: #1e293b;
+      border: 1.5px solid #64748b;
+      color: #fde047;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 4px 10px;
+      min-height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-shift:hover { background: #334155; border-color: #fde047; }
+    .btn-shift:active { transform: scale(0.94); }
+
+    /* BRAAI DECK CONTAINER: SMOOTH SHIFT WITHOUT MOUSE SCROLLING */
+    #braai-sausage-deck {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     /* MODAL POPUPS */
     .modal-backdrop {
       position: fixed;
@@ -227,13 +260,13 @@
     .modal-box {
       background: #0f172a;
       border: 3px solid #475569;
-      border-radius: 16px;
+      border-radius: 14px;
       max-width: 680px;
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95);
       max-height: 94vh;
       overflow-y: auto !important;
@@ -242,23 +275,23 @@
       width: 100%;
       background: #020617;
       border: 2px solid #334155;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 8px;
+      padding: 8px 12px;
       color: #ffffff;
-      font-size: 15px;
+      font-size: 14px;
     }
     .input-field:focus { border-color: #fde047; }
 
     /* MANAGER SUB TABS */
     .mgr-sub-tab {
-      padding: 8px 14px;
+      padding: 6px 12px;
       background: #0f172a;
       border: 2px solid #334155;
       border-radius: 8px;
       color: #cbd5e1;
       font-weight: 800;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
     }
     .mgr-sub-tab.active {
       background: #f59e0b;
@@ -269,22 +302,22 @@
     /* TOAST ALERTS CONTAINER */
     #toast-container {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 16px;
+      right: 16px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       pointer-events: none;
     }
     .toast-msg {
       pointer-events: auto;
-      min-width: 280px;
-      max-width: 440px;
-      padding: 12px 18px;
-      border-radius: 10px;
+      min-width: 260px;
+      max-width: 420px;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       color: #ffffff;
       box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       border: 2px solid;
@@ -298,11 +331,6 @@
       from { transform: translateX(100%); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
-
-    @media (max-width: 880px) {
-      .operational-view { flex-direction: column !important; }
-      .pinned-drawer { width: 100% !important; min-width: 100% !important; height: 48% !important; }
-    }
   </style>
 </head>
 <body data-device="tablet">
@@ -312,29 +340,29 @@
 
   <!-- MANDATORY GATEKEEPER AUTH OVERLAY -->
   <div id="gatekeeper-auth-overlay" class="modal-backdrop" style="z-index: 2000;">
-    <div class="modal-box" style="max-width: 480px; border-color: #f59e0b; background: #0b1120;">
-      <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 12px;">
-        <span style="font-size: 46px;">🍺</span>
-        <div class="title-gold" style="font-size: 20px; margin-top: 4px;">OKTOBERFEST KDS & POS 2026</div>
-        <div style="font-size: 13px; color: #94a3b8; font-weight: bold;">Zutritts-Authentifizierung / Gatekeeper</div>
+    <div class="modal-box" style="max-width: 440px; border-color: #f59e0b;">
+      <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
+        <span style="font-size: 38px;">🍺</span>
+        <div class="title-gold" style="font-size: 17px; margin-top: 2px;">OKTOBERFEST KDS & POS 2026</div>
+        <div style="font-size: 11px; color: #94a3b8; font-weight: bold;">Zutritts-Authentifizierung / Gatekeeper</div>
       </div>
 
       <!-- GATEKEEPER TABS: LOGIN VS REGISTER -->
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
-        <button id="gatekeeper-tab-login" onclick="switchGatekeeperTab('login')" class="btn btn-gold" style="font-size: 15px; min-height: 44px;">🔑 Anmelden</button>
-        <button id="gatekeeper-tab-register" onclick="switchGatekeeperTab('register')" class="btn btn-dark" style="font-size: 15px; min-height: 44px;">📝 Registrieren</button>
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px;">
+        <button id="gatekeeper-tab-login" onclick="switchGatekeeperTab('login')" class="btn btn-gold btn-sm">🔑 Anmelden</button>
+        <button id="gatekeeper-tab-register" onclick="switchGatekeeperTab('register')" class="btn btn-dark btn-sm">📝 Registrieren</button>
       </div>
 
       <!-- GATEKEEPER TAB 1: PERSON + STATION + PIN KEYPAD -->
-      <div id="gatekeeper-panel-login" class="flex flex-col gap-3" style="margin-top: 8px;">
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div id="gatekeeper-panel-login" class="flex flex-col gap-2" style="margin-top: 4px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
           <div>
-            <label style="font-size: 12px; color: #fde047; font-weight: 900; text-transform: uppercase;">1. Person wählen:</label>
-            <select id="gk-login-staff-select" onchange="onGatekeeperStaffSelectChange()" class="input-field font-mono" style="font-size: 14px; font-weight: bold; color: #ffffff; padding: 10px; margin-top: 4px;"></select>
+            <label style="font-size: 11px; color: #ffffff; font-weight: bold; text-transform: uppercase;">1. Person:</label>
+            <select id="gk-login-staff-select" onchange="onGatekeeperStaffSelectChange()" class="input-field font-mono" style="font-size: 13px; font-weight: bold; color: #fde047; padding: 6px 8px;"></select>
           </div>
           <div>
-            <label style="font-size: 12px; color: #38bdf8; font-weight: 900; text-transform: uppercase;">2. Station wählen:</label>
-            <select id="gk-login-station-select" class="input-field font-mono" style="font-size: 14px; font-weight: bold; color: #ffffff; padding: 10px; margin-top: 4px;">
+            <label style="font-size: 11px; color: #ffffff; font-weight: bold; text-transform: uppercase;">2. Station:</label>
+            <select id="gk-login-station-select" class="input-field font-mono" style="font-size: 13px; font-weight: bold; color: #38bdf8; padding: 6px 8px;">
               <option value="till">💵 Till POS</option>
               <option value="braai">🔥 Braai Master</option>
               <option value="handout">🥖 Handout & Assembly</option>
@@ -344,48 +372,48 @@
           </div>
         </div>
 
-        <div style="font-size: 13px; color: #ffffff; font-weight: 800; text-align: center; margin-top: 4px;">
-          3. Persönlichen 4-stelligen PIN-Code eingeben:
+        <div style="font-size: 11px; color: #cbd5e1; text-align: center; margin-top: 2px;">
+          3. 4-stelligen Code eingeben:
         </div>
 
-        <input type="password" id="gatekeeper-pin-input" maxlength="4" class="input-field font-mono" style="font-size: 32px; text-align: center; letter-spacing: 0.35em; color: #fde047; height: 54px; background: #020617;" readonly placeholder="••••">
+        <input type="password" id="gatekeeper-pin-input" maxlength="4" class="input-field font-mono" style="font-size: 28px; text-align: center; letter-spacing: 0.35em; color: #fde047; height: 46px;" readonly placeholder="••••">
 
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px;">
-          <button onclick="pressGatekeeperPin('1')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">1</button>
-          <button onclick="pressGatekeeperPin('2')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">2</button>
-          <button onclick="pressGatekeeperPin('3')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">3</button>
-          <button onclick="pressGatekeeperPin('4')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">4</button>
-          <button onclick="pressGatekeeperPin('5')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">5</button>
-          <button onclick="pressGatekeeperPin('6')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">6</button>
-          <button onclick="pressGatekeeperPin('7')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">7</button>
-          <button onclick="pressGatekeeperPin('8')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">8</button>
-          <button onclick="pressGatekeeperPin('9')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">9</button>
-          <button onclick="resetGatekeeperPin()" class="btn btn-rose" style="font-size: 20px; padding: 12px; font-weight: 900;">C</button>
-          <button onclick="pressGatekeeperPin('0')" class="btn btn-dark" style="font-size: 24px; padding: 12px;">0</button>
-          <button onclick="confirmGatekeeperLogin()" class="btn btn-emerald" style="font-size: 16px; padding: 12px; font-weight: 900;">Weiter ➔</button>
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px;">
+          <button onclick="pressGatekeeperPin('1')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">1</button>
+          <button onclick="pressGatekeeperPin('2')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">2</button>
+          <button onclick="pressGatekeeperPin('3')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">3</button>
+          <button onclick="pressGatekeeperPin('4')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">4</button>
+          <button onclick="pressGatekeeperPin('5')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">5</button>
+          <button onclick="pressGatekeeperPin('6')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">6</button>
+          <button onclick="pressGatekeeperPin('7')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">7</button>
+          <button onclick="pressGatekeeperPin('8')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">8</button>
+          <button onclick="pressGatekeeperPin('9')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">9</button>
+          <button onclick="resetGatekeeperPin()" class="btn btn-rose" style="font-size: 16px; padding: 8px;">C</button>
+          <button onclick="pressGatekeeperPin('0')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">0</button>
+          <button onclick="confirmGatekeeperLogin()" class="btn btn-emerald" style="font-size: 16px; padding: 8px; font-weight: 900;">OK ➔</button>
         </div>
 
-        <div style="margin-top: 6px; text-align: center;">
-          <span style="font-size: 12px; color: #94a3b8;">Noch nicht im Dienstplan? </span>
-          <a href="javascript:void(0)" onclick="switchGatekeeperTab('register')" style="color: #38bdf8; font-weight: bold; font-size: 13px; text-decoration: underline;">Jetzt registrieren</a>
+        <div style="margin-top: 4px; text-align: center;">
+          <span style="font-size: 11px; color: #94a3b8;">Neuer Helfer? </span>
+          <a href="javascript:void(0)" onclick="switchGatekeeperTab('register')" style="color: #38bdf8; font-weight: bold; font-size: 11px; text-decoration: underline;">Hier registrieren</a>
         </div>
       </div>
 
       <!-- GATEKEEPER TAB 2: CREW REGISTRATION -->
-      <div id="gatekeeper-panel-register" class="flex flex-col gap-2 hidden" style="margin-top: 6px;">
-        <div style="font-size: 12px; color: #94a3b8; line-height: 1.3;">
+      <div id="gatekeeper-panel-register" class="flex flex-col gap-2 hidden" style="margin-top: 4px;">
+        <div style="font-size: 11px; color: #94a3b8; line-height: 1.3;">
           Registriere dich für deine Schicht. Die Freischaltung erfolgt durch einen Master-Admin.
         </div>
 
         <div>
-          <label style="font-size: 12px; color: #cbd5e1; font-weight: bold;">Vollständiger Name:</label>
-          <input type="text" id="gk-reg-name" class="input-field" placeholder="z.B. Sandra Meier" style="padding: 8px 12px;">
+          <label style="font-size: 11px; color: #cbd5e1; font-weight: bold;">Vollständiger Name:</label>
+          <input type="text" id="gk-reg-name" class="input-field" placeholder="z.B. Sandra Meier" style="padding: 6px 10px;">
         </div>
 
         <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
           <div>
-            <label style="font-size: 12px; color: #cbd5e1; font-weight: bold;">Rolle / Funktion:</label>
-            <select id="gk-reg-role" class="input-field" style="padding: 8px 10px;">
+            <label style="font-size: 11px; color: #cbd5e1; font-weight: bold;">Rolle:</label>
+            <select id="gk-reg-role" class="input-field" style="padding: 6px 8px;">
               <option value="Kasse Lead">Kasse / Cashier</option>
               <option value="Braai Master">Braai / Griller</option>
               <option value="Ausgabe Lead">Ausgabe & Brötchen</option>
@@ -393,8 +421,8 @@
             </select>
           </div>
           <div>
-            <label style="font-size: 12px; color: #cbd5e1; font-weight: bold;">Wunschstation:</label>
-            <select id="gk-reg-station" class="input-field" style="padding: 8px 10px;">
+            <label style="font-size: 11px; color: #cbd5e1; font-weight: bold;">Wunschstation:</label>
+            <select id="gk-reg-station" class="input-field" style="padding: 6px 8px;">
               <option value="till">Till POS</option>
               <option value="braai">Braai Master</option>
               <option value="handout">Handout Station</option>
@@ -405,16 +433,16 @@
 
         <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
           <div>
-            <label style="font-size: 12px; color: #cbd5e1; font-weight: bold;">4-stellige PIN:</label>
-            <input type="password" id="gk-reg-pin" maxlength="4" class="input-field font-mono" placeholder="••••" style="text-align: center; font-size: 20px; padding: 6px;">
+            <label style="font-size: 11px; color: #cbd5e1; font-weight: bold;">4-stellige PIN:</label>
+            <input type="password" id="gk-reg-pin" maxlength="4" class="input-field font-mono" placeholder="••••" style="text-align: center; font-size: 18px; padding: 4px;">
           </div>
           <div>
-            <label style="font-size: 12px; color: #cbd5e1; font-weight: bold;">PIN bestätigen:</label>
-            <input type="password" id="gk-reg-pin-confirm" maxlength="4" class="input-field font-mono" placeholder="••••" style="text-align: center; font-size: 20px; padding: 6px;">
+            <label style="font-size: 11px; color: #cbd5e1; font-weight: bold;">PIN bestätigen:</label>
+            <input type="password" id="gk-reg-pin-confirm" maxlength="4" class="input-field font-mono" placeholder="••••" style="text-align: center; font-size: 18px; padding: 4px;">
           </div>
         </div>
 
-        <button onclick="submitCrewSelfRegistration()" class="btn btn-emerald" style="margin-top: 6px; padding: 12px; font-size: 16px;">
+        <button onclick="submitCrewSelfRegistration()" class="btn btn-emerald" style="margin-top: 4px; padding: 10px; font-size: 14px;">
           Registrierung Einreichen ➔
         </button>
       </div>
@@ -424,13 +452,13 @@
   <!-- HEADER -->
   <header>
     <div class="flex items-center gap-2">
-      <span style="font-size: 26px;">🍺</span>
+      <span style="font-size: 22px;">🍺</span>
       <div>
-        <div class="title-gold" style="font-size: 15px; line-height: 1;">OKTOBERFEST 2026</div>
-        <div class="font-mono" style="font-size: 12px; color: #ffffff; font-weight: bold;" id="app-clock">12:00:00</div>
+        <div class="title-gold" style="font-size: 14px; line-height: 1;">OKTOBERFEST 2026</div>
+        <div class="font-mono" style="font-size: 11px; color: #ffffff; font-weight: bold;" id="app-clock">12:00:00</div>
       </div>
-      <div style="margin-left: 6px;">
-        <select id="station-nav-select" onchange="handleStationSelectChange(this.value)" class="input-field font-mono" style="padding: 6px 10px; font-size: 14px; color: #fde047; cursor: pointer; width: auto; font-weight: 900;">
+      <div>
+        <select id="station-nav-select" onchange="handleStationSelectChange(this.value)" class="input-field font-mono" style="padding: 4px 8px; font-size: 13px; color: #fde047; cursor: pointer; width: auto; font-weight: 900;">
           <option value="till">💵 Till POS</option>
           <option value="braai">🔥 Braai Master</option>
           <option value="handout">🥖 Handout & Assembly</option>
@@ -440,8 +468,8 @@
       </div>
 
       <!-- DISPLAY SELECTOR -->
-      <div style="margin-left: 6px;">
-        <select id="display-mode-select" onchange="changeDeviceDisplayMode(this.value)" class="input-field font-mono" style="padding: 6px 10px; font-size: 13px; color: #38bdf8; cursor: pointer; width: auto; font-weight: 900;">
+      <div>
+        <select id="display-mode-select" onchange="changeDeviceDisplayMode(this.value)" class="input-field font-mono" style="padding: 4px 6px; font-size: 12px; color: #38bdf8; cursor: pointer; width: auto; font-weight: 900;">
           <option value="phone">📱 Phone</option>
           <option value="tablet" selected>💻 Tablet</option>
           <option value="desktop">🖥️ Desktop</option>
@@ -449,8 +477,8 @@
       </div>
 
       <!-- LANGUAGE SELECTOR -->
-      <div style="margin-left: 6px;">
-        <select id="app-language-select" onchange="changeAppLanguage(this.value)" class="input-field font-mono" style="padding: 6px 10px; font-size: 13px; color: #fde047; cursor: pointer; width: auto; font-weight: 900; background: #0f172a; border-color: #f59e0b;">
+      <div>
+        <select id="app-language-select" onchange="changeAppLanguage(this.value)" class="input-field font-mono" style="padding: 4px 6px; font-size: 12px; color: #fde047; cursor: pointer; width: auto; font-weight: 900; background: #0f172a; border-color: #f59e0b;">
           <option value="de">🇩🇪 Deutsch</option>
           <option value="en">🇬🇧 English</option>
         </select>
@@ -464,12 +492,12 @@
       </button>
 
       <!-- CASH DRAWER STATUS -->
-      <button onclick="handleHeaderCashDrawerClick()" class="btn btn-dark btn-sm font-mono" id="header-cash-float-badge" style="border-color: #10b981; color: #34d399; font-size: 14px;">
+      <button onclick="handleHeaderCashDrawerClick()" class="btn btn-dark btn-sm font-mono" id="header-cash-float-badge" style="border-color: #10b981; color: #34d399; font-size: 13px;">
         💵 Lade: R 1000.00
       </button>
 
-      <div class="badge badge-emerald" id="auth-status-badge" style="font-size: 13px; padding: 6px 10px;">
-        <span style="width:8px; height:8px; background:#10b981; border-radius:50%; display:inline-block;"></span>
+      <div class="badge badge-emerald" id="auth-status-badge" style="font-size: 12px; padding: 4px 8px;">
+        <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
         <span id="current-user-name">Nicolas (Master)</span>
       </div>
 
@@ -482,46 +510,46 @@
 
     <!-- 1. TILL POS -->
     <section id="view-till" class="operational-view">
-      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 8px;">
-        <div class="card flex items-center justify-between" style="padding: 6px 12px; flex-shrink: 0;">
-          <div style="font-size: 14px; color: #ffffff;" id="till-fast-pos-hint">
+      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 6px;">
+        <div class="card flex items-center justify-between" style="padding: 4px 10px; flex-shrink: 0;">
+          <div style="font-size: 13px; color: #ffffff;" id="till-fast-pos-hint">
             <strong style="color: #fde047;">⚡ 1-Tap Fast POS:</strong> Antippen bucht Wurst inkl. festem Brötchen.
           </div>
           <div class="flex gap-2 font-mono">
-            <button onclick="openTillTicketsModal('open')" class="btn btn-dark" style="border-color: #f59e0b; color: #fde047; min-height: 42px; padding: 6px 12px; font-size: 14px;">
-              ⏳ Offen: <strong id="till-counter-processing" style="margin-left: 4px; font-size: 18px;">0</strong>
+            <button onclick="openTillTicketsModal('open')" class="btn btn-dark btn-sm" style="border-color: #f59e0b; color: #fde047;">
+              ⏳ Offen: <strong id="till-counter-processing" style="margin-left: 4px; font-size: 16px;">0</strong>
             </button>
-            <button onclick="openTillTicketsModal('done')" class="btn btn-dark" style="border-color: #10b981; color: #34d399; min-height: 42px; padding: 6px 12px; font-size: 14px;">
-              ✓ Fertig: <strong id="till-counter-delivered" style="margin-left: 4px; font-size: 18px;">0</strong>
+            <button onclick="openTillTicketsModal('done')" class="btn btn-dark btn-sm" style="border-color: #10b981; color: #34d399;">
+              ✓ Fertig: <strong id="till-counter-delivered" style="margin-left: 4px; font-size: 16px;">0</strong>
             </button>
           </div>
         </div>
 
-        <div id="pos-sausage-grid" class="grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; flex: 1; min-height: 0;"></div>
+        <div id="pos-sausage-grid" class="grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; flex: 1; min-height: 0;"></div>
       </div>
 
-      <div class="pinned-drawer flex flex-col justify-between">
+      <div class="pinned-drawer">
         <div class="flex flex-col" style="min-height: 0; flex: 1;">
-          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px; flex-shrink: 0;">
-            <div class="title-gold" style="font-size: 16px;" id="lbl-pos-cart-title">🛒 Aktueller Bon</div>
+          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px; flex-shrink: 0;">
+            <div class="title-gold" style="font-size: 15px;" id="lbl-pos-cart-title">🛒 Aktueller Bon</div>
             <div class="flex gap-2">
-              <button onclick="popLastCartItem()" class="btn btn-dark btn-sm" style="font-size: 13px; padding: 6px 10px;" title="Letztes Item entfernen" id="btn-cart-pop">↩ Item</button>
-              <button onclick="clearCart()" class="btn btn-rose btn-sm" style="font-size: 13px; padding: 6px 10px;" id="btn-cart-clear">Leeren</button>
+              <button onclick="popLastCartItem()" class="btn btn-dark btn-sm" style="font-size: 12px; padding: 4px 8px;" title="Letztes Item entfernen" id="btn-cart-pop">↩ Item</button>
+              <button onclick="clearCart()" class="btn btn-rose btn-sm" style="font-size: 12px; padding: 4px 8px;" id="btn-cart-clear">Leeren</button>
             </div>
           </div>
-          <div id="pos-cart-items" class="flex flex-col gap-2" style="flex: 1; min-height: 0; overflow-y: auto; margin-top: 8px; padding-right: 4px;"></div>
+          <div id="pos-cart-items" class="flex flex-col gap-2" style="flex: 1; min-height: 0; overflow-y: auto; margin-top: 6px; padding-right: 4px;"></div>
         </div>
 
-        <div style="border-top: 3px solid #1e293b; padding-top: 10px; margin-top: 8px; flex-shrink: 0;">
-          <div class="flex items-center justify-between" style="margin-bottom: 10px;">
-            <span style="font-size: 14px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-pos-cart-total">Gesamtsumme</span>
-            <span class="font-mono title-gold" style="font-size: 34px;" id="pos-cart-total">R 0.00</span>
+        <div style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px; flex-shrink: 0;">
+          <div class="flex items-center justify-between" style="margin-bottom: 8px;">
+            <span style="font-size: 13px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-pos-cart-total">Gesamtsumme</span>
+            <span class="font-mono title-gold" style="font-size: 30px;" id="pos-cart-total">R 0.00</span>
           </div>
-          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
-            <button onclick="openCashPaymentModal()" class="btn btn-emerald" style="padding: 16px 8px; font-size: 18px; font-weight: 900; min-height: 64px;" id="btn-pos-pay-cash">
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button onclick="openCashPaymentModal()" class="btn btn-emerald" style="padding: 12px 6px; font-size: 16px; font-weight: 900; min-height: 54px;" id="btn-pos-pay-cash">
               💵 BARGELD
             </button>
-            <button onclick="checkoutCurrentCart('YOCO')" class="btn btn-gold" style="padding: 16px 8px; font-size: 18px; font-weight: 900; min-height: 64px;" id="btn-pos-pay-card">
+            <button onclick="checkoutCurrentCart('YOCO')" class="btn btn-gold" style="padding: 12px 6px; font-size: 16px; font-weight: 900; min-height: 54px;" id="btn-pos-pay-card">
               💳 YOCO / KARTE
             </button>
           </div>
@@ -531,81 +559,95 @@
 
     <!-- 2. BRAAI MASTER -->
     <section id="view-braai" class="operational-view hidden">
-      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 8px;">
-        <div class="card flex items-center justify-between" style="padding: 6px 12px; flex-shrink: 0;">
-          <div style="font-size: 14px; color: #ffffff;" id="braai-deck-hint">
-            <strong style="color: #f59e0b;">🔥 Braai Master Deck:</strong> Currywurst zählt synchron in Bratwurst.
+      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 6px; overflow: hidden;">
+        <!-- Top Toolbar with 1-Tap Screen Shift Steppers (Up / Down) -->
+        <div class="card flex items-center justify-between" style="padding: 4px 10px; flex-shrink: 0;">
+          <div style="font-size: 13px; color: #ffffff;" id="braai-deck-hint">
+            <strong style="color: #f59e0b;">🔥 Braai Master Deck:</strong> Currywurst synchron in Bratwurst.
           </div>
-          <div class="flex gap-2">
-            <span class="badge badge-amber font-mono" style="font-size: 14px;">⏳ Wartend: <strong id="braai-stat-orders-waiting" style="font-size: 18px;">0</strong></span>
+          <div class="flex items-center gap-2">
+            <!-- Screen Shifter buttons: effortlessly move view without scrolling -->
+            <div class="view-shifter-bar" title="Ansicht anpassen">
+              <button onclick="shiftBraaiDeck('top')" class="btn-shift" title="Ganz nach oben">▲ Oben</button>
+              <button onclick="shiftBraaiDeck('bottom')" class="btn-shift" title="Käsegriller anzeigen (unten)">▼ Unten (Käsegriller)</button>
+            </div>
+            <span class="badge badge-amber font-mono" style="font-size: 13px;">⏳ <strong id="braai-stat-orders-waiting" style="font-size: 16px;">0</strong></span>
             <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm" id="btn-braai-restock">📦 Depot ➔ Kühler</button>
           </div>
         </div>
-        <div id="braai-sausage-deck" class="flex flex-col" style="flex: 1; min-height: 0; gap: 8px;"></div>
+
+        <!-- 3 Braai Sausage Cards (auto-proportioned to fit without clipping) -->
+        <div id="braai-sausage-deck"></div>
       </div>
 
-      <div class="pinned-drawer flex flex-col justify-between">
-        <div class="flex flex-col" style="min-height: 0; flex: 1; gap: 8px;">
-          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px; flex-shrink: 0;">
-            <div class="title-gold" style="font-size: 15px;" id="lbl-braai-quick-push">⚡ Schnell-Schub Rost</div>
+      <!-- Right Pinned Action Drawer -->
+      <div class="pinned-drawer">
+        <div class="flex flex-col" style="min-height: 0; flex: 1; gap: 6px;">
+          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px; flex-shrink: 0;">
+            <div class="title-gold" style="font-size: 14px;" id="lbl-braai-quick-push">⚡ Schnell-Schub Rost</div>
             <button onclick="triggerGlobalUndoAction()" class="btn btn-rose btn-sm font-mono">↩ Rückgängig</button>
           </div>
 
-          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
-            <div class="card" style="background: #020617; text-align: center; border: 3px solid #fb7185; padding: 10px 4px;">
-              <div style="font-size: 12px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-on-grill">Aktuell am Grill</div>
-              <div class="font-mono" style="font-size: 38px; color: #fb7185; font-weight: 900; line-height: 1.1;" id="braai-total-on-grill">0</div>
-              <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;" id="sub-braai-sizzling">Sizzling</div>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px; flex-shrink: 0;">
+            <div class="card" style="background: #020617; text-align: center; border: 2px solid #fb7185; padding: 6px 2px;">
+              <div style="font-size: 11px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-on-grill">Am Grill</div>
+              <div class="font-mono" style="font-size: 32px; color: #fb7185; font-weight: 900; line-height: 1;" id="braai-total-on-grill">0</div>
+              <div style="font-size: 10px; color: #cbd5e1; font-weight: bold;" id="sub-braai-sizzling">Sizzling</div>
             </div>
-            <div class="card" style="background: #020617; text-align: center; border: 3px solid #34d399; padding: 10px 4px;">
-              <div style="font-size: 12px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-ready-buffer">Warmhalte-Puffer (Ready)</div>
-              <div class="font-mono" style="font-size: 38px; color: #34d399; font-weight: 900; line-height: 1.1;" id="braai-total-in-buffer">0</div>
-              <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;" id="sub-braai-ready">Sofort ausgabebereit</div>
+            <div class="card" style="background: #020617; text-align: center; border: 2px solid #34d399; padding: 6px 2px;">
+              <div style="font-size: 11px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-ready-buffer">Ready</div>
+              <div class="font-mono" style="font-size: 32px; color: #34d399; font-weight: 900; line-height: 1;" id="braai-total-in-buffer">0</div>
+              <div style="font-size: 10px; color: #cbd5e1; font-weight: bold;" id="sub-braai-ready">Ausgabebereit</div>
             </div>
           </div>
 
-          <div class="flex flex-col gap-2" style="flex: 1; min-height: 0; margin-top: 6px;">
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🌭 Bratwurst / Curry</strong>
+          <!-- Quick-Push Tiles for all 3 sausages -->
+          <div class="flex flex-col gap-2" style="flex: 1; min-height: 0; justify-content: space-between;">
+            <!-- Bratwurst -->
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🌭 Bratwurst / Curry</strong>
                 <span class="badge badge-amber font-mono" id="quick-badge-brat">Kühler: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button id="btn-quick-brat-grill" onclick="moveBraaiStage('bratwurst', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 52px; font-size: 16px;">+5 Grill 🔥</button>
-                <button id="btn-quick-brat-buffer" onclick="moveBraaiStage('bratwurst', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 52px; font-size: 16px;">+5 Ready ♨️</button>
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
+                <button id="btn-quick-brat-grill" onclick="moveBraaiStage('bratwurst', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 44px; font-size: 14px;">+5 Grill 🔥</button>
+                <button id="btn-quick-brat-buffer" onclick="moveBraaiStage('bratwurst', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 44px; font-size: 14px;">+5 Ready ♨️</button>
               </div>
             </div>
 
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🌭 Bockwurst</strong>
+            <!-- Bockwurst -->
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🌭 Bockwurst</strong>
                 <span class="badge badge-amber font-mono" id="quick-badge-bock">Kühler: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button id="btn-quick-bock-grill" onclick="moveBraaiStage('bockwurst', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 52px; font-size: 16px;">+5 Grill 🔥</button>
-                <button id="btn-quick-bock-buffer" onclick="moveBraaiStage('bockwurst', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 52px; font-size: 16px;">+5 Ready ♨️</button>
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
+                <button id="btn-quick-bock-grill" onclick="moveBraaiStage('bockwurst', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 44px; font-size: 14px;">+5 Grill 🔥</button>
+                <button id="btn-quick-bock-buffer" onclick="moveBraaiStage('bockwurst', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 44px; font-size: 14px;">+5 Ready ♨️</button>
               </div>
             </div>
 
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🧀 Käsegriller</strong>
+            <!-- Cheesegriller (guaranteed visible and not hidden behind restock button) -->
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🧀 Käsegriller</strong>
                 <span class="badge badge-amber font-mono" id="quick-badge-cheese">Kühler: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button id="btn-quick-cheese-grill" onclick="moveBraaiStage('cheesegriller', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 52px; font-size: 16px;">+5 Grill 🔥</button>
-                <button id="btn-quick-cheese-buffer" onclick="moveBraaiStage('cheesegriller', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 52px; font-size: 16px;">+5 Ready ♨️</button>
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
+                <button id="btn-quick-cheese-grill" onclick="moveBraaiStage('cheesegriller', 'to_grill', 5)" class="btn btn-dark font-mono" style="min-height: 44px; font-size: 14px;">+5 Grill 🔥</button>
+                <button id="btn-quick-cheese-buffer" onclick="moveBraaiStage('cheesegriller', 'to_buffer', 5)" class="btn btn-emerald font-mono" style="min-height: 44px; font-size: 14px;">+5 Ready ♨️</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div style="border-top: 3px solid #1e293b; padding-top: 10px; margin-top: 8px; flex-shrink: 0;">
-          <div class="flex items-center justify-between" style="margin-bottom: 8px;">
-            <span style="font-size: 13px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-total-demand">Gesamter Kassenbedarf</span>
-            <span class="font-mono title-gold" style="font-size: 34px;" id="braai-total-demand">0</span>
+        <!-- Compact Bottom Summary (NO overlap with quick push cards) -->
+        <div style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 6px; flex-shrink: 0;">
+          <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+            <span style="font-size: 12px; color: #ffffff; font-weight: 900; text-transform: uppercase;" id="lbl-braai-total-demand">Kassenbedarf Gesamt</span>
+            <span class="font-mono title-gold" style="font-size: 26px;" id="braai-total-demand">0</span>
           </div>
-          <button onclick="openMasterRestockModal()" class="btn btn-gold" style="width: 100%; padding: 14px 6px; font-size: 16px; min-height: 56px;" id="btn-braai-restock-large">
+          <button onclick="openMasterRestockModal()" class="btn btn-gold" style="width: 100%; padding: 8px 6px; font-size: 14px; min-height: 44px;" id="btn-braai-restock-large">
             📦 Zeltkühler nachfüllen (Restock)
           </button>
         </div>
@@ -614,82 +656,82 @@
 
     <!-- 3. HANDOUT & ASSEMBLY -->
     <section id="view-handout" class="operational-view hidden">
-      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 8px;">
-        <div class="card flex items-center justify-between" style="padding: 6px 12px; flex-shrink: 0;">
-          <div style="font-size: 14px; color: #ffffff;" id="handout-deck-hint">
+      <div class="flex flex-col" style="flex: 1; min-height: 0; gap: 6px;">
+        <div class="card flex items-center justify-between" style="padding: 4px 10px; flex-shrink: 0;">
+          <div style="font-size: 13px; color: #ffffff;" id="handout-deck-hint">
             <strong style="color: #38bdf8;">🥖 Handout Deck:</strong> Warteschlange der offenen Kundenbons.
           </div>
           <div class="flex gap-2">
-            <span class="badge badge-sky font-mono" style="font-size: 14px;">⏳ Wartend: <strong id="handout-stat-orders-waiting" style="font-size: 18px;">0</strong></span>
+            <span class="badge badge-sky font-mono" style="font-size: 13px;">⏳ Wartend: <strong id="handout-stat-orders-waiting" style="font-size: 16px;">0</strong></span>
           </div>
         </div>
-        <div id="handout-orders-queue" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; flex: 1; min-height: 0; overflow-y: auto;"></div>
+        <div id="handout-orders-queue" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; flex: 1; min-height: 0; overflow-y: auto;"></div>
       </div>
 
-      <div class="pinned-drawer flex flex-col justify-between">
-        <div class="flex flex-col" style="min-height: 0; flex: 1; gap: 8px;">
-          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px; flex-shrink: 0;">
-            <div class="title-gold" style="font-size: 15px;" id="lbl-handout-buffer-title">⚡ Brötchen & Schalen Puffer</div>
+      <div class="pinned-drawer">
+        <div class="flex flex-col" style="min-height: 0; flex: 1; gap: 6px;">
+          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px; flex-shrink: 0;">
+            <div class="title-gold" style="font-size: 14px;" id="lbl-handout-buffer-title">⚡ Brötchen & Schalen Puffer</div>
             <button onclick="triggerGlobalUndoAction()" class="btn btn-rose btn-sm font-mono">↩ Rückgängig</button>
           </div>
 
-          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
-            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 3px solid #fde047; padding: 8px 4px;">
-              <span style="font-size: 12px; color: #fde047; font-weight: 900; text-transform: uppercase;">🥖 Crispy Bedarf</span>
-              <span class="font-mono" style="font-size: 36px; color: #fde047; font-weight: 900; line-height: 1.1;" id="handout-metric-crispy-need">0</span>
-              <span class="font-mono" style="font-size: 12px; color: #ffffff; font-weight: bold;" id="handout-metric-crispy-ready">Bereit: 0</span>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px; flex-shrink: 0;">
+            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 2px solid #fde047; padding: 6px 2px;">
+              <span style="font-size: 11px; color: #fde047; font-weight: 900; text-transform: uppercase;">🥖 Crispy</span>
+              <span class="font-mono" style="font-size: 28px; color: #fde047; font-weight: 900; line-height: 1;" id="handout-metric-crispy-need">0</span>
+              <span class="font-mono" style="font-size: 11px; color: #ffffff; font-weight: bold;" id="handout-metric-crispy-ready">Bereit: 0</span>
             </div>
 
-            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 3px solid #38bdf8; padding: 8px 4px;">
-              <span style="font-size: 12px; color: #38bdf8; font-weight: 900; text-transform: uppercase;">🌭 Hot Dog Bedarf</span>
-              <span class="font-mono" style="font-size: 36px; color: #38bdf8; font-weight: 900; line-height: 1.1;" id="handout-metric-white-need">0</span>
-              <span class="font-mono" style="font-size: 12px; color: #ffffff; font-weight: bold;" id="handout-metric-white-ready">Bereit: 0</span>
+            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 2px solid #38bdf8; padding: 6px 2px;">
+              <span style="font-size: 11px; color: #38bdf8; font-weight: 900; text-transform: uppercase;">🌭 Hot Dog</span>
+              <span class="font-mono" style="font-size: 28px; color: #38bdf8; font-weight: 900; line-height: 1;" id="handout-metric-white-need">0</span>
+              <span class="font-mono" style="font-size: 11px; color: #ffffff; font-weight: bold;" id="handout-metric-white-ready">Bereit: 0</span>
             </div>
 
-            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 3px solid #fb923c; padding: 8px 4px;">
-              <span style="font-size: 12px; color: #fb923c; font-weight: 900; text-transform: uppercase;">🍛 Curry-Schalen</span>
-              <span class="font-mono" style="font-size: 36px; color: #fb923c; font-weight: 900; line-height: 1.1;" id="handout-metric-curry-need">0</span>
-              <span class="font-mono" style="font-size: 12px; color: #ffffff; font-weight: bold;" id="handout-metric-curry-ready">Bereit: 0</span>
+            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 2px solid #fb923c; padding: 6px 2px;">
+              <span style="font-size: 11px; color: #fb923c; font-weight: 900; text-transform: uppercase;">🍛 Schalen</span>
+              <span class="font-mono" style="font-size: 28px; color: #fb923c; font-weight: 900; line-height: 1;" id="handout-metric-curry-need">0</span>
+              <span class="font-mono" style="font-size: 11px; color: #ffffff; font-weight: bold;" id="handout-metric-curry-ready">Bereit: 0</span>
             </div>
 
-            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 3px solid #34d399; padding: 8px 4px;">
-              <span style="font-size: 12px; color: #34d399; font-weight: 900; text-transform: uppercase;">⏳ Offene Bons</span>
-              <span class="font-mono" style="font-size: 36px; color: #34d399; font-weight: 900; line-height: 1.1;" id="handout-metric-orders-total">0</span>
-              <span style="font-size: 12px; color: #cbd5e1; font-weight: bold;">Warteschlange</span>
+            <div class="card flex flex-col items-center justify-center" style="background: #020617; text-align: center; border: 2px solid #34d399; padding: 6px 2px;">
+              <span style="font-size: 11px; color: #34d399; font-weight: 900; text-transform: uppercase;">⏳ Offene Bons</span>
+              <span class="font-mono" style="font-size: 28px; color: #34d399; font-weight: 900; line-height: 1;" id="handout-metric-orders-total">0</span>
+              <span style="font-size: 11px; color: #cbd5e1; font-weight: bold;">Queue</span>
             </div>
           </div>
 
-          <div class="flex flex-col gap-2" style="flex: 1; min-height: 0; margin-top: 4px;">
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🥖 Crispy Brötchen</strong>
+          <div class="flex flex-col gap-2" style="flex: 1; min-height: 0; justify-content: space-between;">
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🥖 Crispy Brötchen</strong>
                 <span class="badge badge-amber font-mono" id="handout-badge-crispy-slice">Puffer: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
                 <button onclick="sliceRollsForBuffer('roll_crusty', 1)" class="btn btn-dark btn-stepper font-mono">+1</button>
                 <button onclick="sliceRollsForBuffer('roll_crusty', 5)" class="btn btn-emerald btn-stepper font-mono">+5</button>
                 <button onclick="revertSlicedRollBuffer('roll_crusty', 1)" class="btn btn-rose btn-stepper font-mono">↩ -1</button>
               </div>
             </div>
 
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🌭 Hot Dog Brötchen</strong>
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🌭 Hot Dog Brötchen</strong>
                 <span class="badge badge-sky font-mono" id="handout-badge-white-slice">Puffer: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
                 <button onclick="sliceRollsForBuffer('roll_white', 1)" class="btn btn-dark btn-stepper font-mono">+1</button>
                 <button onclick="sliceRollsForBuffer('roll_white', 5)" class="btn btn-emerald btn-stepper font-mono">+5</button>
                 <button onclick="revertSlicedRollBuffer('roll_white', 1)" class="btn btn-rose btn-stepper font-mono">↩ -1</button>
               </div>
             </div>
 
-            <div class="card" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
-              <div class="flex items-center justify-between" style="margin-bottom: 6px;">
-                <strong style="font-size: 14px; color: #ffffff;">🍛 Currywurst Schalen</strong>
+            <div class="card" style="background: #020617; padding: 6px 8px; border: 2px solid #334155;">
+              <div class="flex items-center justify-between" style="margin-bottom: 4px;">
+                <strong style="font-size: 13px; color: #ffffff;">🍛 Currywurst Schalen</strong>
                 <span class="badge badge-amber font-mono" id="handout-badge-curry-tray">Puffer: 0</span>
               </div>
-              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+              <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
                 <button onclick="prepCurryTraysBuffer(1)" class="btn btn-dark btn-stepper font-mono">+1</button>
                 <button onclick="prepCurryTraysBuffer(5)" class="btn btn-emerald btn-stepper font-mono">+5</button>
                 <button onclick="revertCurryTraysBuffer(1)" class="btn btn-rose btn-stepper font-mono">↩ -1</button>
@@ -698,12 +740,12 @@
           </div>
         </div>
 
-        <div style="border-top: 3px solid #1e293b; padding-top: 10px; margin-top: 8px; flex-shrink: 0;">
-          <div class="flex items-center justify-between" style="margin-bottom: 8px;">
-            <span style="font-size: 13px; color: #ffffff; font-weight: 900; text-transform: uppercase;">Nächster Bon</span>
-            <span class="font-mono title-gold" style="font-size: 24px;" id="handout-next-ticket-label">Keiner</span>
+        <div style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px; flex-shrink: 0;">
+          <div class="flex items-center justify-between" style="margin-bottom: 6px;">
+            <span style="font-size: 12px; color: #ffffff; font-weight: 900; text-transform: uppercase;">Nächster Bon</span>
+            <span class="font-mono title-gold" style="font-size: 22px;" id="handout-next-ticket-label">Keiner</span>
           </div>
-          <button onclick="completeFirstHandoutOrder()" class="btn btn-emerald" style="width: 100%; padding: 14px 6px; font-size: 16px; font-weight: 900; min-height: 58px;" id="btn-handout-complete-first">
+          <button onclick="completeFirstHandoutOrder()" class="btn btn-emerald" style="width: 100%; padding: 10px 6px; font-size: 15px; font-weight: 900; min-height: 48px;" id="btn-handout-complete-first">
             ✓ Ältesten Bon Sofort Ausgeben
           </button>
         </div>
@@ -713,11 +755,11 @@
     <!-- 4. DUAL VIEW -->
     <section id="view-dual" class="operational-view hidden">
       <div class="card flex flex-col gap-2" style="flex: 1; min-height: 0;">
-        <div class="title-gold" style="font-size: 15px;">🔥 Braai Quick Monitor</div>
+        <div class="title-gold" style="font-size: 14px;">🔥 Braai Quick Monitor</div>
         <div id="dual-braai-deck" class="flex flex-col gap-2" style="flex: 1; min-height: 0;"></div>
       </div>
       <div class="card flex flex-col gap-2" style="flex: 1; min-height: 0;">
-        <div class="title-gold" style="font-size: 15px;">🥖 Handout Queue</div>
+        <div class="title-gold" style="font-size: 14px;">🥖 Handout Queue</div>
         <div id="dual-handout-queue" class="flex flex-col gap-2" style="flex: 1; min-height: 0; overflow-y: auto;"></div>
       </div>
     </section>
@@ -726,12 +768,12 @@
     <section id="view-manager" class="hidden">
       
       <!-- MASTER TOP CONTROL BAR -->
-      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 8px; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border-color: rgba(245, 158, 11, 0.6); flex-shrink: 0; margin-bottom: 4px;">
+      <div class="card flex items-center justify-between" style="flex-wrap: wrap; gap: 8px; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border-color: rgba(245, 158, 11, 0.6); flex-shrink: 0;">
         <div class="flex items-center gap-2">
-          <span style="font-size: 30px;">👑</span>
+          <span style="font-size: 26px;">👑</span>
           <div>
-            <div class="title-gold" style="font-size: 17px;">Oktoberfest Master Hub</div>
-            <div style="font-size: 12px; color: #ffffff;">Finanzen, Organisation, Stationen, Crew & Z-Report</div>
+            <div class="title-gold" style="font-size: 16px;">Oktoberfest Master Hub</div>
+            <div style="font-size: 11px; color: #ffffff;">Finanzen, Organisation, Stationen, Crew & Z-Report</div>
           </div>
         </div>
 
@@ -748,61 +790,59 @@
       </div>
 
       <!-- MASTER SUB-SECTION 1: FINANZEN & KASSE -->
-      <div id="mgr-section-finance" class="flex flex-col gap-3">
-        <!-- Live KPIs -->
-        <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 8px; flex-shrink: 0;">
+      <div id="mgr-section-finance" class="flex flex-col gap-2">
+        <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 6px; flex-shrink: 0;">
           <div class="card">
-            <div style="font-size: 12px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Bruttoumsatz</div>
-            <div class="font-mono title-gold" style="font-size: 28px; margin-top: 4px;" id="mgr-stat-turnover">R 0.00</div>
-            <div style="font-size: 12px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-payment-split">Bar: R0 • Yoco: R0</div>
+            <div style="font-size: 11px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Bruttoumsatz</div>
+            <div class="font-mono title-gold" style="font-size: 24px; margin-top: 2px;" id="mgr-stat-turnover">R 0.00</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-payment-split">Bar: R0 • Yoco: R0</div>
           </div>
           <div class="card">
-            <div style="font-size: 12px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Wareneinsatz (COGS)</div>
-            <div class="font-mono" style="font-size: 28px; color: #fb7185; margin-top: 4px; font-weight: 900;" id="mgr-stat-cogs">R 0.00</div>
-            <div style="font-size: 12px; color: #cbd5e1; font-weight: bold;">Großhandel Wareneinkauf</div>
+            <div style="font-size: 11px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Wareneinsatz (COGS)</div>
+            <div class="font-mono" style="font-size: 24px; color: #fb7185; margin-top: 2px; font-weight: 900;" id="mgr-stat-cogs">R 0.00</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;">Großhandel Wareneinkauf</div>
           </div>
           <div class="card">
-            <div style="font-size: 12px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Deckungsbeitrag (Rohgewinn)</div>
-            <div class="font-mono" style="font-size: 28px; color: #34d399; margin-top: 4px; font-weight: 900;" id="mgr-stat-profit">R 0.00</div>
-            <div style="font-size: 12px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-margin-pct">Marge: 0.0%</div>
+            <div style="font-size: 11px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Deckungsbeitrag</div>
+            <div class="font-mono" style="font-size: 24px; color: #34d399; margin-top: 2px; font-weight: 900;" id="mgr-stat-profit">R 0.00</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-margin-pct">Marge: 0.0%</div>
           </div>
           <div class="card">
-            <div style="font-size: 12px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Verkaufte Einheiten</div>
-            <div class="font-mono" style="font-size: 28px; color: #ffffff; margin-top: 4px; font-weight: 900;" id="mgr-stat-sold-count">0</div>
-            <div style="font-size: 12px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-orders-count">0 Bons gebucht</div>
+            <div style="font-size: 11px; color: #ffffff; text-transform: uppercase; font-weight: bold;">Verkaufte Einheiten</div>
+            <div class="font-mono" style="font-size: 24px; color: #ffffff; margin-top: 2px; font-weight: 900;" id="mgr-stat-sold-count">0</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: bold;" id="mgr-stat-orders-count">0 Bons gebucht</div>
           </div>
         </div>
 
-        <!-- Kassenbuch & Audit-Trail -->
         <div class="card flex flex-col gap-2">
-          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
-            <div class="title-gold" style="font-size: 15px;">💵 Kassenbuch-Audit & Kassenstand</div>
+          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 4px;">
+            <div class="title-gold" style="font-size: 14px;">💵 Kassenbuch-Audit & Kassenstand</div>
             <div class="flex gap-2">
               <button onclick="openCashDrawerModal()" class="btn btn-emerald btn-sm font-mono">+ Einlage / - Entnahme</button>
               <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Backup JSON</button>
             </div>
           </div>
-          <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+          <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
             <div class="card" style="background: #020617; text-align: center;">
-              <div style="font-size: 12px; color: #ffffff;">Start-Wechselgeld (Float)</div>
-              <div class="font-mono title-gold" style="font-size: 24px;" id="finance-display-initial-float">R 1,000.00</div>
+              <div style="font-size: 11px; color: #ffffff;">Start-Wechselgeld (Float)</div>
+              <div class="font-mono title-gold" style="font-size: 22px;" id="finance-display-initial-float">R 1,000.00</div>
             </div>
             <div class="card" style="background: #020617; text-align: center;">
-              <div style="font-size: 12px; color: #ffffff;">Soll-Bargeldbestand Lade</div>
-              <div class="font-mono" style="font-size: 24px; color: #34d399; font-weight: 900;" id="finance-display-expected-cash">R 1,000.00</div>
+              <div style="font-size: 11px; color: #ffffff;">Soll-Bargeldbestand Lade</div>
+              <div class="font-mono" style="font-size: 22px; color: #34d399; font-weight: 900;" id="finance-display-expected-cash">R 1,000.00</div>
             </div>
             <div class="card" style="background: #020617; text-align: center;">
-              <div style="font-size: 12px; color: #ffffff;">Yoco Kartenabrechnung</div>
-              <div class="font-mono" style="font-size: 24px; color: #38bdf8; font-weight: 900;" id="finance-display-yoco-total">R 0.00</div>
+              <div style="font-size: 11px; color: #ffffff;">Yoco Kartenabrechnung</div>
+              <div class="font-mono" style="font-size: 22px; color: #38bdf8; font-weight: 900;" id="finance-display-yoco-total">R 0.00</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- MASTER SUB-SECTION 2: STAMMDATEN & DEPOT -->
-      <div id="mgr-section-catalog" class="flex flex-col gap-3 hidden">
-        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
-          <div class="title-gold" style="font-size: 15px;">🌭 Stammdaten, Preise, COGS & Lagerbestände</div>
+      <div id="mgr-section-catalog" class="flex flex-col gap-2 hidden">
+        <div class="card flex items-center justify-between" style="padding: 6px 10px;">
+          <div class="title-gold" style="font-size: 14px;">🌭 Stammdaten, Preise, COGS & Lagerbestände</div>
           <div class="flex gap-2">
             <button onclick="openNewCatalogItemModal()" class="btn btn-emerald btn-sm">+ Neuer Artikel</button>
             <button onclick="openMasterRestockModal()" class="btn btn-gold btn-sm">📦 Transfer Kühlwagen ➔ Zeltkühler</button>
@@ -811,18 +851,18 @@
         </div>
 
         <div class="card" style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
             <thead>
               <tr style="border-bottom: 2px solid #1e293b; color: #ffffff;">
-                <th style="padding: 8px;">Artikel</th>
+                <th style="padding: 6px;">Artikel</th>
                 <th>Kategorie</th>
                 <th>VK Preis</th>
                 <th>EK (COGS)</th>
-                <th>Kühlwagen (Depot)</th>
+                <th>Kühlwagen</th>
                 <th>Zeltkühler</th>
                 <th>Verkauft</th>
                 <th>Servier-Paarung</th>
-                <th style="text-align: right; padding: 8px;">Aktion</th>
+                <th style="text-align: right; padding: 6px;">Aktion</th>
               </tr>
             </thead>
             <tbody id="mgr-table-catalog" class="font-mono"></tbody>
@@ -831,22 +871,22 @@
       </div>
 
       <!-- MASTER SUB-SECTION 3: STATIONEN SETUP -->
-      <div id="mgr-section-stations" class="flex flex-col gap-3 hidden">
-        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
-          <div class="title-gold" style="font-size: 15px;">🖥️ Arbeitsstationen & Bildschirmzuweisung</div>
+      <div id="mgr-section-stations" class="flex flex-col gap-2 hidden">
+        <div class="card flex items-center justify-between" style="padding: 6px 10px;">
+          <div class="title-gold" style="font-size: 14px;">🖥️ Arbeitsstationen & Bildschirmzuweisung</div>
           <button onclick="openStationEditorModal()" class="btn btn-emerald btn-sm">+ Neue Station anlegen</button>
         </div>
 
         <div class="card" style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
             <thead>
               <tr style="border-bottom: 2px solid #1e293b; color: #ffffff;">
-                <th style="padding: 8px;">Stationsname</th>
+                <th style="padding: 6px;">Stationsname</th>
                 <th>ID</th>
                 <th>Aktive Ansicht</th>
                 <th>Hardware-Ziel</th>
                 <th>Status</th>
-                <th style="text-align: right; padding: 8px;">Aktion</th>
+                <th style="text-align: right; padding: 6px;">Aktion</th>
               </tr>
             </thead>
             <tbody id="mgr-table-stations" class="font-mono"></tbody>
@@ -855,33 +895,33 @@
       </div>
 
       <!-- MASTER SUB-SECTION 4: PERSONAL & PINS -->
-      <div id="mgr-section-staff" class="flex flex-col gap-3 hidden">
-        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
-          <div class="title-gold" style="font-size: 15px;">👥 Personal-Dienstplan & Touch-PINs</div>
+      <div id="mgr-section-staff" class="flex flex-col gap-2 hidden">
+        <div class="card flex items-center justify-between" style="padding: 6px 10px;">
+          <div class="title-gold" style="font-size: 14px;">👥 Personal-Dienstplan & Touch-PINs</div>
           <button onclick="openStaffEditorModal()" class="btn btn-emerald btn-sm">+ Mitarbeiter anlegen</button>
         </div>
 
         <!-- PENDING APPROVAL QUEUE BANNER -->
         <div id="mgr-staff-pending-banner" class="card flex flex-col gap-2 hidden" style="border: 2px solid #f59e0b; background: rgba(245, 158, 11, 0.1);">
           <div class="flex items-center justify-between">
-            <strong style="color: #fde047; font-size: 14px;">⚠️ Ausstehende Registrierungen (Freigabe erforderlich):</strong>
+            <strong style="color: #fde047; font-size: 13px;">⚠️ Ausstehende Registrierungen (Freigabe erforderlich):</strong>
             <span class="badge badge-amber" id="pending-staff-badge-count">0 ausstehend</span>
           </div>
           <div id="mgr-staff-pending-list" class="flex flex-col gap-2"></div>
         </div>
 
         <div class="card" style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
             <thead>
               <tr style="border-bottom: 2px solid #1e293b; color: #ffffff;">
-                <th style="padding: 8px;">Mitarbeiter</th>
+                <th style="padding: 6px;">Mitarbeiter</th>
                 <th>Rolle</th>
                 <th>Standard-Station</th>
                 <th>Schicht</th>
-                <th>4-Digit PIN</th>
+                <th>PIN</th>
                 <th>Master-Rechte</th>
                 <th>Status</th>
-                <th style="text-align: right; padding: 8px;">Aktion</th>
+                <th style="text-align: right; padding: 6px;">Aktion</th>
               </tr>
             </thead>
             <tbody id="mgr-table-staff" class="font-mono"></tbody>
@@ -890,28 +930,28 @@
       </div>
 
       <!-- MASTER SUB-SECTION 5: ORGANISATION & TO-DO -->
-      <div id="mgr-section-organisation" class="flex flex-col gap-3 hidden">
-        <div class="card flex items-center justify-between" style="padding: 8px 12px;">
-          <div class="title-gold" style="font-size: 15px;">📋 Organisation, Phasenplan & Event To-Do</div>
+      <div id="mgr-section-organisation" class="flex flex-col gap-2 hidden">
+        <div class="card flex items-center justify-between" style="padding: 6px 10px;">
+          <div class="title-gold" style="font-size: 14px;">📋 Organisation, Phasenplan & Event To-Do</div>
           <div class="flex gap-2">
             <button onclick="openTaskCreatorModal()" class="btn btn-emerald btn-sm">+ Neue Aufgabe</button>
             <button onclick="openTimelineEventModal()" class="btn btn-dark btn-sm">+ Neuer Meilenstein</button>
           </div>
         </div>
 
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="card flex flex-col gap-2">
-            <div style="font-size: 14px; font-weight: 900; color: #fde047; border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 900; color: #fde047; border-bottom: 2px solid #1e293b; padding-bottom: 4px;">
               ✅ Phasen-Checkliste Oktoberfest 2026
             </div>
-            <div id="mgr-todo-task-list" class="flex flex-col gap-2" style="max-height: 400px; overflow-y: auto;"></div>
+            <div id="mgr-todo-task-list" class="flex flex-col gap-2" style="max-height: 380px; overflow-y: auto;"></div>
           </div>
 
           <div class="card flex flex-col gap-2">
-            <div style="font-size: 14px; font-weight: 900; color: #38bdf8; border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 900; color: #38bdf8; border-bottom: 2px solid #1e293b; padding-bottom: 4px;">
               ⏱️ Event-Timeline & Meilensteine
             </div>
-            <div id="mgr-timeline-list" class="flex flex-col gap-2" style="max-height: 400px; overflow-y: auto;"></div>
+            <div id="mgr-timeline-list" class="flex flex-col gap-2" style="max-height: 380px; overflow-y: auto;"></div>
           </div>
         </div>
       </div>
@@ -923,35 +963,35 @@
 
   <!-- MODAL: WECHSELGELD-RECHNER -->
   <div id="modal-cash-payment" class="modal-backdrop hidden">
-    <div class="modal-box" style="max-width: 480px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 18px;" id="lbl-cash-modal-title">💵 Barzahlung & Wechselgeld</div>
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 16px;" id="lbl-cash-modal-title">💵 Barzahlung & Wechselgeld</div>
         <button onclick="closeCashPaymentModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
 
-      <div class="card" style="background: #020617; text-align: center; padding: 12px;">
-        <div style="font-size: 13px; color: #ffffff; font-weight: bold; text-transform: uppercase;">Zu Zahlender Betrag</div>
-        <div class="font-mono title-gold" style="font-size: 38px; font-weight: 900;" id="cash-modal-due">R 0.00</div>
+      <div class="card" style="background: #020617; text-align: center; padding: 10px;">
+        <div style="font-size: 12px; color: #ffffff; font-weight: bold; text-transform: uppercase;">Zu Zahlender Betrag</div>
+        <div class="font-mono title-gold" style="font-size: 34px; font-weight: 900;" id="cash-modal-due">R 0.00</div>
       </div>
 
       <div class="flex flex-col gap-1">
-        <label style="font-size: 13px; color: #ffffff; font-weight: 800;" id="lbl-cash-tendered">Erhaltenes Bargeld:</label>
-        <input type="number" id="cash-tender-input" oninput="calculateCashChangeDue()" class="input-field font-mono" style="font-size: 26px; font-weight: 900; text-align: center; color: #fde047;" placeholder="0.00" step="10">
+        <label style="font-size: 12px; color: #ffffff; font-weight: 800;" id="lbl-cash-tendered">Erhaltenes Bargeld:</label>
+        <input type="number" id="cash-tender-input" oninput="calculateCashChangeDue()" class="input-field font-mono" style="font-size: 24px; font-weight: 900; text-align: center; color: #fde047;" placeholder="0.00" step="10">
       </div>
 
-      <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 8px;">
-        <button onclick="setCashTenderExact()" class="btn btn-dark font-mono" style="font-size: 14px; min-height: 52px;" id="btn-cash-exact">Passend</button>
-        <button onclick="setCashTenderAmount(50)" class="btn btn-dark font-mono" style="font-size: 14px; min-height: 52px;">R 50</button>
-        <button onclick="setCashTenderAmount(100)" class="btn btn-dark font-mono" style="font-size: 14px; min-height: 52px;">R 100</button>
-        <button onclick="setCashTenderAmount(200)" class="btn btn-dark font-mono" style="font-size: 14px; min-height: 52px;">R 200</button>
+      <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 6px;">
+        <button onclick="setCashTenderExact()" class="btn btn-dark font-mono" style="font-size: 13px; min-height: 44px;" id="btn-cash-exact">Passend</button>
+        <button onclick="setCashTenderAmount(50)" class="btn btn-dark font-mono" style="font-size: 13px; min-height: 44px;">R 50</button>
+        <button onclick="setCashTenderAmount(100)" class="btn btn-dark font-mono" style="font-size: 13px; min-height: 44px;">R 100</button>
+        <button onclick="setCashTenderAmount(200)" class="btn btn-dark font-mono" style="font-size: 13px; min-height: 44px;">R 200</button>
       </div>
 
-      <div class="card flex items-center justify-between" style="background: #020617; padding: 12px 16px;">
-        <span style="font-size: 15px; font-weight: 900; color: #ffffff;" id="lbl-cash-change">Rückgeld an Kunden:</span>
-        <span class="font-mono" style="font-size: 32px; font-weight: 900; color: #34d399;" id="cash-modal-change">R 0.00</span>
+      <div class="card flex items-center justify-between" style="background: #020617; padding: 10px 14px;">
+        <span style="font-size: 14px; font-weight: 900; color: #ffffff;" id="lbl-cash-change">Rückgeld:</span>
+        <span class="font-mono" style="font-size: 28px; font-weight: 900; color: #34d399;" id="cash-modal-change">R 0.00</span>
       </div>
 
-      <button onclick="confirmCashCheckout()" class="btn btn-emerald" style="padding: 14px; font-size: 18px; font-weight: 900; min-height: 60px;" id="btn-cash-confirm">
+      <button onclick="confirmCashCheckout()" class="btn btn-emerald" style="padding: 12px; font-size: 16px; font-weight: 900; min-height: 52px;" id="btn-cash-confirm">
         ✓ Barzahlung Abschließen
       </button>
     </div>
@@ -960,43 +1000,43 @@
   <!-- MODAL: KASSENLADE & KASSENBUCH -->
   <div id="modal-cash-drawer" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">💵 Kassenlade & Kassenbuch</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">💵 Kassenlade & Kassenbuch</div>
         <button onclick="closeCashDrawerModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
 
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
         <div class="card" style="background: #020617; text-align: center;">
-          <div style="font-size: 12px; color: #ffffff; font-weight: bold;">Soll-Bestand Lade</div>
-          <div class="font-mono" style="font-size: 28px; color: #34d399; font-weight: 900;" id="drawer-modal-expected">R 0.00</div>
+          <div style="font-size: 11px; color: #ffffff; font-weight: bold;">Soll-Bestand Lade</div>
+          <div class="font-mono" style="font-size: 24px; color: #34d399; font-weight: 900;" id="drawer-modal-expected">R 0.00</div>
         </div>
         <div class="card" style="background: #020617; text-align: center;">
-          <div style="font-size: 12px; color: #ffffff; font-weight: bold;">Start-Wechselgeld</div>
-          <div class="font-mono title-gold" style="font-size: 28px;" id="drawer-modal-initial">R 1000.00</div>
+          <div style="font-size: 11px; color: #ffffff; font-weight: bold;">Start-Wechselgeld</div>
+          <div class="font-mono title-gold" style="font-size: 24px;" id="drawer-modal-initial">R 1000.00</div>
         </div>
       </div>
 
-      <div class="card flex flex-col gap-2" style="background: #020617; padding: 10px;">
-        <div style="font-size: 13px; font-weight: 800; color: #ffffff;">Barentnahme / Einlage buchen:</div>
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
-          <input type="number" id="drawer-movement-amount" placeholder="Betrag in R" class="input-field font-mono" style="font-size: 15px;">
-          <input type="text" id="drawer-movement-reason" placeholder="Grund (z.B. Wechselgeld)" class="input-field" style="font-size: 14px;">
+      <div class="card flex flex-col gap-2" style="background: #020617; padding: 8px;">
+        <div style="font-size: 12px; font-weight: 800; color: #ffffff;">Barentnahme / Einlage buchen:</div>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
+          <input type="number" id="drawer-movement-amount" placeholder="Betrag in R" class="input-field font-mono">
+          <input type="text" id="drawer-movement-reason" placeholder="Grund" class="input-field">
         </div>
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
           <button onclick="submitCashMovement('IN')" class="btn btn-dark font-mono">+ Einlage (IN)</button>
           <button onclick="submitCashMovement('OUT')" class="btn btn-rose font-mono">- Entnahme (OUT)</button>
         </div>
       </div>
 
-      <div style="max-height: 200px; overflow-y: auto;" id="drawer-movement-history"></div>
+      <div style="max-height: 180px; overflow-y: auto;" id="drawer-movement-history"></div>
     </div>
   </div>
 
   <!-- MODAL: BON-INSPEKTION & RECALL -->
   <div id="modal-till-tickets" class="modal-backdrop hidden">
-    <div class="modal-box" style="max-width: 680px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">🧾 Bon-Übersicht & Storno / Recall</div>
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">🧾 Bon-Übersicht & Storno / Recall</div>
         <button onclick="closeTillTicketsModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
 
@@ -1006,19 +1046,19 @@
         <button onclick="filterTicketsModal('delivered')" class="btn btn-dark btn-sm" id="btn-filter-delivered">✓ Abgeschlossen</button>
       </div>
 
-      <div id="till-tickets-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto;"></div>
+      <div id="till-tickets-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 380px; overflow-y: auto;"></div>
     </div>
   </div>
 
   <!-- MODAL: RESTOCK (DEPOT ➔ KÜHLER) -->
   <div id="modal-master-restock" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">📦 Warentransfer: Kühlwagen ➔ Zeltkühler</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">📦 Warentransfer: Kühlwagen ➔ Zeltkühler</div>
         <button onclick="closeMasterRestockModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div id="restock-transfer-list" class="flex flex-col gap-2" style="max-height: 420px; overflow-y: auto;"></div>
-      <div style="text-align: right; border-top: 2px solid #1e293b; padding-top: 8px;">
+      <div id="restock-transfer-list" class="flex flex-col gap-2" style="max-height: 380px; overflow-y: auto;"></div>
+      <div style="text-align: right; border-top: 2px solid #1e293b; padding-top: 6px;">
         <button onclick="closeMasterRestockModal()" class="btn btn-gold btn-sm">Fertig</button>
       </div>
     </div>
@@ -1026,13 +1066,13 @@
 
   <!-- MODAL: Z-REPORT TAGESABSCHLUSS -->
   <div id="modal-z-report" class="modal-backdrop hidden">
-    <div class="modal-box font-mono" style="font-size: 13px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">📊 Oktoberfest Tagesabschluss (Z-Report)</div>
+    <div class="modal-box font-mono" style="font-size: 12px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">📊 Oktoberfest Tagesabschluss (Z-Report)</div>
         <button onclick="closeZReportModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <div id="z-report-content" class="flex flex-col gap-2"></div>
-      <div class="flex items-center justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px;">
+      <div class="flex items-center justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px;">
         <button onclick="exportEventDataJSON()" class="btn btn-dark btn-sm">💾 Download JSON</button>
         <button onclick="closeZReportModal()" class="btn btn-gold btn-sm">Schließen</button>
       </div>
@@ -1041,38 +1081,38 @@
 
   <!-- MODAL: MASTER TOUCH PIN CHALLENGE -->
   <div id="modal-master-pin" class="modal-backdrop hidden" style="z-index: 2500;">
-    <div class="modal-box" style="max-width: 380px; border-color: #f59e0b;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">👑 Master-PIN Erforderlich</div>
+    <div class="modal-box" style="max-width: 360px; border-color: #f59e0b;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">👑 Master-PIN Erforderlich</div>
         <button onclick="closeMasterPinModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div style="font-size: 13px; color: #cbd5e1; text-align: center;">
+      <div style="font-size: 12px; color: #cbd5e1; text-align: center;">
         Zugriff nur mit Master-Berechtigung (Nicolas PIN 1978):
       </div>
-      <input type="password" id="master-pin-display" maxlength="4" class="input-field font-mono" style="font-size: 32px; text-align: center; letter-spacing: 0.35em; color: #fde047; height: 52px;" readonly placeholder="••••">
-      <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px;">
-        <button onclick="pressMasterPin('1')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">1</button>
-        <button onclick="pressMasterPin('2')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">2</button>
-        <button onclick="pressMasterPin('3')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">3</button>
-        <button onclick="pressMasterPin('4')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">4</button>
-        <button onclick="pressMasterPin('5')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">5</button>
-        <button onclick="pressMasterPin('6')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">6</button>
-        <button onclick="pressMasterPin('7')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">7</button>
-        <button onclick="pressMasterPin('8')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">8</button>
-        <button onclick="pressMasterPin('9')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">9</button>
-        <button onclick="resetMasterPin()" class="btn btn-rose" style="font-size: 18px; padding: 10px;">C</button>
-        <button onclick="pressMasterPin('0')" class="btn btn-dark" style="font-size: 22px; padding: 10px;">0</button>
-        <button onclick="confirmMasterPin()" class="btn btn-emerald" style="font-size: 18px; padding: 10px; font-weight: 900;">OK</button>
+      <input type="password" id="master-pin-display" maxlength="4" class="input-field font-mono" style="font-size: 28px; text-align: center; letter-spacing: 0.35em; color: #fde047; height: 48px;" readonly placeholder="••••">
+      <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px;">
+        <button onclick="pressMasterPin('1')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">1</button>
+        <button onclick="pressMasterPin('2')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">2</button>
+        <button onclick="pressMasterPin('3')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">3</button>
+        <button onclick="pressMasterPin('4')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">4</button>
+        <button onclick="pressMasterPin('5')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">5</button>
+        <button onclick="pressMasterPin('6')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">6</button>
+        <button onclick="pressMasterPin('7')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">7</button>
+        <button onclick="pressMasterPin('8')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">8</button>
+        <button onclick="pressMasterPin('9')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">9</button>
+        <button onclick="resetMasterPin()" class="btn btn-rose" style="font-size: 16px; padding: 8px;">C</button>
+        <button onclick="pressMasterPin('0')" class="btn btn-dark" style="font-size: 20px; padding: 8px;">0</button>
+        <button onclick="confirmMasterPin()" class="btn btn-emerald" style="font-size: 16px; padding: 8px; font-weight: 900;">OK</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: TOUCH APP CONFIRM -->
   <div id="modal-app-confirm" class="modal-backdrop hidden" style="z-index: 2600;">
-    <div class="modal-box" style="max-width: 420px; border-color: #fb7185;">
-      <div class="title-gold" style="font-size: 16px; color: #fb7185;" id="app-confirm-title">Bestätigung erforderlich</div>
-      <div id="app-confirm-message" style="font-size: 14px; color: #ffffff; line-height: 1.4; margin: 10px 0;"></div>
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+    <div class="modal-box" style="max-width: 400px; border-color: #fb7185;">
+      <div class="title-gold" style="font-size: 15px; color: #fb7185;" id="app-confirm-title">Bestätigung erforderlich</div>
+      <div id="app-confirm-message" style="font-size: 13px; color: #ffffff; line-height: 1.4; margin: 8px 0;"></div>
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
         <button onclick="resolveAppConfirm(false)" class="btn btn-dark font-mono">Abbrechen</button>
         <button onclick="resolveAppConfirm(true)" class="btn btn-rose font-mono">Bestätigen ➔</button>
       </div>
@@ -1082,41 +1122,41 @@
   <!-- MODAL: CATALOG ITEM EDITOR -->
   <div id="modal-catalog-editor" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;" id="cat-editor-title">🌭 Artikel Bearbeiten</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;" id="cat-editor-title">🌭 Artikel Bearbeiten</div>
         <button onclick="closeCatalogEditorModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <input type="hidden" id="cat-edit-id">
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Artikelname:</label>
+        <label style="font-size: 12px; color: #ffffff;">Artikelname:</label>
         <input type="text" id="cat-edit-name" class="input-field" placeholder="z.B. Original German Bratwurst">
 
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
           <div>
-            <label style="font-size: 13px; color: #ffffff;">VK-Preis (R):</label>
+            <label style="font-size: 12px; color: #ffffff;">VK-Preis (R):</label>
             <input type="number" id="cat-edit-price" step="1" class="input-field font-mono" placeholder="50.00">
           </div>
           <div>
-            <label style="font-size: 13px; color: #ffffff;">EK-Preis / COGS (R):</label>
+            <label style="font-size: 12px; color: #ffffff;">EK-Preis / COGS (R):</label>
             <input type="number" id="cat-edit-cogs" step="0.5" class="input-field font-mono" placeholder="17.50">
           </div>
         </div>
 
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
           <div>
-            <label style="font-size: 13px; color: #ffffff;">Kühlwagen Depot (Truck):</label>
+            <label style="font-size: 12px; color: #ffffff;">Kühlwagen Depot (Truck):</label>
             <input type="number" id="cat-edit-coldroom" class="input-field font-mono" placeholder="200">
           </div>
           <div>
-            <label style="font-size: 13px; color: #ffffff;">Zeltkühler (Tent Cooler):</label>
+            <label style="font-size: 12px; color: #ffffff;">Zeltkühler (Tent Cooler):</label>
             <input type="number" id="cat-edit-cooler" class="input-field font-mono" placeholder="75">
           </div>
         </div>
 
-        <label style="font-size: 13px; color: #ffffff;">Servier-Form:</label>
+        <label style="font-size: 12px; color: #ffffff;">Servier-Form:</label>
         <input type="text" id="cat-edit-serving" class="input-field" placeholder="z.B. 🥖 Crispy Roll (85g)">
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="closeCatalogEditorModal()" class="btn btn-dark btn-sm">Abbrechen</button>
         <button onclick="saveCatalogEditorAction()" class="btn btn-emerald btn-sm">Speichern</button>
       </div>
@@ -1126,46 +1166,46 @@
   <!-- MODAL: NEW CATALOG ITEM -->
   <div id="modal-new-catalog-item" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">🌭 Neuer Artikel Anlegen</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">🌭 Neuer Artikel Anlegen</div>
         <button onclick="closeNewCatalogItemModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Artikel-ID (eindeutig, engl.):</label>
+        <label style="font-size: 12px; color: #ffffff;">Artikel-ID (eindeutig, engl.):</label>
         <input type="text" id="cat-new-id" class="input-field font-mono" placeholder="z.B. veggie_sausage">
 
-        <label style="font-size: 13px; color: #ffffff;">Artikelname & Icon:</label>
-        <div class="grid" style="grid-template-columns: 80px 1fr; gap: 8px;">
-          <input type="text" id="cat-new-icon" class="input-field" placeholder="🌭" value="🌭" style="text-align: center; font-size: 20px;">
+        <label style="font-size: 12px; color: #ffffff;">Artikelname & Icon:</label>
+        <div class="grid" style="grid-template-columns: 70px 1fr; gap: 6px;">
+          <input type="text" id="cat-new-icon" class="input-field" placeholder="🌭" value="🌭" style="text-align: center; font-size: 18px;">
           <input type="text" id="cat-new-name" class="input-field" placeholder="z.B. Vegetarische Bratwurst">
         </div>
 
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
           <div>
-            <label style="font-size: 13px; color: #ffffff;">VK-Preis (R):</label>
+            <label style="font-size: 12px; color: #ffffff;">VK-Preis (R):</label>
             <input type="number" id="cat-new-price" step="1" class="input-field font-mono" placeholder="50.00" value="50.00">
           </div>
           <div>
-            <label style="font-size: 13px; color: #ffffff;">EK-Preis / COGS (R):</label>
+            <label style="font-size: 12px; color: #ffffff;">EK-Preis / COGS (R):</label>
             <input type="number" id="cat-new-cogs" step="0.5" class="input-field font-mono" placeholder="15.00" value="15.00">
           </div>
         </div>
 
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6px;">
           <div>
-            <label style="font-size: 13px; color: #ffffff;">Kühlwagen Depot:</label>
+            <label style="font-size: 12px; color: #ffffff;">Kühlwagen Depot:</label>
             <input type="number" id="cat-new-coldroom" class="input-field font-mono" placeholder="100" value="100">
           </div>
           <div>
-            <label style="font-size: 13px; color: #ffffff;">Zeltkühler:</label>
+            <label style="font-size: 12px; color: #ffffff;">Zeltkühler:</label>
             <input type="number" id="cat-new-cooler" class="input-field font-mono" placeholder="30" value="30">
           </div>
         </div>
 
-        <label style="font-size: 13px; color: #ffffff;">Servier-Form:</label>
+        <label style="font-size: 12px; color: #ffffff;">Servier-Form:</label>
         <input type="text" id="cat-new-serving" class="input-field" placeholder="z.B. 🥖 Crispy Roll (85g)" value="🥖 Crispy Roll (85g)">
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="closeNewCatalogItemModal()" class="btn btn-dark btn-sm">Abbrechen</button>
         <button onclick="saveNewCatalogItemAction()" class="btn btn-emerald btn-sm">Artikel Speichern</button>
       </div>
@@ -1174,15 +1214,15 @@
 
   <!-- MODAL: TASK CREATOR -->
   <div id="modal-task-creator" class="modal-backdrop hidden">
-    <div class="modal-box" style="max-width: 440px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">📋 Neue Checklisten-Aufgabe</div>
+    <div class="modal-box" style="max-width: 420px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">📋 Neue Checklisten-Aufgabe</div>
         <button onclick="closeTaskCreatorModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Aufgabentext:</label>
-        <input type="text" id="task-create-text" class="input-field" placeholder="z.B. Senf & Ketchup-Spender auffüllen">
-        <label style="font-size: 13px; color: #ffffff;">Phase:</label>
+        <label style="font-size: 12px; color: #ffffff;">Aufgabentext:</label>
+        <input type="text" id="task-create-text" class="input-field" placeholder="z.B. Senf & Ketchup auffüllen">
+        <label style="font-size: 12px; color: #ffffff;">Phase:</label>
         <select id="task-create-phase" class="input-field">
           <option value="Setup">Setup (Aufbau)</option>
           <option value="Kasse">Kasse & Abrechnung</option>
@@ -1191,7 +1231,7 @@
           <option value="Schluss">Schluss & Closeout</option>
         </select>
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="closeTaskCreatorModal()" class="btn btn-dark btn-sm">Abbrechen</button>
         <button onclick="saveNewOrganisationTaskAction()" class="btn btn-emerald btn-sm">Aufgabe Erstellen</button>
       </div>
@@ -1200,18 +1240,18 @@
 
   <!-- MODAL: TIMELINE EVENT -->
   <div id="modal-timeline-event" class="modal-backdrop hidden">
-    <div class="modal-box" style="max-width: 440px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">⏱️ Neuer Meilenstein</div>
+    <div class="modal-box" style="max-width: 420px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">⏱️ Neuer Meilenstein</div>
         <button onclick="closeTimelineEventModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Uhrzeit (HH:MM):</label>
+        <label style="font-size: 12px; color: #ffffff;">Uhrzeit (HH:MM):</label>
         <input type="text" id="tl-create-time" class="input-field font-mono" placeholder="z.B. 17:00">
-        <label style="font-size: 13px; color: #ffffff;">Ereignis / Phase:</label>
+        <label style="font-size: 12px; color: #ffffff;">Ereignis / Phase:</label>
         <input type="text" id="tl-create-event" class="input-field" placeholder="z.B. Zelt-Kapelle Start">
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="closeTimelineEventModal()" class="btn btn-dark btn-sm">Abbrechen</button>
         <button onclick="saveTimelineEventAction()" class="btn btn-emerald btn-sm">Hinzufügen</button>
       </div>
@@ -1220,13 +1260,13 @@
 
   <!-- MODAL: DIAGNOSTICS DISPLAY -->
   <div id="modal-diagnostics" class="modal-backdrop hidden">
-    <div class="modal-box font-mono" style="font-size: 13px; max-width: 520px;">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">🩺 System-Diagnose Bericht</div>
+    <div class="modal-box font-mono" style="font-size: 12px; max-width: 500px;">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">🩺 System-Diagnose Bericht</div>
         <button onclick="closeDiagnosticsModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
-      <div id="diagnostics-results-body" class="flex flex-col gap-2" style="margin: 8px 0;"></div>
-      <div style="text-align: right; border-top: 2px solid #1e293b; padding-top: 8px;">
+      <div id="diagnostics-results-body" class="flex flex-col gap-2" style="margin: 6px 0;"></div>
+      <div style="text-align: right; border-top: 2px solid #1e293b; padding-top: 6px;">
         <button onclick="closeDiagnosticsModal()" class="btn btn-gold btn-sm">Schließen</button>
       </div>
     </div>
@@ -1235,17 +1275,17 @@
   <!-- MODAL: MITARBEITER EDITOR -->
   <div id="modal-staff-editor" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">👥 Mitarbeiter bearbeiten / anlegen</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">👥 Mitarbeiter bearbeiten / anlegen</div>
         <button onclick="closeStaffEditorModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <input type="hidden" id="staff-edit-id">
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Name:</label>
+        <label style="font-size: 12px; color: #ffffff;">Name:</label>
         <input type="text" id="staff-edit-name" class="input-field" placeholder="z.B. Markus">
-        <label style="font-size: 13px; color: #ffffff;">Rolle:</label>
+        <label style="font-size: 12px; color: #ffffff;">Rolle:</label>
         <input type="text" id="staff-edit-role" class="input-field" placeholder="z.B. Braai Master, Kasse Lead">
-        <label style="font-size: 13px; color: #ffffff;">Standard-Station:</label>
+        <label style="font-size: 12px; color: #ffffff;">Standard-Station:</label>
         <select id="staff-edit-station" class="input-field">
           <option value="till">Till POS</option>
           <option value="braai">Braai Master</option>
@@ -1253,14 +1293,14 @@
           <option value="dual">Dual Monitor</option>
           <option value="manager">Manager Hub</option>
         </select>
-        <label style="font-size: 13px; color: #ffffff;">4-stellige PIN:</label>
+        <label style="font-size: 12px; color: #ffffff;">4-stellige PIN:</label>
         <input type="text" id="staff-edit-pin" maxlength="4" class="input-field font-mono" placeholder="z.B. 1234">
-        <label style="font-size: 13px; color: #ffffff; display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-          <input type="checkbox" id="staff-edit-ismaster" style="width: 20px; height: 20px;">
+        <label style="font-size: 12px; color: #ffffff; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+          <input type="checkbox" id="staff-edit-ismaster" style="width: 18px; height: 18px;">
           <span>Master-Administrator Privilegien erteilen</span>
         </label>
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="deleteStaffMemberAction()" class="btn btn-rose btn-sm" id="btn-delete-staff">Löschen</button>
         <button onclick="saveStaffMemberAction()" class="btn btn-emerald btn-sm">Speichern</button>
       </div>
@@ -1270,15 +1310,15 @@
   <!-- MODAL: STATIONEN EDITOR -->
   <div id="modal-station-editor" class="modal-backdrop hidden">
     <div class="modal-box">
-      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-        <div class="title-gold" style="font-size: 16px;">🖥️ Arbeitsstation bearbeiten / anlegen</div>
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 15px;">🖥️ Arbeitsstation bearbeiten / anlegen</div>
         <button onclick="closeStationEditorModal()" class="btn btn-dark btn-sm">✕</button>
       </div>
       <input type="hidden" id="station-edit-id">
       <div class="flex flex-col gap-2">
-        <label style="font-size: 13px; color: #ffffff;">Name der Station:</label>
+        <label style="font-size: 12px; color: #ffffff;">Name der Station:</label>
         <input type="text" id="station-edit-name" class="input-field" placeholder="z.B. Kasse 2 Zelt">
-        <label style="font-size: 13px; color: #ffffff;">Aktive Ansicht:</label>
+        <label style="font-size: 12px; color: #ffffff;">Aktive Ansicht:</label>
         <select id="station-edit-view" class="input-field">
           <option value="till">Till POS</option>
           <option value="braai">Braai Master</option>
@@ -1286,10 +1326,10 @@
           <option value="dual">Dual Monitor</option>
           <option value="manager">Manager Hub</option>
         </select>
-        <label style="font-size: 13px; color: #ffffff;">Hardware-Typ:</label>
+        <label style="font-size: 12px; color: #ffffff;">Hardware-Typ:</label>
         <input type="text" id="station-edit-hardware" class="input-field" placeholder="z.B. Tablet 10 Zoll">
       </div>
-      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 8px; margin-top: 6px;">
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
         <button onclick="deleteStationAction()" class="btn btn-rose btn-sm" id="btn-delete-station">Löschen</button>
         <button onclick="saveStationAction()" class="btn btn-emerald btn-sm">Speichern</button>
       </div>
@@ -1298,7 +1338,7 @@
 
   <!-- JAVASCRIPT APPLICATION ENGINE -->
   <script>
-    const STORAGE_KEY = 'okt2026_hub_state_v8';
+    const STORAGE_KEY = 'okt2026_hub_state_v9';
 
     /* ==========================================================================
        DATA STORES & DEFAULTS
@@ -1533,7 +1573,7 @@
       }
 
       if (staffMember.pin !== gatekeeperPinBuffer) {
-        showToast(`Falscher Code für ${staffMember.name}! Bitte erneut versuchen.`, 'error');
+        showToast(`Falscher Code für ${staffMember.name}!`, 'error');
         resetGatekeeperPin();
         return;
       }
@@ -1558,7 +1598,7 @@
       }
 
       switchStationView(targetStation);
-      showToast(`Willkommen, ${staffMember.name}! Eingeloggt an Station: ${targetStation.toUpperCase()}.`, 'success');
+      showToast(`Willkommen, ${staffMember.name}! Station: ${targetStation.toUpperCase()}.`, 'success');
       resetGatekeeperPin();
     }
 
@@ -1607,7 +1647,7 @@
         document.getElementById('current-user-name').textContent = `${newStaff.name} (Master)`;
         switchStationView(station);
       } else {
-        showToast(`Registrierung eingereicht! Ein Master muss deinen Account erst freischalten.`, 'info');
+        showToast(`Registrierung eingereicht! Ein Master muss deinen Account freischalten.`, 'info');
         switchGatekeeperTab('login');
       }
 
@@ -1676,12 +1716,12 @@
         cart_total: "Gesamtsumme",
         btn_cash: "💵 BARGELD",
         btn_card: "💳 YOCO / KARTE",
-        braai_deck_hint: "🔥 Braai Master Deck: Currywurst zählt synchron in Bratwurst.",
+        braai_deck_hint: "🔥 Braai Master Deck: Currywurst synchron in Bratwurst.",
         depot_to_cooler: "📦 Depot ➔ Kühler",
-        braai_on_grill_label: "Aktuell am Grill",
+        braai_on_grill_label: "Am Grill",
         braai_sizzling_sub: "Sizzling",
-        braai_ready_buffer_label: "Warmhalte-Puffer (Ready)",
-        braai_ready_sub: "Sofort ausgabebereit",
+        braai_ready_buffer_label: "Ready",
+        braai_ready_sub: "Ausgabebereit",
         braai_quick_push: "⚡ Schnell-Schub Rost",
         depot: "Depot",
         on_grill: "Am Grill",
@@ -1722,11 +1762,11 @@
         cart_total: "Total Due",
         btn_cash: "💵 CASH",
         btn_card: "💳 YOCO / CARD",
-        braai_deck_hint: "🔥 Braai Master Deck: Currywurst demand aggregates into Bratwurst.",
+        braai_deck_hint: "🔥 Braai Master Deck: Currywurst synchronizes into Bratwurst.",
         depot_to_cooler: "📦 Depot ➔ Cooler",
-        braai_on_grill_label: "On Braai Now",
+        braai_on_grill_label: "On Braai",
         braai_sizzling_sub: "Sizzling",
-        braai_ready_buffer_label: "Hot Holding (Ready)",
+        braai_ready_buffer_label: "Ready",
         braai_ready_sub: "Ready for Handout",
         braai_quick_push: "⚡ Quick Braai Push",
         depot: "Depot",
@@ -1849,7 +1889,7 @@
 
     function triggerGlobalUndoAction() {
       if (undoStack.length === 0) {
-        showToast(currentLanguage === 'de' ? 'Kein weiterer Schritt zum Rückgängigmachen vorhanden.' : 'No actions to undo.', 'info');
+        showToast(currentLanguage === 'de' ? 'Kein weiterer Schritt zum Rückgängigmachen.' : 'No actions to undo.', 'info');
         return;
       }
       const entry = undoStack.pop();
@@ -1945,7 +1985,7 @@
     }
 
     async function resetToDefault2026Preset() {
-      const ok = await requestAppConfirm('Auf Werkseinstellungen zurücksetzen?', 'Alle Verkaufsdaten und Anpassungen werden gelöscht und der offizielle 2026er Plan neu geladen.');
+      const ok = await requestAppConfirm('Auf Werkseinstellungen zurücksetzen?', 'Alle Verkaufsdaten werden gelöscht und der offizielle 2026er Plan neu geladen.');
       if (ok) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
@@ -2044,16 +2084,16 @@
       const sausages = Object.values(productCatalog);
       grid.innerHTML = sausages.map(s => `
         <div onclick="addSausageToCart('${s.id}')" class="till-touch-tile">
-          <div style="font-size: 64px; line-height: 1; margin-top: 4px;">${s.icon}</div>
-          <div style="font-weight: 900; font-size: 20px; color: #ffffff; margin: 6px 0;">${s.name}</div>
-          <div class="font-mono" style="font-size: 13px; color: #38bdf8; font-weight: bold;">
+          <div style="font-size: 52px; line-height: 1; margin-top: 2px;">${s.icon}</div>
+          <div style="font-weight: 900; font-size: 18px; color: #ffffff; margin: 4px 0;">${s.name}</div>
+          <div class="font-mono" style="font-size: 12px; color: #38bdf8; font-weight: bold;">
             ${s.servingDesc}
           </div>
-          <div class="flex items-center justify-between" style="width: 100%; border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 6px;">
-            <span class="badge badge-amber font-mono" style="font-size: 13px;">
+          <div class="flex items-center justify-between" style="width: 100%; border-top: 2px solid #1e293b; padding-top: 4px; margin-top: 4px;">
+            <span class="badge badge-amber font-mono" style="font-size: 12px;">
               ${t('cooler')}: ${s.id === 'currywurst' ? (productCatalog.bratwurst ? productCatalog.bratwurst.cooler : 0) : s.cooler}
             </span>
-            <span class="font-mono title-gold" style="font-size: 26px;">R ${s.price.toFixed(2)}</span>
+            <span class="font-mono title-gold" style="font-size: 22px;">R ${s.price.toFixed(2)}</span>
           </div>
         </div>
       `).join('');
@@ -2098,7 +2138,7 @@
       if (!container || !totalEl) return;
 
       if (currentCart.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 14px; padding: 36px 0;">${t('cart_empty')}</div>`;
+        container.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 13px; padding: 30px 0;">${t('cart_empty')}</div>`;
         totalEl.textContent = 'R 0.00';
         return;
       }
@@ -2107,17 +2147,17 @@
       container.innerHTML = currentCart.map((item, idx) => {
         total += item.price;
         return `
-          <div class="card flex items-center justify-between" style="background: #020617; padding: 10px 12px; border: 2px solid #1e293b;">
+          <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 10px; border: 2px solid #1e293b;">
             <div class="flex items-center gap-2">
-              <span style="font-size: 26px;">${item.icon}</span>
+              <span style="font-size: 22px;">${item.icon}</span>
               <div>
-                <strong style="font-size: 14px; color: #ffffff;">${item.name}</strong>
-                <div style="font-size: 12px; color: #38bdf8;">${item.servingDesc}</div>
+                <strong style="font-size: 13px; color: #ffffff;">${item.name}</strong>
+                <div style="font-size: 11px; color: #38bdf8;">${item.servingDesc}</div>
               </div>
             </div>
             <div class="flex items-center gap-2 font-mono">
-              <span style="color: #fde047; font-weight: 900; font-size: 16px;">R ${item.price.toFixed(2)}</span>
-              <button onclick="removeSpecificCartItem(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:18px; padding: 4px 8px;">✕</button>
+              <span style="color: #fde047; font-weight: 900; font-size: 15px;">R ${item.price.toFixed(2)}</span>
+              <button onclick="removeSpecificCartItem(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:16px; padding: 2px 6px;">✕</button>
             </div>
           </div>
         `;
@@ -2208,7 +2248,7 @@
       const total = currentCart.reduce((sum, i) => sum + i.price, 0);
       const tender = parseFloat(document.getElementById('cash-tender-input').value) || 0;
       if (tender < total) {
-        showToast(currentLanguage === 'de' ? 'Der gegebene Betrag ist geringer als der Gesamtpreis!' : 'Tendered cash is less than order total!', 'error');
+        showToast(currentLanguage === 'de' ? 'Gegebener Betrag zu gering!' : 'Tendered cash is less than total!', 'error');
         return;
       }
       closeCashPaymentModal();
@@ -2216,8 +2256,22 @@
     }
 
     /* ==========================================================================
-       BRAAI MASTER ENGINE & STRICT LINEAR PIPELINE
+       BRAAI MASTER ENGINE & VIEW SHIFTER (NO SCROLLING NEEDED)
        ========================================================================== */
+    let braaiDeckShiftOffset = 0;
+
+    function shiftBraaiDeck(direction) {
+      const deck = document.getElementById('braai-sausage-deck');
+      if (!deck) return;
+      if (direction === 'top') {
+        braaiDeckShiftOffset = 0;
+      } else if (direction === 'bottom') {
+        // Shift up by 150px to reveal Cheesegriller buttons fully
+        braaiDeckShiftOffset = -140;
+      }
+      deck.style.transform = `translateY(${braaiDeckShiftOffset}px)`;
+    }
+
     function renderBraaiStation() {
       const deck = document.getElementById('braai-sausage-deck');
       const statWaiting = document.getElementById('braai-stat-orders-waiting');
@@ -2289,57 +2343,59 @@
         const canUndoReady = buffer > 0;
 
         return `
-          <div class="card flex flex-col justify-between" style="flex: 1; min-height: 0; background: #0f172a; border: 3px solid #334155;">
-            <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+          <div class="card flex flex-col justify-between" style="flex: 1; min-height: 0; background: #0f172a; border: 2px solid #334155; padding: 6px 10px;">
+            <div class="flex items-center justify-between" style="border-bottom: 1.5px solid #1e293b; padding-bottom: 4px;">
               <div class="flex items-center gap-2">
-                <span style="font-size: 28px;">${item.icon}</span>
-                <strong style="font-size: 16px; color: #ffffff;">${item.name}</strong>
+                <span style="font-size: 22px;">${item.icon}</span>
+                <strong style="font-size: 14px; color: #ffffff;">${item.name}</strong>
               </div>
               <div>
                 ${netNeed > 0 
-                  ? `<span class="badge badge-rose" style="font-size: 15px;">${t('demand')} +${netNeed}</span>` 
-                  : `<span class="badge badge-emerald" style="font-size: 14px;">Covered ✓</span>`}
+                  ? `<span class="badge badge-rose" style="font-size: 13px;">${t('demand')} +${netNeed}</span>` 
+                  : `<span class="badge badge-emerald" style="font-size: 12px;">Covered ✓</span>`}
               </div>
             </div>
 
-            <div class="grid" style="grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 4px 0; flex: 1;">
-              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 2px solid #0ea5e9; padding: 6px 2px;">
-                <span style="font-size: 11px; color: #38bdf8; font-weight: 900; text-transform: uppercase;">${t('depot')}</span>
-                <span class="font-mono" style="font-size: 36px; font-weight: 900; color: #38bdf8; line-height: 1;">${p.coldRoom}</span>
-                <span style="font-size: 10px; color: #ffffff; font-weight: bold;">Truck</span>
+            <!-- Compact 5-Box Metric Row -->
+            <div class="grid" style="grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 4px 0; flex: 1;">
+              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 1.5px solid #0ea5e9; padding: 4px 2px;">
+                <span style="font-size: 10px; color: #38bdf8; font-weight: 900; text-transform: uppercase;">${t('depot')}</span>
+                <span class="font-mono" style="font-size: 26px; font-weight: 900; color: #38bdf8; line-height: 1;">${p.coldRoom}</span>
+                <span style="font-size: 9px; color: #ffffff; font-weight: bold;">Truck</span>
               </div>
-              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 2px solid #f59e0b; padding: 6px 2px;">
-                <span style="font-size: 11px; color: #fde047; font-weight: 900; text-transform: uppercase;">${t('cooler')}</span>
-                <span class="font-mono" style="font-size: 36px; font-weight: 900; color: #fde047; line-height: 1;">${coolerStock}</span>
-                <span style="font-size: 10px; color: #ffffff; font-weight: bold;">Tent</span>
+              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 1.5px solid #f59e0b; padding: 4px 2px;">
+                <span style="font-size: 10px; color: #fde047; font-weight: 900; text-transform: uppercase;">${t('cooler')}</span>
+                <span class="font-mono" style="font-size: 26px; font-weight: 900; color: #fde047; line-height: 1;">${coolerStock}</span>
+                <span style="font-size: 9px; color: #ffffff; font-weight: bold;">Tent</span>
               </div>
-              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 2px solid #f43f5e; padding: 6px 2px;">
-                <span style="font-size: 11px; color: #fb7185; font-weight: 900; text-transform: uppercase;">${t('on_grill')}</span>
-                <span class="font-mono" style="font-size: 36px; font-weight: 900; color: #fb7185; line-height: 1;">${onGrill}</span>
-                <span style="font-size: 10px; color: #ffffff; font-weight: bold;">Sizzling</span>
+              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 1.5px solid #f43f5e; padding: 4px 2px;">
+                <span style="font-size: 10px; color: #fb7185; font-weight: 900; text-transform: uppercase;">${t('on_grill')}</span>
+                <span class="font-mono" style="font-size: 26px; font-weight: 900; color: #fb7185; line-height: 1;">${onGrill}</span>
+                <span style="font-size: 9px; color: #ffffff; font-weight: bold;">Sizzling</span>
               </div>
-              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 2px solid #10b981; padding: 6px 2px;">
-                <span style="font-size: 11px; color: #34d399; font-weight: 900; text-transform: uppercase;">${t('ready')}</span>
-                <span class="font-mono" style="font-size: 36px; font-weight: 900; color: #34d399; line-height: 1;">${buffer}</span>
-                <span style="font-size: 10px; color: #ffffff; font-weight: bold;">Hot</span>
+              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 1.5px solid #10b981; padding: 4px 2px;">
+                <span style="font-size: 10px; color: #34d399; font-weight: 900; text-transform: uppercase;">${t('ready')}</span>
+                <span class="font-mono" style="font-size: 26px; font-weight: 900; color: #34d399; line-height: 1;">${buffer}</span>
+                <span style="font-size: 9px; color: #ffffff; font-weight: bold;">Hot</span>
               </div>
-              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 2px solid #fb923c; padding: 6px 2px;">
-                <span style="font-size: 11px; color: #fb923c; font-weight: 900; text-transform: uppercase;">${t('demand')}</span>
-                <span class="font-mono" style="font-size: 36px; font-weight: 900; color: #fb923c; line-height: 1;">${waiting}</span>
-                <span style="font-size: 10px; color: #ffffff; font-weight: bold;">POS</span>
+              <div class="card flex flex-col items-center justify-center" style="background: #020617; border: 1.5px solid #fb923c; padding: 4px 2px;">
+                <span style="font-size: 10px; color: #fb923c; font-weight: 900; text-transform: uppercase;">${t('demand')}</span>
+                <span class="font-mono" style="font-size: 26px; font-weight: 900; color: #fb923c; line-height: 1;">${waiting}</span>
+                <span style="font-size: 9px; color: #ffffff; font-weight: bold;">POS</span>
               </div>
             </div>
 
-            <div class="flex items-center justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; gap: 8px;">
-              <div class="flex items-center gap-2 font-mono">
-                <span style="font-size: 12px; color: #ffffff; font-weight: bold;">${t('onto_grill')}</span>
+            <!-- Stepper Controls (Onto Grill & Into Ready) -->
+            <div class="flex items-center justify-between" style="border-top: 1.5px solid #1e293b; padding-top: 4px; gap: 6px;">
+              <div class="flex items-center gap-1 font-mono">
+                <span style="font-size: 11px; color: #ffffff; font-weight: bold; margin-right: 2px;">${t('onto_grill')}</span>
                 <button onclick="moveBraaiStage('${item.id}', 'to_grill', 1)" class="btn btn-dark btn-stepper" ${!canMoveToGrill ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>+1</button>
                 <button onclick="moveBraaiStage('${item.id}', 'to_grill', 5)" class="btn btn-dark btn-stepper" ${coolerStock < 5 ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>+5</button>
                 <button onclick="moveBraaiStage('${item.id}', 'undo_grill', 1)" class="btn btn-rose btn-stepper" ${!canUndoGrill ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>↩</button>
               </div>
 
-              <div class="flex items-center gap-2 font-mono">
-                <span style="font-size: 12px; color: #ffffff; font-weight: bold;">${t('into_ready')}</span>
+              <div class="flex items-center gap-1 font-mono">
+                <span style="font-size: 11px; color: #ffffff; font-weight: bold; margin-right: 2px;">${t('into_ready')}</span>
                 <button onclick="moveBraaiStage('${item.id}', 'to_buffer', 1)" class="btn btn-emerald btn-stepper" ${!canMoveToReady ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>+1</button>
                 <button onclick="moveBraaiStage('${item.id}', 'to_buffer', 5)" class="btn btn-emerald btn-stepper" ${onGrill < 5 ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>+5</button>
                 <button onclick="moveBraaiStage('${item.id}', 'undo_buffer', 1)" class="btn btn-rose btn-stepper" ${!canUndoReady ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>↩</button>
@@ -2355,12 +2411,12 @@
       const btnB = document.getElementById(`btn-quick-${shortKey}-buffer`);
       if (btnG) {
         btnG.disabled = coolerCount <= 0;
-        btnG.style.opacity = coolerCount <= 0 ? '0.4' : '1';
+        btnG.style.opacity = coolerCount <= 0 ? '0.35' : '1';
         btnG.style.cursor = coolerCount <= 0 ? 'not-allowed' : 'pointer';
       }
       if (btnB) {
         btnB.disabled = grillCount <= 0;
-        btnB.style.opacity = grillCount <= 0 ? '0.4' : '1';
+        btnB.style.opacity = grillCount <= 0 ? '0.35' : '1';
         btnB.style.cursor = grillCount <= 0 ? 'not-allowed' : 'pointer';
       }
     }
@@ -2373,7 +2429,7 @@
       if (action === 'to_grill') {
         const availableInCooler = prod ? prod.cooler : 0;
         if (availableInCooler <= 0) {
-          showToast(currentLanguage === 'de' ? 'Keine Würste im Zeltkühler! Bitte zuerst nachfüllen.' : 'No sausages in tent cooler! Please restock from depot first.', 'error');
+          showToast(currentLanguage === 'de' ? 'Keine Würste im Zeltkühler! Bitte zuerst nachfüllen.' : 'No sausages in tent cooler! Restock first.', 'error');
           return;
         }
         pushUndoSnapshot(`Braai to_grill ${count}x ${sausageId}`);
@@ -2388,7 +2444,7 @@
         if (prod) prod.cooler += amt;
       } else if (action === 'to_buffer') {
         if (grillingNow[sausageId] <= 0) {
-          showToast(currentLanguage === 'de' ? 'Keine Würste auf dem Grill! Sie können nur gegrillte Würste in Ready legen.' : 'No sausages sizzling on the grill! You can only move grilled sausages to Ready.', 'error');
+          showToast(currentLanguage === 'de' ? 'Keine Würste auf dem Grill!' : 'No sausages sizzling on the grill!', 'error');
           return;
         }
         pushUndoSnapshot(`Braai to_ready ${count}x ${sausageId}`);
@@ -2461,42 +2517,42 @@
 
       if (pending.length === 0) {
         queueEl.innerHTML = `
-          <div class="card flex flex-col items-center justify-center" style="grid-column: 1 / -1; height: 100%; min-height: 220px; color: #ffffff; text-align: center; border: 3px dashed #334155;">
-            <span style="font-size: 54px; margin-bottom: 8px;">🥖</span>
-            <div style="font-size: 18px; font-weight: 900; color: #fde047;">Keine offenen Bons in der Ausgabe</div>
-            <div style="font-size: 13px; margin-top: 4px; color: #cbd5e1;">Neue Kassenbons erscheinen hier sofort automatisch.</div>
+          <div class="card flex flex-col items-center justify-center" style="grid-column: 1 / -1; height: 100%; min-height: 200px; color: #ffffff; text-align: center; border: 2px dashed #334155;">
+            <span style="font-size: 46px; margin-bottom: 6px;">🥖</span>
+            <div style="font-size: 16px; font-weight: 900; color: #fde047;">Keine offenen Bons in der Ausgabe</div>
+            <div style="font-size: 12px; margin-top: 4px; color: #cbd5e1;">Neue Kassenbons erscheinen hier sofort automatisch.</div>
           </div>
         `;
         return;
       }
 
       queueEl.innerHTML = pending.map(order => `
-        <div class="card flex flex-col justify-between" style="background: #0f172a; border: 3px solid #334155; padding: 12px; border-radius: 14px;">
-          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 8px; flex-shrink: 0;">
+        <div class="card flex flex-col justify-between" style="background: #0f172a; border: 2px solid #334155; padding: 10px; border-radius: 12px;">
+          <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px; flex-shrink: 0;">
             <div class="flex items-center gap-2 font-mono">
-              <span class="title-gold" style="font-size: 22px;">#${order.num}</span>
-              <span style="font-size: 12px; color: #ffffff; font-weight: bold;">${order.timestamp}</span>
+              <span class="title-gold" style="font-size: 20px;">#${order.num}</span>
+              <span style="font-size: 11px; color: #ffffff; font-weight: bold;">${order.timestamp}</span>
             </div>
-            <span class="badge ${order.paymentMethod === 'CASH' ? 'badge-emerald' : 'badge-amber'}" style="font-size: 13px;">
+            <span class="badge ${order.paymentMethod === 'CASH' ? 'badge-emerald' : 'badge-amber'}" style="font-size: 12px;">
               ${order.paymentMethod}
             </span>
           </div>
 
-          <div class="flex flex-col gap-2" style="margin: 10px 0; flex: 1;">
+          <div class="flex flex-col gap-1" style="margin: 8px 0; flex: 1;">
             ${order.items.map(i => `
-              <div class="flex items-center justify-between" style="background: #020617; padding: 8px 10px; border-radius: 8px; border: 2px solid #1e293b;">
+              <div class="flex items-center justify-between" style="background: #020617; padding: 6px 8px; border-radius: 6px; border: 1.5px solid #1e293b;">
                 <div class="flex items-center gap-2">
-                  <span style="font-size: 24px;">${i.icon}</span>
-                  <span style="font-size: 14px; font-weight: 900; color: #ffffff;">${i.name}</span>
+                  <span style="font-size: 20px;">${i.icon}</span>
+                  <span style="font-size: 13px; font-weight: 900; color: #ffffff;">${i.name}</span>
                 </div>
-                <span class="badge badge-sky font-mono" style="font-size: 12px;">
+                <span class="badge badge-sky font-mono" style="font-size: 11px;">
                   ${i.servingDesc}
                 </span>
               </div>
             `).join('')}
           </div>
 
-          <button onclick="completeHandoutOrder('${order.id}')" class="btn btn-emerald" style="width: 100%; padding: 14px 8px; font-size: 16px; font-weight: 900; margin-top: 6px; min-height: 56px;">
+          <button onclick="completeHandoutOrder('${order.id}')" class="btn btn-emerald" style="width: 100%; padding: 10px 6px; font-size: 15px; font-weight: 900; margin-top: 4px; min-height: 48px;">
             ${t('btn_complete_order')}
           </button>
         </div>
@@ -2567,9 +2623,9 @@
 
       if (bDeck) {
         bDeck.innerHTML = sausages.map(s => `
-          <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 10px; font-size: 13px;">
+          <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 8px; font-size: 12px;">
             <strong>${s.icon} ${s.name}</strong>
-            <div class="flex gap-3 font-mono">
+            <div class="flex gap-2 font-mono">
               <span style="color: #fb7185; font-weight: bold;">Grill: ${grillingNow[s.id] || 0}</span>
               <span style="color: #34d399; font-weight: bold;">Ready: ${prepBuffer[s.id] || 0}</span>
             </div>
@@ -2579,12 +2635,12 @@
 
       if (hQueue) {
         if (pending.length === 0) {
-          hQueue.innerHTML = `<div style="text-align: center; color: #ffffff; font-size: 13px; padding: 14px;">Keine offenen Bons.</div>`;
+          hQueue.innerHTML = `<div style="text-align: center; color: #ffffff; font-size: 12px; padding: 12px;">Keine offenen Bons.</div>`;
         } else {
           hQueue.innerHTML = pending.map(o => `
-            <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 10px;">
-              <span class="font-mono title-gold" style="font-size: 15px;">#${o.num}</span>
-              <span style="font-size: 13px; font-weight: bold;">${o.items.map(i => i.name).join(', ')}</span>
+            <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 8px;">
+              <span class="font-mono title-gold" style="font-size: 14px;">#${o.num}</span>
+              <span style="font-size: 12px; font-weight: bold;">${o.items.map(i => i.name).join(', ')}</span>
               <button onclick="completeHandoutOrder('${o.id}')" class="btn btn-emerald btn-sm">Done</button>
             </div>
           `).join('');
@@ -2668,7 +2724,7 @@
       if (catTable) {
         catTable.innerHTML = Object.values(productCatalog).map(p => `
           <tr style="border-bottom: 1px solid #1e293b;">
-            <td style="padding: 8px;">${p.icon} <strong>${p.name}</strong></td>
+            <td style="padding: 6px;">${p.icon} <strong>${p.name}</strong></td>
             <td>${p.category}</td>
             <td style="color:#fde047; font-weight: bold;">R ${p.price.toFixed(2)}</td>
             <td style="color:#fb7185; font-weight: bold;">R ${(p.cogs || 0).toFixed(2)}</td>
@@ -2676,11 +2732,11 @@
             <td style="color:#34d399; font-weight: bold;">${p.id === 'currywurst' ? '-' : p.cooler}</td>
             <td style="font-weight: bold;">${p.sold || 0}</td>
             <td style="color:#38bdf8;">${p.servingDesc}</td>
-            <td style="text-align: right; padding: 8px;">
-              <button onclick="openCatalogEditorModal('${p.id}')" class="btn btn-dark btn-sm" style="margin-right: 4px;">Edit</button>
+            <td style="text-align: right; padding: 6px;">
+              <button onclick="openCatalogEditorModal('${p.id}')" class="btn btn-dark btn-sm" style="margin-right: 2px;">Edit</button>
               ${p.id !== 'currywurst' ? `
                 <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm font-mono">+10 Kühler</button>
-              ` : '<span style="color:#cbd5e1; font-size:12px; font-weight: bold;">➔ In Bratwurst</span>'}
+              ` : '<span style="color:#cbd5e1; font-size:11px; font-weight: bold;">➔ In Bratwurst</span>'}
             </td>
           </tr>
         `).join('');
@@ -2690,14 +2746,14 @@
       if (stTable) {
         stTable.innerHTML = stationList.map(s => `
           <tr style="border-bottom: 1px solid #1e293b;">
-            <td style="padding: 8px;"><strong>${s.name}</strong></td>
+            <td style="padding: 6px;"><strong>${s.name}</strong></td>
             <td>${s.id}</td>
             <td><span class="badge badge-sky">${s.view}</span></td>
             <td>${s.hardware}</td>
             <td><span class="badge badge-emerald">${s.status}</span></td>
-            <td style="text-align: right; padding: 8px;">
+            <td style="text-align: right; padding: 6px;">
               <button onclick="switchStationView('${s.view}')" class="btn btn-dark btn-sm">Öffnen</button>
-              <button onclick="openStationEditorModal('${s.id}')" class="btn btn-dark btn-sm" style="margin-left: 4px;">Edit</button>
+              <button onclick="openStationEditorModal('${s.id}')" class="btn btn-dark btn-sm" style="margin-left: 2px;">Edit</button>
             </td>
           </tr>
         `).join('');
@@ -2714,9 +2770,9 @@
           pendingBanner.classList.remove('hidden');
           pendingBadge.textContent = `${pendingStaff.length} ausstehend`;
           pendingList.innerHTML = pendingStaff.map(s => `
-            <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 12px; border: 2px solid #f59e0b;">
+            <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 10px; border: 2px solid #f59e0b;">
               <div>
-                <strong>${s.name}</strong> (${s.role}) - Wunsch-Station: <span style="color:#38bdf8;">${s.station}</span>
+                <strong>${s.name}</strong> (${s.role}) - Wunsch: <span style="color:#38bdf8;">${s.station}</span>
                 <div style="font-size: 11px; color: #94a3b8;">PIN: ${s.pin} • Schicht: ${s.shift}</div>
               </div>
               <div class="flex gap-2">
@@ -2733,18 +2789,18 @@
       if (staffTable) {
         staffTable.innerHTML = staffRoster.map(s => `
           <tr style="border-bottom: 1px solid #1e293b;">
-            <td style="padding: 8px;"><strong>${s.name}</strong> ${s.isMaster ? '👑' : ''}</td>
+            <td style="padding: 6px;"><strong>${s.name}</strong> ${s.isMaster ? '👑' : ''}</td>
             <td>${s.role}</td>
             <td>${s.station || s.role}</td>
             <td>${s.shift || '16:00 - 24:00'}</td>
             <td style="color: #fde047; font-weight: bold;">${s.pin}</td>
-            <td>${s.isMaster ? '<span class="badge badge-emerald">Ja (★ Master)</span>' : '<span class="badge badge-dark" style="color:#cbd5e1;">Crew</span>'}</td>
+            <td>${s.isMaster ? '<span class="badge badge-emerald">★ Master</span>' : '<span class="badge badge-dark" style="color:#cbd5e1;">Crew</span>'}</td>
             <td>
               <span class="badge ${s.status === 'pending' ? 'badge-amber' : 'badge-emerald'}">
-                ${s.status === 'pending' ? 'Wartet auf Freigabe' : 'Aktiv'}
+                ${s.status === 'pending' ? 'Wartet' : 'Aktiv'}
               </span>
             </td>
-            <td style="text-align: right; padding: 8px;">
+            <td style="text-align: right; padding: 6px;">
               <button onclick="openStaffEditorModal('${s.id}')" class="btn btn-dark btn-sm">Bearbeiten</button>
             </td>
           </tr>
@@ -2754,14 +2810,14 @@
       const todoEl = document.getElementById('mgr-todo-task-list');
       if (todoEl) {
         todoEl.innerHTML = taskList.map((t, idx) => `
-          <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 10px;">
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1;">
-              <input type="checkbox" onchange="toggleTaskDone(${idx})" ${t.done ? 'checked' : ''} style="width: 20px; height: 20px;">
-              <span style="${t.done ? 'text-decoration: line-through; opacity: 0.6;' : 'font-weight: 700;'} font-size: 13px;">${t.text}</span>
+          <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 8px;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex: 1;">
+              <input type="checkbox" onchange="toggleTaskDone(${idx})" ${t.done ? 'checked' : ''} style="width: 18px; height: 18px;">
+              <span style="${t.done ? 'text-decoration: line-through; opacity: 0.6;' : 'font-weight: 700;'} font-size: 12px;">${t.text}</span>
             </label>
             <div class="flex items-center gap-2">
-              <span class="badge badge-amber font-mono" style="font-size: 11px;">${t.phase}</span>
-              <button onclick="deleteOrganisationTask(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:16px;">✕</button>
+              <span class="badge badge-amber font-mono" style="font-size: 10px;">${t.phase}</span>
+              <button onclick="deleteOrganisationTask(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:15px;">✕</button>
             </div>
           </div>
         `).join('');
@@ -2770,10 +2826,10 @@
       const timeEl = document.getElementById('mgr-timeline-list');
       if (timeEl) {
         timeEl.innerHTML = timelineList.map((tl, idx) => `
-          <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 10px;">
-            <span class="font-mono title-gold" style="font-size: 15px;">${tl.time}</span>
-            <span style="font-size: 13px; font-weight: 700; color: #ffffff; flex: 1; margin-left: 10px;">${tl.event}</span>
-            <button onclick="deleteTimelineEvent(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:16px;">✕</button>
+          <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 8px;">
+            <span class="font-mono title-gold" style="font-size: 14px;">${tl.time}</span>
+            <span style="font-size: 12px; font-weight: 700; color: #ffffff; flex: 1; margin-left: 8px;">${tl.event}</span>
+            <button onclick="deleteTimelineEvent(${idx})" style="background:none; border:none; color:#fb7185; cursor:pointer; font-size:15px;">✕</button>
           </div>
         `).join('');
       }
@@ -2962,7 +3018,7 @@
       const body = document.getElementById('diagnostics-results-body');
       if (body) {
         body.innerHTML = tests.map(t => `
-          <div class="card" style="background:#020617; color:#34d399; padding:8px 10px; font-weight:bold;">
+          <div class="card" style="background:#020617; color:#34d399; padding:6px 8px; font-weight:bold;">
             ${t}
           </div>
         `).join('');
@@ -3213,17 +3269,17 @@
       if (!cont) return;
 
       if (cashMovements.length === 0) {
-        cont.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 13px; padding: 14px;">Bisher keine manuellen Entnahmen oder Einlagen gebucht.</div>`;
+        cont.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 12px; padding: 12px;">Bisher keine manuellen Entnahmen oder Einlagen gebucht.</div>`;
         return;
       }
 
       cont.innerHTML = `
-        <div style="font-size: 12px; color: #ffffff; font-weight: bold; margin-bottom: 6px;">Buchungshistorie:</div>
-        <div class="flex flex-col gap-1 font-mono" style="font-size: 12px;">
+        <div style="font-size: 11px; color: #ffffff; font-weight: bold; margin-bottom: 4px;">Buchungshistorie:</div>
+        <div class="flex flex-col gap-1 font-mono" style="font-size: 11px;">
           ${cashMovements.slice().reverse().map(m => `
-            <div class="card flex items-center justify-between" style="background: #020617; padding: 6px 8px;">
+            <div class="card flex items-center justify-between" style="background: #020617; padding: 4px 6px;">
               <span>${m.timestamp} - ${m.reason} (${m.author})</span>
-              <strong style="color: ${m.type === 'IN' ? '#34d399' : '#fb7185'}; font-size: 14px;">
+              <strong style="color: ${m.type === 'IN' ? '#34d399' : '#fb7185'}; font-size: 13px;">
                 ${m.type === 'IN' ? '+' : '-'} R ${m.amount.toFixed(2)}
               </strong>
             </div>
@@ -3264,27 +3320,27 @@
       if (activeTicketFilter === 'delivered') filtered = orders.filter(o => o.status === 'delivered');
 
       if (filtered.length === 0) {
-        list.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 14px; padding: 26px;">Keine Bons für diesen Filter gefunden.</div>`;
+        list.innerHTML = `<div style="text-align: center; color: #cbd5e1; font-size: 13px; padding: 22px;">Keine Bons für diesen Filter gefunden.</div>`;
         return;
       }
 
       list.innerHTML = filtered.slice().reverse().map(order => `
-        <div class="card flex items-center justify-between" style="background: #020617; padding: 10px 12px; border: 2px solid #334155;">
+        <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 10px; border: 2px solid #334155;">
           <div>
             <div class="flex items-center gap-2 font-mono">
-              <strong class="title-gold" style="font-size: 16px;">#${order.num}</strong>
-              <span style="font-size: 12px; color: #cbd5e1; font-weight: bold;">${order.timestamp}</span>
+              <strong class="title-gold" style="font-size: 15px;">#${order.num}</strong>
+              <span style="font-size: 11px; color: #cbd5e1; font-weight: bold;">${order.timestamp}</span>
               <span class="badge ${order.status === 'processing' ? 'badge-amber' : 'badge-emerald'}">
                 ${order.status === 'processing' ? '⏳ In Bearbeitung' : '✓ Ausgegeben'}
               </span>
             </div>
-            <div style="font-size: 13px; color: #ffffff; font-weight: bold; margin-top: 4px;">
+            <div style="font-size: 12px; color: #ffffff; font-weight: bold; margin-top: 3px;">
               ${order.items.map(i => i.name).join(', ')}
             </div>
           </div>
 
-          <div class="flex items-center gap-3 font-mono">
-            <span style="font-weight: 900; font-size: 16px; color: #fde047;">R ${order.total.toFixed(2)}</span>
+          <div class="flex items-center gap-2 font-mono">
+            <span style="font-weight: 900; font-size: 15px; color: #fde047;">R ${order.total.toFixed(2)}</span>
             ${order.status === 'delivered' ? `
               <button onclick="recallDeliveredOrder('${order.id}')" class="btn btn-rose btn-sm font-mono">${t('recall_cancel')}</button>
             ` : ''}
@@ -3324,17 +3380,17 @@
       const transferrable = [productCatalog.bratwurst, productCatalog.bockwurst, productCatalog.cheesegriller].filter(Boolean);
 
       list.innerHTML = transferrable.map(p => `
-        <div class="card flex items-center justify-between" style="background: #020617; padding: 10px 14px; border: 2px solid #334155;">
+        <div class="card flex items-center justify-between" style="background: #020617; padding: 8px 12px; border: 2px solid #334155;">
           <div>
-            <div style="font-weight: 900; font-size: 15px; color: #ffffff;">${p.icon} ${p.name}</div>
-            <div class="font-mono" style="font-size: 13px; color: #ffffff; margin-top: 3px;">
-              ${t('depot')}: <strong style="color: #38bdf8; font-size: 15px;">${p.coldRoom}</strong> ➔ ${t('cooler')}: <strong style="color: #34d399; font-size: 15px;">${p.cooler}</strong>
+            <div style="font-weight: 900; font-size: 14px; color: #ffffff;">${p.icon} ${p.name}</div>
+            <div class="font-mono" style="font-size: 12px; color: #ffffff; margin-top: 2px;">
+              ${t('depot')}: <strong style="color: #38bdf8; font-size: 14px;">${p.coldRoom}</strong> ➔ ${t('cooler')}: <strong style="color: #34d399; font-size: 14px;">${p.cooler}</strong>
             </div>
           </div>
           <div class="flex gap-2 font-mono">
-            <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm font-mono" style="font-size: 14px;">+10</button>
-            <button onclick="transferMainToLocal('${p.id}', 25)" class="btn btn-dark btn-sm font-mono" style="font-size: 14px;">+25</button>
-            <button onclick="revertLocalToMain('${p.id}', 10)" class="btn btn-rose btn-sm font-mono" style="font-size: 14px;" title="10 zurück ins Depot">↩ -10</button>
+            <button onclick="transferMainToLocal('${p.id}', 10)" class="btn btn-dark btn-sm font-mono">+10</button>
+            <button onclick="transferMainToLocal('${p.id}', 25)" class="btn btn-dark btn-sm font-mono">+25</button>
+            <button onclick="revertLocalToMain('${p.id}', 10)" class="btn btn-rose btn-sm font-mono" title="10 zurück ins Depot">↩ -10</button>
           </div>
         </div>
       `).join('');
@@ -3400,20 +3456,20 @@
       });
 
       content.innerHTML = `
-        <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 8px;">
-          <strong style="color: #fde047; font-size: 16px;">GERMAN CLUB OKTOBERFEST 2026</strong>
-          <div style="color: #ffffff; font-size: 12px; font-weight: bold;">Offizieller Z-Report Tagesabschluss</div>
+        <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+          <strong style="color: #fde047; font-size: 15px;">GERMAN CLUB OKTOBERFEST 2026</strong>
+          <div style="color: #ffffff; font-size: 11px; font-weight: bold;">Offizieller Z-Report Tagesabschluss</div>
         </div>
-        <div class="flex justify-between" style="font-size: 14px;"><span>Verkaufte Würste:</span><strong style="color:#fde047; font-size: 16px;">${sausages}</strong></div>
-        <div class="flex justify-between" style="font-size: 14px;"><span>Bons Gesamt:</span><strong style="font-size: 16px;">${orders.length}</strong></div>
-        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:6px; font-size: 15px;"><span>Bruttoumsatz:</span><strong style="color:#fde047; font-size: 18px;">R ${turnover.toFixed(2)}</strong></div>
-        <div class="flex justify-between" style="color:#cbd5e1; font-size: 13px;"><span>- Barumsatz:</span><span>R ${cash.toFixed(2)}</span></div>
-        <div class="flex justify-between" style="color:#cbd5e1; font-size: 13px;"><span>- Yoco / Karte:</span><span>R ${yoco.toFixed(2)}</span></div>
-        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:6px; font-size: 14px;"><span>Wareneinsatz (COGS):</span><strong style="color:#fb7185; font-size: 16px;">R ${cogs.toFixed(2)}</strong></div>
-        <div class="flex justify-between" style="border-top:2px solid #1e293b; padding-top:6px; font-size:16px; font-weight:900;">
-          <span>Rohgewinn:</span><strong style="color:#34d399; font-size: 18px;">R ${(turnover - cogs).toFixed(2)}</strong>
+        <div class="flex justify-between" style="font-size: 13px;"><span>Verkaufte Würste:</span><strong style="color:#fde047; font-size: 15px;">${sausages}</strong></div>
+        <div class="flex justify-between" style="font-size: 13px;"><span>Bons Gesamt:</span><strong style="font-size: 15px;">${orders.length}</strong></div>
+        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:4px; font-size: 14px;"><span>Bruttoumsatz:</span><strong style="color:#fde047; font-size: 16px;">R ${turnover.toFixed(2)}</strong></div>
+        <div class="flex justify-between" style="color:#cbd5e1; font-size: 12px;"><span>- Barumsatz:</span><span>R ${cash.toFixed(2)}</span></div>
+        <div class="flex justify-between" style="color:#cbd5e1; font-size: 12px;"><span>- Yoco / Karte:</span><span>R ${yoco.toFixed(2)}</span></div>
+        <div class="flex justify-between" style="border-top:1px solid #1e293b; padding-top:4px; font-size: 13px;"><span>Wareneinsatz (COGS):</span><strong style="color:#fb7185; font-size: 15px;">R ${cogs.toFixed(2)}</strong></div>
+        <div class="flex justify-between" style="border-top:2px solid #1e293b; padding-top:4px; font-size:15px; font-weight:900;">
+          <span>Rohgewinn:</span><strong style="color:#34d399; font-size: 16px;">R ${(turnover - cogs).toFixed(2)}</strong>
         </div>
-        <div class="flex justify-between" style="color:#38bdf8; font-size: 15px; font-weight: bold;"><span>Soll-Kassenlade:</span><strong>R ${getCashDrawerBalance().toFixed(2)}</strong></div>
+        <div class="flex justify-between" style="color:#38bdf8; font-size: 14px; font-weight: bold;"><span>Soll-Kassenlade:</span><strong>R ${getCashDrawerBalance().toFixed(2)}</strong></div>
       `;
     }
 
