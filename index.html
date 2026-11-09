@@ -511,6 +511,7 @@
         </select>
         <span id="badge-year-status" class="badge badge-emerald" style="font-size: 11px;">● 2026</span>
         <button id="btn-toggle-year-lock" onclick="toggleCurrentYearLock()" class="btn btn-dark btn-sm font-mono" style="padding: 2px 6px; font-size: 11px; min-height: 28px;">🔒</button>
+        <button id="btn-add-year" onclick="openCreateNewYearModal()" class="btn btn-emerald btn-sm font-mono" style="padding: 2px 8px; font-size: 11px; min-height: 28px;" title="Neues Geschäftsjahr anlegen">+ Neues Jahr</button>
       </div>
 
       <!-- STATION SELECTOR -->
@@ -1233,6 +1234,50 @@
     </div>
   </div>
 
+  <!-- MODAL: CREATE NEW FISCAL YEAR -->
+  <div id="modal-new-year" class="modal-backdrop hidden" style="z-index: 2400;">
+    <div class="modal-box" style="max-width: 540px; border-color: var(--accent-gold);">
+      <div class="flex items-center justify-between" style="border-bottom: 2px solid #1e293b; padding-bottom: 6px;">
+        <div class="title-gold" style="font-size: 16px;" id="lbl-ny-title">📅 Neues Geschäftsjahr anlegen</div>
+        <button onclick="closeCreateNewYearModal()" class="btn btn-dark btn-sm">✕</button>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div>
+            <label style="font-size: 12px; color: #ffffff; font-weight: bold;" id="lbl-ny-yearnumber">Neues Jahr (YYYY):</label>
+            <input type="number" id="ny-input-year" class="input-field font-mono" style="font-size: 18px; font-weight: 900; color: var(--accent-gold-bright);" value="2027">
+          </div>
+          <div>
+            <label style="font-size: 12px; color: #ffffff; font-weight: bold;" id="lbl-ny-startfloat">Start-Wechselgeld (Float R):</label>
+            <input type="number" id="ny-input-float" class="input-field font-mono" style="font-size: 18px; font-weight: 900; color: #34d399;" value="1000.00" step="100">
+          </div>
+        </div>
+
+        <div style="font-size: 12px; color: var(--accent-blue); font-weight: 900; margin-top: 4px; text-transform: uppercase;" id="lbl-ny-stockconfig">
+          📦 Lagerbestand je Artikel konfigurieren:
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); line-height: 1.2;" id="lbl-ny-stockdesc">
+          Wähle für jeden Artikel, ob Restbestände des Vorjahres übernommen werden oder ob bei 0 gestartet wird.
+        </div>
+
+        <div id="ny-products-config-list" class="flex flex-col gap-2" style="max-height: 240px; overflow-y: auto; padding-right: 4px;"></div>
+
+        <div style="background: #020617; border: 1.5px solid #334155; padding: 8px 10px; border-radius: 8px; margin-top: 4px;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; color: #ffffff;">
+            <input type="checkbox" id="ny-check-lockprevious" checked style="width: 18px; height: 18px;">
+            <span id="lbl-ny-lockprev">Vorheriges Jahr automatisch als Archiv sperren (Read-Only)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-between" style="border-top: 2px solid #1e293b; padding-top: 6px; margin-top: 4px;">
+        <button onclick="closeCreateNewYearModal()" class="btn btn-dark btn-sm" id="btn-ny-cancel">Abbrechen</button>
+        <button onclick="submitCreateNewYearAction()" class="btn btn-emerald btn-sm" id="btn-ny-create">Jahr initialisieren ➔</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: CATALOG ITEM EDITOR -->
   <div id="modal-catalog-editor" class="modal-backdrop hidden">
     <div class="modal-box">
@@ -1664,6 +1709,16 @@
         btn_complete_first: "✓ Ältesten Bon Sofort Ausgeben",
         btn_complete_order: "✓ Fertig & Ausgegeben",
         recall_cancel: "↩ Recall / Storno",
+        btn_add_year: "+ Neues Jahr",
+        modal_ny_title: "📅 Neues Geschäftsjahr anlegen",
+        ny_yearnumber: "Neues Jahr (YYYY):",
+        ny_startfloat: "Start-Wechselgeld (Float R):",
+        ny_stockconfig: "📦 Lagerbestand je Artikel konfigurieren:",
+        ny_stockdesc: "Wähle für jeden Artikel, ob Restbestände des Vorjahres übernommen werden oder ob bei 0 gestartet wird.",
+        ny_carryover: "Übernehmen",
+        ny_startzero: "Auf 0 setzen",
+        ny_lockprev: "Vorheriges Jahr automatisch als Archiv sperren (Read-Only)",
+        ny_create_btn: "Jahr initialisieren ➔",
         lock_year: "🔒 Sperren",
         unlock_year: "🔓 Entsperren",
         year_locked: "● Gesperrt (Archiv)",
@@ -1761,6 +1816,16 @@
         btn_complete_first: "✓ Handout Oldest Ticket Now",
         btn_complete_order: "✓ Ready & Handed Out",
         recall_cancel: "↩ Recall / Void",
+        btn_add_year: "+ New Year",
+        modal_ny_title: "📅 Create New Fiscal Year",
+        ny_yearnumber: "New Year (YYYY):",
+        ny_startfloat: "Starting Cash Float (R):",
+        ny_stockconfig: "📦 Configure Stock per Position:",
+        ny_stockdesc: "Select whether to carry over remaining stock from previous year or start at 0.",
+        ny_carryover: "Carry Over",
+        ny_startzero: "Start at 0",
+        ny_lockprev: "Automatically lock previous year as archive (Read-Only)",
+        ny_create_btn: "Initialize Fiscal Year ➔",
         lock_year: "🔒 Lock Year",
         unlock_year: "🔓 Unlock Year",
         year_locked: "● Locked (Archive)",
@@ -2003,7 +2068,178 @@
       const btnConfirm = document.getElementById('btn-confirm-ok');
       if (btnConfirm) btnConfirm.textContent = t('confirm');
 
+      // New Year Modal Localization
+      const btnAddYr = document.getElementById('btn-add-year');
+      if (btnAddYr) btnAddYr.textContent = t('btn_add_year');
+      const nyTitle = document.getElementById('lbl-ny-title');
+      if (nyTitle) nyTitle.textContent = t('modal_ny_title');
+      const nyYrNum = document.getElementById('lbl-ny-yearnumber');
+      if (nyYrNum) nyYrNum.textContent = t('ny_yearnumber');
+      const nyStartFloat = document.getElementById('lbl-ny-startfloat');
+      if (nyStartFloat) nyStartFloat.textContent = t('ny_startfloat');
+      const nyStockCfg = document.getElementById('lbl-ny-stockconfig');
+      if (nyStockCfg) nyStockCfg.textContent = t('ny_stockconfig');
+      const nyStockDesc = document.getElementById('lbl-ny-stockdesc');
+      if (nyStockDesc) nyStockDesc.textContent = t('ny_stockdesc');
+      const nyLockPrev = document.getElementById('lbl-ny-lockprev');
+      if (nyLockPrev) nyLockPrev.textContent = t('ny_lockprev');
+      const nyCancel = document.getElementById('btn-ny-cancel');
+      if (nyCancel) nyCancel.textContent = t('cancel');
+      const nyCreate = document.getElementById('btn-ny-create');
+      if (nyCreate) nyCreate.textContent = t('ny_create_btn');
+
       updateYearLockControlsUI();
+    }
+
+    /* ==========================================================================
+       CREATE NEW YEAR MODAL LOGIC
+       ========================================================================== */
+    function openCreateNewYearModal() {
+      if (!currentStaffUser || !currentStaffUser.isMaster) {
+        showToast(currentLanguage === 'de' ? 'Nur Master-Administratoren können ein neues Jahr anlegen!' : 'Only Master Admins can create a new year!', 'error');
+        return;
+      }
+
+      const nextYear = (parseInt(activeYear, 10) + 1) || 2027;
+      const inpYear = document.getElementById('ny-input-year');
+      const inpFloat = document.getElementById('ny-input-float');
+      const listContainer = document.getElementById('ny-products-config-list');
+
+      if (inpYear) inpYear.value = nextYear;
+      if (inpFloat) inpFloat.value = "1000.00";
+
+      if (listContainer) {
+        const sausageItems = Object.values(productCatalog).filter(p => p.id !== 'currywurst');
+        listContainer.innerHTML = sausageItems.map(p => {
+          const remainingDepot = Math.max(0, p.coldRoom || 0);
+          const remainingCooler = Math.max(0, p.cooler || 0);
+          const totalRemaining = remainingDepot + remainingCooler;
+
+          return `
+            <div class="card flex flex-col gap-1" style="background:#020617; border: 1.5px solid #334155; padding: 6px 10px;">
+              <div class="flex items-center justify-between">
+                <strong style="font-size: 13px; color: #ffffff;">${p.icon} ${p.name}</strong>
+                <span class="badge badge-sky font-mono" style="font-size: 11px;">Rest: ${totalRemaining}</span>
+              </div>
+              <div class="flex items-center justify-between gap-2" style="margin-top: 2px;">
+                <div class="flex items-center gap-3" style="font-size: 12px;">
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                    <input type="radio" name="stock_mode_${p.id}" value="carry" checked onchange="toggleNyItemInput('${p.id}', true, ${totalRemaining})">
+                    <span>${t('ny_carryover')} (${totalRemaining})</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                    <input type="radio" name="stock_mode_${p.id}" value="zero" onchange="toggleNyItemInput('${p.id}', false, 0)">
+                    <span>${t('ny_startzero')}</span>
+                  </label>
+                </div>
+                <div class="flex items-center gap-1 font-mono">
+                  <span style="font-size: 10px; color: var(--text-muted);">Depot:</span>
+                  <input type="number" id="ny-stock-val-${p.id}" value="${totalRemaining}" class="input-field font-mono" style="width: 70px; padding: 2px 6px; font-size: 12px; height: 26px; text-align: center;">
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('modal-new-year').classList.remove('hidden');
+    }
+
+    function toggleNyItemInput(productId, isCarry, defaultQty) {
+      const input = document.getElementById(`ny-stock-val-${productId}`);
+      if (input) {
+        input.value = defaultQty;
+      }
+    }
+
+    function closeCreateNewYearModal() {
+      document.getElementById('modal-new-year').classList.add('hidden');
+    }
+
+    function submitCreateNewYearAction() {
+      const yearInput = (document.getElementById('ny-input-year').value || '').trim();
+      const floatInput = parseFloat(document.getElementById('ny-input-float').value) || 1000.00;
+      const autoLockPrev = document.getElementById('ny-check-lockprevious').checked;
+
+      if (!yearInput || yearInput.length !== 4 || isNaN(yearInput)) {
+        showToast(currentLanguage === 'de' ? 'Bitte ein gültiges 4-stelliges Jahr angeben!' : 'Please enter a valid 4-digit year!', 'error');
+        return;
+      }
+
+      if (autoLockPrev && HISTORICAL_FINANCIAL_DATABASE[activeYear]) {
+        HISTORICAL_FINANCIAL_DATABASE[activeYear].locked = true;
+      }
+
+      // Initialize brand new catalog for the upcoming year
+      const newYearCatalog = JSON.parse(JSON.stringify(defaultCatalog));
+      let totalFreezerStockValue = 0;
+
+      Object.keys(newYearCatalog).forEach(k => {
+        const prod = newYearCatalog[k];
+        prod.sold = 0;
+        prod.cooler = 0; // Fresh year tent coolers start empty until thawed/transferred
+
+        const inputEl = document.getElementById(`ny-stock-val-${k}`);
+        if (inputEl) {
+          const qty = parseInt(inputEl.value, 10) || 0;
+          prod.coldRoom = qty;
+          totalFreezerStockValue += (qty * (prod.cogs || 15.0));
+        } else if (k === 'currywurst') {
+          prod.coldRoom = 0;
+          prod.cooler = 0;
+        }
+      });
+
+      // Register Year in Historical Database
+      HISTORICAL_FINANCIAL_DATABASE[yearInput] = {
+        locked: false,
+        ordered: 600,
+        sold: 0,
+        turnoverCash: 0.00,
+        turnoverYoco: 0.00,
+        turnoverBand: 0.00,
+        grossTurnover: 0.00,
+        foodCogs: 0.00,
+        grossProfit: 0.00,
+        labourOpEx: 2500.00,
+        clubFeeOpEx: 2000.00,
+        consumablesOpEx: 0.00,
+        fuelOpEx: 0.00,
+        feeOpEx: 0.00,
+        netProfit: -4500.00,
+        freezerStockValue: totalFreezerStockValue
+      };
+
+      // Add to Year Selector Dropdown if not already present
+      const selYear = document.getElementById('sel-active-year');
+      if (selYear && !Array.from(selYear.options).some(o => o.value === yearInput)) {
+        const opt = document.createElement('option');
+        opt.value = yearInput;
+        opt.textContent = yearInput;
+        selYear.insertBefore(opt, selYear.firstChild);
+      }
+
+      // Reset Operational Buffers & Orders for new year
+      productCatalog = newYearCatalog;
+      orders = [];
+      currentCart = [];
+      orderSequenceNumber = 101;
+      initialCashFloat = floatInput;
+      cashMovements = [];
+      prepBuffer = { bratwurst: 0, bockwurst: 0, cheesegriller: 0 };
+      grillingNow = { bratwurst: 0, bockwurst: 0, cheesegriller: 0 };
+      rollBuffer = { roll_crusty: 0, roll_white: 0 };
+      trayBuffer = { curry_tray: 0 };
+
+      activeYear = yearInput;
+      if (selYear) selYear.value = activeYear;
+
+      saveState();
+      closeCreateNewYearModal();
+      updateYearLockControlsUI();
+      renderAllViews();
+
+      showToast(currentLanguage === 'de' ? `Geschäftsjahr ${yearInput} erfolgreich initialisiert!` : `Fiscal year ${yearInput} successfully initialized!`, 'success');
     }
 
     /* ==========================================================================
